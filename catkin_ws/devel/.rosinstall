@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/valentin/thesis/ma-ros_git/catkin_ws/devel/setup.sh

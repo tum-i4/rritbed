@@ -59,6 +59,30 @@ def get_zero_twist():
 
     return new_twist
 
+
+def get_twist_from_string(value_string):
+    """ Return new twist initialised to the values given in the string """
+
+    value_array = value_string.split(",")
+
+    if not len(value_array) == 6:
+        return get_zero_twist()
+
+    # Might throw exception - intentional!
+    value_array = [int(x) for x in value_array]
+
+    new_twist = Twist()
+
+    new_twist.linear.x = value_array[0]
+    new_twist.linear.y = value_array[1]
+    new_twist.linear.z = value_array[2]
+    new_twist.angular.x = value_array[3]
+    new_twist.angular.y = value_array[4]
+    new_twist.angular.z = value_array[5]
+
+    return new_twist
+
+
 if __name__ == '__main__':
     try:
         move()

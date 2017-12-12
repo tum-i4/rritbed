@@ -40,9 +40,21 @@ def move():
             return
         
         # Read next movement command
-        # ...
+        next_line = file_contents[current_line]
+        current_line += 1
 
-    pass
+        # Remove trailing new line
+        newline_index = len(next_line) - 3
+        assert(next_line[newline_index:] == "\n")
+        next_line = next_line[:len(next_line) - 3]
+        
+        try:
+            vel_msg = get_twist_from_string(next_line)
+        except ValueError:
+            print("Invalid value read from line:\n" + next_line)
+            return
+
+        # TODO ...
 
 
 def get_zero_twist():

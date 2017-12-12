@@ -38,7 +38,7 @@ def move():
 		if current_line >= len(file_contents):
 			print("End of movement file reached")
 			return
-		
+
 		# Read next movement command
 		next_line = file_contents[current_line]
 		current_line += 1
@@ -47,7 +47,7 @@ def move():
 		newline_index = len(next_line) - 3
 		assert(next_line[newline_index:] == "\n")
 		next_line = next_line[:len(next_line) - 3]
-		
+
 		try:
 			vel_msg = get_twist_from_string(next_line)
 		except ValueError:

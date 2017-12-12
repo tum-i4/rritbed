@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+""" Basic mover """
+
+import os
 import rospy
 from geometry_msgs.msg import Twist
 PI = 3.1415926535897

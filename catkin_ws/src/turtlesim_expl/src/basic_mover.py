@@ -2,6 +2,7 @@
 """ Basic mover """
 
 import os
+import time
 import rospy
 from geometry_msgs.msg import Twist
 PI = 3.1415926535897
@@ -16,7 +17,7 @@ def move():
 
 	file_path = os.path.join(os.getcwd(), "move")
 	if not os.path.isfile(file_path):
-		print("No movement file found")
+		print("No movement file found in" + file_path)
 		return
 
 	current_line = 0
@@ -44,9 +45,9 @@ def move():
 		current_line += 1
 
 		# Remove trailing new line
-		newline_index = len(next_line) - 3
+		newline_index = len(next_line) - 1
 		assert(next_line[newline_index:] == "\n")
-		next_line = next_line[:len(next_line) - 3]
+		next_line = next_line[:newline_index]
 
 		try:
 			vel_msg = get_twist_from_string(next_line)
@@ -56,6 +57,7 @@ def move():
 
 		# We have read the velocity and can now publish it
 		velocity_publisher.publish(vel_msg)
+		time.sleep(0.2)
 
     # Make sure to stop robot after the program has been cancelled
 	velocity_publisher.publish(get_zero_twist())
@@ -82,7 +84,7 @@ def get_twist_from_string(value_string):
 	value_array = value_string.split(",")
 
 	if not len(value_array) == 6:
-		return get_zero_twist()
+		raise ValueError("Incorrect number of elements in line")
 
 	# Might throw exception - intentional!
 	value_array = [int(x) for x in value_array]

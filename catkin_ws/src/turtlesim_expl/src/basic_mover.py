@@ -54,7 +54,11 @@ def move():
 			print("Invalid value read from line:\n" + next_line)
 			return
 
-		# TODO ...
+		# We have read the velocity and can now publish it
+		velocity_publisher.publish(vel_msg)
+
+    # Make sure to stop robot after the program has been cancelled
+	velocity_publisher.publish(get_zero_twist())
 
 
 def get_zero_twist():

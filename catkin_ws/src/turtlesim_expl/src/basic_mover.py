@@ -57,7 +57,8 @@ def move():
 
 		# We have read the velocity and can now publish it
 		velocity_publisher.publish(vel_msg)
-		time.sleep(0.2)
+		# TODO: Try cleaner solution
+		time.sleep(0.5)
 
     # Make sure to stop robot after the program has been cancelled
 	velocity_publisher.publish(get_zero_twist())

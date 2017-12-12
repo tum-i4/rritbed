@@ -15,7 +15,7 @@ def move():
 	velocity_publisher = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
 
 	file_path = os.path.join(os.getcwd(), "move")
-	if not os.path.isfile():
+	if not os.path.isfile(file_path):
 		print("No movement file found")
 		return
 

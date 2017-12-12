@@ -6,6 +6,7 @@ import rospy
 from geometry_msgs.msg import Twist
 PI = 3.1415926535897
 
+
 def move():
     """ Move robot according to movement file """
 
@@ -26,7 +27,7 @@ def move():
         file_reader = open(file_path)
         file_contents = file_reader.readlines()
         file_reader.close()
-    except:
+    except IOError:
         print("Couldn't read movement file")
         return
 
@@ -42,6 +43,7 @@ def move():
         # ...
 
     pass
+
 
 def get_zero_twist():
     """ Return new twist initialised to zero """

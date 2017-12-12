@@ -15,7 +15,7 @@ def move():
 	pass
 
 if __name__ == '__main__':
-	try:
-		move()
-	except rospy.ROSInterruptException:
-		pass
+    try:
+        move()
+    except rospy.ROSInterruptException:
+        pass

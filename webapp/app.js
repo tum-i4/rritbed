@@ -41,6 +41,8 @@ app.use(bodyParser.urlencoded({
 }));
 
 var idpRoutes = require("./app/models/idp/idpRoutes");
+var maRoutes  = require("./app/models/ma/maRoutes");
 app.use("/api", idpRoutes());
+app.use("/api", maRoutes());
 
 module.exports = app;

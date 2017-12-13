@@ -3,9 +3,35 @@
 
 import os
 import time
+import requests
 import rospy
 from geometry_msgs.msg import Twist
 PI = 3.1415926535897
+url = "http://localhost:5000/api/log"
+data = '''{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "text": {
+            "record.document": "SOME_JOURNAL"
+          }
+        },
+        {
+          "text": {
+            "record.articleTitle": "farmers"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 50,
+  "sort": [],
+  "facets": {}
+}'''
 
 
 def move():
@@ -59,6 +85,9 @@ def move():
 		velocity_publisher.publish(vel_msg)
 		# TODO: Try cleaner solution
 		time.sleep(0.5)
+
+		# TODO: Temp requests
+		response = requests.post(url, data=data)
 
     # Make sure to stop robot after the program has been cancelled
 	velocity_publisher.publish(get_zero_twist())

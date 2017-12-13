@@ -8,7 +8,7 @@ Config.app  = {};
 Config.auth = {};
 
 Config.db.host = 'localhost:27017';
-Config.db.name = 'Experiment';
+Config.db.name = 'webapp';
 
 // Use environment defined port or 3000
 Config.app.port = process.env.PORT || 5000;

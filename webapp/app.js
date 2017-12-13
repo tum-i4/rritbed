@@ -40,55 +40,6 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-/*
-app.use(function(req, res, next) {
-    var data = new Buffer('');
-    req.on('data', function (chunk) {
-        console.log("Data");
-        data = Buffer.concat([data, chunk]);
-    });
-    req.on('end', function () {
-        req.rawBody = data;
-        console.log("End");
-        next();
-    });
-});
-*/
-
-//passport
-
-var passport = require('passport');
-var jwtConfig = require('./passport/jwtConfig');
-
-app.use(passport.initialize());
-jwtConfig(passport);
-
-
-/**
- * routing
- */
-
-// var userRoutes = require("./app/models/user/userRoutes");
-// app.use('/', userRoutes(passport));
-//
-// var cityRoutes = require("./app/models/city/cityRoutes");
-// app.use('/api', cityRoutes());
-//
-// var localRoutes = require("./app/models/local/localRoutes");
-// app.use('/api', localRoutes());
-//
-// var bookingRoutes = require("./app/models/booking/bookingRoutes");
-// app.use('/api', bookingRoutes(passport));
-//
-// var imageRoutes = require("./app/models/image/imageRoutes");
-// app.use('/api', imageRoutes(passport));
-//
-// var specialityRoutes = require("./app/models/speciality/specialityRoutes");
-// app.use('/api', specialityRoutes());
-//
-// var languageRoutes = require("./app/models/language/languageRoutes");
-// app.use('/api', languageRoutes());
-
 var idpRoutes = require("./app/models/idp/idpRoutes");
 app.use("/api", idpRoutes());
 

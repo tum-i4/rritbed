@@ -2,13 +2,13 @@
  * Created by vzieglmeier on 14.08.16.
  */
 
-var IdpSchema       = require("./idpSchema.js");
-var CurrentIdSchema = require("./currentIdSchema.js");
-var PlaylistSchema  = require("./playlistSchema.js");
-var TemplateSchema  = require("./templateSchema.js");
+var IdpSchema       = require("../idp/idpSchema.js");
+var CurrentIdSchema = require("../idp/currentIdSchema.js");
+var PlaylistSchema  = require("../idp/playlistSchema.js");
+var TemplateSchema  = require("../idp/templateSchema.js");
 
 var MongooseManager = require("../mongooseManager.js");
-var idpController   = require("./idpController");
+var idpController   = require("../idp/idpController");
 var Config          = require('../../../config/config.dev_local.js');
 var dump            = require("./../../dump/dump.js");
 

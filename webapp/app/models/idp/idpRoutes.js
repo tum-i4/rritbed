@@ -7,7 +7,7 @@ module.exports = idpRoutes;
 function idpRoutes() {
 
     var idpController = require('./idpController');
-    var dbController = require('./dbController');
+    var dbController = require('../db/dbController');
     var router = require('express').Router();
     var unless = require('express-unless');
     

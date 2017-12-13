@@ -13,6 +13,16 @@ var ObjectId = mongoose.Types.ObjectId;
 // Global variables
 var zeroId = new ObjectId("000000000000");
 
+var log = function(req, res) {
+    console.log("TODO TODO TODO TEMP TEMP TEMP NOT IMPLEMENTED");
+    res.send("Not implemented");
+};
+exports.log = log;
+
+/**
+ * Helper functions
+ */
+
 var debugInvalidBody = function (object) {
     for (var propName in object)
     {
@@ -47,9 +57,3 @@ var generateListFromListLikeAndObject = function (listlike, object) {
     }
 };
 exports.generateListFromListLikeAndObject = generateListFromListLikeAndObject;
-
-var log = function(req, res) {
-    console.log("TODO TODO TODO TEMP TEMP TEMP NOT IMPLEMENTED");
-    throw("Not implemented");
-};
-exports.log = log;

@@ -7,7 +7,7 @@ import requests
 import rospy
 from geometry_msgs.msg import Twist
 PI = 3.1415926535897
-url = "http://localhost:5000/api/log"
+url = "http://localhost:5000/log"
 data = '''{
   "query": {
     "bool": {

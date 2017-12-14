@@ -14,7 +14,7 @@ var ObjectId = mongoose.Types.ObjectId;
 var zeroId = new ObjectId("000000000000");
 
 var log = function(req, res) {
-    console.log("TODO TODO TODO TEMP TEMP TEMP NOT IMPLEMENTED");
+    console.log("+++++ RECEIVED CALL to /api/log +++++");
     res.send("Not implemented");
 };
 exports.log = log;

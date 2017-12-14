@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-from bottle import post, run, template, BaseResponse
+from bottle import post, run, template, request, response
 
 @post('/log')
 def log():
-	return BaseResponse(body="", status=200, headers=None)
+	response.status = 200
+	return
 
 run(host='localhost', port=5000)

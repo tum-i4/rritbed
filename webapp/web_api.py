@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Web API """
 
+import random
 import os.path
 import uuid
 import time
@@ -16,9 +17,19 @@ LOG_FILE_NAME = "log"
 def log():
 	""" Default log endpoint with no arguments """
 
-	with open(LOG_FILE_NAME, "a") as outfile:
-		outfile.write(get_log_string())
+	append_to_log(get_log_string())
 	return
+
+
+@post("/log/<num:int>")
+def log_num(num):
+	""" Log endpoint with number input """
+
+	random.seed(num)
+
+	
+
+	append_to_log(get_log_string(method_path="com.api.web.num"))
 
 
 @post("/DANGER/reset-log")
@@ -43,21 +54,29 @@ def reset_log():
 ### Helper methods ###
 
 
-def get_log_string():
-	""" Creates a log string """
+def append_to_log(log_str):
+	""" Appends the given string to the log file """
+
+	with open(LOG_FILE_NAME, "a") as outfile:
+		outfile.write(log_str)
+	return
+
+
+def get_log_string(method_path="com.none", env="PROD", lvl="DEBUG"):
+	""" Creates a log string from the given method (some.java.method) """
 
 	time_unix_now = time.time()
 	time_utc_now = time.gmtime(time_unix_now)
 
-	log_message = ("\"origin\" : \"some.java.class\", // service"
+	log_message = ("\"origin\" : \"" + method_path + "\", // service"
 		"\"abcd_version\" : \"5.2.3\","
 		"\"hub\" : \"ABCD\","
-		"\"level\" : \"DEBUG\", // Info, Alert"
+		"\"level\" : \"" + lvl + "\", // DEBUG, INFO, ALERT"
 		"\"timestamp\" : \"2017-10-12T01:12:12.123Z\","
 		"\"appID\" : \"ABCD\","
 		"\"vin\" : \"" + "A192738" + "\", // ##ROS##"
 		"\"abcd_topic\" : \"abcd_svds\","
-		"\"environment\" : \"PROD\", // DEV (development), PROD (customer)"
+		"\"environment\" : \"" + env + "\", // PROD (production), DEV (development), PROD (customer)"
 		"\"timeUTC\" : \"" + time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now) + "\","
 		"\"context\" : {"
 		"	\"str\" : {"

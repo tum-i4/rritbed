@@ -1,14 +1,20 @@
 #!/usr/bin/env python
 """ Logging node """
 
+import requests
 import rospy
 from rosgraph_msgs.msg import Log
+
+URL = "http://localhost:5000"
+DATA = """{
+	"vin": "A192738"
+	}"""
 
 
 def log(data):
 	""" TODO currently logs, should call API """
 
-	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data)
+	requests.post(URL + "/log", data=DATA)
 
 
 def logger():
@@ -22,5 +28,5 @@ def logger():
 	rospy.spin()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	logger()

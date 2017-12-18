@@ -11,7 +11,7 @@ def repeat_move():
 		basic_mover.move()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	try:
 		repeat_move()
 	except rospy.ROSInterruptException:

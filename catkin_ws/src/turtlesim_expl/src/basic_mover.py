@@ -23,6 +23,8 @@ def move():
 		rospy.logwarn("No movement file found in" + file_path)
 		return
 
+	rospy.loginfo("Starting basic movement with movement file " + file_path)
+
 	current_line = 0
 	file_contents = []
 

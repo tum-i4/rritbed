@@ -6,15 +6,17 @@ import uuid
 import time
 from bottle import post, run, template, request, BaseResponse
 
-log_file_name = "log"
+LOG_FILE_NAME = "log"
+
 
 ### API endpoints ###
+
 
 @post("/log")
 def log():
 	""" Default log endpoint with no arguments """
 
-	with open(log_file_name, "a") as outfile:
+	with open(LOG_FILE_NAME, "a") as outfile:
 		outfile.write(get_log_string())
 	return
 
@@ -23,18 +25,19 @@ def log():
 def reset_log():
 	""" Clears the log file """
 
-	if not os.path.isfile(log_file_name):
+	if not os.path.isfile(LOG_FILE_NAME):
 		return BaseResponse(body="Log file doesn't exist", status=200)
 
 	counter = 0
-	new_file_name = log_file_name + " (0)"
+	new_file_name = LOG_FILE_NAME + " (0)"
 	while os.path.isfile(new_file_name):
 		counter += 1
-		new_file_name = log_file_name + " ({})".format(counter)
+		new_file_name = LOG_FILE_NAME + " ({})".format(counter)
 
-	os.rename(log_file_name, new_file_name)
+	os.rename(LOG_FILE_NAME, new_file_name)
 
 	return BaseResponse(body="Successfully cleared the log file", status=200)
+
 
 
 ### Helper methods ###

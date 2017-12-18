@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <node ns="ecu1" name="ecu1" pkg="turtlesim_expl" type="listener" />
-  <node ns="ecu2" name="ecu2" pkg="turtlesim_expl" type="listener" />
-
-  <node ns="log" name="logging_listener" pkg="turtlesim_expl" type="listener" />
-</launch>

@@ -27,7 +27,7 @@ def log_num(num):
 
 	random.seed(num)
 
-	
+	# TODO use random to generate data for log
 
 	append_to_log(get_log_string(method_path="com.api.web.num"))
 

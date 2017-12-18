@@ -3,5 +3,5 @@
   <node ns="ecu1" name="ecu1" pkg="turtlesim" type="turtlesim_node" />
   <node ns="ecu2" name="ecu2" pkg="turtlesim" type="turtlesim_node" />
 
-  <!--node ns="log" name="logging_listener" pkg="turtlesim_expl" type="listener" /-->
+  <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
 </launch>

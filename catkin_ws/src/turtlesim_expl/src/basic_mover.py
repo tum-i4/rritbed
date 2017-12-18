@@ -3,47 +3,24 @@
 
 import os
 import time
-import requests
 import rospy
 from geometry_msgs.msg import Twist
+
 PI = 3.1415926535897
-url = "http://localhost:5000/log"
-data = '''{
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "text": {
-            "record.document": "SOME_JOURNAL"
-          }
-        },
-        {
-          "text": {
-            "record.articleTitle": "farmers"
-          }
-        }
-      ],
-      "must_not": [],
-      "should": []
-    }
-  },
-  "from": 0,
-  "size": 50,
-  "sort": [],
-  "facets": {}
-}'''
+MOVE_FILE_PATH = "/ros"
 
 
 def move():
 	""" Move robot according to movement file """
 
 	# Start a new node
-	rospy.init_node('robot_mover', anonymous=True)
-	velocity_publisher = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+	rospy.init_node("robot_mover", anonymous=True)
+	velocity_publisher = rospy.Publisher("turtle1/cmd_vel", Twist, queue_size=10)
 
-	file_path = os.path.join(os.getcwd(), "move")
+	# Used to use os.getcwd()
+	file_path = os.path.join(MOVE_FILE_PATH, "move")
 	if not os.path.isfile(file_path):
-		print("No movement file found in" + file_path)
+		rospy.logwarn("No movement file found in" + file_path)
 		return
 
 	current_line = 0
@@ -55,7 +32,7 @@ def move():
 		file_contents = file_reader.readlines()
 		file_reader.close()
 	except IOError:
-		print("Couldn't read movement file")
+		rospy.logwarn("Couldn't read movement file")
 		return
 
 	# While loop to assure that Ctrl-C can exit the app
@@ -63,7 +40,7 @@ def move():
 		vel_msg = get_zero_twist()
 
 		if current_line >= len(file_contents):
-			print("End of movement file reached")
+			rospy.loginfo("End of movement file reached")
 			return
 
 		# Read next movement command
@@ -78,16 +55,13 @@ def move():
 		try:
 			vel_msg = get_twist_from_string(next_line)
 		except ValueError:
-			print("Invalid value read from line:\n" + next_line)
+			rospy.logwarn("Invalid value read from line:\n" + next_line)
 			return
 
 		# We have read the velocity and can now publish it
 		velocity_publisher.publish(vel_msg)
 		# TODO: Try cleaner solution
 		time.sleep(0.5)
-
-		# TODO: Temp requests
-		response = requests.post(url, data=data)
 
     # Make sure to stop robot after the program has been cancelled
 	velocity_publisher.publish(get_zero_twist())
@@ -131,7 +105,7 @@ def get_twist_from_string(value_string):
 	return new_twist
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	try:
 		move()
 	except rospy.ROSInterruptException:

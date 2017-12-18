@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 """ Web API """
 
+import os.path
 import uuid
 import time
-from bottle import post, run, template, request, response
+from bottle import post, run, template, request, BaseResponse
+
+log_file_name = "log"
 
 ### API endpoints ###
 
@@ -11,8 +14,7 @@ from bottle import post, run, template, request, response
 def log():
 	""" Default log endpoint with no arguments """
 
-	response.status = 200
-	with open("log.txt", "a") as outfile:
+	with open(log_file_name, "a") as outfile:
 		outfile.write(get_log_string())
 	return
 

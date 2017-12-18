@@ -2,20 +2,21 @@
 """ Logging node """
 
 import rospy
-from std_msgs.msg import String
+from rosgraph_msgs.msg import Log
 
 
 def log(data):
 	""" TODO currently logs, should call API """
 
-	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data)
 
 
 def logger():
 	""" Main function """
+
 	rospy.init_node('logger', anonymous=True)
 
-	rospy.Subscriber("chatter", String, log)
+	rospy.Subscriber("/rosout", Log, log)
 
 	# spin() keeps python from exiting until this node is stopped
 	rospy.spin()

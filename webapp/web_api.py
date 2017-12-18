@@ -5,16 +5,23 @@ import uuid
 import time
 from bottle import post, run, template, request, response
 
+### API endpoints ###
+
 @post("/log")
 def log():
+	""" Default log endpoint with no arguments """
+
 	response.status = 200
 	with open("log.txt", "a") as outfile:
 		outfile.write(get_log_string())
 	return
 
 
+### Helper methods ###
+
+
 def get_log_string():
-	""" Creates a log string with the given arguments """
+	""" Creates a log string """
 
 	time_unix_now = time.time()
 	time_utc_now = time.gmtime(time_unix_now)
@@ -28,7 +35,7 @@ def get_log_string():
 		"\"vin\" : \"" + "A192738" + "\", // ##ROS##"
 		"\"abcd_topic\" : \"abcd_svds\","
 		"\"environment\" : \"PROD\", // DEV (development), PROD (customer)"
-		"\"timeUTC\" : \"" + time.strftime("%Y-%m-%d %H:%M:%S", time_utc_now) + "\","
+		"\"timeUTC\" : \"" + time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now) + "\","
 		"\"context\" : {"
 		"	\"str\" : {"
 		"	\"client\" : \"webapi\","

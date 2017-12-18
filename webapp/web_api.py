@@ -19,6 +19,24 @@ def log():
 	return
 
 
+@post("/DANGER/reset-log")
+def reset_log():
+	""" Clears the log file """
+
+	if not os.path.isfile(log_file_name):
+		return BaseResponse(body="Log file doesn't exist", status=200)
+
+	counter = 0
+	new_file_name = log_file_name + " (0)"
+	while os.path.isfile(new_file_name):
+		counter += 1
+		new_file_name = log_file_name + " ({})".format(counter)
+
+	os.rename(log_file_name, new_file_name)
+
+	return BaseResponse(body="Successfully cleared the log file", status=200)
+
+
 ### Helper methods ###
 
 

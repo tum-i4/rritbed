@@ -6,4 +6,4 @@ source devel/setup.bash
 
 roslaunch ~/thesis/ma-ros_git/scripts/ros.launch
 
-cd ~/thesis/ma-ros_git
+cd ~/thesis/ma-ros_git/scripts

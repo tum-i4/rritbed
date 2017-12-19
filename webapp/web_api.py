@@ -37,7 +37,8 @@ def log_colour():
 	""" Log endpoint with colour input """
 
 	# TODO can we get the data?
-	append_to_log(get_log_string(method_path="com.car.colour.getColour(" + request.params.colour + ")"), vin=request.params.vin)
+	# pylint: disable-msg=E1101
+	append_to_log(get_log_string(method_path="com.car.colour.getColour(" + request.params.colour + ")", vin=request.params.vin)
 
 
 @post("/DANGER/reset-log")

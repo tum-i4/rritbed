@@ -70,7 +70,7 @@ def append_to_log(log_str):
 	return
 
 
-def get_log_string(method_path="com.none", vin="A192738" env="PROD", lvl="DEBUG"):
+def get_log_string(method_path="com.none", vin="A192738", env="PROD", lvl="DEBUG"):
 	""" Creates a log string from the given method (some.java.method) """
 
 	time_unix_now = time.time()

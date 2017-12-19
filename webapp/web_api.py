@@ -32,6 +32,14 @@ def log_num(num):
 	append_to_log(get_log_string(method_path="com.api.web.num"))
 
 
+@post("/log/colour")
+def log_colour(colour):
+	""" Log endpoint with colour input """
+
+	# TODO can we get the data?
+	append_to_log(get_log_string(method_path="com.car.colour.getColour(" + request.params.colour + ")"), vin=request.params.vin)
+
+
 @post("/DANGER/reset-log")
 def reset_log():
 	""" Clears the log file """
@@ -62,7 +70,7 @@ def append_to_log(log_str):
 	return
 
 
-def get_log_string(method_path="com.none", env="PROD", lvl="DEBUG"):
+def get_log_string(method_path="com.none", vin="A192738" env="PROD", lvl="DEBUG"):
 	""" Creates a log string from the given method (some.java.method) """
 
 	time_unix_now = time.time()
@@ -74,7 +82,7 @@ def get_log_string(method_path="com.none", env="PROD", lvl="DEBUG"):
 		"\"level\" : \"" + lvl + "\", // DEBUG, INFO, ALERT"
 		"\"timestamp\" : \"2017-10-12T01:12:12.123Z\","
 		"\"appID\" : \"ABCD\","
-		"\"vin\" : \"" + "A192738" + "\", // ##ROS##"
+		"\"vin\" : \"" + vin + "\", // ##ROS##"
 		"\"abcd_topic\" : \"abcd_svds\","
 		"\"environment\" : \"" + env + "\", // PROD (production), DEV (development), PROD (customer)"
 		"\"timeUTC\" : \"" + time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now) + "\","

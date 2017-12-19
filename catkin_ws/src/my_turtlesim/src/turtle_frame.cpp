@@ -105,12 +105,18 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
 
   width_in_meters_ = (width() - 1) / meter_;
   height_in_meters_ = (height() - 1) / meter_;
-  spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);
+  // spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);
+
+  // TODO
+  float x_pct = (rand() % 101) / 100.0; // * width_in_meters_;
+  float y_pct = (rand() % 101) / 100.0; // * height_in_meters_;
+
+  spawnTurtle("", width_in_meters_ * x_pct, height_in_meters_ * y_pct, 0);
 
   // TODO: Object-oriented
   // Window is 500 x 500, starting at 0,0 and ending at 500,500
 
-  // TOP LEFT: RED
+  // TOP LEFT: MAGENTA
   path_painter_.setPen(QPen(Qt::magenta, 1, Qt::SolidLine, Qt::SquareCap));
   path_painter_.setBrush(Qt::magenta);
   static const QPoint points1[4] = {
@@ -154,14 +160,14 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   };
   path_painter_.drawPolygon(points4, 4);
 
-  // DANGER ZONE TOP RIGHT: RED
+  // DANGER ZONE MIDDLE: RED
   path_painter_.setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::SquareCap));
   path_painter_.setBrush(Qt::red);
   static const QPoint points5[4] = {
-    QPoint(490,   0),
-    QPoint(500,   0),
-    QPoint(500,  10),
-    QPoint(490,  10)
+    QPoint(245, 245),
+    QPoint(255, 245),
+    QPoint(255, 255),
+    QPoint(245, 255)
   };
   path_painter_.drawPolygon(points5, 4);
 

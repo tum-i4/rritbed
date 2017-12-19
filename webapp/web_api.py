@@ -33,7 +33,7 @@ def log_num(num):
 
 
 @post("/log/colour")
-def log_colour(colour):
+def log_colour():
 	""" Log endpoint with colour input """
 
 	# TODO can we get the data?

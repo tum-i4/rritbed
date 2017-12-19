@@ -14,8 +14,8 @@ DATA_2 = """{
 	"vin": "A232758"
 	}"""
 
-#COLOUR_1_PATH = "/ecu1/turtle1/color_sensor"
-#COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
+COLOUR_1_PATH = "/ecu1/turtle1/color_sensor"
+COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
 
 
 
@@ -28,10 +28,8 @@ class Logger:
 
 		rospy.init_node('logger', anonymous=True)
 
-		#rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour_1)
-		#rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour_2)
-
-		rospy.Subscriber("/turtle1/color_sensor", Color, self.log_colour_1)
+		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour_1)
+		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour_2)
 	
 
 	def log_colour_1(self, data):
@@ -51,9 +49,9 @@ class Logger:
 			return
 
 		self.last_colour = log_data
-		rospy.loginfo(log_data)
+		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 
-		#requests.post(URL + "/log", data=request)
+		requests.post(URL + "/log/colour", data=request)
 
 
 

@@ -105,6 +105,22 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   height_in_meters_ = (height() - 1) / meter_;
   spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);
 
+  // TODO: Object-oriented
+  // Window is 500 x 500, starting at 0,0 and ending at 500,500
+
+  path_painter_.setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(Qt::red);
+  static const QPoint points1[4] = {
+    QPoint(  0,   0),
+    QPoint(250,   0),
+    QPoint(250, 250),
+    QPoint(  0, 250)
+  };
+
+  path_painter_.drawPolygon(points1, 4);
+
+  // END TODO
+
   // spawn all available turtle types
   if(false)
   {

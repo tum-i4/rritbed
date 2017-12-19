@@ -108,16 +108,60 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   // TODO: Object-oriented
   // Window is 500 x 500, starting at 0,0 and ending at 500,500
 
-  path_painter_.setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::SquareCap));
-  path_painter_.setBrush(Qt::red);
+  // TOP LEFT: RED
+  path_painter_.setPen(QPen(Qt::magenta, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(Qt::magenta);
   static const QPoint points1[4] = {
     QPoint(  0,   0),
     QPoint(250,   0),
     QPoint(250, 250),
     QPoint(  0, 250)
   };
-
   path_painter_.drawPolygon(points1, 4);
+
+  // TOP RIGHT: YELLOW
+  path_painter_.setPen(QPen(Qt::yellow, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(Qt::yellow);
+  static const QPoint points2[4] = {
+    QPoint(250,   0),
+    QPoint(500,   0),
+    QPoint(500, 250),
+    QPoint(250, 250)
+  };
+  path_painter_.drawPolygon(points2, 4);
+
+  // BOTTOM LEFT: GREEN
+  path_painter_.setPen(QPen(Qt::green, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(Qt::green);
+  static const QPoint points3[4] = {
+    QPoint(  0, 250),
+    QPoint(250, 250),
+    QPoint(250, 500),
+    QPoint(  0, 500)
+  };
+  path_painter_.drawPolygon(points3, 4);
+
+  // BOTTOM RIGHT: BLUE
+  path_painter_.setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(Qt::blue);
+  static const QPoint points4[4] = {
+    QPoint(250, 250),
+    QPoint(500, 250),
+    QPoint(500, 500),
+    QPoint(250, 500)
+  };
+  path_painter_.drawPolygon(points4, 4);
+
+  // DANGER ZONE TOP RIGHT: RED
+  path_painter_.setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(Qt::red);
+  static const QPoint points5[4] = {
+    QPoint(490,   0),
+    QPoint(500,   0),
+    QPoint(500,  10),
+    QPoint(490,  10)
+  };
+  path_painter_.drawPolygon(points5, 4);
 
   // END TODO
 

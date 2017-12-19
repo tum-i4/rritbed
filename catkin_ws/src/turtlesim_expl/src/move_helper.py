@@ -10,7 +10,6 @@ PI = 3.1415926535897
 BASE_PATH = "/ros"
 
 
-@staticmethod
 def get_zero_twist():
 	""" Return new twist initialised to zero """
 
@@ -26,7 +25,6 @@ def get_zero_twist():
 	return new_twist
 
 
-@staticmethod
 def get_twist_from_string(value_string):
 	""" Return new twist initialised to the values given in the string """
 

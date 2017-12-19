@@ -90,6 +90,8 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   img.load(images_path + turtles[0]);
   turtle_images_.append(img);
 
+  // END TODO
+
   meter_ = turtle_images_[0].height();
 
   clear();

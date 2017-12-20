@@ -3,9 +3,9 @@
 
 import random
 import os.path
-import uuid
-import time
 from bottle import post, run, template, request, BaseResponse
+
+from log_entry import LogEntry
 
 LOG_FILE_NAME = "log"
 
@@ -17,19 +17,24 @@ LOG_FILE_NAME = "log"
 def log():
 	""" Default log endpoint with no arguments """
 
-	append_to_log(get_log_string())
+	basic_log_entry = LogEntry(vin="", origin="com.status", appID="STATUS")
+
+	append_to_log(basic_log_entry.get_log_string())
 	return
 
 
-@post("/log/<num:int>")
+@post("/log/get-vins/<num:int>")
 def log_num(num):
 	""" Log endpoint with number input """
 
-	random.seed(num)
+	# pylint: disable-msg=E1101
+	numbered_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin="com.api.web.getVins",
+		appID="GETVINS",
+		log_message="getVins returned {} vins".format(num))
 
-	# TODO use random to generate data for log
-
-	append_to_log(get_log_string(method_path="com.api.web.num"))
+	append_to_log(numbered_log_entry.get_log_string())
 
 
 @post("/log/colour")
@@ -37,10 +42,14 @@ def log_colour():
 	""" Log endpoint with colour input """
 
 	# pylint: disable-msg=E1101
-	colour = request.params.colour
-	vin = request.params.vin
+	colour_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin="com.api.web.callColour",
+		appID="COLOUR",
+		log_message="Successfully registered colour " + request.params.colour
+	)
 
-	append_to_log(get_log_string(method_path="com.car.colour.getColour(" + colour + ")", vin=vin))
+	append_to_log(colour_log_entry.get_log_string())
 
 
 @post("/DANGER/reset-log")
@@ -66,7 +75,7 @@ def reset_log():
 
 
 def append_to_log(log_str):
-	""" Appends the given string to the log file """
+	""" Appends the given string plus a newline to the log file """
 
 	with open(LOG_FILE_NAME, "a") as outfile:
 		outfile.write(log_str + "\n")

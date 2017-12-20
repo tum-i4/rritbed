@@ -18,7 +18,7 @@ LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
 
 @post("/log")
 def log():
-	""" Default log endpoint with no arguments """
+	""" Default log endpoint with no arguments """	
 
 	basic_log_entry = LogEntry(vin="", origin="com.status", appID="STATUS")
 
@@ -75,9 +75,9 @@ def reset_log():
 
 
 def get_time_string(time_unix):
-	""" Creates time string of the format '2017-12-20_18-08-25' """
+	""" Creates time string of the format '2017-12-20_18:08:25' """
 
-	return time.strftime("_%Y-%m-$d_%H-%M-%S", time.gmtime(time_unix))
+	return time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 
 
 

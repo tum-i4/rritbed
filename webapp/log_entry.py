@@ -9,48 +9,48 @@ class LogEntry(object):
 	""" Container class for log data """
 
 	log_entry = {
-		"origin" : "",          # Class name sending this log entry - some.java.method
-		"log_lib_version" : "", # Version of the logging library used for storing this event
-		"hub" : "EMEA",         # "Region" the server is used for: EMEA
-		"level" : "",           # INFO, DEBUG, ...
-		"import_timestamp" : "",# When was the log imported in kibana
-		"appID" : "",           # Name of the microservice using this
 		"vin" : "",             # Identifier of the car calling the microservice
-		"lib_topic" : "",       # Kibana topic name log was sent to
+		"origin" : "",          # Class name sending this log entry - some.java.method
+		"appID" : "",           # Name of the microservice using this
+		"level" : "",           # INFO, DEBUG, ...
 		"env" : "",             # PROD, INT, TEST
-		#"threadID" : "",        # Server worker pool thread id serving this request
 		"log_message" : "",
 		"transactionID" : "",   # UUID of the request made to the server
 		"logID" : "",           # UUID of this log entry
 		"userIDs" : "[null]",   # List of (always one?) ints or [null] in string
-		#"version" : "1",        # Internal kibana version - constant 1
 		"timeUTC" : "",         # When the logging event has happened
 		"timeUnix" : 0,         # !Assumption!: Same time as timeUTC
 		"context" : {
 			"str" : "",
 			"client" : "webapi",
-			"method" : ""        # method name - see class
+			"method" : ""       # method name - see class
 		}
+
+		#"hub" : "EMEA",         # "Region" the server is used for: EMEA
+		#"threadID" : "",        # Server worker pool thread id serving this request
+		#"import_timestamp" : "",# When was the log imported in kibana
+		#"log_lib_version" : "", # Version of the logging library used for storing this event
+		#"lib_topic" : "",       # Kibana topic name log was sent to
+		#"version" : "1",        # Internal kibana version - constant 1
 	}
 
-	def __init__(self, origin, log_lib_version, import_timestamp, appID,
-		vin, lib_topic, log_message, context, transactionID=None, logID=None,
-		level="DEBUG", env="TEST", userIDs="[null]", timeUnix=None):
+	def __init__(self, vin, origin, appID,
+		level="DEBUG", env="TEST", log_message="", userIDs="[null]", context=None,
+		transactionID=None, logID=None, timeUnix=None):
 		""" Ctor """
 
 		object.__init__(self)
 
-		self.log_entry.origin = origin
-		self.log_entry.log_lib_version = log_lib_version
-		self.log_entry.level = level
-		self.log_entry.import_timestamp = import_timestamp
-		self.log_entry.appID = appID
 		self.log_entry.vin = vin
-		self.log_entry.lib_topic = lib_topic
+		self.log_entry.origin = origin
+		self.log_entry.appID = appID
+		self.log_entry.level = level
 		self.log_entry.env = env
 		self.log_entry.log_message = log_message
 		self.log_entry.userIDs = userIDs
-		self.log_entry.context = context
+
+		if context is not None:
+			self.log_entry.context = context
 
 		self.log_entry.transactionID = self.set_or_generate_id(transactionID)
 		self.log_entry.logID = self.set_or_generate_id(logID)

@@ -62,7 +62,7 @@ class LogEntry(object):
 		""" Checks to see if the id is set, otherwise generates a new UUID """
 
 		if given_id is None:
-			return uuid.uuid4()
+			return uuid.uuid4().__str__()
 
 		return given_id
 

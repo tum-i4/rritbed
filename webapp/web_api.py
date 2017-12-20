@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 """ Web API """
 
-import random
+import time
+import datetime
 import os.path
 from bottle import post, run, template, request, BaseResponse
 
 from log_entry import LogEntry
 
+LOG_FOLDER = "log"
 LOG_FILE_NAME = "log"
+LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
 
 
 ### API endpoints ###
@@ -56,18 +59,25 @@ def log_colour():
 def reset_log():
 	""" Clears the log file """
 
-	if not os.path.isfile(LOG_FILE_NAME):
+	if not os.path.isfile(LOG_FILE_PATH):
 		return BaseResponse(body="Log file doesn't exist", status=200)
 
-	counter = 0
-	new_file_name = LOG_FILE_NAME + " (0)"
-	while os.path.isfile(new_file_name):
-		counter += 1
-		new_file_name = LOG_FILE_NAME + " ({})".format(counter)
+	time_unix = time.time()
+	new_file_name = LOG_FILE_PATH + "_until_" + get_time_string(time_unix)
 
-	os.rename(LOG_FILE_NAME, new_file_name)
+	while os.path.isfile(new_file_name):
+		time_unix += datetime.timedelta(seconds=1)
+		new_file_name = LOG_FILE_PATH + get_time_string(time_unix)
+
+	os.rename(LOG_FILE_PATH, new_file_name)
 
 	return BaseResponse(body="Successfully cleared the log file", status=200)
+
+
+def get_time_string(time_unix):
+	""" Creates time string of the format '2017-12-20_18-08-25' """
+
+	return time.strftime("_%Y-%m-$d_%H-%M-%S", time.gmtime(time_unix))
 
 
 
@@ -77,7 +87,7 @@ def reset_log():
 def append_to_log(log_str):
 	""" Appends the given string plus a newline to the log file """
 
-	with open(LOG_FILE_NAME, "a") as outfile:
+	with open(LOG_FILE_PATH, "a") as outfile:
 		outfile.write(log_str + "\n")
 	return
 

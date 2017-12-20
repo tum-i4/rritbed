@@ -75,7 +75,7 @@ class LogEntry(object):
 
 		time_utc_now = time.gmtime(time_unix)
 
-		self.log_entry["timeUnix"] = str(int(time_unix))
+		self.log_entry["timeUnix"] = int(time_unix)
 		self.log_entry["timeUTC"] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
 
 

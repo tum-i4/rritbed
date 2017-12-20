@@ -80,6 +80,6 @@ class LogEntry(object):
 
 
 	def get_log_string(self):
-		""" Creates a log string from this item's log data """
+		""" Creates a log string from this item's log data, sorted by key """
 
-		return json.dumps(self.log_entry)
+		return json.dumps(self.log_entry, sort_keys=True)

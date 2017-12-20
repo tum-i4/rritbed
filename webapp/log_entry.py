@@ -41,19 +41,19 @@ class LogEntry(object):
 
 		object.__init__(self)
 
-		self.log_entry.vin = vin
-		self.log_entry.origin = origin
-		self.log_entry.appID = appID
-		self.log_entry.level = level
-		self.log_entry.env = env
-		self.log_entry.log_message = log_message
-		self.log_entry.userIDs = userIDs
+		self.log_entry["vin"] = vin
+		self.log_entry["origin"] = origin
+		self.log_entry["appID"] = appID
+		self.log_entry["level"] = level
+		self.log_entry["env"] = env
+		self.log_entry["log_message"] = log_message
+		self.log_entry["userIDs"] = userIDs
 
 		if context is not None:
-			self.log_entry.context = context
+			self.log_entry["context"] = context
 
-		self.log_entry.transactionID = self.set_or_generate_id(transactionID)
-		self.log_entry.logID = self.set_or_generate_id(logID)
+		self.log_entry["transactionID"] = self.set_or_generate_id(transactionID)
+		self.log_entry["logID"] = self.set_or_generate_id(logID)
 
 		self.set_time(timeUnix)
 
@@ -75,8 +75,8 @@ class LogEntry(object):
 
 		time_utc_now = time.gmtime(time_unix)
 
-		self.log_entry.timeUnix = str(int(time_unix))
-		self.log_entry.timeUTC = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
+		self.log_entry["timeUnix"] = str(int(time_unix))
+		self.log_entry["timeUTC"] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
 
 
 	def get_log_string(self):

@@ -4,7 +4,7 @@
 import time
 import datetime
 import os.path
-from bottle import post, run, template, request, BaseResponse
+from bottle import post, run, request, BaseResponse
 
 from log_entry import LogEntry
 
@@ -18,11 +18,11 @@ LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
 
 @post("/log")
 def log():
-	""" Default log endpoint with no arguments """	
+	""" Default log endpoint with no arguments """
 
 	basic_log_entry = LogEntry(vin="", origin="com.status", appID="STATUS")
 
-	append_to_log(basic_log_entry.get_log_string())
+	_append_to_log(basic_log_entry.get_log_string())
 	return
 
 
@@ -37,7 +37,7 @@ def log_num(num):
 		appID="GETVINS",
 		log_message="getVins returned {} vins".format(num))
 
-	append_to_log(numbered_log_entry.get_log_string())
+	_append_to_log(numbered_log_entry.get_log_string())
 
 
 @post("/log/colour")
@@ -52,7 +52,7 @@ def log_colour():
 		log_message="Successfully registered colour " + request.params.colour
 	)
 
-	append_to_log(colour_log_entry.get_log_string())
+	_append_to_log(colour_log_entry.get_log_string())
 
 
 @post("/DANGER/reset-log")
@@ -63,28 +63,28 @@ def reset_log():
 		return BaseResponse(body="Log file doesn't exist", status=200)
 
 	time_unix = time.time()
-	new_file_name = LOG_FILE_PATH + "_until_" + get_time_string(time_unix)
+	new_file_name = LOG_FILE_PATH + "_until_" + _get_time_string(time_unix)
 
 	while os.path.isfile(new_file_name):
 		time_unix += datetime.timedelta(seconds=1)
-		new_file_name = LOG_FILE_PATH + get_time_string(time_unix)
+		new_file_name = LOG_FILE_PATH + _get_time_string(time_unix)
 
 	os.rename(LOG_FILE_PATH, new_file_name)
 
 	return BaseResponse(body="Successfully cleared the log file", status=200)
 
 
-def get_time_string(time_unix):
+
+### Helper methods ###
+
+
+def _get_time_string(time_unix):
 	""" Creates time string of the format '2017-12-20_18:08:25' """
 
 	return time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 
 
-
-### Helper methods ###
-
-
-def append_to_log(log_str):
+def _append_to_log(log_str):
 	""" Appends the given string plus a newline to the log file """
 
 	with open(LOG_FILE_PATH, "a") as outfile:

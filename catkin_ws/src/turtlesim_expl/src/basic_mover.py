@@ -2,9 +2,7 @@
 """ Basic mover """
 
 import os
-import time
 import rospy
-from geometry_msgs.msg import Twist
 
 import move_helper
 from turtle_interface import TurtleInterface
@@ -20,8 +18,8 @@ class BasicMover(object):
 		""" Ctor """
 
 		object.__init__(self)
-		self.turtle_if = TurtleInterface()
 
+		self.turtle_if = TurtleInterface()
 		self.rate_limiter = rospy.Rate(2)
 
 
@@ -73,11 +71,10 @@ class BasicMover(object):
 
 			# We have read the velocity and can now publish it
 			self.turtle_if.publish(vel_msg)
-
 			self.rate_limiter.sleep()
 
 		# Make sure to stop robot after the program has been cancelled
-		self.turtle_if.publish(move_helper.get_zero_twist())
+		self.turtle_if.stop_turtle()
 
 
 if __name__ == "__main__":

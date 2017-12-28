@@ -1,49 +1,60 @@
 #!/usr/bin/env python
-""" Basic mover """
+""" Random mover """
 
 import random
-import time
 import rospy
-from geometry_msgs.msg import Twist
 
 import move_helper
+from turtle_interface import TurtleInterface
 
 PI = 3.1415926535897
 
-def rand_move():
-	""" Move robot randomly """
 
-	# Start a new node
-	rospy.init_node("robot_mover", anonymous=True)
-	velocity_publisher = rospy.Publisher("turtle1/cmd_vel", Twist, queue_size=10)
+class RandomMover(object):
+	""" Random mover based on random.random """
 
-	rospy.loginfo("Starting random walker")
+	turtle_if = None
+	rate_limiter = None
 
-	# While loop to assure that Ctrl-C can exit the app
-	while not rospy.is_shutdown():
-		vel_msg = move_helper.get_zero_twist()
+	def __init__(self):
+		""" Ctor """
 
-		# Decide if the turtle walks or turns
-		turtle_walks = random.choice([True, False])
+		object.__init__(self)
 
-		# Velocity should be between -10 and 10, linear x (walk) or angular z (turn)
-		veloc_value = random.choice(range(-10, 11))
+		self.turtle_if = TurtleInterface()
+		self.rate_limiter = rospy.Rate(2)
 
-		if turtle_walks:
-			vel_msg.linear.x = veloc_value
-		else:
-			vel_msg.angular.z = veloc_value
 
-		velocity_publisher.publish(vel_msg)
-		# TODO: Try cleaner solution
-		time.sleep(0.5)
+	def move(self):
+		""" Move robot randomly """
 
-    # Make sure to stop robot after the program has been cancelled
-	velocity_publisher.publish(move_helper.get_zero_twist())
+		rospy.loginfo("Starting random walker")
+
+		# While loop to assure that Ctrl-C can exit the app
+		while not rospy.is_shutdown():
+			vel_msg = move_helper.get_zero_twist()
+
+			# Decide if the turtle walks or turns
+			turtle_walks = random.choice([True, False])
+
+			# Velocity should be between -10 and 10, linear x (walk) or angular z (turn)
+			veloc_value = random.choice(range(-10, 11))
+
+			if turtle_walks:
+				vel_msg.linear.x = veloc_value
+			else:
+				vel_msg.angular.z = veloc_value
+
+			self.turtle_if.publish(vel_msg)
+			self.rate_limiter.sleep()
+
+		# Make sure to stop robot after the program has been cancelled
+		self.turtle_if.publish(move_helper.get_zero_twist())
 
 
 if __name__ == "__main__":
 	try:
-		rand_move()
+		T_MOVER = RandomMover()
+		T_MOVER.move()
 	except rospy.ROSInterruptException:
 		pass

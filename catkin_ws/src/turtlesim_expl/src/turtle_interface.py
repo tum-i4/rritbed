@@ -4,6 +4,8 @@
 import rospy
 from geometry_msgs.msg import Twist
 
+import move_helper
+
 class TurtleInterface(object):
 	""" Direct interface class for moving a turtle """
 
@@ -26,3 +28,8 @@ class TurtleInterface(object):
 	def publish(self, vel_msg):
 		""" Publish velocity to turtle """
 		self.velocity_publisher.publish(vel_msg)
+
+
+	def stop_turtle(self):
+		""" Convenience method for stopping turtle """
+		self.publish(move_helper.get_zero_twist())

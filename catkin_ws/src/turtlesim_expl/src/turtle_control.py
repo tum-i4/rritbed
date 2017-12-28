@@ -21,9 +21,11 @@ class TurtleControl(object):
 
 		object.__init__(self)
 
+		rospy.init_node("turtle_control", anonymous=True)
+
 		assert(issubclass(move_strategy, MoveStrategy))
 
-		self.move_strategy = move_strategy
+		self.move_strategy = move_strategy()
 		self.rate_limiter = rospy.Rate(rate_in_hz)
 		self.turtle_path = turtle_path
 
@@ -32,6 +34,8 @@ class TurtleControl(object):
 
 
 	def run(self):
+		""" Generate new velocity from movement strategy until exited """
+
 		# While loop to assure that Ctrl-C can exit the app
 		while not rospy.is_shutdown():
 			vel_msg = self.move_strategy.get_next()

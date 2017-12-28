@@ -12,7 +12,6 @@ from turtle_control import TurtleControl
 class RandomMoveStrategy(MoveStrategy):
 	""" Random move strategy based on random.random """
 
-
 	def __init__(self):
 		""" Ctor """
 		MoveStrategy.__init__(self)

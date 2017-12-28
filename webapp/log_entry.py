@@ -53,7 +53,7 @@ class LogEntry(object):
 	}
 
 
-	def __init__(self, vin, origin, appID,
+	def __init__(self, vin, origin, log_lib_version, appID,
 		level="DEBUG", env="TEST", log_message="", userIDs="[null]", context=None,
 		transactionID=None, logID=None, timeUnix=None):
 		""" Ctor """

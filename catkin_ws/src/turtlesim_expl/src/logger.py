@@ -4,10 +4,12 @@
 import requests
 import rospy
 from turtlesim.msg import Color
+from std_msgs.msg import Float32
 
 URL = "http://localhost:5000"
 PATH = "/log"
 
+GAUSSIAN_PATH = "/gaussian_generator"
 COLOUR_1_PATH = "/ecu1/turtle1/color_sensor"
 COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
 
@@ -32,8 +34,19 @@ class Logger(object):
 
 		rospy.init_node('logger', anonymous=True)
 
+		rospy.Subscriber(GAUSSIAN_PATH, Float32, self.log_gaussian)
 		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour_1)
 		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour_2)
+
+
+	def log_gaussian(self, data):
+		""" Logging Gaussian value """
+
+		# TODO: Use ROS master specific VIN
+		request = self._data[0]
+		request["gauss_value"] = data.data
+
+		self.send_log_request("gauss", request)
 
 
 	def log_colour_1(self, data):

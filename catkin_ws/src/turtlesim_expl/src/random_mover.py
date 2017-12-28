@@ -12,9 +12,15 @@ from turtle_control import TurtleControl
 class RandomMoveStrategy(MoveStrategy):
 	""" Random move strategy based on random.random """
 
+	_rand_gen = random.Random()
+
+
 	def __init__(self):
 		""" Ctor """
+
 		MoveStrategy.__init__(self)
+
+		self._rand_gen.seed(31415926535897)
 
 
 	def get_next(self):
@@ -23,10 +29,10 @@ class RandomMoveStrategy(MoveStrategy):
 		vel_msg = move_helper.get_zero_twist()
 
 		# Decide if the turtle walks or turns
-		turtle_walks = random.choice([True, False])
+		turtle_walks = self._rand_gen.choice([True, False])
 
 		# Velocity should be between -10 and 10, linear x (walk) or angular z (turn)
-		veloc_value = random.choice(range(-10, 11))
+		veloc_value = self._rand_gen.choice(range(-10, 11))
 
 		if turtle_walks:
 			vel_msg.linear.x = veloc_value

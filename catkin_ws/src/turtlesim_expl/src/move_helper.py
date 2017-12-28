@@ -3,7 +3,6 @@
 
 from geometry_msgs.msg import Twist
 
-PI = 3.1415926535897
 BASE_PATH = "/tmp/ros"
 
 

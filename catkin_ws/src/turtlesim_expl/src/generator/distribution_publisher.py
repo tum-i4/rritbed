@@ -27,12 +27,37 @@ class DistributionPublisher(object):
 	_gaussian_str = "gaussian"
 	_gumbel_str = "gumbel"
 	_laplace_str = "laplace"
+	_logistic_str = "logistic"
+	_pareto_str = "pareto"
+	_rayleigh_str = "rayleigh"
+	_uniform_str = "uniform"
+	_vonmises_str = "vonmises"
+	_wald_str = "wald"
+	_weibull_str = "weibull"
+	_zipf_str = "zipf"
 
 	# pylint: disable-msg=E1101
 	_generators = {
+		# Gaussian, Gumbel, Laplace: loc and scale arbitrary
 		_gaussian_str : DistributionGenerator(np.random.normal, _gaussian_str),
 		_gumbel_str : DistributionGenerator(np.random.gumbel, _gumbel_str),
-		_laplace_str : DistributionGenerator(np.random.laplace, _laplace_str)
+		_laplace_str : DistributionGenerator(np.random.laplace, _laplace_str),
+		# Logistic: loc arbitrary, scale > 0
+		_logistic_str : DistributionGenerator(np.random.logistic, _logistic_str),
+		# Pareto: a(lpha) > 0
+		_pareto_str : DistributionGenerator(np.random.pareto, _pareto_str, 1, [1.0]),
+		# Rayleigh: scale > 0
+		_rayleigh_str : DistributionGenerator(np.random.rayleigh, _rayleigh_str, 1, [1.0]),
+		# Uniform: low < high
+		_uniform_str : DistributionGenerator(np.random.uniform, _uniform_str),
+		# Von Mises: mu arbitrary, kappa >= 0
+		_vonmises_str : DistributionGenerator(np.random.vonmises, _vonmises_str),
+		# Wald: mean > 0, scale > 0
+		_wald_str : DistributionGenerator(np.random.wald, _wald_str, 2, [1.0, 1.0]),
+		# Weibull: a > 0
+		_weibull_str : DistributionGenerator(np.random.weibull, _weibull_str, 1, [5.0]),
+		# Zipf: a > 1
+		_zipf_str : DistributionGenerator(np.random.zipf, _zipf_str, 1, [2.0])
 	}
 
 
@@ -66,12 +91,12 @@ class DistributionPublisher(object):
 		# Remaining in args are the arguments given to the sub-routine
 		# pylint: disable-msg=W1202
 		if len(args) is not generator.args_count:
-			rospy.loginfo("Initialising with default values {}".format(generator.default_values))
 			self.values = generator.default_values
+			rospy.loginfo("Initialising with default values {}".format(self._values))
 			return
 
-		rospy.loginfo("Initialising with values {}".format(args))
 		self._values = [float(x) for x in args]
+		rospy.loginfo("Initialising with values {}".format(self._values))
 
 
 	def run(self):

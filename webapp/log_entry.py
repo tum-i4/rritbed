@@ -28,7 +28,8 @@ class LogEntry(object):
 	log_entry = {
 		vin_field : "",             # Identifier of the car calling the microservice
 		origin_field : "",          # Class name sending this log entry - some.java.method
-		log_lib_version_field : "", # Version of the logging library used for storing this event
+		log_lib_version_field : "", # Version of the logging library used for storing this event -
+									# each microservice has their own
 		appID_field : "",           # Name of the microservice using this
 		level_field : "",           # INFO, DEBUG, ...
 		env_field : "",             # PROD, INT, TEST
@@ -37,7 +38,7 @@ class LogEntry(object):
 		logID_field : "",           # UUID of this log entry
 		userIDs_field : "[null]",   # List of (always one?) ints or [null] in string
 		timeUTC_field : "",         # When the logging event has happened
-		timeUnix_field : 0,         # !Assumption!: Same time as timeUTC
+		timeUnix_field : 0,         # !Caution! At COMPANY not the same time as timeUTC
 		context_field : {
 			str_field : "",
 			client_field : "webapi",

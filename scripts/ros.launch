@@ -13,5 +13,5 @@
   <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
 
   <node pkg="rosbag" type="record" name="rosbag_recorder"
-    args="-a -o /ros/bags/recording-all"/>
+    args="-a -o /tmp/ros/bags/recording-all"/>
 </launch>

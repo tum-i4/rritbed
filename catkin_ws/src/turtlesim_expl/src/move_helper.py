@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 """ Move helper functions """
 
-import os
-import time
-import rospy
 from geometry_msgs.msg import Twist
 
 PI = 3.1415926535897
-BASE_PATH = "/ros"
+BASE_PATH = "/tmp/ros"
 
 
 def get_zero_twist():

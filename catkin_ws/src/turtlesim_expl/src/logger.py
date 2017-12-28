@@ -6,6 +6,7 @@ import rospy
 from turtlesim.msg import Color
 
 URL = "http://localhost:5000"
+PATH = "/log"
 
 COLOUR_1_PATH = "/ecu1/turtle1/color_sensor"
 COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
@@ -14,12 +15,14 @@ COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
 class Logger(object):
 	""" Logger class """
 
-	data = [
-		{"vin": "A192738"},
-		{"vin": "A232758"}
+	_vin_field = "vin"
+
+	_data = [
+		{_vin_field: "A192738"},
+		{_vin_field: "A232758"}
 	]
 
-	last_colour = [
+	_last_colour = [
 		None,
 		None
 	]
@@ -46,15 +49,20 @@ class Logger(object):
 	def log_colour(self, log_data, index):
 		""" Colour logging """
 
-		if self.last_colour[index] == log_data:
+		if self._last_colour[index] == log_data:
 			return
 
-		self.last_colour[index] = log_data
+		self._last_colour[index] = log_data
 
-		request = self.data[index]
+		request = self._data[index]
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 
-		requests.post(URL + "/log/colour", data=request)
+		self.send_log_request("colour", request)
+
+
+	def send_log_request(self, log_method, data):
+		""" Send request to specified logging endpoint with given data """
+		requests.post(URL + PATH + "/" + log_method, data)
 
 
 

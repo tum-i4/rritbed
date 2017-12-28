@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ Web API """
 
+# pylint: disable-msg=E1101
+
 import time
 import datetime
 import os.path
@@ -20,10 +22,46 @@ LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
 def log():
 	""" Default log endpoint with no arguments """
 
-	basic_log_entry = LogEntry(vin="", origin="com.status", appID="STATUS")
+	basic_log_entry = LogEntry(vin="", origin="com.status", log_lib_version="5.6.1", appID="STATUS")
 
 	_append_to_log(basic_log_entry.get_log_string())
 	return
+
+
+@post("/log/gauss")
+def log_gauss():
+	""" Log endpoint for Gaussian generator """
+
+	_log_num("Gauss", request.params.gauss)
+
+
+def _log_num(name, num):
+	""" Log the given number under the given method name """
+
+	number_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin="com.api.registerNumber",
+		log_lib_version="5.3.2",
+		appID="NUM",
+		log_message="Got number {} in registerNumber".format(num)
+	)
+
+	_append_to_log(number_log_entry.get_log_string())
+
+
+@post("/log/colour")
+def log_colour():
+	""" Log endpoint with colour input """
+
+	colour_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin="com.api.web.callColour",
+		log_lib_version="5.6.1",
+		appID="COLOUR",
+		log_message="Successfully registered colour " + request.params.colour
+	)
+
+	_append_to_log(colour_log_entry.get_log_string())
 
 
 @post("/log/get-vins/<num:int>")
@@ -34,25 +72,11 @@ def log_num(num):
 	numbered_log_entry = LogEntry(
 		vin=request.params.vin,
 		origin="com.api.web.getVins",
+		log_lib_version="5.3.2",
 		appID="GETVINS",
 		log_message="getVins returned {} vins".format(num))
 
 	_append_to_log(numbered_log_entry.get_log_string())
-
-
-@post("/log/colour")
-def log_colour():
-	""" Log endpoint with colour input """
-
-	# pylint: disable-msg=E1101
-	colour_log_entry = LogEntry(
-		vin=request.params.vin,
-		origin="com.api.web.callColour",
-		appID="COLOUR",
-		log_message="Successfully registered colour " + request.params.colour
-	)
-
-	_append_to_log(colour_log_entry.get_log_string())
 
 
 @post("/DANGER/reset-log")

@@ -28,22 +28,23 @@ def log():
 	return
 
 
-@post("/log/gauss")
-def log_gauss():
-	""" Log endpoint for Gaussian generator """
-
-	_log_num("Gauss", request.params.gauss)
+@post("/log/data/<generator:re:[a-z]")
+def log_data(generator):
+	""" Log endpoint for data generator """
+	_log_num(generator, request.params.generated)
 
 
 def _log_num(name, num):
 	""" Log the given number under the given method name """
 
+	method_name = "register" + name.capitalize()
+
 	number_log_entry = LogEntry(
 		vin=request.params.vin,
-		origin="com.api.registerNumber",
+		origin="com.api." + method_name,
 		log_lib_version="5.3.2",
-		appID="NUM",
-		log_message="Got number {} in registerNumber".format(num)
+		appID=name.upper(),
+		log_message="Got {} in {}".format(num, method_name)
 	)
 
 	_append_to_log(number_log_entry.get_log_string())

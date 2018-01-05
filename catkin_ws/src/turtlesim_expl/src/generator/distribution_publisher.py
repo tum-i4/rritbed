@@ -2,7 +2,17 @@
 """
 Generate data based on a distribution and publish it to ROS
 Possible arguments:
-gauss [loc] [scale] : Gaussian distribution
+gaussian [loc] [scale] : Normal distribution
+gumbel [loc] [scale]
+laplace [loc] [scale]
+logistic [loc] [scale] : Logistic distribution - scale > 0
+pareto [alpha]         : Pareto distribution - alpha > 0
+rayleigh [scale]       : Rayleigh distribution - scale >= 0
+uniform [low] [high]   : Uniform distribution - low < high
+vonmises [mu] [kappa]  : Von Mises distribution - kappa >= 0
+wald [mean] [scale]    : Wald distribution - mean > 0, scale >= 0
+weibull [a]            : Weibull distribution - a > 0
+zipf [a]               : Zipf distribution - a > 1
 """
 
 import sys
@@ -73,12 +83,12 @@ class DistributionPublisher(object):
 		del args[0]
 
 		if len(args) is 0:
-			raise("Sub-routine name not given")
+			raise Exception("Sub-routine name not given")
 
 		try:
 			generator = self._generators[args[0]]
 		except KeyError:
-			raise("Could not find specified sub-routine " + args[0])
+			raise Exception("Could not find specified sub-routine " + args[0])
 
 		self._sub_routine = args[0]
 

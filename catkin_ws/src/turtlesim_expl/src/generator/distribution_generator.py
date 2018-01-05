@@ -36,11 +36,11 @@ class DistributionGenerator(object):
 			values = self.default_values
 
 		if len(values) is not self.args_count:
-			raise("Invalid number of values given")
+			raise Exception("Invalid number of values given")
 
 		if self.args_count is 1:
 			return self._method(values[0])
 		elif self.args_count is 2:
 			return self._method(values[0], values[1])
 		else:
-			raise("IMPLEMENTATION MISSING")
+			raise Exception("IMPLEMENTATION MISSING")

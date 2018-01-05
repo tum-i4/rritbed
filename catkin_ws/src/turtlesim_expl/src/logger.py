@@ -60,9 +60,9 @@ class Logger(object):
 
 		# TODO: Use ROS master / namespace specific VIN
 		request = self._data[0]
-		request[generator_name + "_value"] = data.data
+		request["generated"] = data.data
 
-		self.send_log_request(generator_name, request)
+		self.send_log_request("data/" + generator_name, request)
 
 
 	def log_colour_1(self, data):

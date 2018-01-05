@@ -46,6 +46,8 @@ class DistributionPublisher(object):
 	_weibull_str = "weibull"
 	_zipf_str = "zipf"
 
+	_file_based_str = "file"
+
 	# pylint: disable-msg=E1101
 	_generators = {
 		# Gaussian, Gumbel, Laplace: loc and scale arbitrary
@@ -85,31 +87,54 @@ class DistributionPublisher(object):
 		if len(args) is 0:
 			raise Exception("Sub-routine name not given")
 
-		try:
-			generator = self._generators[args[0]]
-		except KeyError:
-			raise Exception("Could not find specified sub-routine " + args[0])
+		if args[0] is self._file_based_str:
+			self.setup_reader(args.copy())
+		else:
+			self.setup_generator(args.copy())
 
-		self._sub_routine = args[0]
+
+	def setup_reader(self, my_args):
+		"""
+		Setup for file-based publishing
+		my_args: Arguments trimmed to <file_name>
+		"""
+		if len(my_args) is 0:
+			raise Exception("File name not given")
+		
+		pass
+
+
+	def setup_generator(self, my_args):
+		"""
+		Setup for data generation
+		my_args: Arguments trimmed to <generator> [default arg] ([default arg 2] ...)
+		"""
+
+		try:
+			generator = self._generators[my_args[0]]
+		except KeyError:
+			raise Exception("Could not find specified sub-routine " + my_args[0])
+
+		self._sub_routine = my_args[0]
 
 		# Delete sub-routine name from arguments
-		del args[0]
+		del my_args[0]
 
 		rospy.init_node(generator.name, anonymous=True)
 		self._publisher = rospy.Publisher(generator.name, Float32, generator.queue_size)
 
 		# Remaining in args are the arguments given to the sub-routine
 		# pylint: disable-msg=W1202
-		if len(args) is not generator.args_count:
+		if len(my_args) is not generator.args_count:
 			self.values = generator.default_values
 			rospy.loginfo("Initialising with default values {}".format(self._values))
 			return
 
-		self._values = [float(x) for x in args]
+		self._values = [float(x) for x in my_args]
 		rospy.loginfo("Initialising with values {}".format(self._values))
 
 
-	def run(self):
+	def generate(self):
 		""" Generate data until node is stopped """
 
 		rate_limiter = rospy.Rate(self._generators[self._sub_routine].rate_in_hz)
@@ -125,6 +150,6 @@ class DistributionPublisher(object):
 if __name__ == "__main__":
 	try:
 		PUB = DistributionPublisher()
-		PUB.run()
+		PUB.generate()
 	except rospy.ROSInterruptException:
 		pass

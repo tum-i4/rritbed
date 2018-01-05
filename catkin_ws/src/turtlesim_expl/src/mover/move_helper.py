@@ -3,8 +3,6 @@
 
 from geometry_msgs.msg import Twist
 
-BASE_PATH = "/tmp/ros"
-
 
 def get_zero_twist():
 	""" Return new twist initialised to zero """

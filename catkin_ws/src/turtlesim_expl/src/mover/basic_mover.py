@@ -8,7 +8,7 @@ import move_helper
 from move_strategy import MoveStrategy
 from turtle_control import TurtleControl
 
-from util import paths_and_constants
+BASE_PATH = "/tmp/ros"
 
 
 class BasicMoveStrategy(MoveStrategy):
@@ -27,7 +27,7 @@ class BasicMoveStrategy(MoveStrategy):
 		""" Get next velocity from movement file """
 
 		# Used to use os.getcwd()
-		self._file_path = os.path.join(paths_and_constants.BASE_PATH, "move")
+		self._file_path = os.path.join(BASE_PATH, "move")
 		if not os.path.isfile(self._file_path):
 			rospy.logwarn("No movement file found in" + self._file_path)
 			return None

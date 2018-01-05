@@ -22,6 +22,8 @@ from std_msgs.msg import Float32
 
 from distribution_generator import DistributionGenerator
 
+BASE_PATH = "/tmp/ros"
+
 
 class DistributionPublisher(object):
 	""" Data generation class based on distribution """
@@ -88,9 +90,9 @@ class DistributionPublisher(object):
 			raise Exception("Sub-routine name not given")
 
 		if args[0] is self._file_based_str:
-			self.setup_reader(args.copy())
+			self.setup_reader(args)
 		else:
-			self.setup_generator(args.copy())
+			self.setup_generator(args)
 
 
 	def setup_reader(self, my_args):
@@ -100,6 +102,11 @@ class DistributionPublisher(object):
 		"""
 		if len(my_args) is 0:
 			raise Exception("File name not given")
+
+		file_path = my_args[0]
+
+		if not file_path.contains(os.sep):
+			file_path = os.path.join(BASE_PATH, "data", file_path)
 		
 		pass
 

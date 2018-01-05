@@ -9,7 +9,20 @@ from std_msgs.msg import Float32
 URL = "http://localhost:5000"
 PATH = "/log"
 
-GAUSSIAN_PATH = "/gaussian_generator"
+GAUSSIAN = "gaussian"
+GUMBEL = "gumbel"
+LAPLACE = "laplace"
+LOGISTIC = "logistic"
+PARETO = "pareto"
+RAYLEIGH = "rayleigh"
+UNIFORM = "uniform"
+VONMISES = "vonmises"
+WALD = "wald"
+WEIBULL = "weibull"
+ZIPF = "zipf"
+DATA_GENERATOR_NAMES = [
+	GAUSSIAN, GUMBEL, LAPLACE, LOGISTIC, PARETO, RAYLEIGH, UNIFORM, VONMISES, WALD, WEIBULL, ZIPF]
+
 COLOUR_1_PATH = "/ecu1/turtle1/color_sensor"
 COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
 
@@ -34,19 +47,22 @@ class Logger(object):
 
 		rospy.init_node('logger', anonymous=True)
 
-		rospy.Subscriber(GAUSSIAN_PATH, Float32, self.log_gaussian)
+		# Data generation
+		for name in DATA_GENERATOR_NAMES:
+			rospy.Subscriber("/" + name, Float32, self.log_generated_data, name)
+
 		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour_1)
 		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour_2)
 
 
-	def log_gaussian(self, data):
-		""" Logging Gaussian value """
+	def log_generated_data(self, data, generator_name):
+		""" Logging generated data value """
 
-		# TODO: Use ROS master specific VIN
+		# TODO: Use ROS master / namespace specific VIN
 		request = self._data[0]
-		request["gauss_value"] = data.data
+		request[generator_name + "_value"] = data.data
 
-		self.send_log_request("gauss", request)
+		self.send_log_request(generator_name, request)
 
 
 	def log_colour_1(self, data):

@@ -44,8 +44,7 @@ class DistributionPublisher(object):
 
 	_sub_routine = ""
 
-	_generator = None
-	_values = []
+	_generator_arguments = []
 
 
 	_gaussian_str = "gaussian"
@@ -111,7 +110,7 @@ class DistributionPublisher(object):
 			name += "_" + args[0]
 		else:
 			self._setup_generator(args)
-			queue_size = self._generator.queue_size
+			queue_size = self._generators[self._sub_routine].queue_size
 
 		rospy.init_node(name, anonymous=True)
 		self._publisher = rospy.Publisher(name, Float32, queue_size=queue_size)
@@ -175,12 +174,12 @@ class DistributionPublisher(object):
 		# Remaining in args are the arguments given to the sub-routine
 		# pylint: disable-msg=W1202
 		if len(my_args) != generator.args_count:
-			self._values = generator.default_values
-			rospy.loginfo("Initialising with default values {}".format(self._values))
+			self._generator_arguments = generator.default_values
+			rospy.loginfo("Initialising with default values {}".format(self._generator_arguments))
 			return
 
-		self._values = [float(x) for x in my_args]
-		rospy.loginfo("Initialising with values {}".format(self._values))
+		self._generator_arguments = [float(x) for x in my_args]
+		rospy.loginfo("Initialising with values {}".format(self._generator_arguments))
 
 
 	def run(self):

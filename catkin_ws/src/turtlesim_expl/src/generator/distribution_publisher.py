@@ -41,7 +41,6 @@ class DistributionPublisher(object):
 
 	_file_based = False
 
-	_file_path = ""
 	_file_contents = []
 	_current_line = 0
 	_repeat_file = False
@@ -111,7 +110,7 @@ class DistributionPublisher(object):
 
 		if args[0] == self._file_based_str:
 			self._setup_reader(args)
-			name += "_" + args[0]
+			name += "_" + args[1]
 		else:
 			self._setup_generator(args)
 			queue_size = self._generators[self._sub_routine].queue_size
@@ -126,36 +125,33 @@ class DistributionPublisher(object):
 		my_args: Arguments trimmed to <file_name> [-r]
 		"""
 
-		# Delete "file" from arguments
-		del(my_args[0])
-
-		if not my_args:
+		if len(my_args) == 1:
 			raise Exception("No file name given")
 
-		if len(my_args) > 2:
-			raise Exception("Too many arguments supplied: {}".format(my_args))
+		if len(my_args) > 3:
+			raise Exception("Too many arguments supplied: {}".format(my_args[1:]))
 
 		self._file_based = True
 
 		# File path argument
-		self._file_path = my_args[0]
+		file_path = my_args[1]
 
 		# Either a full path was given (contains sep), otherwise the name is appended to the default path
-		if os.sep not in self._file_path:
-			self._file_path = os.path.join(self._base_path_expanded, "data", self._file_path)
+		if os.sep not in file_path:
+			file_path = os.path.join(self._base_path_expanded, "data", file_path)
 
-		if not os.path.isfile(self._file_path):
-			raise Exception("No file found at " + self._file_path)
+		if not os.path.isfile(file_path):
+			raise Exception("No file found at " + file_path)
 
 		try:
-			file_reader = open(self._file_path)
+			file_reader = open(file_path)
 			self._file_contents = file_reader.readlines()
 			file_reader.close()
 		except IOError:
-			raise Exception("Couldn't read file " + self._file_path)
+			raise Exception("Couldn't read file " + file_path)
 
 		# Repeat file argument
-		if len(my_args) > 1 and my_args[1] == "-r":
+		if len(my_args) > 2 and my_args[2] == "-r":
 			self._repeat_file = True
 
 
@@ -171,18 +167,15 @@ class DistributionPublisher(object):
 			raise Exception("Could not find specified sub-routine " + my_args[0])
 
 		self._sub_routine = my_args[0]
+		generator_arguments = my_args[1:]
 
-		# Delete sub-routine name from arguments
-		del my_args[0]
-
-		# Remaining in args are the arguments given to the sub-routine
 		# pylint: disable-msg=W1202
-		if len(my_args) != generator.args_count:
+		if len(generator_arguments) != generator.args_count:
 			self._generator_arguments = generator.default_values
 			rospy.loginfo("Initialising with default values {}".format(self._generator_arguments))
 			return
 
-		self._generator_arguments = [float(x) for x in my_args]
+		self._generator_arguments = [float(x) for x in generator_arguments]
 		rospy.loginfo("Initialising with values {}".format(self._generator_arguments))
 
 

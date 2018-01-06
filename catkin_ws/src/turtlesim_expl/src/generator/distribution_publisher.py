@@ -220,7 +220,9 @@ class DistributionPublisher(object):
 				rospy.loginfo("End of data file reached")
 				return None
 
-		# TODO: Functionality
+		next_num = float(self._file_contents[self._current_line])
+		self._current_line += 1
+		return next_num
 
 
 	def _generate(self):

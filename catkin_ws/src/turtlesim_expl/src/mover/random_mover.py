@@ -38,7 +38,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _get_seed(self, args):
-		""" Get the seed from the supplied arguments (set None if no arguments are given) """
+		""" Get the seed from the supplied arguments (return None if no arguments are given) """
 
 		if not args:
 			return None

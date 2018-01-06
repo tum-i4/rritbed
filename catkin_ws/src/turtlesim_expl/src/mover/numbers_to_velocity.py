@@ -66,7 +66,7 @@ class NumbersToVelocity(object):
 			self._input_topic,
 			self._output_namespace,
 			self._turtle_name,
-			self._topic_type)
+			self._topic_type.__name__)
 
 		# Keep this node from exiting until it's stopped
 		rospy.spin()

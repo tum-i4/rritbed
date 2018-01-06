@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-""" Random move strategy """
+"""
+Random move strategy
+Possible arguments:
+-pi     : Use 3.14... as seed
+-pi1000 : use 314... as seed
+[seed]  : use given value (must be valid float or int) as seed
+"""
 
 import sys
 import random

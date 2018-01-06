@@ -129,7 +129,7 @@ class DistributionPublisher(object):
 			raise Exception("No file name given")
 
 		if len(my_args) > 3:
-			raise Exception("Too many arguments supplied: %s", my_args[1:])
+			raise Exception("Too many arguments supplied: {}".format(my_args[1:]))
 
 		self._file_based = True
 
@@ -141,14 +141,14 @@ class DistributionPublisher(object):
 			file_path = os.path.join(self._base_path_expanded, "data", file_path)
 
 		if not os.path.isfile(file_path):
-			raise Exception("No file found at %s", file_path)
+			raise Exception("No file found at {}".format(file_path))
 
 		try:
 			file_reader = open(file_path)
 			self._file_contents = file_reader.readlines()
 			file_reader.close()
 		except IOError:
-			raise Exception("Couldn't read file %s", file_path)
+			raise Exception("Couldn't read file {}".format(file_path))
 
 		# Repeat file argument
 		if len(my_args) > 2 and my_args[2] == "-r":
@@ -164,7 +164,7 @@ class DistributionPublisher(object):
 		try:
 			generator = self._generators[my_args[0]]
 		except KeyError:
-			raise Exception("Could not find specified sub-routine %s", my_args[0])
+			raise Exception("Could not find specified sub-routine {}".format(my_args[0]))
 
 		self._sub_routine = my_args[0]
 		generator_arguments = my_args[1:]

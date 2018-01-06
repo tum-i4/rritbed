@@ -103,10 +103,18 @@ class DistributionPublisher(object):
 		if not args:
 			raise Exception("Sub-routine name not given")
 
+		name = args[0]
+		queue_size = 10
+
 		if args[0] == self._file_based_str:
 			self._setup_reader(args)
+			name += "_" + args[0]
 		else:
 			self._setup_generator(args)
+			queue_size = self._generator.queue_size
+
+		rospy.init_node(name, anonymous=True)
+		self._publisher = rospy.Publisher(name, Float32, queue_size=queue_size)
 
 
 	def _setup_reader(self, my_args):
@@ -134,7 +142,7 @@ class DistributionPublisher(object):
 			self._file_path = os.path.join(self._base_path_expanded, "data", self._file_path)
 
 		if not os.path.isfile(self._file_path):
-			raise Exception("No file found at" + self._file_path)
+			raise Exception("No file found at " + self._file_path)
 
 		try:
 			file_reader = open(self._file_path)
@@ -163,9 +171,6 @@ class DistributionPublisher(object):
 
 		# Delete sub-routine name from arguments
 		del my_args[0]
-
-		rospy.init_node(generator.name, anonymous=True)
-		self._publisher = rospy.Publisher(generator.name, Float32, generator.queue_size)
 
 		# Remaining in args are the arguments given to the sub-routine
 		# pylint: disable-msg=W1202
@@ -215,11 +220,12 @@ class DistributionPublisher(object):
 				rospy.loginfo("End of data file reached")
 				return None
 
+		# TODO: Functionality
+
 
 	def _generate(self):
 		""" Generate data with current generator """
 		return self._generators[self._sub_routine].generate()
-			
 
 
 if __name__ == "__main__":

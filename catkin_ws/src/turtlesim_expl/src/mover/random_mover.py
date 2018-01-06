@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Random move strategy """
 
+import sys
 import random
 import rospy
 
@@ -20,7 +21,35 @@ class RandomMoveStrategy(MoveStrategy):
 
 		MoveStrategy.__init__(self)
 
-		self._rand_gen.seed(31415926535897)
+		# Remove remapping arguments and program name
+		args = rospy.myargv(sys.argv)[1:]
+
+		seed = self._get_seed(args)
+
+		if seed is not None:
+			rospy.loginfo("Using seed %s", seed)
+			self._rand_gen.seed(seed)
+
+
+	def _get_seed(self, args):
+		""" Get the seed from the supplied arguments (set None if no arguments are given) """
+
+		if not args:
+			return None
+
+		if args[0] == "-pi":
+			return 3.1415926535897
+
+		if args[0] == "-pi1000":
+			return 31415926535897
+
+		try:
+			seed = float(args[0])
+		except ValueError:
+			raise Exception(
+				"Please provide valid argument or a float as a seed input.\nProvided: %s", args[0])
+
+		return seed
 
 
 	def get_next(self):

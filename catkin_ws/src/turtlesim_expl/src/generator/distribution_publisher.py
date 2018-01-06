@@ -13,6 +13,10 @@ vonmises [mu] [kappa]  : Von Mises distribution - kappa >= 0
 wald [mean] [scale]    : Wald distribution - mean > 0, scale >= 0
 weibull [a]            : Weibull distribution - a > 0
 zipf [a]               : Zipf distribution - a > 1
+
+Publish distribution based on pre-generated file
+Possible arguments:
+file <file name> [-r]  : Repeat after reaching EOF
 """
 
 # pylint: disable-msg=C1801

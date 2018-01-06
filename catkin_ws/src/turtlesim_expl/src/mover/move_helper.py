@@ -20,7 +20,10 @@ def get_zero_twist():
 
 
 def get_twist_from_string(value_string):
-	""" Return new twist initialised to the values given in the string """
+	"""
+	Return new twist initialised to the values given in the string
+	value_string: Should be formatted as "i,i,i,i,i,i" with six integer values
+	"""
 
 	value_array = value_string.split(",")
 

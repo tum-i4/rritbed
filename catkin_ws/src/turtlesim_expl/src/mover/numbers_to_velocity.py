@@ -36,7 +36,7 @@ class NumbersToVelocity(object):
 		args = rospy.myargv(sys.argv)[1:]
 
 		if len(args) < 3 or len(args) > 4:
-			raise Exception("Invalid number of arguments given: %s", len(args))
+			raise Exception("Invalid number of arguments given: {}".format(len(args)))
 
 		self._input_topic = args[0]
 
@@ -45,7 +45,7 @@ class NumbersToVelocity(object):
 		elif args[1] == "int":
 			self._topic_type = Int32
 		else:
-			raise Exception("Invalid topic type given: %s\nExpected: float or int", args[1])
+			raise Exception("Invalid topic type given: {}\nExpected: float or int".format(args[1]))
 
 		self._output_namespace = args[2]
 

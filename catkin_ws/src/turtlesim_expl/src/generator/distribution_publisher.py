@@ -15,6 +15,9 @@ weibull [a]            : Weibull distribution - a > 0
 zipf [a]               : Zipf distribution - a > 1
 """
 
+# pylint: disable-msg=C1801
+
+import os
 import sys
 import numpy as np
 import rospy
@@ -22,13 +25,22 @@ from std_msgs.msg import Float32
 
 from distribution_generator import DistributionGenerator
 
-BASE_PATH = "/tmp/ros"
+_BASE_PATH = "~/ros"
 
 
 class DistributionPublisher(object):
 	""" Data generation class based on distribution """
 
+	_base_path_expanded = ""
+
 	_publisher = None
+
+	_file_based = False
+
+	_file_path = ""
+	_file_contents = []
+	_current_line = 0
+	_repeat_file = False
 
 	_sub_routine = ""
 
@@ -80,38 +92,63 @@ class DistributionPublisher(object):
 
 		object.__init__(self)
 
+		self._base_path_expanded = os.path.expanduser(_BASE_PATH)
+
 		# Remove remapping arguments
 		args = rospy.myargv(sys.argv)
 
 		# Delete program name from arguments
 		del args[0]
 
-		if len(args) is 0:
+		if not args:
 			raise Exception("Sub-routine name not given")
 
-		if args[0] is self._file_based_str:
-			self.setup_reader(args)
+		if args[0] == self._file_based_str:
+			self._setup_reader(args)
 		else:
-			self.setup_generator(args)
+			self._setup_generator(args)
 
 
-	def setup_reader(self, my_args):
+	def _setup_reader(self, my_args):
 		"""
 		Setup for file-based publishing
-		my_args: Arguments trimmed to <file_name>
+		my_args: Arguments trimmed to <file_name> [-r]
 		"""
-		if len(my_args) is 0:
-			raise Exception("File name not given")
 
-		file_path = my_args[0]
+		# Delete "file" from arguments
+		del(my_args[0])
 
-		if not file_path.contains(os.sep):
-			file_path = os.path.join(BASE_PATH, "data", file_path)
-		
-		pass
+		if not my_args:
+			raise Exception("No file name given")
+
+		if len(my_args) > 2:
+			raise Exception("Too many arguments supplied: {}".format(my_args))
+
+		self._file_based = True
+
+		# File path argument
+		self._file_path = my_args[0]
+
+		# Either a full path was given (contains sep), otherwise the name is appended to the default path
+		if os.sep not in self._file_path:
+			self._file_path = os.path.join(self._base_path_expanded, "data", self._file_path)
+
+		if not os.path.isfile(self._file_path):
+			raise Exception("No file found at" + self._file_path)
+
+		try:
+			file_reader = open(self._file_path)
+			self._file_contents = file_reader.readlines()
+			file_reader.close()
+		except IOError:
+			raise Exception("Couldn't read file " + self._file_path)
+
+		# Repeat file argument
+		if len(my_args) > 1 and my_args[1] == "-r":
+			self._repeat_file = True
 
 
-	def setup_generator(self, my_args):
+	def _setup_generator(self, my_args):
 		"""
 		Setup for data generation
 		my_args: Arguments trimmed to <generator> [default arg] ([default arg 2] ...)
@@ -132,8 +169,8 @@ class DistributionPublisher(object):
 
 		# Remaining in args are the arguments given to the sub-routine
 		# pylint: disable-msg=W1202
-		if len(my_args) is not generator.args_count:
-			self.values = generator.default_values
+		if len(my_args) != generator.args_count:
+			self._values = generator.default_values
 			rospy.loginfo("Initialising with default values {}".format(self._values))
 			return
 
@@ -141,22 +178,53 @@ class DistributionPublisher(object):
 		rospy.loginfo("Initialising with values {}".format(self._values))
 
 
-	def generate(self):
-		""" Generate data until node is stopped """
+	def run(self):
+		""" Run the distribution publisher with the given rate limiter and create num method """
 
-		rate_limiter = rospy.Rate(self._generators[self._sub_routine].rate_in_hz)
+		rate_in_hz = 10
+		create_num = self._read
+
+		if not self._file_based:
+			rate_in_hz = self._generators[self._sub_routine].rate_in_hz
+			create_num = self._generate
+
+		rate_limiter = rospy.Rate(rate_in_hz)
 
 		# While loop to assure that Ctrl-C can exit the app
 		while not rospy.is_shutdown():
-			next_num = self._generators[self._sub_routine].generate()
+			next_num = create_num()
+
+			if next_num is None:
+				break
+
 			rospy.loginfo("Value: " + str(next_num))
 			self._publisher.publish(next_num)
 			rate_limiter.sleep()
 
 
+	def _read(self):
+		"""
+		Read next line from file
+		Returns: Either repeats based on self._repeat_file or None if EOF is reached
+		"""
+
+		if self._current_line >= len(self._file_contents):
+			if self._repeat_file:
+				self._current_line = 0
+			else:
+				rospy.loginfo("End of data file reached")
+				return None
+
+
+	def _generate(self):
+		""" Generate data with current generator """
+		return self._generators[self._sub_routine].generate()
+			
+
+
 if __name__ == "__main__":
 	try:
 		PUB = DistributionPublisher()
-		PUB.generate()
+		PUB.run()
 	except rospy.ROSInterruptException:
 		pass

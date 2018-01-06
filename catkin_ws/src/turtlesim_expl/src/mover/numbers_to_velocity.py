@@ -9,20 +9,23 @@ output namespace: Namespace in which the turtle is registered
 turtle name:      (optionally) The name of the turtle (default: "turtle1")
 """
 
-import os
 import sys
 import rospy
 from std_msgs.msg import Float32, Int32
+from geometry_msgs.msg import Twist
 
 import move_helper
 
 
 class NumbersToVelocity(object):
+	""" Number input to turtle velocity output pipe """
 
 	_input_topic = ""
 	_topic_type = None
 	_output_namespace = ""
 	_turtle_name = "turtle1"
+
+	_velocity_publisher = None
 
 	def __init__(self):
 		""" Ctor """
@@ -50,7 +53,14 @@ class NumbersToVelocity(object):
 			self._turtle_name = args[3]
 
 
-	def process(self):
+	def activate(self):
+		""" Initialise the node, activate the topics and spin """
+
+		rospy.init_node("numbers_to_velocity_pipe", anonymous=True)
+		rospy.Subscriber(self._input_topic, self._topic_type, self._pipe)
+		self._velocity_publisher = rospy.Publisher(
+			self._output_namespace + "/" + self._turtle_name + "/cmd_vel", Twist, queue_size=10)
+
 		rospy.loginfo(
 			"Started piping from %s to %s/%s, with type %s",
 			self._input_topic,
@@ -58,13 +68,23 @@ class NumbersToVelocity(object):
 			self._turtle_name,
 			self._topic_type)
 
-		# TODO: Implement!
+		# Keep this node from exiting until it's stopped
+		rospy.spin()
+
+
+	def _pipe(self, data):
+		""" Pipe the given data """
+
+		rospy.logdebug("TODO TODO TODO")
+		rospy.logdebug(data.data)
+
+		# TODO: DO STH
 
 
 
 if __name__ == "__main__":
 	try:
 		PIPE = NumbersToVelocity()
-		PIPE.process()
+		PIPE.activate()
 	except rospy.ROSInterruptException:
 		pass

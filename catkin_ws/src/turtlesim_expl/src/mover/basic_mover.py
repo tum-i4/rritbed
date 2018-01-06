@@ -31,7 +31,7 @@ class BasicMoveStrategy(MoveStrategy):
 		""" Get next velocity from movement file """
 
 		# Used to use os.getcwd()
-		self._file_path = os.path.join(self._base_path_expanded, "move")
+		self._file_path = os.path.join(self._base_path_expanded, "data", "move")
 		if not os.path.isfile(self._file_path):
 			rospy.logwarn("No movement file found in" + self._file_path)
 			return None

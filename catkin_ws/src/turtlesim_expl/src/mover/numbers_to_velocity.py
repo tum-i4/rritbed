@@ -27,6 +27,9 @@ class NumbersToVelocity(object):
 
 	_velocity_publisher = None
 
+	_just_chose_speed = True
+	_turtle_walks = True
+
 	def __init__(self):
 		""" Ctor """
 
@@ -75,10 +78,20 @@ class NumbersToVelocity(object):
 	def _pipe(self, data):
 		""" Pipe the given data """
 
-		rospy.logdebug("TODO TODO TODO")
-		rospy.logdebug(data.data)
+		vel_msg = move_helper.get_zero_twist()
 
-		# TODO: DO STH
+		# Decide direction or speed?
+		if self._just_chose_speed:
+			self._turtle_walks = data.data > 0
+			self._just_chose_speed = False
+			return
+
+		if self._turtle_walks:
+			vel_msg.linear.x = data.data
+		else:
+			vel_msg.angular.z = data.data
+
+		self._velocity_publisher.publish(vel_msg)
 
 
 

@@ -7,11 +7,15 @@
 
   <group ns="ecu2">
   	<node name="ecu2" pkg="turtlesim" type="turtlesim_node" />
-	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py" />
+    <node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen"/>
+	  <!--node name="mover" pkg="turtlesim_expl" type="random_mover.py" /-->
   </group>
+
+  <node name="gauss" pkg="turtlesim_expl" type="distribution_publisher.py"
+    args="gaussian" />
 
   <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
 
   <node pkg="rosbag" type="record" name="rosbag_recorder"
-    args="-a -o /tmp/ros/bags/recording-all"/>
+    args="-a -o /tmp/ros-bag-recording-all"/>
 </launch>

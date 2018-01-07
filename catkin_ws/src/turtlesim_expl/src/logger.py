@@ -51,8 +51,8 @@ class Logger(object):
 		for name in DATA_GENERATOR_NAMES:
 			rospy.Subscriber("/" + name, Float32, self.log_generated_data, name)
 
-		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour_1)
-		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour_2)
+		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour, 0)
+		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour, 1)
 
 
 	def log_generated_data(self, data, generator_name):
@@ -63,16 +63,6 @@ class Logger(object):
 		request["generated"] = data.data
 
 		self.send_log_request("data/" + generator_name, request)
-
-
-	def log_colour_1(self, data):
-		""" Colour logging for node 1 """
-		self.log_colour(data, 0)
-
-
-	def log_colour_2(self, data):
-		""" Colour logging for node 2 """
-		self.log_colour(data, 1)
 
 
 	def log_colour(self, log_data, index):

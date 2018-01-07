@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
+<!-- Exemplary launch file with different node types and how to use them -->
 <launch>
-  <group ns="ecu1">
-  	<node name="ecu1" pkg="turtlesim" type="turtlesim_node" />
-	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py" />
+  <group ns="turtle">
+  	<node name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
+    <!-- A random mover with seed pi1000 (31415...) -->
+	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py" 
+      args="-pi1000" />
+
+    <!-- Manual turtle control -->
+    <!-- node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen"/ -->
   </group>
 
-  <group ns="ecu2">
-  	<node name="ecu2" pkg="turtlesim" type="turtlesim_node" />
-    <node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen"/>
-	  <!--node name="mover" pkg="turtlesim_expl" type="random_mover.py" /-->
-  </group>
-
+  <!-- Data generation with gaussian distribution and default arguments -->
   <node name="gauss" pkg="turtlesim_expl" type="distribution_publisher.py"
     args="gaussian" />
 
+  <!-- Logging -->
   <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
 
+  <!-- Rosbag recording with prefix as given -->
   <node pkg="rosbag" type="record" name="rosbag_recorder"
     args="-a -o /tmp/ros-bag-recording-all"/>
 </launch>

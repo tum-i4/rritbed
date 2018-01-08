@@ -121,13 +121,14 @@ Possible OPTIONS:
 	def _generate_vins(self, number_of_vins, vary_plant=True):
 		""" Generates VIN tails in the format [A-Z][0-9]{6} (from WBAUV710X0A192738) """
 
-		distance = number_of_vins-1
-		start = random.choice(range(100000, 999999-distance))
+		# Maximum start for one VIN: 999999
+		possible_starts = range(100000, 1000001-number_of_vins)
+		start = random.choice(possible_starts)
 
 		vins = []
 		plant_letter = self._get_plant_letter()
 
-		for serial_number in range(start, start+distance):
+		for serial_number in range(start, start+number_of_vins):
 			if vary_plant:
 				plant_letter = self._get_plant_letter()
 			vins.append(plant_letter + str(serial_number))

@@ -4,6 +4,8 @@ Launch file orchestrator
 For usage see _help() method.
 """
 
+import os
+import random
 import sys
 
 class LaunchFileOrchestrator(object):
@@ -11,18 +13,22 @@ class LaunchFileOrchestrator(object):
 
 	_help_text = """
 Usage:
+lfo --help : Display this help
+lfo --vins <number of vins> [vary plant: true / false]
+
 lfo </path/to/file> [OPTIONS]
 
 Possible OPTIONS:
---help     : Display this help
--m         : Create launch file with only one manually controlled turtle,
-             a logger node and rosbag recording.
-             Excludes all other options!
--i="/file" : Path to file with identifiers to use for namespaces.
-             Limits number of namespaces to the number of individual 
-             identifiers in file!
--n=NUMBER  : Number of namespaces to create
+--manual      : Create launch file with only one manually controlled turtle,
+                a logger node and rosbag recording.
+                Excludes all other options!
+-i="/file"    : Path to file with identifiers to use for namespaces.
+                Limits number of namespaces to the number of individual 
+                identifiers in file!
+-n=NUMBER     : Number of namespaces to create
 	"""
+
+	_file_path = ""
 
 	_manual_turtle_mode = False
 	_identifier_file_path = ""
@@ -38,33 +44,110 @@ Possible OPTIONS:
 		if "--help" in args or not args:
 			self._print_and_exit(self._help_text)
 
-		if "-m" in args:
+		# VIN mode
+		if "--vins" in args:
+			if len(args) < 2 or len(args) > 3:
+				self._print_and_exit("Invalid number of arguments supplied")
+
+			number_of_vins = 0
+			try:
+				number_of_vins = int(args[1])
+			except ValueError:
+				self._print_and_exit("Invalid value for number of VINs supplied: {}".format(args[1]))
+
+			vary_plant = True
+			if len(args) == 3:
+				if args[2] == "false":
+					vary_plant = False
+				else:
+					self._print_and_exit("Invalid value for vary plant argument supplied: {}".format(args[2]))
+
+			self._print_vins_and_exit(number_of_vins, vary_plant)
+
+		# Make sure arguments have been supplied
+		if not args:
+			self._print_and_exit("No arguments supplied")
+
+		# Sanity check supplied path argument
+		path = os.path.dirname(args[0])
+		file_name = os.path.basename(args[0])
+		launch_ext = ".launch"
+
+		if file_name == "":
+			file_name = "ros.launch"
+		elif not file_name.endswith(launch_ext):
+			file_name += launch_ext
+
+		if not os.path.lexists(path):
+			self._print_and_exit("Supplied path {} does not exist.".format(path))
+
+		file_path = os.path.join(path, file_name)
+		if os.path.lexists(file_path):
+			self._print_and_exit("File {} exists already".format(file_path))
+
+		self._file_path = file_path
+
+		# Manual mode?
+		if "--manual" in args:
 			self._manual_turtle_mode = True
-			if len(args) > 1:
+			if len(args) > 2:
 				self._print_and_exit("When using -m, no other arguments are allowed")
 			return
 
-		for arg in args:
+		# Check all remaining arguments
+		for arg in args[1:]:
 			if arg.startswith("-i="):
 				self._identifier_file_path = arg[3:]
 			elif arg.startswith("-n="):
 				try:
 					self._namespace_number = int(arg[3:])
 				except ValueError:
-					self._print_and_exit("Please supply integer for namespace number.\nReceived: {}".format(arg[3:]))
+					self._print_and_exit(
+						"Please supply integer for namespace number.\nReceived: {}".format(arg[3:]))
 			else:
 				self._print_and_exit("Invalid argument supplied: {}".format(arg))
-
-		# TODO: Read arguments
-		exit()
 
 
 	def create(self):
 		# TODO: Create just one launch file with multiple namespaces!
-		# Use VIN as namespace name?
+		# Use VIN as namespace name
 		# "Manual" launch *is* supposed to be one launch file with *just* the manually controlled turtle
-		# Pass as arguments instead the number of namespaces or a file with identifiers?
+		# Based on identifier file
+		# Based on number of instances
+		# Check if identifier file length and number of instances supplied fit
 		pass
+
+
+	def _generate_vins(self, number_of_vins, vary_plant=True):
+		""" Generates VIN tails in the format [A-Z][0-9]{6} (from WBAUV710X0A192738) """
+
+		distance = number_of_vins-1
+		start = random.choice(range(100000, 999999-distance))
+
+		vins = []
+		plant_letter = self._get_plant_letter()
+
+		for serial_number in range(start, start+distance):
+			if vary_plant:
+				plant_letter = self._get_plant_letter()
+			vins.append(plant_letter + str(serial_number))
+
+		return vins
+
+
+	def _get_plant_letter(self):
+		""" Returns char between A and Z """
+		return chr(random.choice(range(65, 91)))
+
+
+	def _print_vins_and_exit(self, number_of_vins, vary_plant=True):
+		""" Generate VINs with the given arguments, print them one by one and exit """
+
+		vins = self._generate_vins(number_of_vins, vary_plant)
+		for vin in vins:
+			print(vin)
+
+		exit()
 
 
 	def _print_and_exit(self, text):

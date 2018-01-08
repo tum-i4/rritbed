@@ -2,13 +2,14 @@
 """
 Pipe to convert some published number values to a velocity output for turtles
 Arguments:
-</input/topic> <topic type> </output/namespace> [turtle name]
+</input/topic> <topic type> </output/namespace/> [turtle name]
 input topic:      Complete rostopic path
 topic type:       float (Float32), int (Int32)
 output namespace: Namespace in which the turtle is registered
 turtle name:      (optionally) The name of the turtle (default: "turtle1")
 """
 
+import os
 import sys
 import rospy
 from std_msgs.msg import Float32, Int32
@@ -51,6 +52,8 @@ class NumbersToVelocity(object):
 			raise Exception("Invalid topic type given: {}\nExpected: float or int".format(args[1]))
 
 		self._output_namespace = args[2]
+		if not self._output_namespace.endswith(os.sep):
+			self._output_namespace += os.sep
 
 		if len(args) == 4:
 			self._turtle_name = args[3]
@@ -60,15 +63,17 @@ class NumbersToVelocity(object):
 		""" Initialise the node, activate the topics and spin """
 
 		rospy.init_node("numbers_to_velocity_pipe", anonymous=True)
+
 		rospy.Subscriber(self._input_topic, self._topic_type, self._pipe)
+
+		_output = self._output_namespace + self._turtle_name + "/cmd_vel"
 		self._velocity_publisher = rospy.Publisher(
-			self._output_namespace + "/" + self._turtle_name + "/cmd_vel", Twist, queue_size=10)
+			_output, Twist, queue_size=10)
 
 		rospy.loginfo(
-			"Started piping from %s to %s/%s, with type %s",
+			"Started piping from %s to %s, with type %s",
 			self._input_topic,
-			self._output_namespace,
-			self._turtle_name,
+			_output,
 			self._topic_type.__name__)
 
 		# Keep this node from exiting until it's stopped

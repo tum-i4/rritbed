@@ -118,6 +118,44 @@ Possible OPTIONS:
 		pass
 
 
+#   <!-- Logging -->
+#   <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
+
+#   <!-- Rosbag recording with prefix as given -->
+#   <node pkg="rosbag" type="record" name="rosbag_recorder"
+#     args=""/>
+
+
+	def _create_node_element(self, n_name, n_type, n_pkg, n_ns=None, n_args=None):
+		""" Creates an ElementTree element "node" with fixed order attributes """
+
+		node_element = ET.Element("node")
+
+		if n_ns is not None:
+			node_element.attrib["ns"] = n_ns
+
+		node_element.attrib["name"] = n_name
+		node_element.attrib["type"] = n_type
+		node_element.attrib["pkg"] = n_pkg
+
+		if n_args is not None:
+			node_element.attrib["args"] = n_args
+
+		return node_element
+
+
+	def _create_group(self, elements, ns=None):
+		group_element = ET.Element("group")
+
+		if ns is not None:
+			group_element.attrib["ns"] = ns
+
+		for element in elements:
+			group_element.append(element)
+
+		return group_element
+
+
 	def _generate_vins(self, number_of_vins, vary_plant=True):
 		""" Generates VIN tails in the format [A-Z][0-9]{6} (from WBAUV710X0A192738) """
 

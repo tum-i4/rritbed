@@ -8,6 +8,9 @@ import os
 import random
 import sys
 
+from lxml import etree as ET
+
+
 class LaunchFileOrchestrator(object):
 	""" Creates a launch file based on the given arguments """
 
@@ -109,12 +112,39 @@ Possible OPTIONS:
 
 
 	def create(self):
+		root_element = ET.Element("launch")
+
+		n1 = self._create_node_element("n", "t", "p")
+		n2 = self._create_node_element("n2", "t", "p", "ns", "-a -b")
+
+		group = self._create_group([n1, n2], "NS")
+
+		comment = ET.Comment("Logging")
+
+		for el in [group, n1, comment, n2]:
+			root_element.append(el)
+
+		# xml_tree = ET.ElementTree(root_element)
+
 		# TODO: Create just one launch file with multiple namespaces!
 		# Use VIN as namespace name
 		# "Manual" launch *is* supposed to be one launch file with *just* the manually controlled turtle
 		# Based on identifier file
 		# Based on number of instances
 		# Check if identifier file length and number of instances supplied fit
+
+		root_element.append(
+			self._create_node_element("logger", "logger.py", "turtlesim_expl", "log"))
+
+		rosbag_folder = os.path.expanduser(os.path.join("~", "ros", "bags", "recording-all"))
+		root_element.append(
+			self._create_node_element("rosbag_recorder", "record", "rosbag", None, "-a -o " + rosbag_folder))
+
+		ET.dump(root_element)
+		exit()
+
+		# TODO: Write to file
+		# xml_tree.write("/path/to/file", xml_declaration=True)
 		pass
 
 

@@ -25,6 +25,8 @@ Possible OPTIONS:
 	"""
 
 	_manual_turtle_mode = False
+	_identifier_file_path = ""
+	_namespace_number = 0
 
 	def __init__(self):
 		""" Ctor """
@@ -39,10 +41,22 @@ Possible OPTIONS:
 		if "-m" in args:
 			self._manual_turtle_mode = True
 			if len(args) > 1:
-				self._print_and_exit("When using -m, no other flags are allowed")
+				self._print_and_exit("When using -m, no other arguments are allowed")
 			return
 
+		for arg in args:
+			if arg.startswith("-i="):
+				self._identifier_file_path = arg[3:]
+			elif arg.startswith("-n="):
+				try:
+					self._namespace_number = int(arg[3:])
+				except ValueError:
+					self._print_and_exit("Please supply integer for namespace number.\nReceived: {}".format(arg[3:]))
+			else:
+				self._print_and_exit("Invalid argument supplied: {}".format(arg))
+
 		# TODO: Read arguments
+		exit()
 
 
 	def create(self):

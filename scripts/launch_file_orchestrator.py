@@ -24,6 +24,8 @@ Possible OPTIONS:
 -n=NUMBER  : Number of namespaces to create
 	"""
 
+	_manual_turtle_mode = False
+
 	def __init__(self):
 		""" Ctor """
 
@@ -32,8 +34,13 @@ Possible OPTIONS:
 		args = sys.argv[1:]
 
 		if "--help" in args or not args:
-			self._print_help()
-			exit()
+			self._print_and_exit(self._help_text)
+
+		if "-m" in args:
+			self._manual_turtle_mode = True
+			if len(args) > 1:
+				self._print_and_exit("When using -m, no other flags are allowed")
+			return
 
 		# TODO: Read arguments
 
@@ -46,8 +53,9 @@ Possible OPTIONS:
 		pass
 
 
-	def _print_help(self):
-		print(self._help_text)
+	def _print_and_exit(self, text):
+		print(text)
+		exit()
 
 
 

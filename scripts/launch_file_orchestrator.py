@@ -30,6 +30,10 @@ class LaunchFileOrchestrator(object):
 
 
 	def create(self):
+		# TODO: Create just one launch file with multiple namespaces!
+		# Use VIN as namespace name?
+		# "Manual" launch *is* supposed to be one launch file with *just* the manually controlled turtle
+		# Pass as arguments instead the number of namespaces or a file with identifiers?
 		pass
 
 

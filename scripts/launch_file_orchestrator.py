@@ -174,16 +174,23 @@ Possible OPTIONS:
 		return node_element
 
 
-	def _create_group(self, elements, ns=None):
+	def _create_group(self, elements, n_ns=None):
 		group_element = ET.Element("group")
 
-		if ns is not None:
-			group_element.attrib["ns"] = ns
+		if n_ns is not None:
+			group_element.attrib["ns"] = n_ns
 
 		for element in elements:
 			group_element.append(element)
 
 		return group_element
+
+
+	def _create_turtle_group(self, control_node):
+		""" Creates a group of ns "turtle" with a turtle and the given control node """
+
+		turtle_node = self._create_node_element("turtlesim", "turtlesim_node", "turtlesim")
+		return self._create_group([turtle_node, control_node], n_ns="turtle")
 
 
 	def _generate_vins(self, number_of_vins, vary_plant=True):

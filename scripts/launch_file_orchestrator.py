@@ -140,7 +140,7 @@ Possible OPTIONS:
 		possible_generators = []
 		number_of_generators = rand_gen.randint(5,100)
 		for i in range(0, number_of_generators):
-
+			pass
 
 		# TODO: Note which generators exist as possibilities for the turtle (num to vel pipe)
 

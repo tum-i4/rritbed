@@ -148,14 +148,6 @@ Possible OPTIONS:
 		pass
 
 
-#   <!-- Logging -->
-#   <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
-
-#   <!-- Rosbag recording with prefix as given -->
-#   <node pkg="rosbag" type="record" name="rosbag_recorder"
-#     args=""/>
-
-
 	def _create_node_element(self, n_name, n_type, n_pkg, n_ns=None, n_args=None):
 		""" Creates an ElementTree element "node" with fixed order attributes """
 
@@ -175,6 +167,8 @@ Possible OPTIONS:
 
 
 	def _create_group(self, elements, n_ns=None):
+		""" Creates a group with the given element and optionally the given namespace """
+
 		group_element = ET.Element("group")
 
 		if n_ns is not None:
@@ -191,6 +185,11 @@ Possible OPTIONS:
 
 		turtle_node = self._create_node_element("turtlesim", "turtlesim_node", "turtlesim")
 		return self._create_group([turtle_node, control_node], n_ns="turtle")
+
+
+	def _create_padded_comment(self, text):
+		""" Creates a comment padded front and back with a space for legibility """
+		return ET.Comment(" {} ".format(text))
 
 
 	def _generate_vins(self, number_of_vins, vary_plant=True):

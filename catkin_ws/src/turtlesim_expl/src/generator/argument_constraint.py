@@ -3,25 +3,6 @@
 
 from sys import maxint as MAXINT
 
-class ArgumentsConstraints(object):
-	""" Define constraints for arguments (number, and constraint for each argument) """
-
-	number_of_arguments = 0
-	argument_constraints = []
-
-	def __init__(self, number_of_arguments, argument_constraints):
-		""" Ctor """
-
-		object.__init__(self)
-
-		if number_of_arguments != len(argument_constraints):
-			raise Exception("Invalid number of argument constraints supplied")
-
-		self.number_of_arguments = number_of_arguments
-		self.argument_constraints = argument_constraints
-
-
-
 
 class ArgumentConstraint(object):
 	""" Define constraints for an argument (min, max) """

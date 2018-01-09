@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 """
+Create a JSON file describing all possible generators
+Usage:
+--generators [file name]
+
 Generate data based on a distribution and publish it to ROS
 Possible arguments:
 gaussian [loc] [scale] : Normal distribution
@@ -103,14 +107,26 @@ class DistributionPublisher(object):
 		del args[0]
 
 		if not args:
-			raise Exception("Sub-routine name not given")
+			raise Exception("No arguments given")
+
+		# 1) JSON dump mode
+		# --generators [file path]
+
+		if args[0] == "--generators":
+			file_path = args[1] if len(args) == 2 else None
+			self._generator_mode(file_path)
+			exit()
+
+		# 2) Publishing mode
 
 		name = args[0]
 		queue_size = 10
 
+		#    a) File based
 		if args[0] == self._file_based_str:
 			self._setup_reader(args)
 			name += "_" + args[1]
+		#    b) Generator based
 		else:
 			self._setup_generator(args)
 			queue_size = self._generators[self._sub_routine].queue_size
@@ -224,6 +240,12 @@ class DistributionPublisher(object):
 	def _generate(self):
 		""" Generate data with current generator """
 		return self._generators[self._sub_routine].generate()
+
+
+	def _generator_mode(self, file_path):
+		""" Print all current generator definitions out or write them to a file """
+
+		raise Exception("IMPLEMENT")
 
 
 if __name__ == "__main__":

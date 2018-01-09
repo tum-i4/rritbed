@@ -243,7 +243,7 @@ class DistributionPublisher(object):
 
 
 	def _generator_mode(self, file_path):
-		""" Print all current generator definitions out or write them to a file """
+		""" Print all current generator definitions out (file_path is None) or write them to a file """
 
 		raise Exception("IMPLEMENT")
 

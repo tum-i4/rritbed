@@ -37,6 +37,8 @@ class DistributionGenerator(object):
 		if values is None:
 			values = self._get_default_values()
 
+		# TODO: Check given values for argument constraints
+
 		args_count = self._get_args_count()
 
 		if len(values) is args_count:

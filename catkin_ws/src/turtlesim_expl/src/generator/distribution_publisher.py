@@ -255,24 +255,27 @@ class DistributionPublisher(object):
 
 		if file_path is not None:
 			self._generator_mode_write_to_file(file_path)
+			exit()
 
-		print("name, (default, min, max), ...")
-		for gen_name in self._generators.keys():
+		print("name, ['default, min, max', ...]")
+		for gen_name in self._generators:
 			constraints = self._generators[gen_name].args_constraints
-			print("%s, %s", gen_name, ["{}, {}, {}".format(
+			print("{}, {}".format(gen_name, ["{}, {}, {}".format(
 				x.default_value, x.min_value, x.max_value)
-				for x in constraints])
+				for x in constraints]))
 
 
 	def _generator_mode_write_to_file(self, file_path):
 
+		file_path = os.path.expanduser(file_path)
+
 		folder_path = os.path.dirname(file_path)
 		if not os.path.exists(folder_path):
-			print("File path %s does not exist", folder_path)
+			print("File path {} does not exist".format(folder_path))
 			exit()
 
 		if os.path.exists(file_path):
-			print("File %s exists and would be overwritten", file_path)
+			print("File {} exists and would be overwritten".format(file_path))
 			exit()
 
 		gen_defs = {}
@@ -288,7 +291,7 @@ class DistributionPublisher(object):
 		with open(file_path, 'w') as file_writer:
 			file_writer.write(result)
 
-		print("Data written to file %s successfully", file_path)
+		print("Data written to file {} successfully".format(file_path))
 
 
 if __name__ == "__main__":

@@ -120,7 +120,7 @@ Possible OPTIONS:
 		rosbag_folder = os.path.expanduser(os.path.join("~", "ros", "bags", "recording-all"))
 		root_element.append(
 			self._create_padded_comment("Rosbag recording to the file (prefix) {}".format(rosbag_folder)))
-		# <node pkg="rosbag" type="record" name="rosbag_recorder" args="-a -o /home/USER/ros/bags/recording-all"/>
+		# <node pkg="rosbag" type="record" name="rosbag_recorder" args="-a -o /file/prefix"/>
 		root_element.append(
 			self._create_node_element("rosbag_recorder", "record", "rosbag", None, "-a -o " + rosbag_folder))
 
@@ -131,26 +131,40 @@ Possible OPTIONS:
 		root_element.append(
 			self._create_node_element("logger", "logger.py", "turtlesim_expl", "log"))
 
-		# Data generation [5..100]
+		# Data generation [1..10]
 		# - Based on distributions
 		# - A few parameters
 		# - Live and file based
 
+		gen_defs_file_path = os.path.expanduser("~/ros/gens")
+		if not os.path.exists(gen_defs_file_path):
+			raise Exception("Generator definitions file not found at {}".format(gen_defs_file_path))
+
+		json_line = ""
+		with open(gen_defs_file_path, 'r') as file_reader:
+			file_content = file_reader.readlines()
+			assert(len(file_content) == 1)
+			json_line = file_content[0]
+
+		generator_definitions = json.loads(json_line)
+
 		selected_generators = []
-		possible_generators = []
-		number_of_generators = rand_gen.randint(5,100)
+		possible_generators = generator_definitions.keys()
+		number_of_generators = rand_gen.randint(1, 10)
 		for i in range(0, number_of_generators):
-			pass
+			selected_generators.append(
+				random.choice(possible_generators))
+
+		print(possible_generators)
+		print(selected_generators)
 
 		# TODO: Note which generators exist as possibilities for the turtle (num to vel pipe)
 
 		# Turtle group [1]
 		# Options:
 		# - Random walk with parameter input for random seed
-		# - Data generation for walking
-		#   - Live
-		#   - File-based (fixed test cases)
 		# - Manual control
+		# - Random walk with intelligence (to be implemented first)
 
 		# Random mover -pi -pi1000 or float for args
 		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="-pi1000" />

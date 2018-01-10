@@ -23,7 +23,6 @@ Possible arguments:
 file <file name> [-r]  : Repeat after reaching EOF
 """
 
-# pylint: disable-msg=C1801
 
 import os
 import sys
@@ -186,8 +185,8 @@ class DistributionPublisher(object):
 		generator_arguments = my_args[1:]
 
 		# pylint: disable-msg=W1202
-		if len(generator_arguments) != generator.args_count:
-			self._generator_arguments = generator.default_values
+		if len(generator_arguments) != generator.get_args_count():
+			self._generator_arguments = generator.get_default_values()
 			rospy.loginfo("Initialising with default values %s", self._generator_arguments)
 			return
 

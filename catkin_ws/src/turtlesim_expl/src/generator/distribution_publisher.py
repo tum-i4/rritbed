@@ -31,6 +31,7 @@ import rospy
 from std_msgs.msg import Float32
 
 from distribution_generator import DistributionGenerator
+from argument_constraint import ArgumentConstraint as AC
 
 _BASE_PATH = "~/ros"
 
@@ -74,21 +75,28 @@ class DistributionPublisher(object):
 		_gumbel_str : DistributionGenerator(np.random.gumbel, _gumbel_str),
 		_laplace_str : DistributionGenerator(np.random.laplace, _laplace_str),
 		# Logistic: loc arbitrary, scale > 0
-		_logistic_str : DistributionGenerator(np.random.logistic, _logistic_str),
+		_logistic_str : DistributionGenerator(np.random.logistic, _logistic_str,
+			[AC(0.0), AC(1.0, min_value=0.1)]),
 		# Pareto: a(lpha) > 0
-		_pareto_str : DistributionGenerator(np.random.pareto, _pareto_str, 1, [1.0]),
+		_pareto_str : DistributionGenerator(np.random.pareto, _pareto_str,
+			[AC(1.0, min_value=0.1)]),
 		# Rayleigh: scale > 0
-		_rayleigh_str : DistributionGenerator(np.random.rayleigh, _rayleigh_str, 1, [1.0]),
-		# Uniform: low < high
+		_rayleigh_str : DistributionGenerator(np.random.rayleigh, _rayleigh_str,
+			[AC(1.0, min_value=0.1)]),
+		# Uniform: low < high (not a binding constraint)
 		_uniform_str : DistributionGenerator(np.random.uniform, _uniform_str),
 		# Von Mises: mu arbitrary, kappa >= 0
-		_vonmises_str : DistributionGenerator(np.random.vonmises, _vonmises_str),
+		_vonmises_str : DistributionGenerator(np.random.vonmises, _vonmises_str,
+			[AC(0.0), AC(1.0, min_value=0)]),
 		# Wald: mean > 0, scale > 0
-		_wald_str : DistributionGenerator(np.random.wald, _wald_str, 2, [1.0, 1.0]),
+		_wald_str : DistributionGenerator(np.random.wald, _wald_str,
+			[AC(1.0, min_value=0.1), AC(1.0, min_value=0.1)]),
 		# Weibull: a > 0
-		_weibull_str : DistributionGenerator(np.random.weibull, _weibull_str, 1, [5.0]),
+		_weibull_str : DistributionGenerator(np.random.weibull, _weibull_str,
+			[AC(5.0, min_value=0.1)]),
 		# Zipf: a > 1
-		_zipf_str : DistributionGenerator(np.random.zipf, _zipf_str, 1, [2.0])
+		_zipf_str : DistributionGenerator(np.random.zipf, _zipf_str,
+			[AC(2.0, min_value=1.1)])
 	}
 
 

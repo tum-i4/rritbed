@@ -35,9 +35,9 @@ class DistributionGenerator(object):
 		""" Generate a new value based on the distribution method """
 
 		if values is None:
-			values = self._get_default_values()
+			values = self.get_default_values()
 
-		args_count = self._get_args_count()
+		args_count = self.get_args_count()
 
 		if len(values) is not args_count:
 			raise Exception("Invalid number of values given")
@@ -54,9 +54,9 @@ class DistributionGenerator(object):
 			raise Exception("IMPLEMENTATION MISSING")
 
 
-	def _get_args_count(self):
+	def get_args_count(self):
 		return len(self.args_constraints)
 
 
-	def _get_default_values(self):
+	def get_default_values(self):
 		return [x.default_value for x in self.args_constraints]

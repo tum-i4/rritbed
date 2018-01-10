@@ -22,3 +22,8 @@ class ArgumentConstraint(object):
 		self.default_value = default_value * 1.0
 		self.min_value = min_value * 1.0
 		self.max_value = max_value * 1.0
+
+
+	def fits(self, value):
+		""" Checks if the given value fits """
+		return value >= self.min_value and value <= self.max_value

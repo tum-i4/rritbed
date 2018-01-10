@@ -37,12 +37,14 @@ class DistributionGenerator(object):
 		if values is None:
 			values = self._get_default_values()
 
-		# TODO: Check given values for argument constraints
-
 		args_count = self._get_args_count()
 
-		if len(values) is args_count:
+		if len(values) is not args_count:
 			raise Exception("Invalid number of values given")
+
+		for i in range(0, args_count):
+			if not self.args_constraints[i].fits(values[i]):
+				raise Exception("Given value {} does not fit the argument constraint".format(values[i]))
 
 		if args_count is 1:
 			return self._method(values[0])

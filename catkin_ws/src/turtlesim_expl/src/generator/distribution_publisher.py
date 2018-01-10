@@ -286,7 +286,7 @@ class DistributionPublisher(object):
 				{"default" : x.default_value, "min" : x.min_value, "max" : x.max_value}
 				for x in constraints]
 
-		result = json.dumps(gen_defs, indent=2)
+		result = json.dumps(gen_defs)
 
 		with open(file_path, 'w') as file_writer:
 			file_writer.write(result)

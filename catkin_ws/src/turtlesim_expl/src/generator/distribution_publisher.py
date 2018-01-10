@@ -24,6 +24,7 @@ file <file name> [-r]  : Repeat after reaching EOF
 """
 
 
+import json
 import os
 import sys
 import numpy as np
@@ -252,7 +253,42 @@ class DistributionPublisher(object):
 	def _generator_mode(self, file_path):
 		""" Print all current generator definitions out (file_path is None) or write them to a file """
 
-		raise Exception("IMPLEMENT")
+		if file_path is not None:
+			self._generator_mode_write_to_file(file_path)
+
+		print("name, (default, min, max), ...")
+		for gen_name in self._generators.keys():
+			constraints = self._generators[gen_name].args_constraints
+			print("%s, %s", gen_name, ["{}, {}, {}".format(
+				x.default_value, x.min_value, x.max_value)
+				for x in constraints])
+
+
+	def _generator_mode_write_to_file(self, file_path):
+
+		folder_path = os.path.dirname(file_path)
+		if not os.path.exists(folder_path):
+			print("File path %s does not exist", folder_path)
+			exit()
+
+		if os.path.exists(file_path):
+			print("File %s exists and would be overwritten", file_path)
+			exit()
+
+		gen_defs = {}
+
+		for gen_name in self._generators:
+			constraints = self._generators[gen_name].args_constraints
+			gen_defs[gen_name] = [
+				{"default" : x.default_value, "min" : x.min_value, "max" : x.max_value}
+				for x in constraints]
+
+		result = json.dumps(gen_defs, indent=2)
+
+		with open(file_path, 'w') as file_writer:
+			file_writer.write(result)
+
+		print("Data written to file %s successfully", file_path)
 
 
 if __name__ == "__main__":

@@ -125,7 +125,7 @@ class DistributionPublisher(object):
 		#    a) File based
 		if args[0] == self._file_based_str:
 			self._setup_reader(args)
-			name += "_" + args[1]
+			name += "_" + os.path.basename(args[1])
 		#    b) Generator based
 		else:
 			self._setup_generator(args)

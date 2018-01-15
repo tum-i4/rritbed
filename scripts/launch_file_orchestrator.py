@@ -8,8 +8,8 @@ import os
 import random
 import sys
 
-from lxml import etree as ET
 import json
+from lxml import etree as ET
 
 
 class LaunchFileOrchestrator(object):
@@ -113,6 +113,7 @@ Possible OPTIONS:
 
 
 	def create(self):
+		""" Create the launch file based on the set parameters """
 		rand_gen = random.Random()
 		root_element = ET.Element("launch")
 
@@ -183,7 +184,7 @@ Possible OPTIONS:
 #   <group ns="turtle">
 #   	<node name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
 #     <!-- A random mover with seed pi1000 (31415...) -->
-# 	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py" 
+# 	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py"
 #       args="-pi1000" />
 
 #     <!-- Manual turtle control -->
@@ -214,6 +215,7 @@ Possible OPTIONS:
 		pass
 
 
+	# pylint: disable-msg=R0201,R0913; (Method could be a function, too many arguments)
 	def _create_node_element(self, n_name, n_type, n_pkg, n_ns=None, n_args=None):
 		""" Creates an ElementTree element "node" with fixed order attributes """
 

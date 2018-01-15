@@ -5,6 +5,7 @@ import json
 import time
 import uuid
 
+# pylint: disable-msg=R0903; (Too few public methods (1/2))
 class LogEntry(object):
 	""" Container class for log data """
 
@@ -53,6 +54,7 @@ class LogEntry(object):
 	}
 
 
+	# pylint: disable-msg=R0913; (Too many arguments)
 	def __init__(self, vin, origin, log_lib_version, appID,
 		level="DEBUG", env="TEST", log_message="", userIDs="[null]", context=None,
 		transactionID=None, logID=None, timeUnix=None):
@@ -62,6 +64,7 @@ class LogEntry(object):
 
 		self.log_entry[self.vin_field] = vin
 		self.log_entry[self.origin_field] = origin
+		self.log_entry[self.log_lib_version_field] = log_lib_version
 		self.log_entry[self.appID_field] = appID
 		self.log_entry[self.level_field] = level
 		self.log_entry[self.env_field] = env
@@ -71,13 +74,14 @@ class LogEntry(object):
 		if context is not None:
 			self.log_entry[self.context_field] = context
 
-		self.log_entry[self.transactionID_field] = self.set_or_generate_id(transactionID)
-		self.log_entry[self.logID_field] = self.set_or_generate_id(logID)
+		self.log_entry[self.transactionID_field] = self._verify_or_generate_id(transactionID)
+		self.log_entry[self.logID_field] = self._verify_or_generate_id(logID)
 
-		self.set_time(timeUnix)
+		self._set_time(timeUnix)
 
 
-	def set_or_generate_id(self, given_id):
+	# pylint: disable-msg=R0201; (Method could be a function)
+	def _verify_or_generate_id(self, given_id):
 		""" Checks to see if the id is set, otherwise generates a new UUID """
 
 		if given_id is None:
@@ -86,7 +90,7 @@ class LogEntry(object):
 		return given_id
 
 
-	def set_time(self, time_unix):
+	def _set_time(self, time_unix):
 		""" Sets timeUnix and timeUTC fields in this item's log data """
 
 		if time_unix is None:

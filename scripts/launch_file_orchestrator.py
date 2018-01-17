@@ -127,10 +127,41 @@ Possible OPTIONS:
 		root_element.append(
 			self._create_node_element("rosbag_recorder", "record", "rosbag", None, "-a -o " + rosbag_folder))
 
+		vin_list = ["TEST"]
+
+		for vin in vin_list:
+			root_element.append(self._create_unit(vin, rand_gen))
+
+		
+
+		# TODO: Create just one launch file with multiple namespaces!
+		# Use VIN as namespace name
+		# "Manual" launch *is* supposed to be one launch file with *just* the manually controlled turtle
+		# Based on identifier file
+		# Based on number of instances
+		# Check if identifier file length and number of instances supplied fit
+
+		# TODO: TEMP DEBUG
+		ET.dump(root_element)
+		exit()
+		# END TODO
+
+		# xml_tree = ET.ElementTree(root_element)
+
+		# TODO: Write to file
+		# xml_tree.write("/path/to/file", xml_declaration=True)
+		pass
+
+
+	def _create_unit(self, vin, rand_gen):
+		""" Creates a 'unit' (a 'car') consisting of logging, turtle and data generation """
+
+		group_element = self._create_group([], vin)
+
 		# Logging node
-		root_element.append(self._create_padded_comment("Logging"))
+		group_element.append(self._create_padded_comment("Logging"))
 		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
-		root_element.append(
+		group_element.append(
 			self._create_node_element("logger", "logger.py", "turtlesim_expl", "log"))
 
 		# Turtle group [1]
@@ -142,7 +173,7 @@ Possible OPTIONS:
 		# Random mover -pi -pi1000 or float for args
 		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="-pi1000" />
 
-		root_element.append(self._create_padded_comment("Turtle group"))
+		group_element.append(self._create_padded_comment("Turtle group"))
 
 		# TODO: Vary parameter input for random seed
 		# TODO: Add random walk with intelligence
@@ -154,7 +185,7 @@ Possible OPTIONS:
 				"teleop", "turtle_teleop_key", "turtlesim")
 			control_node.attrib["output"] = "screen"
 
-		root_element.append(
+		group_element.append(
 			self._create_turtle_group(control_node))
 
 		# Data generation [1..10]
@@ -181,28 +212,11 @@ Possible OPTIONS:
 			selected_generators.append(
 				random.choice(possible_generators))
 
+		group_element.append(self._create_padded_comment("Generators"))
 		for key in selected_generators:
-			root_element.append(self._create_generator_node_element(key, generator_definitions[key]))
+			group_element.append(self._create_generator_node_element(key, generator_definitions[key]))
 
-		# TODO: Generators
-
-		# TODO: TEMP DEBUG
-		ET.dump(root_element)
-		exit()
-		# END TODO
-
-		# xml_tree = ET.ElementTree(root_element)
-
-		# TODO: Create just one launch file with multiple namespaces!
-		# Use VIN as namespace name
-		# "Manual" launch *is* supposed to be one launch file with *just* the manually controlled turtle
-		# Based on identifier file
-		# Based on number of instances
-		# Check if identifier file length and number of instances supplied fit
-
-		# TODO: Write to file
-		# xml_tree.write("/path/to/file", xml_declaration=True)
-		pass
+		return group_element
 
 
 	# pylint: disable-msg=R0201,R0913; (Method could be a function, too many arguments)

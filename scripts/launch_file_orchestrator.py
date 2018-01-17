@@ -11,6 +11,8 @@ import sys
 import json
 from lxml import etree as ET
 
+GEN_DEFS_FILE_PATH = "~/ros/gens"
+
 
 class LaunchFileOrchestrator(object):
 	""" Creates a launch file based on the given arguments """
@@ -160,12 +162,12 @@ Possible OPTIONS:
 		# - A few parameters
 		# - Live and file based
 
-		gen_defs_file_path = os.path.expanduser("~/ros/gens")
-		if not os.path.exists(gen_defs_file_path):
-			raise Exception("Generator definitions file not found at {}".format(gen_defs_file_path))
+		gen_defs_file_path_expanded = os.path.expanduser(GEN_DEFS_FILE_PATH)
+		if not os.path.exists(gen_defs_file_path_expanded):
+			raise Exception("Generator definitions file not found at {}".format(gen_defs_file_path_expanded))
 
 		json_line = ""
-		with open(gen_defs_file_path, 'r') as file_reader:
+		with open(gen_defs_file_path_expanded, 'r') as file_reader:
 			file_content = file_reader.readlines()
 			assert(len(file_content) == 1)
 			json_line = file_content[0]

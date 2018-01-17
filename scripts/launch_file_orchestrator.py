@@ -198,6 +198,9 @@ Possible OPTIONS:
 		group_element.append(
 			self._create_turtle_group(control_node))
 
+		if self._manual_turtle_mode:
+			return group_element
+
 		# Data generation [1..10]
 		# - Based on distributions
 		# - A few parameters

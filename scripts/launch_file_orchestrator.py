@@ -40,6 +40,8 @@ Possible OPTIONS:
 	_identifier_file_path = None
 	_namespace_number = None
 
+	_dump_mode = False
+
 	def __init__(self):
 		""" Ctor """
 
@@ -111,6 +113,8 @@ Possible OPTIONS:
 				except ValueError:
 					self._print_and_exit(
 						"Please supply integer for namespace number.\nReceived: {}".format(arg[3:]))
+			elif arg == "--dump":
+				self._dump_mode = True
 			else:
 				self._print_and_exit("Invalid argument supplied: {}".format(arg))
 
@@ -157,6 +161,10 @@ Possible OPTIONS:
 
 		for vin in vin_list:
 			root_element.append(self._create_unit(vin, rand_gen))
+
+		if self._dump_mode:
+			ET.dump(root_element)
+			exit()
 
 		xml_tree = ET.ElementTree(root_element)
 

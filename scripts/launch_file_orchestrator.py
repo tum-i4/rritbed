@@ -177,7 +177,7 @@ Possible OPTIONS:
 		selected_generators = []
 		possible_generators = generator_definitions.keys()
 		number_of_generators = rand_gen.randint(1, 10)
-		for i in range(0, number_of_generators):
+		for _ in range(0, number_of_generators):
 			selected_generators.append(
 				random.choice(possible_generators))
 

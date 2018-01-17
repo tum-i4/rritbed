@@ -220,15 +220,23 @@ Possible OPTIONS:
 		generator_definitions = json.loads(json_line)
 
 		selected_generators = []
+		selected_generator_frequency = {}
 		possible_generators = generator_definitions.keys()
+
 		number_of_generators = rand_gen.randint(1, 10)
 		for _ in range(0, number_of_generators):
-			selected_generators.append(
-				random.choice(possible_generators))
+			selection = random.choice(possible_generators)
+			selected_generators.append(selection)
+			selected_generator_frequency[selection] = 0
 
 		group_element.append(self._create_padded_comment("Generators"))
+
 		for key in selected_generators:
-			group_element.append(self._create_generator_node_element(key, generator_definitions[key]))
+			selected_generator_frequency[key] += 1
+			group_element.append(self._create_generator_node_element(
+				"{}_{}".format(key, selected_generator_frequency[key]),
+				key,
+				generator_definitions[key]))
 
 		return group_element
 
@@ -253,21 +261,17 @@ Possible OPTIONS:
 		return node_element
 
 
-	def _create_generator_node_element(self, gen_name, gen_def):
+	def _create_generator_node_element(self, n_name, gen_key, gen_def):
 		""" Creates a generator node element """
 
-		args = gen_name
+		args = gen_key
 
 		for arg_def in gen_def:
 			arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
 			args += " {:f}".format(arg)
 
 		return self._create_node_element(
-			gen_name, "distribution_publisher.py", "turtlesim_expl", n_args=args)
-
-	# 	 <!-- Data generation with gaussian distribution and default arguments -->
-	#   <node name="gauss" pkg="turtlesim_expl" type="distribution_publisher.py"
-	#     args="gaussian" />
+			n_name, "distribution_publisher.py", "turtlesim_expl", n_args=args)
 
 
 	def _create_group(self, elements, n_ns=None):

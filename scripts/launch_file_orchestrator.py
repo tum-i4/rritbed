@@ -126,11 +126,34 @@ Possible OPTIONS:
 			self._create_node_element("rosbag_recorder", "record", "rosbag", None, "-a -o " + rosbag_folder))
 
 		# Logging node
-		root_element.append(
-			self._create_padded_comment("Logging"))
+		root_element.append(self._create_padded_comment("Logging"))
 		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
 		root_element.append(
 			self._create_node_element("logger", "logger.py", "turtlesim_expl", "log"))
+
+		# Turtle group [1]
+		# Options:
+		# - Manual control
+		# - Random walk with parameter input for random seed
+		# - Random walk with intelligence
+
+		# Random mover -pi -pi1000 or float for args
+		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="-pi1000" />
+
+		root_element.append(self._create_padded_comment("Turtle group"))
+
+		# TODO: Vary parameter input for random seed
+		# TODO: Add random walk with intelligence
+		control_node = self._create_node_element(
+			"mover", "random_mover.py", "turtlesim_expl", n_args="-pi1000")
+
+		if self._manual_turtle_mode:
+			control_node = self._create_node_element(
+				"teleop", "turtle_teleop_key", "turtlesim")
+			control_node.attrib["output"] = "screen"
+
+		root_element.append(
+			self._create_turtle_group(control_node))
 
 		# Data generation [1..10]
 		# - Based on distributions
@@ -159,42 +182,7 @@ Possible OPTIONS:
 		print(possible_generators)
 		print(selected_generators)
 
-		# TODO: Note which generators exist as possibilities for the turtle (num to vel pipe)
-
-		# Turtle group [1]
-		# Options:
-		# - Random walk with parameter input for random seed
-		# - Manual control
-		# - Random walk with intelligence (to be implemented first)
-
-		# Random mover -pi -pi1000 or float for args
-		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="-pi1000" />
-
-		# control_node = self._create_node_element
-
-		# if self._manual_turtle_mode:
-		# 	control_node = self._create_node_element(
-		# 		"teleop", "turtle_teleop_key", "turtlesim")
-		# 	control_node.attrib["output"] = "screen"
-
-		# root_element.append(
-		# 	self._create_turtle_group(control_node))
-
-
-#   <group ns="turtle">
-#   	<node name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
-#     <!-- A random mover with seed pi1000 (31415...) -->
-# 	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py"
-#       args="-pi1000" />
-
-#     <!-- Manual turtle control -->
-#     <!-- node pkg="turtlesim" type="turtle_teleop_key" name="teleop" output="screen"/ -->
-#   </group>
-
-
-		# _manual_turtle_mode = False
-		# _identifier_file_path = ""
-		# _namespace_number = 0
+		# TODO: Generators
 
 		# TODO: TEMP DEBUG
 		ET.dump(root_element)
@@ -226,10 +214,11 @@ Possible OPTIONS:
 
 		node_element.attrib["name"] = n_name
 		node_element.attrib["type"] = n_type
-		node_element.attrib["pkg"] = n_pkg
 
 		if n_args is not None:
 			node_element.attrib["args"] = n_args
+
+		node_element.attrib["pkg"] = n_pkg
 
 		return node_element
 

@@ -148,17 +148,18 @@ Possible OPTIONS:
 				vin_list = rand_gen.sample(vin_list, self._namespace_number)
 
 		if self._identifier_file_path is None and self._namespace_number is None:
-			vin_list = self._generate_vins(random.randint(0, 100))
+			vin_list = self._generate_vins(1)
 
-		print("Creating {} groups{}".format(
-			len(vin_list), " in manual mode" if self._manual_turtle_mode else ""))
+		print("Creating {} group{}{}".format(
+			len(vin_list),
+			"s" if len(vin_list) > 1 else "",
+			" in manual mode" if self._manual_turtle_mode else ""))
 
 		for vin in vin_list:
 			root_element.append(self._create_unit(vin, rand_gen))
 
 		xml_tree = ET.ElementTree(root_element)
 
-		# TODO: Write to file
 		xml_tree.write(self._file_path, xml_declaration=True)
 		print("Successfully saved launch file {}".format(self._file_path))
 

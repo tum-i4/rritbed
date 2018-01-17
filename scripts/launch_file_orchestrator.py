@@ -37,8 +37,8 @@ Possible OPTIONS:
 	_file_path = ""
 
 	_manual_turtle_mode = False
-	_identifier_file_path = ""
-	_namespace_number = 0
+	_identifier_file_path = None
+	_namespace_number = None
 
 	def __init__(self):
 		""" Ctor """
@@ -127,30 +127,39 @@ Possible OPTIONS:
 		root_element.append(
 			self._create_node_element("rosbag_recorder", "record", "rosbag", None, "-a -o " + rosbag_folder))
 
-		vin_list = ["TEST"]
+		vin_list = []
+
+		# Manual mode: Just one namespace group
+		if self._manual_turtle_mode:
+			vin_list = ["Manual_mode"]
+
+		# Identifier file given: Load identifiers from there
+		if self._identifier_file_path is not None:
+			vin_list = self._load_identifiers_from_file()
+			if self._namespace_number is not None and len(vin_list) < self._namespace_number:
+				raise Exception("Given namespace number needs to be leq than given identifiers")
+
+		# Namespace number given: Generate or load appropriate amount of identifiers
+		if self._namespace_number is not None:
+			if self._identifier_file_path is None:
+				vin_list = self._generate_vins(self._namespace_number)
+			else:
+				vin_list = rand_gen.sample(vin_list, self._namespace_number)
+
+		if self._identifier_file_path is None and self._namespace_number is None:
+			vin_list = self._generate_vins(random.randint(0, 100))
+
+		print("Creating {} groups{}".format(
+			len(vin_list), " in manual mode" if self._manual_turtle_mode else ""))
 
 		for vin in vin_list:
 			root_element.append(self._create_unit(vin, rand_gen))
 
-		
-
-		# TODO: Create just one launch file with multiple namespaces!
-		# Use VIN as namespace name
-		# "Manual" launch *is* supposed to be one launch file with *just* the manually controlled turtle
-		# Based on identifier file
-		# Based on number of instances
-		# Check if identifier file length and number of instances supplied fit
-
-		# TODO: TEMP DEBUG
-		ET.dump(root_element)
-		exit()
-		# END TODO
-
-		# xml_tree = ET.ElementTree(root_element)
+		xml_tree = ET.ElementTree(root_element)
 
 		# TODO: Write to file
-		# xml_tree.write("/path/to/file", xml_declaration=True)
-		pass
+		xml_tree.write(self._file_path, xml_declaration=True)
+		print("Successfully saved launch file {}".format(self._file_path))
 
 
 	def _create_unit(self, vin, rand_gen):
@@ -280,6 +289,19 @@ Possible OPTIONS:
 	def _create_padded_comment(self, text):
 		""" Creates a comment padded front and back with a space for legibility """
 		return ET.Comment(" {} ".format(text))
+
+
+	def _load_identifiers_from_file(self):
+		""" Load the identifiers from the file path set in the class """
+
+		if not os.path.lexists(self._identifier_file_path):
+			raise Exception("Can't find identifier file at {}".format(self._identifier_file_path))
+
+		identifiers = []
+		with open(self._identifier_file_path, "r") as file_reader:
+			identifiers = file_reader.readlines()
+
+		return identifiers
 
 
 	def _generate_vins(self, number_of_vins, vary_plant=True):

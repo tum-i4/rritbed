@@ -75,8 +75,9 @@ Possible OPTIONS:
 			self._print_and_exit("No arguments supplied")
 
 		# Sanity check supplied path argument
-		path = os.path.dirname(args[0])
-		file_name = os.path.basename(args[0])
+		arg_0_expanded = os.path.expanduser(args[0])
+		path = os.path.dirname(arg_0_expanded)
+		file_name = os.path.basename(arg_0_expanded)
 		launch_ext = ".launch"
 
 		if file_name == "":
@@ -103,7 +104,7 @@ Possible OPTIONS:
 		# Check all remaining arguments
 		for arg in args[1:]:
 			if arg.startswith("-i="):
-				self._identifier_file_path = arg[3:]
+				self._identifier_file_path = os.path.expanduser(arg[3:])
 			elif arg.startswith("-n="):
 				try:
 					self._namespace_number = int(arg[3:])
@@ -203,7 +204,7 @@ Possible OPTIONS:
 		# - Live and file based
 
 		gen_defs_file_path_expanded = os.path.expanduser(GEN_DEFS_FILE_PATH)
-		if not os.path.exists(gen_defs_file_path_expanded):
+		if not os.path.lexists(gen_defs_file_path_expanded):
 			raise Exception("Generator definitions file not found at {}".format(gen_defs_file_path_expanded))
 
 		json_line = ""

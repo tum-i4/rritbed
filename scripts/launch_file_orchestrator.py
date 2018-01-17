@@ -10,6 +10,7 @@ import sys
 
 import json
 from lxml import etree as ET
+from sys import maxint as MAXINT
 
 GEN_DEFS_FILE_PATH = "~/ros/gens"
 
@@ -194,10 +195,10 @@ Possible OPTIONS:
 
 		group_element.append(self._create_padded_comment("Turtle group"))
 
-		# TODO: Vary parameter input for random seed
 		# TODO: Add random walk with intelligence
+		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
 		control_node = self._create_node_element(
-			"mover", "random_mover.py", "turtlesim_expl", n_args="-pi1000")
+			"mover", "random_mover.py", "turtlesim_expl", n_args=seed)
 
 		if self._manual_turtle_mode:
 			control_node = self._create_node_element(

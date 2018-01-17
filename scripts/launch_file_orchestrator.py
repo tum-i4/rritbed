@@ -225,6 +225,22 @@ Possible OPTIONS:
 		return node_element
 
 
+	def _create_generator_node_element(self, gen_name, args_list):
+		""" Creates a generator node element """
+
+		args = gen_name
+
+		for arg in args_list:
+			args += " {}".format(arg)
+
+		return self._create_node_element(
+			gen_name, "distribution_publisher.py", "turtlesim_expl", n_args=args)
+
+	# 	 <!-- Data generation with gaussian distribution and default arguments -->
+	#   <node name="gauss" pkg="turtlesim_expl" type="distribution_publisher.py"
+	#     args="gaussian" />
+
+
 	def _create_group(self, elements, n_ns=None):
 		""" Creates a group with the given element and optionally the given namespace """
 

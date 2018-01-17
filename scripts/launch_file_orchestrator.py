@@ -181,8 +181,8 @@ Possible OPTIONS:
 			selected_generators.append(
 				random.choice(possible_generators))
 
-		print(possible_generators)
-		print(selected_generators)
+		for key in selected_generators:
+			root_element.append(self._create_generator_node_element(key, generator_definitions[key]))
 
 		# TODO: Generators
 
@@ -225,12 +225,13 @@ Possible OPTIONS:
 		return node_element
 
 
-	def _create_generator_node_element(self, gen_name, args_list):
+	def _create_generator_node_element(self, gen_name, gen_def):
 		""" Creates a generator node element """
 
 		args = gen_name
 
-		for arg in args_list:
+		for arg_def in gen_def:
+			arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
 			args += " {}".format(arg)
 
 		return self._create_node_element(

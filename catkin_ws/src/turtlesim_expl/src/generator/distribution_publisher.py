@@ -129,17 +129,19 @@ class DistributionPublisher(object):
 
 		name = args[0]
 		queue_size = 10
+		return_message = ""
 
 		#    a) File based
 		if args[0] == self._file_based_str:
-			self._setup_reader(args)
+			return_message = self._setup_reader(args)
 			name += "_" + os.path.basename(args[1])
 		#    b) Generator based
 		else:
-			self._setup_generator(args)
+			return_message = self._setup_generator(args)
 			queue_size = self._generators[self._sub_routine].queue_size
 
 		rospy.init_node(name, anonymous=True)
+		rospy.loginfo(return_message)
 		self._publisher = rospy.Publisher(name, Float32, queue_size=queue_size)
 
 
@@ -178,6 +180,9 @@ class DistributionPublisher(object):
 		if len(my_args) > 2 and my_args[2] == "-r":
 			self._repeat_file = True
 
+		return "Publishing file-based from {}{}".format(
+			file_path, " (repeating)" if self._repeat_file else "")
+
 
 	def _setup_generator(self, my_args):
 		"""
@@ -196,11 +201,10 @@ class DistributionPublisher(object):
 		# pylint: disable-msg=W1202
 		if len(generator_arguments) != generator.get_args_count():
 			self._generator_arguments = generator.get_default_values()
-			rospy.loginfo("Initialising with default values %s", self._generator_arguments)
-			return
+			return "Initialising with default values {}".format(self._generator_arguments)
 
 		self._generator_arguments = [float(x) for x in generator_arguments]
-		rospy.loginfo("Initialising with values %s", self._generator_arguments)
+		return "Initialising with values {}".format(self._generator_arguments)
 
 
 	def run(self):

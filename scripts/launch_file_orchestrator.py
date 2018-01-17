@@ -232,7 +232,7 @@ Possible OPTIONS:
 
 		for arg_def in gen_def:
 			arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
-			args += " {}".format(arg)
+			args += " {:f}".format(arg)
 
 		return self._create_node_element(
 			gen_name, "distribution_publisher.py", "turtlesim_expl", n_args=args)

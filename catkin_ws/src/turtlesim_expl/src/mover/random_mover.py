@@ -33,6 +33,8 @@ class RandomMoveStrategy(MoveStrategy):
 	_data_field = "data"
 	_last_update_field = "last_update"
 
+	_update_rate_in_sec = 0.01
+
 	_turtle_state = {
 		_last_pose_field: {
 			_data_field: None,
@@ -127,7 +129,7 @@ class RandomMoveStrategy(MoveStrategy):
 		assert(issubclass(data.__class__, data_class))
 
 		time_now = time.clock()
-		if time_now < 0.01 + self._turtle_state[field][self._last_update_field]:
+		if time_now < self._update_rate_in_sec + self._turtle_state[field][self._last_update_field]:
 			return
 
 		self._turtle_state[field][self._data_field] = data

@@ -72,7 +72,10 @@ class RandomMoveStrategy(MoveStrategy):
 		group.add_argument("-pi1000", action="store_const", dest="seed", const=31415926535897.0,
 							help="Use pi*10B as seed")
 
-		# TODO: Add argument for intelligence mode
+		return_choice = "return"
+		parser.add_argument("--intelligence", "-i", metavar="intelligence_mode",
+							choices=[return_choice],
+							help="Specify intelligence mode;")
 
 		args = parser.parse_args(filtered_argv)
 
@@ -82,11 +85,21 @@ class RandomMoveStrategy(MoveStrategy):
 		else:
 			rospy.loginfo("No seed specified")
 
-		rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
-		rospy.Subscriber(COLOUR_PATH, Color, self._save_colour)
+		# Set get_next implementation based on intelligence selected
+		if args.intelligence is None:
+			self.get_next = self._get_next_impl
+		elif args.intelligence == return_choice:
+			rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
+			rospy.Subscriber(COLOUR_PATH, Color, self._save_colour)
+			self.get_next = self._react_impl
 
 
+	# pylint: disable-msg=E0202; (An attribute hides this method)
 	def get_next(self):
+		raise NotImplementedError
+
+
+	def _get_next_impl(self):
 		""" Move robot randomly """
 
 		vel_msg = move_helper.get_zero_twist()
@@ -105,13 +118,13 @@ class RandomMoveStrategy(MoveStrategy):
 		return vel_msg
 
 
-	def react(self):
+	def _react_impl(self):
 		""" Alternative to get_next with basic intelligence:
 		Turn robot around when approaching a red field """
 
 		# No need to react - generate normal next step
 		if self._get_last_colour != self._illegal_colour:
-			return self.get_next()
+			return self._get_next_impl()
 
 		# Generate reverse of current pose
 		rospy.logwarn("Reversing current pose - illegal area hit")

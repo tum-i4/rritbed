@@ -87,11 +87,15 @@ class RandomMoveStrategy(MoveStrategy):
 
 		# Set get_next implementation based on intelligence selected
 		if args.intelligence is None:
+			rospy.loginfo("No intelligence mode specified")
 			self.get_next = self._get_next_impl
 		elif args.intelligence == return_choice:
+			rospy.loginfo("Intelligence mode \"%s\" specified", return_choice)
 			rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
 			rospy.Subscriber(COLOUR_PATH, Color, self._save_colour)
 			self.get_next = self._react_impl
+		else:
+			raise NotImplementedError
 
 
 	# pylint: disable-msg=E0202; (An attribute hides this method)

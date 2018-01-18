@@ -24,7 +24,13 @@ class RandomMoveStrategy(MoveStrategy):
 	""" Random move strategy based on random.random """
 
 	_rand_gen = random.Random()
-	_last_pose = None
+
+	_last_pose_field = "last_pose"
+	_last_colour_field = "last_colour"
+	_turtle_state = {
+		_last_pose_field: None,
+		_last_colour_field: None
+	}
 
 
 	def __init__(self):
@@ -77,7 +83,28 @@ class RandomMoveStrategy(MoveStrategy):
 
 	def _save_pose(self, pose):
 		print(pose)
-		self._last_pose = pose
+		self._set_last_pose(pose)
+
+
+	# Getters & setters
+
+
+	def _get_last_colour(self):
+		return self._turtle_state[self._last_colour_field]
+
+
+	def _set_last_colour(self, colour):
+		assert(issubclass(colour, Color))
+		self._turtle_state[self._last_colour_field] = colour
+
+
+	def _get_last_pose(self):
+		return self._turtle_state[self._last_pose_field]
+
+
+	def _set_last_pose(self, pose):
+		assert(issubclass(pose, Pose))
+		self._turtle_state[self._last_pose_field] = pose
 
 
 if __name__ == "__main__":

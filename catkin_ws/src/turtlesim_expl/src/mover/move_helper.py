@@ -59,3 +59,5 @@ def reverse_pose(pose):
 	# Code adapted from turtlesim > mimic.cpp
 	reversed_twist.angular.z = -pose.angular_velocity
 	reversed_twist.linear.x = -pose.linear_velocity
+
+	return reversed_twist

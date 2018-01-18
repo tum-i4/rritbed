@@ -2,6 +2,7 @@
 """ Move helper functions """
 
 from geometry_msgs.msg import Twist
+from turtlesim.msg import Pose
 
 
 def get_zero_twist():
@@ -43,3 +44,18 @@ def get_twist_from_string(value_string):
 	new_twist.angular.z = value_array[5]
 
 	return new_twist
+
+
+def reverse_pose(pose):
+	"""
+	Reverses the given pose (turns around turtle)
+	Returns: A Twist message with the reversed pose
+	"""
+
+	assert(issubclass(pose.__class__, Pose))
+
+	reversed_twist = get_zero_twist()
+
+	# Code adapted from turtlesim > mimic.cpp
+	reversed_twist.angular.z = -pose.angular_velocity
+	reversed_twist.linear.x = -pose.linear_velocity

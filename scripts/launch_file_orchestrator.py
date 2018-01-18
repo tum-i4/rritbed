@@ -190,15 +190,20 @@ Possible OPTIONS:
 		# - Random walk with parameter input for random seed
 		# - Random walk with intelligence
 
-		# Random mover -pi -pi1000 or float for args
+		# Random mover -pi, -pi1000, or float for args
 		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="-pi1000" />
 
 		group_element.append(self._create_padded_comment("Turtle group"))
 
-		# TODO: Add random walk with intelligence
+		# TODO: Add more intelligence options
 		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
+		intell_choice = rand_gen.choice(["", "return"])
+		control_node_args = "--seed {}{}".format(
+			seed,
+			" --intelligence " + intell_choice if intell_choice != "" else "")
+
 		control_node = self._create_node_element(
-			"mover", "random_mover.py", "turtlesim_expl", n_args="--seed {}".format(seed))
+			"mover", "random_mover.py", "turtlesim_expl", n_args=control_node_args)
 
 		if self._manual_turtle_mode:
 			control_node = self._create_node_element(

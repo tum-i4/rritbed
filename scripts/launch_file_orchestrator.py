@@ -163,7 +163,15 @@ Possible OPTIONS:
 		for vin in vin_list:
 			root_element.append(self._create_unit(vin, rand_gen))
 
+		# Add header comment at top of file
+		header_comment = self._create_padded_comment(
+			"Launch file with {} namespaces {}".format(
+				len(vin_list),
+				"(manual mode)" if self._manual_turtle_mode else ""))
+		root_element.insert(0, header_comment)
+
 		if self._dump_mode:
+			print("") # New line
 			ET.dump(root_element)
 			exit()
 

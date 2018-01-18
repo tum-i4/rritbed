@@ -8,8 +8,10 @@ Possible arguments:
 """
 
 import argparse
-import sys
 import random
+import sys
+import time
+
 import rospy
 
 import move_helper
@@ -18,6 +20,7 @@ from turtle_control import TurtleControl
 from turtlesim.msg import Color, Pose
 
 POSE_PATH = "turtle1/pose"
+COLOUR_PATH = "turtle1/color_sensor"
 
 
 class RandomMoveStrategy(MoveStrategy):
@@ -27,9 +30,18 @@ class RandomMoveStrategy(MoveStrategy):
 
 	_last_pose_field = "last_pose"
 	_last_colour_field = "last_colour"
+	_data_field = "data"
+	_last_update_field = "last_update"
+
 	_turtle_state = {
-		_last_pose_field: None,
-		_last_colour_field: None
+		_last_pose_field: {
+			_data_field: None,
+			_last_update_field: 0
+		},
+		_last_colour_field: {
+			_data_field: None,
+			_last_update_field: 0
+		}
 	}
 
 
@@ -51,6 +63,8 @@ class RandomMoveStrategy(MoveStrategy):
 		group.add_argument("-pi1000", action="store_const", dest="seed", const=31415926535897.0,
 							help="Use pi*10B as seed")
 
+		# TODO: Add argument for intelligence mode
+
 		args = parser.parse_args(filtered_argv)
 
 		if args.seed is not None:
@@ -60,6 +74,7 @@ class RandomMoveStrategy(MoveStrategy):
 			rospy.loginfo("No seed specified")
 
 		rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
+		rospy.Subscriber(COLOUR_PATH, Color, self._save_colour)
 
 
 	def get_next(self):
@@ -82,20 +97,14 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _save_pose(self, pose):
-		print(pose)
 		self._set_last_pose(pose)
 
 
+	def _save_colour(self, colour):
+		self._set_last_colour(colour)
+
+
 	# Getters & setters
-
-
-	def _get_last_colour(self):
-		return self._turtle_state[self._last_colour_field]
-
-
-	def _set_last_colour(self, colour):
-		assert(issubclass(colour, Color))
-		self._turtle_state[self._last_colour_field] = colour
 
 
 	def _get_last_pose(self):
@@ -103,8 +112,26 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _set_last_pose(self, pose):
-		assert(issubclass(pose, Pose))
-		self._turtle_state[self._last_pose_field] = pose
+		self._set_field(self._last_pose_field, pose, Pose)
+
+
+	def _get_last_colour(self):
+		return self._turtle_state[self._last_colour_field]
+
+
+	def _set_last_colour(self, colour):
+		self._set_field(self._last_colour_field, colour, Color)
+
+
+	def _set_field(self, field, data, data_class):
+		assert(issubclass(data.__class__, data_class))
+
+		time_now = time.clock()
+		if time_now < 0.01 + self._turtle_state[field][self._last_update_field]:
+			return
+
+		self._turtle_state[field][self._data_field] = data
+		self._turtle_state[field][self._last_update_field] = time_now
 
 
 if __name__ == "__main__":

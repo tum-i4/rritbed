@@ -10,6 +10,6 @@ class MoveStrategy(object):
 		raise NotImplementedError
 
 
-	def react(self, colour_message):
-		""" Generate next velocity by reacting to the colour message """
+	def react(self):
+		""" Generate next velocity by reacting to the messages published by the turtle """
 		raise NotImplementedError

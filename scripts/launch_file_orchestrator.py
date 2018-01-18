@@ -198,7 +198,7 @@ Possible OPTIONS:
 		# TODO: Add random walk with intelligence
 		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
 		control_node = self._create_node_element(
-			"mover", "random_mover.py", "turtlesim_expl", n_args=seed)
+			"mover", "random_mover.py", "turtlesim_expl", n_args="--seed {}".format(seed))
 
 		if self._manual_turtle_mode:
 			control_node = self._create_node_element(

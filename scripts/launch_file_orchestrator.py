@@ -311,7 +311,7 @@ Possible OPTIONS:
 
 	def _create_padded_comment(self, text):
 		""" Creates a comment padded front and back with a space for legibility """
-		return ET.Comment(" {} ".format(text))
+		return ET.Comment(" {} ".format(text.strip()))
 
 
 	def _load_identifiers_from_file(self):

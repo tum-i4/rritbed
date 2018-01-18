@@ -46,11 +46,18 @@ class RandomMoveStrategy(MoveStrategy):
 		}
 	}
 
+	_illegal_colour = Color()
+
 
 	def __init__(self):
 		""" Ctor """
 
 		MoveStrategy.__init__(self)
+
+		# Set illegal colour parameters
+		self._illegal_colour.r = 255
+		self._illegal_colour.g = 0
+		self._illegal_colour.b = 0
 
 		# Remove remapping arguments and program name
 		filtered_argv = rospy.myargv(sys.argv)[1:]
@@ -96,6 +103,21 @@ class RandomMoveStrategy(MoveStrategy):
 			vel_msg.angular.z = veloc_value
 
 		return vel_msg
+
+
+	def react(self):
+		""" Alternative to get_next with basic intelligence:
+		Turn robot around when approaching a red field """
+
+		# No need to react - generate normal next step
+		if self._get_last_colour != self._illegal_colour:
+			return self.get_next()
+
+		# Generate reverse of current pose
+		rospy.logwarn("Reversing current pose - illegal area hit")
+		pose = self._get_last_pose
+		reversed_pose_twist = move_helper.reverse_pose(pose)
+		return reversed_pose_twist
 
 
 	def _save_pose(self, pose):

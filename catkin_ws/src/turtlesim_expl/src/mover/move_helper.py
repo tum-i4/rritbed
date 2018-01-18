@@ -54,10 +54,10 @@ def reverse_pose(pose):
 
 	assert(issubclass(pose.__class__, Pose))
 
-	reversed_twist = get_zero_twist()
+	reversed_pose_twist = get_zero_twist()
 
 	# Code adapted from turtlesim > mimic.cpp
-	reversed_twist.angular.z = -pose.angular_velocity
-	reversed_twist.linear.x = -pose.linear_velocity
+	reversed_pose_twist.angular.z = -pose.angular_velocity
+	reversed_pose_twist.linear.x = -pose.linear_velocity
 
-	return reversed_twist
+	return reversed_pose_twist

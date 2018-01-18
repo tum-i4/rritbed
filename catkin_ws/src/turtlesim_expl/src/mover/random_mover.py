@@ -15,12 +15,16 @@ import rospy
 import move_helper
 from move_strategy import MoveStrategy
 from turtle_control import TurtleControl
+from turtlesim.msg import Color, Pose
+
+POSE_PATH = "turtle1/pose"
 
 
 class RandomMoveStrategy(MoveStrategy):
 	""" Random move strategy based on random.random """
 
 	_rand_gen = random.Random()
+	_last_pose = None
 
 
 	def __init__(self):
@@ -49,6 +53,8 @@ class RandomMoveStrategy(MoveStrategy):
 		else:
 			rospy.loginfo("No seed specified")
 
+		rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
+
 
 	def get_next(self):
 		""" Move robot randomly """
@@ -67,6 +73,11 @@ class RandomMoveStrategy(MoveStrategy):
 			vel_msg.angular.z = veloc_value
 
 		return vel_msg
+
+
+	def _save_pose(self, pose):
+		print(pose)
+		self._last_pose = pose
 
 
 if __name__ == "__main__":

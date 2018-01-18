@@ -21,10 +21,9 @@ class LogEntry(object):
 	userIDs_field = "userIDs"
 	timeUTC_field = "timeUTC"
 	timeUnix_field = "timeUnix"
-	context_field = "context"
-	str_field = "str"
-	client_field = "client"
-	method_field = "method"
+	session_id_field = "session_id"
+	gps_position_field = "gps_position"
+	execution_time_field = "execution_time"
 
 	log_entry = {
 		vin_field : "",             # Identifier of the car calling the microservice
@@ -40,17 +39,10 @@ class LogEntry(object):
 		userIDs_field : "[null]",   # List of (always one?) ints or [null] in string
 		timeUTC_field : "",         # When the logging event has happened
 		timeUnix_field : 0,         # !Caution! At COMPANY not the same time as timeUTC
-		context_field : {
-			str_field : "",
-			client_field : "webapi",
-			method_field : ""       # method name - see class
-		}
 
-		#"hub" : "EMEA",         # "Region" the server is used for: EMEA
-		#"threadID" : "",        # Server worker pool thread id serving this request
-		#"import_timestamp" : "",# When was the log imported in kibana
-		#"lib_topic" : "",       # Kibana topic name log was sent to
-		#"version" : "1",        # Internal kibana version - constant 1
+		session_id_field : "",
+		gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
+		execution_time_field : 0    # How long the execution took
 	}
 
 

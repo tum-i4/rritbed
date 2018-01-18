@@ -23,8 +23,8 @@ ZIPF = "zipf"
 DATA_GENERATOR_NAMES = [
 	GAUSSIAN, GUMBEL, LAPLACE, LOGISTIC, PARETO, RAYLEIGH, UNIFORM, VONMISES, WALD, WEIBULL, ZIPF]
 
-COLOUR_1_PATH = "/ecu1/turtle1/color_sensor"
-COLOUR_2_PATH = "/ecu2/turtle1/color_sensor"
+COLOUR_1_PATH = "turtle/turtle1/color_sensor"
+COLOUR_2_PATH = "turtle/turtle1/color_sensor"
 
 
 class Logger(object):

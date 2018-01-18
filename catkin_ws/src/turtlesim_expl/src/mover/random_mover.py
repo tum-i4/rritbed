@@ -7,6 +7,7 @@ Possible arguments:
 [seed]  : use given value (must be valid float or int) as seed
 """
 
+import argparse
 import sys
 import random
 import rospy
@@ -28,34 +29,25 @@ class RandomMoveStrategy(MoveStrategy):
 		MoveStrategy.__init__(self)
 
 		# Remove remapping arguments and program name
-		args = rospy.myargv(sys.argv)[1:]
+		filtered_argv = rospy.myargv(sys.argv)[1:]
 
-		seed = self._get_seed(args)
+		parser = argparse.ArgumentParser(description="Randomly move a turtlesim around")
 
-		if seed is not None:
-			rospy.loginfo("Using seed %s", seed)
-			self._rand_gen.seed(seed)
+		group = parser.add_mutually_exclusive_group()
+		group.add_argument("--seed", "-s", metavar="seed", type=float,
+							help="Specify seed for the random generator")
+		group.add_argument("-pi", action="store_const", dest="seed", const=3.1415926535897,
+							help="Use pi as seed")
+		group.add_argument("-pi1000", action="store_const", dest="seed", const=31415926535897.0,
+							help="Use pi*10B as seed")
 
+		args = parser.parse_args(filtered_argv)
 
-	def _get_seed(self, args):
-		""" Get the seed from the supplied arguments (return None if no arguments are given) """
-
-		if not args:
-			return None
-
-		if args[0] == "-pi":
-			return 3.1415926535897
-
-		if args[0] == "-pi1000":
-			return 31415926535897
-
-		try:
-			seed = float(args[0])
-		except ValueError:
-			raise Exception(
-				"Please provide valid argument or a float as a seed input.\nProvided: %s", args[0])
-
-		return seed
+		if args.seed is not None:
+			rospy.loginfo("Using seed %s", args.seed)
+			self._rand_gen.seed(args.seed)
+		else:
+			rospy.loginfo("No seed specified")
 
 
 	def get_next(self):

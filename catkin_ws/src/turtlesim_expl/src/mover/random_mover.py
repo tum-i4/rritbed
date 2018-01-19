@@ -128,10 +128,6 @@ class RandomMoveStrategy(MoveStrategy):
 		self._rand_gen.jumpahead(7)
 		vel_msg.angular.z = self._rand_gen.choice(angular_z_choices)
 
-		# Make sure we escalate speed the longer we are in the illegal zone
-		if self._turtle_state[self._illegal_since_field] is not None:
-			vel_msg.linear.x *= self._turtle_state[self._illegal_since_field]
-
 		return vel_msg
 
 
@@ -156,9 +152,18 @@ class RandomMoveStrategy(MoveStrategy):
 			return self._get_next_impl()
 
 		# Generate reverse of current pose
-		rospy.logwarn("Reversing current pose - illegal area hit")
+		rospy.logwarn("Reversing and escalating current pose - illegal area hit")
 		pose = self._get_last_pose()
 		reversed_pose_twist = move_helper.reverse_pose(pose)
+
+		# Make sure we escalate speed the longer we are in the illegal zone
+		if self._turtle_state[self._illegal_since_field] is not None:
+			time_since_illegal = self._turtle_state[self._illegal_since_field]
+			if reversed_pose_twist.linear.x < 0:
+				reversed_pose_twist.linear.x -= time_since_illegal
+			else:
+				reversed_pose_twist.linear.x += time_since_illegal
+
 		return reversed_pose_twist
 
 

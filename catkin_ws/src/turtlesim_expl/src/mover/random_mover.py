@@ -108,16 +108,23 @@ class RandomMoveStrategy(MoveStrategy):
 
 		vel_msg = move_helper.get_zero_twist()
 
-		# Decide if the turtle walks or turns
-		turtle_walks = self._rand_gen.choice([True, False])
+		linear_x_choices = [
+			0,
+			self._jmp_and_rndint(-5, 5),
+			self._jmp_and_rndint(-7, 7),
+			self._jmp_and_rndint(-10, 10)
+		]
 
-		# Velocity should be between -10 and 10, linear x (walk) or angular z (turn)
-		veloc_value = self._rand_gen.choice(range(-10, 11))
+		angular_z_choices = [
+			0,
+			self._jmp_and_rndint(-1, 1),
+			self._jmp_and_rndint(-3, 3),
+			self._jmp_and_rndint(-5, 5)
+		]
 
-		if turtle_walks:
-			vel_msg.linear.x = veloc_value
-		else:
-			vel_msg.angular.z = veloc_value
+		vel_msg.linear.x = self._rand_gen.choice(linear_x_choices)
+		self._rand_gen.jumpahead(7)
+		vel_msg.angular.z = self._rand_gen.choice(angular_z_choices)
 
 		return vel_msg
 

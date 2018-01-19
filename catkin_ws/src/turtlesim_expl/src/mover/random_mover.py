@@ -149,6 +149,15 @@ class RandomMoveStrategy(MoveStrategy):
 		return reversed_pose_twist
 
 
+	def _jmp_and_rndint(self, start, stop, jmp=79):
+		""" Jumpahead and return a random integer in the specified range [start, stop] """
+		self._rand_gen.jumpahead(jmp)
+		return self._rand_gen.randint(start, stop)
+
+
+	# Event handlers
+
+
 	def _save_pose(self, pose):
 		self._set_last_pose(pose)
 

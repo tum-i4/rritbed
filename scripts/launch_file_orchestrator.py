@@ -33,7 +33,7 @@ class LaunchFileOrchestrator(object):
 
 		parser = argparse.ArgumentParser(prog="lfo")
 
-		sub_parsers = parser.add_subparsers(title="modes")
+		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
 
 		# GEN mode
 		parser_default_mode = sub_parsers.add_parser("gen", help="Create a ROS launch file")
@@ -65,11 +65,11 @@ class LaunchFileOrchestrator(object):
 		args = parser.parse_args()
 
 		# GEN mode
-		if args.dump_mode is not None:
+		if args.mode == "gen":
 			self._generate_launch_file_and_exit(args)
 
 		# VIN mode
-		if args.vin_count is not None:
+		if args.mode == "vin":
 			self._print_vins_and_exit(args.vin_count, args.vary_plant)
 
 		# Missing implementation

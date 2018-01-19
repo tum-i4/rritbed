@@ -3,6 +3,7 @@
 
 import requests
 import rospy
+import time
 from turtlesim.msg import Color
 from std_msgs.msg import Float32
 
@@ -41,6 +42,8 @@ class Logger(object):
 		None,
 		None
 	]
+
+	_last_conn_err = 0
 
 	def init(self):
 		""" Initialise logger """
@@ -81,7 +84,14 @@ class Logger(object):
 
 	def send_log_request(self, log_method, data):
 		""" Send request to specified logging endpoint with given data """
-		requests.post(URL + PATH + "/" + log_method, data)
+		try:
+			requests.post(URL + PATH + "/" + log_method, data, timeout=0.01)
+		except requests.ConnectionError as conn_err:
+			time_now = time.clock()
+			# Only print an error every second
+			if time_now > self._last_conn_err + 1:
+				rospy.logerr("Can't connect to logging API; Error: %s", conn_err)
+				self._last_conn_err = time_now
 
 
 

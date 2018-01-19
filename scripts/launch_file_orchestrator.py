@@ -183,9 +183,9 @@ class LaunchFileOrchestrator(object):
 
 		# Logging node
 		group_element.append(self._create_padded_comment("Logging"))
-		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
+		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" args="A1231414" />
 		group_element.append(
-			self._create_node_element("logger", "logger.py", "turtlesim_expl"))
+			self._create_node_element("logger", "logger.py", "turtlesim_expl", n_args=vin))
 
 		# Turtle group [1]
 		# Options:

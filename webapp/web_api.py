@@ -28,7 +28,7 @@ def log():
 	return
 
 
-@post("/log/data/<generator:re:[a-z]")
+@post("/log/data/<generator>")
 def log_data(generator):
 	""" Log endpoint for data generator """
 	_log_num(generator, request.params.generated)

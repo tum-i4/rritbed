@@ -85,7 +85,7 @@ class Logger(object):
 	def send_log_request(self, log_method, data):
 		""" Send request to specified logging endpoint with given data """
 		try:
-			requests.post(URL + PATH + "/" + log_method, data, timeout=0.01)
+			requests.post(URL + PATH + "/" + log_method, data)
 		except requests.ConnectionError as conn_err:
 			time_now = time.clock()
 			# Only print an error every second

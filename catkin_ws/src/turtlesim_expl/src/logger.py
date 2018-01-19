@@ -92,11 +92,11 @@ class Logger(object):
 		""" Send request to specified logging endpoint with given data """
 		try:
 			requests.post(URL + PATH + "/" + log_method, data)
-		except requests.ConnectionError as conn_err:
-			time_now = time.clock()
+		except requests.ConnectionError:
+			time_now = time.time()
 			# Only print an error every second
 			if time_now > self._last_conn_err + 1:
-				rospy.logerr("Can't connect to logging API; Error: %s", conn_err)
+				rospy.logerr("Can't connect to logging API")
 				self._last_conn_err = time_now
 
 

@@ -48,6 +48,14 @@ class Logger(object):
 	def init(self):
 		""" Initialise logger """
 
+		parser = argparse.ArgumentParser(prog="logger")
+
+		parser.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
+
+		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
+
+		self._data[self._vin_field] = args.namespace
+
 		rospy.init_node('logger', anonymous=True)
 
 		# Data generation

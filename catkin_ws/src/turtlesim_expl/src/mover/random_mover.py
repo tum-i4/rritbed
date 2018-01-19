@@ -32,6 +32,7 @@ class RandomMoveStrategy(MoveStrategy):
 	_last_colour_field = "last_colour"
 	_data_field = "data"
 	_last_update_field = "last_update"
+	_illegal_since_field = "illegal_since"
 
 	_update_rate_in_sec = 0.01
 
@@ -43,7 +44,8 @@ class RandomMoveStrategy(MoveStrategy):
 		_last_colour_field: {
 			_data_field: None,
 			_last_update_field: 0
-		}
+		},
+		_illegal_since_field: None
 	}
 
 	_illegal_colour = Color()
@@ -126,6 +128,10 @@ class RandomMoveStrategy(MoveStrategy):
 		self._rand_gen.jumpahead(7)
 		vel_msg.angular.z = self._rand_gen.choice(angular_z_choices)
 
+		# Make sure we escalate speed the longer we are in the illegal zone
+		if self._turtle_state[self._illegal_since_field] is not None:
+			vel_msg.linear.x *= self._turtle_state[self._illegal_since_field]
+
 		return vel_msg
 
 
@@ -135,7 +141,14 @@ class RandomMoveStrategy(MoveStrategy):
 
 		# No need to react - generate normal next step
 		if self._get_last_colour() != self._illegal_colour:
+			self._turtle_state[self._illegal_since_field] = None
 			return self._get_next_impl()
+
+		# We hit an illegal area
+
+		# Initialise "illegal since" field
+		if self._turtle_state[self._illegal_since_field] is None:
+			self._turtle_state[self._illegal_since_field] = time.clock()
 
 		# Make sure we didn't spawn in the illegal area
 		if (self._get_last_pose().linear_velocity == 0

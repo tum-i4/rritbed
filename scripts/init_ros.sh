@@ -4,8 +4,8 @@ args=`getopt f: $*`
 
 base_path="~/thesis/ma-ros_git/scripts"
 
-if (( $# == 2 )); then
-    file_name="$2.launch"
+if (( $# == 1 )); then
+    file_name=$1
 else
 	file_name="ros.launch"
 fi

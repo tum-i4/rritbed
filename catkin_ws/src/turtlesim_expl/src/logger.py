@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 """ Logging node """
 
+import argparse
+import sys
+import time
+
 import requests
 import rospy
-import time
+
 from turtlesim.msg import Color
 from std_msgs.msg import Float32
+
 
 URL = "http://localhost:5000"
 PATH = "/log"
@@ -24,8 +29,7 @@ ZIPF = "zipf"
 DATA_GENERATOR_NAMES = [
 	GAUSSIAN, GUMBEL, LAPLACE, LOGISTIC, PARETO, RAYLEIGH, UNIFORM, VONMISES, WALD, WEIBULL, ZIPF]
 
-COLOUR_1_PATH = "turtle/turtle1/color_sensor"
-COLOUR_2_PATH = "turtle/turtle1/color_sensor"
+COLOUR_PATH = "turtle/turtle1/color_sensor"
 
 
 class Logger(object):
@@ -33,15 +37,11 @@ class Logger(object):
 
 	_vin_field = "vin"
 
-	_data = [
-		{_vin_field: "A192738"},
-		{_vin_field: "A232758"}
-	]
+	_data = {
+		_vin_field: ""
+	}
 
-	_last_colour = [
-		None,
-		None
-	]
+	_last_colour = None
 
 	_last_conn_err = 0
 
@@ -54,29 +54,27 @@ class Logger(object):
 		for name in DATA_GENERATOR_NAMES:
 			rospy.Subscriber(name, Float32, self.log_generated_data, name)
 
-		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour, 0)
-		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour, 1)
+		rospy.Subscriber(COLOUR_PATH, Color, self.log_colour)
 
 
 	def log_generated_data(self, data, generator_name):
 		""" Logging generated data value """
 
-		# TODO: Use ROS master / namespace specific VIN
-		request = self._data[0]
+		request = self._data
 		request["generated"] = data.data
 
 		self.send_log_request("data/" + generator_name, request)
 
 
-	def log_colour(self, log_data, index):
+	def log_colour(self, log_data):
 		""" Colour logging """
 
-		if self._last_colour[index] == log_data:
+		if self._last_colour == log_data:
 			return
 
-		self._last_colour[index] = log_data
+		self._last_colour = log_data
 
-		request = self._data[index]
+		request = self._data
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 
 		self.send_log_request("colour", request)

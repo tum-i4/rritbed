@@ -4,13 +4,13 @@ Launch file orchestrator
 For usage see _help() method.
 """
 
+import argparse
 import os
 import random
-import sys
 
 import json
-from lxml import etree as ET
 from sys import maxint as MAXINT
+from lxml import etree as ET
 
 GEN_DEFS_FILE_PATH = "~/ros/gens"
 
@@ -18,28 +18,11 @@ GEN_DEFS_FILE_PATH = "~/ros/gens"
 class LaunchFileOrchestrator(object):
 	""" Creates a launch file based on the given arguments """
 
-	_help_text = """
-Usage:
-lfo --help : Display this help
-lfo --vins <number of vins> [vary plant: true / false]
-
-lfo </path/to/file> [OPTIONS]
-
-Possible OPTIONS:
---manual      : Create launch file with only one manually controlled turtle,
-                a logger node and rosbag recording.
-                Excludes all other options!
--i="/file"    : Path to file with identifiers to use for namespaces.
-                Limits number of namespaces to the number of individual 
-                identifiers in file!
--n=NUMBER     : Number of namespaces to create
-	"""
-
 	_file_path = ""
 
 	_manual_turtle_mode = False
 	_identifier_file_path = None
-	_namespace_number = None
+	_namespace_count = None
 
 	_dump_mode = False
 
@@ -48,79 +31,91 @@ Possible OPTIONS:
 
 		object.__init__(self)
 
-		args = sys.argv[1:]
+		parser = argparse.ArgumentParser(prog="lfo")
 
-		if "--help" in args or not args:
-			self._print_and_exit(self._help_text)
+		sub_parsers = parser.add_subparsers(title="modes")
+
+		# GEN mode
+		parser_default_mode = sub_parsers.add_parser("gen", help="Create a ROS launch file")
+
+		file_or_dump_group = parser_default_mode.add_mutually_exclusive_group(required=True)
+		file_or_dump_group.add_argument("--file", "-f", metavar="/FILE/PATH", dest="file_path",
+			help="Write result to specified file")
+		file_or_dump_group.add_argument("--dump", "-d", action="store_true", dest="dump_mode",
+			help="Dump result to stdout")
+
+		optionals_group = parser_default_mode.add_argument_group(title="additional options")
+		optionals_group.add_argument("--manual", "-m", action="store_true", dest="manual_turtle_mode",
+			help=("Create launch file with only one manually controlled turtle, a logger node and "
+			"rosbag recording.\nExcludes other options!"))
+		optionals_group.add_argument("--identifiers", "-i", dest="identifier_file_path",
+			metavar="/FILE/PATH",
+			help=("Path to file with identifiers to use for namespaces. Limits number of "
+			"namespaces to the number of individual identifiers in file!"))
+		optionals_group.add_argument("--namespaces", "-n", dest="namespace_count", metavar="NS_COUNT",
+			help="Number of namespaces to create")
 
 		# VIN mode
-		if "--vins" in args:
-			if len(args) < 2 or len(args) > 3:
-				self._print_and_exit("Invalid number of arguments supplied")
+		parser_vin_mode = sub_parsers.add_parser("vin", help="Generate VINs and output to stdout")
 
-			number_of_vins = 0
-			try:
-				number_of_vins = int(args[1])
-			except ValueError:
-				self._print_and_exit("Invalid value for number of VINs supplied: {}".format(args[1]))
+		parser_vin_mode.add_argument("vin_count", type=int, help="Number of VINs to generate")
+		parser_vin_mode.add_argument("--dont-vary-plant", "-p", action="store_false", dest="vary_plant",
+			help="Vary plant letter (default: yes)")
 
-			vary_plant = True
-			if len(args) == 3:
-				if args[2] == "false":
-					vary_plant = False
-				else:
-					self._print_and_exit("Invalid value for vary plant argument supplied: {}".format(args[2]))
+		args = parser.parse_args()
 
-			self._print_vins_and_exit(number_of_vins, vary_plant)
+		# GEN mode
+		if args.dump_mode is not None:
+			self._generate_launch_file_and_exit(args)
 
-		# Make sure arguments have been supplied
-		if not args:
-			self._print_and_exit("No arguments supplied")
+		# VIN mode
+		if args.vin_count is not None:
+			self._print_vins_and_exit(args.vin_count, args.vary_plant)
 
-		# Sanity check supplied path argument
-		arg_0_expanded = os.path.expanduser(args[0])
-		path = os.path.dirname(arg_0_expanded)
-		file_name = os.path.basename(arg_0_expanded)
-		launch_ext = ".launch"
-
-		if file_name == "":
-			file_name = "ros.launch"
-		elif not file_name.endswith(launch_ext):
-			file_name += launch_ext
-
-		if not os.path.lexists(path):
-			self._print_and_exit("Supplied path {} does not exist.".format(path))
-
-		file_path = os.path.join(path, file_name)
-		if os.path.lexists(file_path):
-			self._print_and_exit("File {} exists already".format(file_path))
-
-		self._file_path = file_path
-
-		# Manual mode?
-		if "--manual" in args:
-			self._manual_turtle_mode = True
-			if len(args) > 2:
-				self._print_and_exit("When using -m, no other arguments are allowed")
-			return
-
-		# Check all remaining arguments
-		for arg in args[1:]:
-			if arg.startswith("-i="):
-				self._identifier_file_path = os.path.expanduser(arg[3:])
-			elif arg.startswith("-n="):
-				try:
-					self._namespace_number = int(arg[3:])
-				except ValueError:
-					self._print_and_exit(
-						"Please supply integer for namespace number.\nReceived: {}".format(arg[3:]))
-			elif arg == "--dump":
-				self._dump_mode = True
-			else:
-				self._print_and_exit("Invalid argument supplied: {}".format(arg))
+		# Missing implementation
+		raise NotImplementedError
 
 
-	def create(self):
+	def _generate_launch_file_and_exit(self, args):
+		self._dump_mode = args.dump_mode
+
+		# File mode: Sanity check and fix supplied path argument
+		if not self._dump_mode:
+			path_expanded = os.path.expanduser(args.file_path)
+			path = os.path.dirname(path_expanded)
+			file_name = os.path.basename(path_expanded)
+			launch_ext = ".launch"
+
+			if file_name == "":
+				file_name = "ros.launch"
+			elif not file_name.endswith(launch_ext):
+				file_name += launch_ext
+
+			if not os.path.lexists(path):
+				self._print_and_exit("Supplied path {} does not exist.".format(path))
+
+			file_path = os.path.join(path, file_name)
+			if os.path.lexists(file_path):
+				self._print_and_exit("File {} exists already".format(file_path))
+
+			self._file_path = file_path
+
+		# Make sure that in manual mode no other option has been chosen
+		if args.manual_turtle_mode and (
+			args.identifier_file_path is not None
+			or args.namespace_count is not None):
+			self._print_and_exit("When using manual mode, no other arguments are allowed")
+
+		# Set other class variables
+		self._manual_turtle_mode = args.manual_turtle_mode
+		self._identifier_file_path = args.identifier_file_path
+		self._namespace_count = args.namespace_count
+
+		self._create()
+		exit()
+
+
+	def _create(self):
 		""" Create the launch file based on the set parameters """
 		rand_gen = random.Random()
 		root_element = ET.Element("launch")
@@ -142,17 +137,17 @@ Possible OPTIONS:
 		# Identifier file given: Load identifiers from there
 		if self._identifier_file_path is not None:
 			vin_list = self._load_identifiers_from_file()
-			if self._namespace_number is not None and len(vin_list) < self._namespace_number:
+			if self._namespace_count is not None and len(vin_list) < self._namespace_count:
 				raise Exception("Given namespace number needs to be leq than given identifiers")
 
 		# Namespace number given: Generate or load appropriate amount of identifiers
-		if self._namespace_number is not None:
+		if self._namespace_count is not None:
 			if self._identifier_file_path is None:
-				vin_list = self._generate_vins(self._namespace_number)
+				vin_list = self._generate_vins(self._namespace_count)
 			else:
-				vin_list = rand_gen.sample(vin_list, self._namespace_number)
+				vin_list = rand_gen.sample(vin_list, self._namespace_count)
 
-		if self._identifier_file_path is None and self._namespace_number is None:
+		if self._identifier_file_path is None and self._namespace_count is None:
 			vin_list = self._generate_vins(1)
 
 		print("Creating {} group{}{}".format(
@@ -376,4 +371,3 @@ Possible OPTIONS:
 
 if __name__ == "__main__":
 	LFO = LaunchFileOrchestrator()
-	LFO.create()

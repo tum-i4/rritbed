@@ -49,7 +49,7 @@ class Logger(object):
 
 		# Data generation
 		for name in DATA_GENERATOR_NAMES:
-			rospy.Subscriber("/" + name, Float32, self.log_generated_data, name)
+			rospy.Subscriber(name, Float32, self.log_generated_data, name)
 
 		rospy.Subscriber(COLOUR_1_PATH, Color, self.log_colour, 0)
 		rospy.Subscriber(COLOUR_2_PATH, Color, self.log_colour, 1)

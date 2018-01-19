@@ -134,12 +134,17 @@ class RandomMoveStrategy(MoveStrategy):
 		Turn robot around when approaching a red field """
 
 		# No need to react - generate normal next step
-		if self._get_last_colour != self._illegal_colour:
+		if self._get_last_colour() != self._illegal_colour:
+			return self._get_next_impl()
+
+		# Make sure we didn't spawn in the illegal area
+		if (self._get_last_pose().linear_velocity == 0
+			and self._get_last_pose().angular_velocity == 0):
 			return self._get_next_impl()
 
 		# Generate reverse of current pose
 		rospy.logwarn("Reversing current pose - illegal area hit")
-		pose = self._get_last_pose
+		pose = self._get_last_pose()
 		reversed_pose_twist = move_helper.reverse_pose(pose)
 		return reversed_pose_twist
 
@@ -156,7 +161,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _get_last_pose(self):
-		return self._turtle_state[self._last_pose_field]
+		return self._turtle_state[self._last_pose_field][self._data_field]
 
 
 	def _set_last_pose(self, pose):
@@ -164,7 +169,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _get_last_colour(self):
-		return self._turtle_state[self._last_colour_field]
+		return self._turtle_state[self._last_colour_field][self._data_field]
 
 
 	def _set_last_colour(self, colour):

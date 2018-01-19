@@ -144,7 +144,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 		# Initialise "illegal since" field
 		if self._turtle_state[self._illegal_since_field] is None:
-			self._turtle_state[self._illegal_since_field] = time.clock()
+			self._turtle_state[self._illegal_since_field] = time.time()
 
 		# Make sure we didn't spawn in the illegal area
 		if (self._get_last_pose().linear_velocity == 0
@@ -206,7 +206,7 @@ class RandomMoveStrategy(MoveStrategy):
 	def _set_field(self, field, data, data_class):
 		assert(issubclass(data.__class__, data_class))
 
-		time_now = time.clock()
+		time_now = time.time()
 		if time_now < self._update_rate_in_sec + self._turtle_state[field][self._last_update_field]:
 			return
 

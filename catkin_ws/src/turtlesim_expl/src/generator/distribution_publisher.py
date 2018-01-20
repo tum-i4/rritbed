@@ -58,6 +58,8 @@ class DistributionPublisher(object):
 		generator_choices = GENS.get_generator_names()
 
 		parser = argparse.ArgumentParser(prog="dist_pub")
+		parser.add_argument("--id", "-i", help="ID to publish to")
+
 		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
 
 		# Live gen mode
@@ -92,9 +94,12 @@ class DistributionPublisher(object):
 		else:
 			raise NotImplementedError
 
+		# If ID was set we use it as a topic to publish to
+		publish_topic = args.id or name
+
 		rospy.init_node(name, anonymous=True)
 		rospy.loginfo(return_message)
-		self._publisher = rospy.Publisher(name, Float32, queue_size=queue_size)
+		self._publisher = rospy.Publisher(publish_topic, Float32, queue_size=queue_size)
 
 
 	def _setup_reader(self, file_path, repeat_file):

@@ -1,22 +1,18 @@
 #!/usr/bin/env python
 """
-Create a JSON file describing all possible generators
-Usage:
---generators [file name]
-
 Generate data based on a distribution and publish it to ROS
 Possible arguments:
-gaussian [loc] [scale] : Normal distribution
-gumbel [loc] [scale]
-laplace [loc] [scale]
-logistic [loc] [scale] : Logistic distribution - scale > 0
-pareto [alpha]         : Pareto distribution - alpha > 0
-rayleigh [scale]       : Rayleigh distribution - scale >= 0
-uniform [low] [high]   : Uniform distribution - low < high
-vonmises [mu] [kappa]  : Von Mises distribution - kappa >= 0
-wald [mean] [scale]    : Wald distribution - mean > 0, scale >= 0
-weibull [a]            : Weibull distribution - a > 0
-zipf [a]               : Zipf distribution - a > 1
+gen gaussian [loc] [scale] : Normal distribution
+gen gumbel [loc] [scale]
+gen laplace [loc] [scale]
+gen logistic [loc] [scale] : Logistic distribution - scale > 0
+gen pareto [alpha]         : Pareto distribution - alpha > 0
+gen rayleigh [scale]       : Rayleigh distribution - scale >= 0
+gen uniform [low] [high]   : Uniform distribution - low < high
+gen vonmises [mu] [kappa]  : Von Mises distribution - kappa >= 0
+gen wald [mean] [scale]    : Wald distribution - mean > 0, scale >= 0
+gen weibull [a]            : Weibull distribution - a > 0
+gen zipf [a]               : Zipf distribution - a > 1
 
 Publish distribution based on pre-generated file
 Possible arguments:
@@ -25,15 +21,12 @@ file <file name> [-r]  : Repeat after reaching EOF
 
 
 import argparse
-import json
 import os
 import sys
-import numpy as np
 import rospy
-from std_msgs.msg import Float32
 
-from distribution_generator import DistributionGenerator
-from argument_constraint import ArgumentConstraint as AC
+import generators as GENS
+from std_msgs.msg import Float32
 
 _BASE_PATH = "~/ros"
 
@@ -52,53 +45,7 @@ class DistributionPublisher(object):
 	_repeat_file = False
 
 	_sub_routine = ""
-
 	_generator_arguments = []
-
-
-	_gaussian_str = "gaussian"
-	_gumbel_str = "gumbel"
-	_laplace_str = "laplace"
-	_logistic_str = "logistic"
-	_pareto_str = "pareto"
-	_rayleigh_str = "rayleigh"
-	_uniform_str = "uniform"
-	_vonmises_str = "vonmises"
-	_wald_str = "wald"
-	_weibull_str = "weibull"
-	_zipf_str = "zipf"
-
-
-	# pylint: disable-msg=E1101
-	_generators = {
-		# Gaussian, Gumbel, Laplace: loc and scale arbitrary
-		_gaussian_str : DistributionGenerator(np.random.normal, _gaussian_str),
-		_gumbel_str : DistributionGenerator(np.random.gumbel, _gumbel_str),
-		_laplace_str : DistributionGenerator(np.random.laplace, _laplace_str),
-		# Logistic: loc arbitrary, scale > 0
-		_logistic_str : DistributionGenerator(np.random.logistic, _logistic_str,
-			[AC(0.0), AC(1.0, min_value=0.1)]),
-		# Pareto: a(lpha) > 0
-		_pareto_str : DistributionGenerator(np.random.pareto, _pareto_str,
-			[AC(1.0, min_value=0.1)]),
-		# Rayleigh: scale > 0
-		_rayleigh_str : DistributionGenerator(np.random.rayleigh, _rayleigh_str,
-			[AC(1.0, min_value=0.1)]),
-		# Uniform: low < high (not a binding constraint)
-		_uniform_str : DistributionGenerator(np.random.uniform, _uniform_str),
-		# Von Mises: mu arbitrary, kappa >= 0
-		_vonmises_str : DistributionGenerator(np.random.vonmises, _vonmises_str,
-			[AC(0.0), AC(1.0, min_value=0)]),
-		# Wald: mean > 0, scale > 0
-		_wald_str : DistributionGenerator(np.random.wald, _wald_str,
-			[AC(1.0, min_value=0.1), AC(1.0, min_value=0.1)]),
-		# Weibull: a > 0
-		_weibull_str : DistributionGenerator(np.random.weibull, _weibull_str,
-			[AC(5.0, min_value=0.1)]),
-		# Zipf: a > 1
-		_zipf_str : DistributionGenerator(np.random.zipf, _zipf_str,
-			[AC(2.0, min_value=1.1)])
-	}
 
 
 	def __init__(self):
@@ -108,9 +55,7 @@ class DistributionPublisher(object):
 
 		self._base_path_expanded = os.path.expanduser(_BASE_PATH)
 
-		generator_choices = []
-		for key in self._generators:
-			generator_choices.append(key)
+		generator_choices = GENS.get_generator_names()
 
 		parser = argparse.ArgumentParser(prog="dist_pub")
 		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
@@ -126,24 +71,10 @@ class DistributionPublisher(object):
 		parser_file.add_argument("pub_file_path", metavar="/FILE/PATH", help="The file to publish from")
 		parser_file.add_argument("--repeat", "-r", action="store_true", dest="repeat_file")
 
-		# Gen defs mode
-		parser_defs = sub_parsers.add_parser("defs",
-			help="Print out or save generator definitions to file")
-		parser_defs.add_argument("defs_file_path", nargs="?", metavar="/FILE/PATH", default=None,
-			help="File path to store the definitions to")
-
 		# Remove remapping arguments and delete program name from arguments
 		filtered_argv = rospy.myargv(sys.argv)[1:]
 
 		args = parser.parse_args(filtered_argv)
-
-		# 1) JSON dump mode
-
-		if args.mode == "defs":
-			self._generator_mode(args.defs_file_path)
-			exit()
-
-		# 2) Publishing mode
 
 		name = ""
 		queue_size = 10
@@ -157,7 +88,7 @@ class DistributionPublisher(object):
 		elif args.mode == "gen":
 			return_message = self._setup_generator(args.generator, args.params)
 			name = args.generator
-			queue_size = self._generators[self._sub_routine].queue_size
+			queue_size = GENS.GENERATORS[self._sub_routine].queue_size
 		else:
 			raise NotImplementedError
 
@@ -167,9 +98,7 @@ class DistributionPublisher(object):
 
 
 	def _setup_reader(self, file_path, repeat_file):
-		"""
-		Setup for file-based publishing
-		"""
+		""" Setup for file-based publishing """
 
 		self._file_based = True
 
@@ -195,12 +124,10 @@ class DistributionPublisher(object):
 
 
 	def _setup_generator(self, gen_name, parameters):
-		"""
-		Setup for data generation
-		"""
+		""" Setup for data generation """
 
 		try:
-			generator = self._generators[gen_name]
+			generator = GENS.GENERATORS[gen_name]
 		except KeyError:
 			raise Exception("Could not find specified sub-routine {}".format(gen_name))
 
@@ -222,7 +149,7 @@ class DistributionPublisher(object):
 		create_num = self._read
 
 		if not self._file_based:
-			rate_in_hz = self._generators[self._sub_routine].rate_in_hz
+			rate_in_hz = GENS.GENERATORS[self._sub_routine].rate_in_hz
 			create_num = self._generate
 
 		rate_limiter = rospy.Rate(rate_in_hz)
@@ -259,51 +186,7 @@ class DistributionPublisher(object):
 
 	def _generate(self):
 		""" Generate data with current generator """
-		return self._generators[self._sub_routine].generate()
-
-
-	def _generator_mode(self, file_path):
-		""" Print all current generator definitions out (file_path is None) or write them to a file """
-
-		if file_path is not None:
-			self._generator_mode_write_to_file(file_path)
-			exit()
-
-		print("name, ['default, min, max', ...]")
-		for gen_name in self._generators:
-			constraints = self._generators[gen_name].args_constraints
-			print("{}, {}".format(gen_name, ["{}, {}, {}".format(
-				x.default_value, x.min_value, x.max_value)
-				for x in constraints]))
-
-
-	def _generator_mode_write_to_file(self, file_path):
-
-		file_path = os.path.expanduser(file_path)
-
-		folder_path = os.path.dirname(file_path)
-		if not os.path.exists(folder_path):
-			print("File path {} does not exist".format(folder_path))
-			exit()
-
-		if os.path.exists(file_path):
-			print("File {} exists and would be overwritten".format(file_path))
-			exit()
-
-		gen_defs = {}
-
-		for gen_name in self._generators:
-			constraints = self._generators[gen_name].args_constraints
-			gen_defs[gen_name] = [
-				{"default" : x.default_value, "min" : x.min_value, "max" : x.max_value}
-				for x in constraints]
-
-		result = json.dumps(gen_defs)
-
-		with open(file_path, 'w') as file_writer:
-			file_writer.write(result)
-
-		print("Data written to file {} successfully".format(file_path))
+		return GENS.GENERATORS[self._sub_routine].generate()
 
 
 if __name__ == "__main__":

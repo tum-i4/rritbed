@@ -78,26 +78,23 @@ class DistributionPublisher(object):
 
 		args = parser.parse_args(filtered_argv)
 
-		name = ""
-		queue_size = 10
 		return_message = ""
+		queue_size = 10
 
 		#    a) File based
 		if args.mode == "file":
 			return_message = self._setup_reader(args.pub_file_path, args.repeat_file)
-			name = "file_" + os.path.basename(args.pub_file_path)
 		#    b) Generator based
 		elif args.mode == "gen":
 			return_message = self._setup_generator(args.generator, args.params)
-			name = args.generator
 			queue_size = GENS.GENERATORS[self._sub_routine].queue_size
 		else:
 			raise NotImplementedError
 
 		# If ID was set we use it as a topic to publish to
-		publish_topic = args.id or name
+		publish_topic = args.id
 
-		rospy.init_node(name, anonymous=True)
+		rospy.init_node(args.id, anonymous=True)
 		rospy.loginfo(return_message)
 		self._publisher = rospy.Publisher(publish_topic, Float32, queue_size=queue_size)
 

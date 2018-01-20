@@ -15,20 +15,6 @@ from std_msgs.msg import Float32
 URL = "http://localhost:5000"
 PATH = "/log"
 
-GAUSSIAN = "gaussian"
-GUMBEL = "gumbel"
-LAPLACE = "laplace"
-LOGISTIC = "logistic"
-PARETO = "pareto"
-RAYLEIGH = "rayleigh"
-UNIFORM = "uniform"
-VONMISES = "vonmises"
-WALD = "wald"
-WEIBULL = "weibull"
-ZIPF = "zipf"
-DATA_GENERATOR_NAMES = [
-	GAUSSIAN, GUMBEL, LAPLACE, LOGISTIC, PARETO, RAYLEIGH, UNIFORM, VONMISES, WALD, WEIBULL, ZIPF]
-
 COLOUR_PATH = "turtle/turtle1/color_sensor"
 
 
@@ -51,6 +37,7 @@ class Logger(object):
 		parser = argparse.ArgumentParser(prog="logger")
 
 		parser.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
+		parser.add_argument("--gen-topics", metavar="TOPIC", nargs="*", default=[], dest="gen_topics")
 
 		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
@@ -58,9 +45,9 @@ class Logger(object):
 
 		rospy.init_node('logger', anonymous=True)
 
-		# Data generation
-		for name in DATA_GENERATOR_NAMES:
-			rospy.Subscriber(name, Float32, self.log_generated_data, name)
+		# Subscribe to topics
+		for topic in args.gen_topics:
+			rospy.Subscriber(topic, Float32, self.log_generated_data, topic)
 
 		rospy.Subscriber(COLOUR_PATH, Color, self.log_colour)
 

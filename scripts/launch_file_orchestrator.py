@@ -181,12 +181,6 @@ class LaunchFileOrchestrator(object):
 
 		group_element = self._create_group([], vin)
 
-		# Logging node
-		group_element.append(self._create_padded_comment("Logging"))
-		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" args="A1231414" />
-		group_element.append(
-			self._create_node_element("logger", "logger.py", "turtlesim_expl", n_args=vin))
-
 		# Turtle group [1]
 		# Options:
 		# - Manual control
@@ -250,12 +244,29 @@ class LaunchFileOrchestrator(object):
 		#   args="-i gaussian_1 gen gaussian 1.0 2.0" />
 		group_element.append(self._create_padded_comment("Generators"))
 
-		for key in selected_generators:
-			selected_generator_frequency[key] += 1
+		selected_generator_keys = []
+
+		for gen_name in selected_generators:
+			selected_generator_frequency[gen_name] += 1
+			gen_key = "{}_{}".format(gen_name, selected_generator_frequency[gen_name])
+			selected_generator_keys.append(gen_key)
+
 			group_element.append(self._create_generator_node_element(
-				"{}_{}".format(key, selected_generator_frequency[key]),
-				key,
-				generator_definitions[key]))
+				gen_key,
+				gen_name,
+				generator_definitions[gen_name]))
+
+		assert(len(selected_generators) == len(selected_generator_keys))
+
+		# Logging node
+		group_element.append(self._create_padded_comment("Logging"))
+		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" args="A1231414" />
+		logger_args = "{} --gen-topics".format(vin)
+		for gen_key in selected_generator_keys:
+			logger_args += " {}".format(gen_key)
+
+		group_element.append(
+			self._create_node_element("logger", "logger.py", "turtlesim_expl", n_args=logger_args))
 
 		return group_element
 

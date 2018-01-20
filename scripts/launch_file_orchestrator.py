@@ -246,6 +246,8 @@ class LaunchFileOrchestrator(object):
 			selected_generators.append(selection)
 			selected_generator_frequency[selection] = 0
 
+		# <node name="gauss" type="distribution_publisher.py" pkg="turtlesim_expl"
+		#   args="-i gaussian_1 gen gaussian 1.0 2.0" />
 		group_element.append(self._create_padded_comment("Generators"))
 
 		for key in selected_generators:
@@ -278,17 +280,17 @@ class LaunchFileOrchestrator(object):
 		return node_element
 
 
-	def _create_generator_node_element(self, n_name, gen_key, gen_def):
+	def _create_generator_node_element(self, gen_id, gen_key, gen_def):
 		""" Creates a generator node element """
 
-		args = gen_key
+		args = "--id {} gen {}".format(gen_id, gen_key)
 
 		for arg_def in gen_def:
 			arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
 			args += " {:f}".format(arg)
 
 		return self._create_node_element(
-			n_name, "distribution_publisher.py", "turtlesim_expl", n_args=args)
+			gen_id, "distribution_publisher.py", "turtlesim_expl", n_args=args)
 
 
 	def _create_group(self, elements, n_ns=None):

@@ -24,6 +24,7 @@ file <file name> [-r]  : Repeat after reaching EOF
 """
 
 
+import argparse
 import json
 import os
 import sys
@@ -67,7 +68,6 @@ class DistributionPublisher(object):
 	_weibull_str = "weibull"
 	_zipf_str = "zipf"
 
-	_file_based_str = "file"
 
 	# pylint: disable-msg=E1101
 	_generators = {
@@ -108,59 +108,70 @@ class DistributionPublisher(object):
 
 		self._base_path_expanded = os.path.expanduser(_BASE_PATH)
 
-		# Remove remapping arguments
-		args = rospy.myargv(sys.argv)
+		generator_choices = []
+		for key in self._generators:
+			generator_choices.append(key)
 
-		# Delete program name from arguments
-		del args[0]
+		parser = argparse.ArgumentParser(prog="dist_pub")
+		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
 
-		if not args:
-			raise Exception("No arguments given")
+		# Live gen mode
+		parser_gen = sub_parsers.add_parser("gen", help="Generate data live from a distribution")
+		parser_gen.add_argument("generator", choices=generator_choices,
+			help="The generator name")
+		parser_gen.add_argument("params", type=float, nargs="*", help="Optional parameters")
+
+		# File pub mode
+		parser_file = sub_parsers.add_parser("file", help="Publish data from a file")
+		parser_file.add_argument("pub_file_path", metavar="/FILE/PATH", help="The file to publish from")
+		parser_file.add_argument("--repeat", "-r", action="store_true", dest="repeat_file")
+
+		# Gen defs mode
+		parser_defs = sub_parsers.add_parser("defs",
+			help="Print out or save generator definitions to file")
+		parser_defs.add_argument("defs_file_path", nargs="?", metavar="/FILE/PATH", default=None,
+			help="File path to store the definitions to")
+
+		# Remove remapping arguments and delete program name from arguments
+		filtered_argv = rospy.myargv(sys.argv)[1:]
+
+		args = parser.parse_args(filtered_argv)
 
 		# 1) JSON dump mode
-		# --generators [file path]
 
-		if args[0] == "--generators":
-			file_path = args[1] if len(args) == 2 else None
-			self._generator_mode(file_path)
+		if args.mode == "defs":
+			self._generator_mode(args.defs_file_path)
 			exit()
 
 		# 2) Publishing mode
 
-		name = args[0]
+		name = ""
 		queue_size = 10
 		return_message = ""
 
 		#    a) File based
-		if args[0] == self._file_based_str:
-			return_message = self._setup_reader(args)
-			name += "_" + os.path.basename(args[1])
+		if args.mode == "file":
+			return_message = self._setup_reader(args.pub_file_path, args.repeat_file)
+			name = "file_" + os.path.basename(args.pub_file_path)
 		#    b) Generator based
-		else:
-			return_message = self._setup_generator(args)
+		elif args.mode == "gen":
+			return_message = self._setup_generator(args.generator, args.params)
+			name = args.generator
 			queue_size = self._generators[self._sub_routine].queue_size
+		else:
+			raise NotImplementedError
 
 		rospy.init_node(name, anonymous=True)
 		rospy.loginfo(return_message)
 		self._publisher = rospy.Publisher(name, Float32, queue_size=queue_size)
 
 
-	def _setup_reader(self, my_args):
+	def _setup_reader(self, file_path, repeat_file):
 		"""
 		Setup for file-based publishing
-		my_args: Arguments trimmed to <file_name> [-r]
 		"""
 
-		if len(my_args) == 1:
-			raise Exception("No file name given")
-
-		if len(my_args) > 3:
-			raise Exception("Too many arguments supplied: {}".format(my_args[1:]))
-
 		self._file_based = True
-
-		# File path argument
-		file_path = my_args[1]
 
 		# Either a full path was given (contains sep), otherwise the name is appended to the default path
 		if os.sep not in file_path:
@@ -177,33 +188,30 @@ class DistributionPublisher(object):
 			raise Exception("Couldn't read file {}".format(file_path))
 
 		# Repeat file argument
-		if len(my_args) > 2 and my_args[2] == "-r":
-			self._repeat_file = True
+		self._repeat_file = repeat_file
 
 		return "Publishing file-based from {}{}".format(
 			file_path, " (repeating)" if self._repeat_file else "")
 
 
-	def _setup_generator(self, my_args):
+	def _setup_generator(self, gen_name, parameters):
 		"""
 		Setup for data generation
-		my_args: Arguments trimmed to <generator> [default arg] ([default arg 2] ...)
 		"""
 
 		try:
-			generator = self._generators[my_args[0]]
+			generator = self._generators[gen_name]
 		except KeyError:
-			raise Exception("Could not find specified sub-routine {}".format(my_args[0]))
+			raise Exception("Could not find specified sub-routine {}".format(gen_name))
 
-		self._sub_routine = my_args[0]
-		generator_arguments = my_args[1:]
+		self._sub_routine = gen_name
 
 		# pylint: disable-msg=W1202
-		if len(generator_arguments) != generator.get_args_count():
+		if len(parameters) != generator.get_args_count():
 			self._generator_arguments = generator.get_default_values()
 			return "Initialising with default values {}".format(self._generator_arguments)
 
-		self._generator_arguments = [float(x) for x in generator_arguments]
+		self._generator_arguments = [float(x) for x in parameters]
 		return "Initialising with values {}".format(self._generator_arguments)
 
 

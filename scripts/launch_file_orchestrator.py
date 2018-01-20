@@ -52,8 +52,8 @@ class LaunchFileOrchestrator(object):
 			metavar="/FILE/PATH",
 			help=("Path to file with identifiers to use for namespaces. Limits number of "
 			"namespaces to the number of individual identifiers in file!"))
-		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count", metavar="NS_COUNT",
-			help="Number of namespaces to create")
+		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
+			metavar="NS_COUNT", help="Number of namespaces to create")
 
 		# VIN mode
 		parser_vin_mode = sub_parsers.add_parser("vin", help="Generate VINs and output to stdout")

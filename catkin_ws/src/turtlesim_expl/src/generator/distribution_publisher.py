@@ -58,7 +58,7 @@ class DistributionPublisher(object):
 		generator_choices = GENS.get_generator_names()
 
 		parser = argparse.ArgumentParser(prog="dist_pub")
-		parser.add_argument("--id", "-i", help="ID to publish to")
+		parser.add_argument("--id", "-i", required=True, help="ID to publish to")
 
 		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
 

@@ -187,8 +187,8 @@ class LaunchFileOrchestrator(object):
 		# - Random walk with parameter input for random seed
 		# - Random walk with intelligence
 
-		# Random mover -pi, -pi1000, or float for args
-		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="-pi1000" />
+		# Random mover; args: --seed FLOAT --intelligence CHOICE
+		# <node name="mover" pkg="turtlesim_expl" type="random_mover.py" args="--seed 1.23" />
 
 		group_element.append(self._create_padded_comment("Turtle group"))
 

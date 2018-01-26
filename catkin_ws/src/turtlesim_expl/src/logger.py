@@ -27,7 +27,7 @@ class Logger(object):
 		_vin_field: ""
 	}
 
-	_last_colour = None
+	_last_colour_broadcast = 0
 
 	_last_conn_err = 0
 
@@ -64,10 +64,13 @@ class Logger(object):
 	def log_colour(self, log_data):
 		""" Colour logging """
 
-		if self._last_colour == log_data:
+		time_now = time.time()
+
+		# Only broadcast once per second
+		if time_now < self._last_colour_broadcast + 1:
 			return
 
-		self._last_colour = log_data
+		self._last_colour_broadcast = time_now
 
 		request = self._data
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)

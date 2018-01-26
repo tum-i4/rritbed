@@ -59,7 +59,7 @@ def log_colour():
 		origin="com.api.web.callColour",
 		log_lib_version="5.6.1",
 		appID="COLOUR",
-		log_message="Successfully registered colour " + request.params.colour
+		log_message=request.params.colour
 	)
 
 	_append_to_log(colour_log_entry.get_log_string())

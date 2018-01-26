@@ -66,6 +66,8 @@ private slots:
   void onUpdate();
 
 private:
+  void vauDrawArea(QColor colour, QPoint, QPoint);
+
   void updateTurtles();
   void clear();
   bool hasTurtle(const std::string& name);

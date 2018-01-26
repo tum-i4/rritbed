@@ -113,63 +113,23 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
 
   spawnTurtle("", width_in_meters_ * x_pct, height_in_meters_ * y_pct, 0);
 
-  // TODO: Object-oriented
-  // Window is 500 x 500, starting at 0,0 and ending at 500,500
+  // === VAU ===
+  // Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500
 
   // TOP LEFT: MAGENTA
-  path_painter_.setPen(QPen(Qt::magenta, 1, Qt::SolidLine, Qt::SquareCap));
-  path_painter_.setBrush(Qt::magenta);
-  static const QPoint points1[4] = {
-    QPoint(  0,   0),
-    QPoint(250,   0),
-    QPoint(250, 250),
-    QPoint(  0, 250)
-  };
-  path_painter_.drawPolygon(points1, 4);
+  vauDrawArea(Qt::magenta, QPoint(0, 0), QPoint(250, 250));
 
-  // TOP RIGHT: YELLOW
-  path_painter_.setPen(QPen(Qt::yellow, 1, Qt::SolidLine, Qt::SquareCap));
-  path_painter_.setBrush(Qt::yellow);
-  static const QPoint points2[4] = {
-    QPoint(250,   0),
-    QPoint(500,   0),
-    QPoint(500, 250),
-    QPoint(250, 250)
-  };
-  path_painter_.drawPolygon(points2, 4);
+  // // TOP RIGHT: YELLOW
+  vauDrawArea(Qt::yellow, QPoint(250, 0), QPoint(500, 250));
 
-  // BOTTOM LEFT: GREEN
-  path_painter_.setPen(QPen(Qt::green, 1, Qt::SolidLine, Qt::SquareCap));
-  path_painter_.setBrush(Qt::green);
-  static const QPoint points3[4] = {
-    QPoint(  0, 250),
-    QPoint(250, 250),
-    QPoint(250, 500),
-    QPoint(  0, 500)
-  };
-  path_painter_.drawPolygon(points3, 4);
+  // // BOTTOM LEFT: GREEN
+  vauDrawArea(Qt::green, QPoint(0, 250), QPoint(250, 500));
 
-  // BOTTOM RIGHT: BLUE
-  path_painter_.setPen(QPen(Qt::blue, 1, Qt::SolidLine, Qt::SquareCap));
-  path_painter_.setBrush(Qt::blue);
-  static const QPoint points4[4] = {
-    QPoint(250, 250),
-    QPoint(500, 250),
-    QPoint(500, 500),
-    QPoint(250, 500)
-  };
-  path_painter_.drawPolygon(points4, 4);
+  // // BOTTOM RIGHT: BLUE
+  vauDrawArea(Qt::blue, QPoint(250, 250), QPoint(500, 500));
 
   // DANGER ZONE MIDDLE: RED
-  path_painter_.setPen(QPen(Qt::red, 1, Qt::SolidLine, Qt::SquareCap));
-  path_painter_.setBrush(Qt::red);
-  static const QPoint points5[4] = {
-    QPoint(245, 245),
-    QPoint(255, 245),
-    QPoint(255, 255),
-    QPoint(245, 255)
-  };
-  path_painter_.drawPolygon(points5, 4);
+  vauDrawArea(Qt::red, QPoint(245, 245), QPoint(255, 255));
 
   // END TODO
 
@@ -189,6 +149,25 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
 TurtleFrame::~TurtleFrame()
 {
   delete update_timer_;
+}
+
+/// Draw defined area in defined colour ///
+void TurtleFrame::vauDrawArea(QColor vauColour, QPoint vauTopLeft, QPoint vauBottomRight)
+{
+  path_painter_.setPen(QPen(vauColour, 1, Qt::SolidLine, Qt::SquareCap));
+  path_painter_.setBrush(vauColour);
+
+  // === TL ===       BR x, TL y
+  // TL x, BR y       === BR ===
+
+  QPoint points[4] = {
+    vauTopLeft,
+    QPoint(vauBottomRight.x(), vauTopLeft.y()),
+    vauBottomRight,
+    QPoint(vauTopLeft.x(), vauBottomRight.y())
+  };
+
+  path_painter_.drawPolygon(points, 4);
 }
 
 bool TurtleFrame::spawnCallback(turtlesim::Spawn::Request& req, turtlesim::Spawn::Response& res)

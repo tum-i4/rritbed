@@ -44,7 +44,7 @@ def _log_num(name, num):
 		origin="com.api." + method_name,
 		log_lib_version="5.3.2",
 		appID=name.upper(),
-		log_message="Got {} in {}".format(num, method_name)
+		log_message=num
 	)
 
 	_append_to_log(number_log_entry.get_log_string())

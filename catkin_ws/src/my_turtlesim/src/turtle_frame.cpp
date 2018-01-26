@@ -116,17 +116,21 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   // === VAU ===
   // Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500
 
-  // TOP LEFT: MAGENTA
-  vauDrawArea(Qt::magenta, QPoint(0, 0), QPoint(250, 250));
+  // TOP LEFT: PURPLE
+  QColor pastelPurple = QColor(150, 125, 210);
+  vauDrawArea(pastelPurple, QPoint(0, 0), QPoint(250, 250));
 
   // // TOP RIGHT: YELLOW
-  vauDrawArea(Qt::yellow, QPoint(250, 0), QPoint(500, 250));
+  QColor pastelYellow = QColor(255, 240, 120);
+  vauDrawArea(pastelYellow, QPoint(250, 0), QPoint(500, 250));
 
   // // BOTTOM LEFT: GREEN
-  vauDrawArea(Qt::green, QPoint(0, 250), QPoint(250, 500));
+  QColor pastelGreen = QColor(100, 180, 100);
+  vauDrawArea(pastelGreen, QPoint(0, 250), QPoint(250, 500));
 
   // // BOTTOM RIGHT: BLUE
-  vauDrawArea(Qt::blue, QPoint(250, 250), QPoint(500, 500));
+  QColor pastelBlue = QColor(100, 180, 250);
+  vauDrawArea(pastelBlue, QPoint(250, 250), QPoint(500, 500));
 
   // DANGER ZONE MIDDLE: RED
   vauDrawArea(Qt::red, QPoint(245, 245), QPoint(255, 255));

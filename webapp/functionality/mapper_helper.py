@@ -5,13 +5,16 @@ import collections
 import math
 
 
+_SUB_SPACE_SIZE = 5
+
+
 def map_coordinate(original_coordinate):
 	""" Maps the original coordinate to our space """
 	converted_coordinate = math.floor(original_coordinate / 500)
 
-	if converted_coordinate > 5 or converted_coordinate < 0:
-		raise ArithmeticError("Resulting coordinate too big - "+
-			"was the given value from a bigger space?\n" +
+	if _dimension_invalid(converted_coordinate):
+		raise ArithmeticError("Resulting coordinate is invalid - "+
+			"was the given value from an invalid space?\n" +
 			"Given value: {}".format(original_coordinate))
 
 	return converted_coordinate
@@ -30,3 +33,7 @@ def assert_size(matrix):
 	if len(matrix) != 5 or len(matrix[0]) != 5:
 		raise AssertionError("Given matrix has incorrect dimensions.\nx: {}\ny: {}".format(
 			len(matrix), len(matrix[0])))
+
+
+def _dimension_invalid(value):
+	return value < 0 or value >= _SUB_SPACE_SIZE

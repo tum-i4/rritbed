@@ -56,6 +56,7 @@ class Logger(object):
 			rospy.Subscriber(topic, Float32, self.log_generated_data, topic)
 
 		rospy.Subscriber(COLOUR_PATH, Color, self.log_colour)
+		rospy.Subscriber(POSE_PATH, Pose, self.log_pose)
 
 
 	def log_generated_data(self, data, generator_name):
@@ -96,6 +97,14 @@ class Logger(object):
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 
 		self.send_log_request("colour", request)
+
+
+	def log_pose(self, log_data):
+		""" Pose logging """
+
+		print(str(log_data.x) + " ___ " + str(log_data.y))
+
+		# self.send_log_request
 
 
 	def send_log_request(self, log_method, data):

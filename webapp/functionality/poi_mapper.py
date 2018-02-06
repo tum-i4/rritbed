@@ -18,10 +18,23 @@ class PoiMapper(object):
 		[ita, ita, frc, ger, frc]
 	]
 
+	tot = "tot"
+	shl = "shl"
+	arl = "arl"
+
+	gas_stations = [
+		[tot, tot, arl, arl, tot],
+		[arl, tot, arl, arl, arl],
+		[shl, tot, shl, shl, shl],
+		[tot, shl, shl, shl, shl],
+		[tot, arl, tot, tot, arl]
+	]
+
 	@staticmethod
 	def map(crd_x, crd_y, type):
 		""" Maps the given coordinates and type to a POI """
 
 		assert_size(PoiMapper.restaurants)
+		assert_size(PoiMapper.gas_stations)
 
 		pass

@@ -74,7 +74,18 @@ def get_country_code():
 	# Save request to log
 	_append_to_log(cc_request_log_entry)
 
-	# TODO: Response
+	country_code = CountryCodeMapper.map(crd_x, crd_y)
+
+	cc_response_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin=origin,
+		log_lib_version=lib_version,
+		appID=app_id,
+		log_message="Country code request for x: {} and y: {} returned {}".format(
+			crd_x, crd_y, country_code)
+	)
+
+	_append_to_log(cc_response_log_entry)
 
 
 @post("/log/colour")

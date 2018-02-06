@@ -73,6 +73,10 @@ class Logger(object):
 
 		time_now = time.time()
 
+		# Add a degree of randomness to when exactly the logging will occur
+		if self._last_broadcast[method.__name__] == 0:
+			self._last_broadcast[method.__name__] = time_now + random.randrange(1, 3)
+
 		# Only broadcast once per rate_in_sec
 		if time_now < self._last_broadcast[method.__name__] + rate_in_sec:
 			return

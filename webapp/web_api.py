@@ -9,6 +9,7 @@ import os.path
 from bottle import post, run, request, BaseResponse
 
 from log_entry import LogEntry
+from functionality.country_code_mapper import CountryCodeMapper
 
 LOG_FOLDER = "log"
 LOG_FILE_NAME = "log"
@@ -48,6 +49,32 @@ def _log_num(name, num):
 	)
 
 	_append_to_log(number_log_entry.get_log_string())
+
+
+@post("/get/country-code")
+def get_country_code():
+	""" Map coordinates to country code and save request and response to log """
+
+	crd_x = request.params.x
+	crd_y = request.params.y
+
+	origin = "com.get.countryCode"
+	lib_version = "6.4.1"
+	app_id = "COUNTRYCODE"
+
+	cc_request_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin=origin,
+		log_lib_version=lib_version,
+		appID=app_id,
+		log_message="Requesting country code for coordinates x: {} and y: {}".format(
+			crd_x, crd_y)
+	)
+
+	# Save request to log
+	_append_to_log(cc_request_log_entry)
+
+	# TODO: Response
 
 
 @post("/log/colour")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Country code mapper """
 
-from functionality.mapper_base import map_coordinate
+from functionality.mapper_helper import map_coordinate
 
 class CountryCodeMapper(object):
 	""" Mapping coordinates to country codes """
@@ -11,7 +11,7 @@ class CountryCodeMapper(object):
 		["DE", "DE", "DE", "AT", "AT"],
 		["DE", "DE", "DE", "CH", "AT"],
 		["FR", "DE", "DE", "CH", "AT"],
-		["FR", "FR", "DE", "IT", "IT"],
+		["FR", "FR", "DE", "IT", "IT"]
 	]
 
 	@staticmethod

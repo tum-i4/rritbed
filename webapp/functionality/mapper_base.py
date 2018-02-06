@@ -22,17 +22,17 @@ class MapperBase(object):
 		""" Maps given coordinates to the given matrix """
 
 		# Throws if incorrect size
-		MapperBase.assert_size(matrix)
+		MapperBase._assert_size(matrix)
 
 		# Both throw if invalid value
-		mapped_x = MapperBase.map_coordinate(crd_x, MapperBase._X_FIELD)
-		mapped_y = MapperBase.map_coordinate(crd_y, MapperBase._Y_FIELD)
+		mapped_x = MapperBase._map_coordinate(crd_x, MapperBase._X_FIELD)
+		mapped_y = MapperBase._map_coordinate(crd_y, MapperBase._Y_FIELD)
 
 		return matrix[mapped_x][mapped_y]
 
 
 	@staticmethod
-	def map_coordinate(original_coordinate, dimension):
+	def _map_coordinate(original_coordinate, dimension):
 		""" Maps the original coordinate to our space """
 		converted_coordinate = math.floor(original_coordinate / 500)
 
@@ -45,7 +45,7 @@ class MapperBase(object):
 
 
 	@staticmethod
-	def assert_size(matrix):
+	def _assert_size(matrix):
 		""" Verifies the given matrix' size """
 
 		# pylint: disable-msg=C1801; (Do not use len in conditions - more understandable this way)

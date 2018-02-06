@@ -123,6 +123,14 @@ class Logger(object):
 		pass
 
 
+	def request_poi(self, crd_x, crd_y, type="restaurant"):
+		pass
+
+
+	def request_tsp_routing(self, crd_x, crd_y, targ_x, targ_y):
+		pass
+
+
 	def send_request(self, log_method, data, path="/log"):
 		""" Send request to specified logging endpoint with given data """
 		try:

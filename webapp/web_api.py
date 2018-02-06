@@ -25,7 +25,7 @@ def log():
 
 	basic_log_entry = LogEntry(vin="", origin="com.status", log_lib_version="5.6.1", appID="STATUS")
 
-	_append_to_log(basic_log_entry.get_log_string())
+	_append_to_log(basic_log_entry)
 	return
 
 
@@ -48,7 +48,7 @@ def _log_num(name, num):
 		log_message=num
 	)
 
-	_append_to_log(number_log_entry.get_log_string())
+	_append_to_log(number_log_entry)
 
 
 @post("/get/country-code")
@@ -74,7 +74,7 @@ def get_country_code():
 	)
 
 	# Save request to log
-	_append_to_log(cc_request_log_entry.get_log_string())
+	_append_to_log(cc_request_log_entry)
 
 	country_code = CountryCodeMapper.map(crd_x, crd_y)
 
@@ -88,7 +88,7 @@ def get_country_code():
 		gps_position=position
 	)
 
-	_append_to_log(cc_response_log_entry.get_log_string())
+	_append_to_log(cc_response_log_entry)
 
 
 @post("/log/colour")
@@ -103,7 +103,7 @@ def log_colour():
 		log_message=request.params.colour
 	)
 
-	_append_to_log(colour_log_entry.get_log_string())
+	_append_to_log(colour_log_entry)
 
 
 @post("/log/get-vins/<num:int>")
@@ -118,7 +118,7 @@ def log_num(num):
 		appID="GETVINS",
 		log_message="getVins returned {} vins".format(num))
 
-	_append_to_log(numbered_log_entry.get_log_string())
+	_append_to_log(numbered_log_entry)
 
 
 @post("/DANGER/reset-log")
@@ -150,11 +150,11 @@ def _get_time_string(time_unix):
 	return time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 
 
-def _append_to_log(log_str):
+def _append_to_log(new_log_entry):
 	""" Appends the given string plus a newline to the log file """
 
 	with open(LOG_FILE_PATH, "a") as outfile:
-		outfile.write(log_str + "\n")
+		outfile.write(new_log_entry.get_log_string() + "\n")
 	return
 
 

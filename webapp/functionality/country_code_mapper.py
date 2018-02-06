@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Country code mapper """
 
-import math
+from functionality.mapper_base import map_coordinate
 
 class CountryCodeMapper(object):
 	""" Mapping coordinates to country codes """
@@ -21,13 +21,13 @@ class CountryCodeMapper(object):
 		returns: "DE" if coordinates are malformed
 		"""
 
-		reduced_rounded_x = math.floor(crd_x / 500)
-		reduced_rounded_y = math.floor(crd_y / 500)
+		mapped_x = map_coordinate(crd_x)
+		mapped_y = map_coordinate(crd_y)
 
 		# Coordinate is malformed: Return default
-		if (reduced_rounded_x < 0 or reduced_rounded_y < 0
-			or reduced_rounded_x >= len(CountryCodeMapper.codes)
-			or reduced_rounded_y >= len(CountryCodeMapper.codes[0])):
+		if (mapped_x < 0 or mapped_y < 0
+			or mapped_x >= len(CountryCodeMapper.codes)
+			or mapped_y >= len(CountryCodeMapper.codes[0])):
 			return "DE"
 
-		return CountryCodeMapper.codes[reduced_rounded_x][reduced_rounded_y]
+		return CountryCodeMapper.codes[mapped_x][mapped_y]

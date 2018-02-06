@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Country code mapper """
 
-from functionality.mapper_helper import map_coordinate
+from functionality.mapper_helper import map_coordinate, assert_size
 
 class CountryCodeMapper(object):
 	""" Mapping coordinates to country codes """
@@ -20,6 +20,9 @@ class CountryCodeMapper(object):
 		Maps given coordinates to country code
 		returns: "DE" if coordinates are malformed
 		"""
+
+		# Throws if incorrect size
+		assert_size(CountryCodeMapper.codes)
 
 		mapped_x = map_coordinate(crd_x)
 		mapped_y = map_coordinate(crd_y)

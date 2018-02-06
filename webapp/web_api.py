@@ -61,30 +61,30 @@ def get_country_code():
 	origin = "com.get.countryCode"
 	lib_version = "6.4.1"
 	app_id = "COUNTRYCODE"
-	position = "{},{}".format(crd_x, crd_y)
+	position = _get_position_string(crd_x, crd_y)
 
+	# Save request to log
 	cc_request_log_entry = LogEntry(
 		vin=request.params.vin,
 		origin=origin,
 		log_lib_version=lib_version,
 		appID=app_id,
-		log_message="Requesting country code for coordinates x: {} and y: {}".format(
-			crd_x, crd_y),
+		log_message="Requesting country code",
 		gps_position=position
 	)
 
-	# Save request to log
 	_append_to_log(cc_request_log_entry)
 
 	country_code = CountryCodeMapper.map(crd_x, crd_y)
 
+	# Save response to log
 	cc_response_log_entry = LogEntry(
 		vin=request.params.vin,
 		origin=origin,
 		log_lib_version=lib_version,
 		appID=app_id,
-		log_message="Country code request for x: {} and y: {} returned {}".format(
-			crd_x, crd_y, country_code),
+		log_message="Country code {} returned for request [x: {} and y: {}]".format(
+			country_code, crd_x, crd_y),
 		gps_position=position
 	)
 
@@ -148,6 +148,12 @@ def _get_time_string(time_unix):
 	""" Creates time string of the format '2017-12-20_18:08:25' """
 
 	return time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
+
+
+def _get_position_string(crd_x, crd_y):
+	""" Creates a position string of the format '41.123,40.31312' """
+
+	return "{},{}".format(crd_x, crd_y)
 
 
 def _append_to_log(new_log_entry):

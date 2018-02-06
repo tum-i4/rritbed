@@ -2,6 +2,7 @@
 """ Logging node """
 
 import argparse
+import random
 import sys
 import time
 
@@ -101,9 +102,25 @@ class Logger(object):
 	def log_pose(self, log_data):
 		""" Pose logging """
 
-		print(str(log_data.x) + " ___ " + str(log_data.y))
+		# Randomly choose which request to make
+
+		# 1) Country code request - 50 %
+		cc = "cc"
+		# 2) POI search - 25 %
+		poi = "poi"
+		# 3) TSPRouting - 25 %
+		tsp = "tsp"
+
+		choice = random.choice([cc, cc, poi, tsp])
+
+		if choice == cc:
+			self.request_country_code(log_data.x, log_data.y)
 
 		# self.send_log_request
+
+
+	def request_country_code(self, crd_x, crd_y):
+		pass
 
 
 	def send_request(self, log_method, data, path="/log"):

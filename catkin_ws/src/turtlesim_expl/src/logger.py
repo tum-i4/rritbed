@@ -30,9 +30,6 @@ class Logger(object):
 		_vin_field: ""
 	}
 
-	_last_colour_broadcast = 0
-	_last_pose_broadcast = 0
-
 	_last_broadcast = {}
 
 	_last_conn_err = 0
@@ -49,14 +46,17 @@ class Logger(object):
 
 		self._data[self._vin_field] = args.namespace
 
+		self._last_broadcast[self.log_colour.__name__] = 0
+		self._last_broadcast[self.log_pose.__name__] = 0
+
 		rospy.init_node('logger', anonymous=True)
 
 		# Subscribe to topics
 		for topic in args.gen_topics:
 			rospy.Subscriber(topic, Float32, self.log_generated_data, topic)
 
-		rospy.Subscriber(COLOUR_PATH, Color, self.log_colour)
-		rospy.Subscriber(POSE_PATH, Pose, self.log_pose)
+		rospy.Subscriber(COLOUR_PATH, Color, self.rate_limit, self.log_colour)
+		rospy.Subscriber(POSE_PATH, Pose, self.rate_limit, self.log_pose)
 
 
 	def log_generated_data(self, data, generator_name):
@@ -84,14 +84,6 @@ class Logger(object):
 
 	def log_colour(self, log_data):
 		""" Colour logging """
-
-		# time_now = time.time()
-
-		# # Only broadcast once per second
-		# if time_now < self._last_colour_broadcast + 1:
-		# 	return
-
-		# self._last_colour_broadcast = time_now
 
 		request = self._data
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)

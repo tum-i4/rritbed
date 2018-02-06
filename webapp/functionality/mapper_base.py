@@ -8,25 +8,25 @@ import math
 class MapperBase(object):
 	""" Base class for mappers """
 
-	_X = "X"
-	_Y = "Y"
+	_X_FIELD = "X"
+	_Y_FIELD = "Y"
 
 	_SUB_SPACE_SIZE = {
-		_X: 5,
-		_Y: 5
+		_X_FIELD: 5,
+		_Y_FIELD: 5
 	}
 
 
 	@staticmethod
-	def map(matrix, crd_x, crd_y):
+	def _map(matrix, crd_x, crd_y):
 		""" Maps given coordinates to the given matrix """
 
 		# Throws if incorrect size
 		MapperBase.assert_size(matrix)
 
 		# Both throw if invalid value
-		mapped_x = MapperBase.map_coordinate(crd_x, MapperBase._X)
-		mapped_y = MapperBase.map_coordinate(crd_y, MapperBase._Y)
+		mapped_x = MapperBase.map_coordinate(crd_x, MapperBase._X_FIELD)
+		mapped_y = MapperBase.map_coordinate(crd_y, MapperBase._Y_FIELD)
 
 		return matrix[mapped_x][mapped_y]
 
@@ -57,7 +57,7 @@ class MapperBase(object):
 
 		# We definitely have a two-dimensional matrix at this point
 
-		if MapperBase._len_invalid(matrix, MapperBase._X) or MapperBase._len_invalid(matrix[0], MapperBase._Y):
+		if MapperBase._len_invalid(matrix, MapperBase._X_FIELD) or MapperBase._len_invalid(matrix[0], MapperBase._Y_FIELD):
 			raise AssertionError("Given matrix has incorrect dimensions.\nx: {}\ny: {}".format(
 				len(matrix), len(matrix[0])))
 

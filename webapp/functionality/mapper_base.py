@@ -25,6 +25,10 @@ class MapperBase(object):
 		MapperBase._assert_size(matrix)
 
 		# Both throw if invalid value
+		crd_x = float(crd_x)
+		crd_y = float(crd_y)
+
+		# Both throw if invalid value
 		mapped_x = MapperBase._map_coordinate(crd_x, MapperBase._X_FIELD)
 		mapped_y = MapperBase._map_coordinate(crd_y, MapperBase._Y_FIELD)
 
@@ -34,7 +38,11 @@ class MapperBase(object):
 	@staticmethod
 	def _map_coordinate(original_coordinate, dimension):
 		""" Maps the original coordinate to our space """
-		converted_coordinate = math.floor(original_coordinate / 500)
+
+		converted_coordinate = (
+			int(
+				math.floor(
+					original_coordinate / 500.0)))
 
 		if MapperBase._dimension_invalid(converted_coordinate, dimension):
 			raise ArithmeticError("Resulting coordinate is invalid - "+

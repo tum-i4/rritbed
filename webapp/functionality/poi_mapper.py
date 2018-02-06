@@ -6,9 +6,9 @@ from functionality.mapper_helper import map_coordinate, assert_size
 class PoiMapper(object):
 	""" Mapping coordinates to one of the POIs """
 
-	ita = "ita"
-	ger = "ger"
-	frc = "frc"
+	ita = "Italian"
+	ger = "German"
+	frc = "French"
 
 	restaurants = [
 		[ita, ita, ger, ger, frc],
@@ -18,9 +18,9 @@ class PoiMapper(object):
 		[ita, ita, frc, ger, frc]
 	]
 
-	tot = "tot"
-	shl = "shl"
-	arl = "arl"
+	tot = "Total"
+	shl = "Shell"
+	arl = "Aral"
 
 	gas_stations = [
 		[tot, tot, arl, arl, tot],

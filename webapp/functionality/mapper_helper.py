@@ -30,10 +30,15 @@ def assert_size(matrix):
 		or len(matrix[0]) == 0):
 		raise AssertionError("Given object is either no matrix or is zero in one or more dimensions")
 
-	if len(matrix) != 5 or len(matrix[0]) != 5:
+	# We definitely have a two-dimensional matrix at this point
+
+	if _len_invalid(matrix) or _len_invalid(matrix[0]):
 		raise AssertionError("Given matrix has incorrect dimensions.\nx: {}\ny: {}".format(
 			len(matrix), len(matrix[0])))
 
 
 def _dimension_invalid(value):
 	return value < 0 or value >= _SUB_SPACE_SIZE
+
+def _len_invalid(seq):
+	return len(seq) != _SUB_SPACE_SIZE

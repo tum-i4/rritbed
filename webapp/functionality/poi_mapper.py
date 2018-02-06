@@ -3,7 +3,7 @@
 
 from functionality.mapper_base import MapperBase
 
-class PoiMapper(object):
+class PoiMapper(MapperBase):
 	""" Mapping coordinates to one of the POIs """
 
 	ita = "Italian"
@@ -33,23 +33,15 @@ class PoiMapper(object):
 	restaurants_field = "restaurant"
 	gas_stations_field = "gas station"
 
-	poi_types = [
-		restaurants_field,
-		gas_stations_field
-	]
-
 	pois = {
 		restaurants_field: restaurants,
 		gas_stations_field: gas_stations
 	}
 
 	@staticmethod
-	def map(crd_x, crd_y, poi_type):
-		""" Maps the given coordinates and type to a POI """
+	def map(poi_type, crd_x, crd_y):
+		""" Maps the given coordinates to a POI of the given type """
 
-		MapperBase.assert_size(PoiMapper.restaurants)
-		MapperBase.assert_size(PoiMapper.gas_stations)
+		assert(poi_type in PoiMapper.pois)
 
-		assert(poi_type in PoiMapper.poi_types)
-
-		pass
+		return MapperBase._map(PoiMapper.pois[poi_type], crd_x, crd_y)

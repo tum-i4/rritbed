@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ POI mapper """
 
-from functionality.mapper_helper import map_coordinate, assert_size
+from functionality.mapper_base import MapperBase
 
 class PoiMapper(object):
 	""" Mapping coordinates to one of the POIs """
@@ -47,8 +47,8 @@ class PoiMapper(object):
 	def map(crd_x, crd_y, poi_type):
 		""" Maps the given coordinates and type to a POI """
 
-		assert_size(PoiMapper.restaurants)
-		assert_size(PoiMapper.gas_stations)
+		MapperBase.assert_size(PoiMapper.restaurants)
+		MapperBase.assert_size(PoiMapper.gas_stations)
 
 		assert(poi_type in PoiMapper.poi_types)
 

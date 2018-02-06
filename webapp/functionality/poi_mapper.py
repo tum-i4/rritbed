@@ -33,6 +33,11 @@ class PoiMapper(object):
 	restaurants_field = "restaurant"
 	gas_stations_field = "gas station"
 
+	poi_types = [
+		restaurants_field,
+		gas_stations_field
+	]
+
 	pois = {
 		restaurants_field: restaurants,
 		gas_stations_field: gas_stations

@@ -124,6 +124,8 @@ class Logger(object):
 
 
 	def request_country_code(self, crd_x, crd_y):
+		""" Get country code for given coordinates """
+
 		request = self._data
 		request["x"] = crd_x
 		request["y"] = crd_y

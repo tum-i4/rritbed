@@ -44,12 +44,12 @@ class PoiMapper(object):
 	}
 
 	@staticmethod
-	def map(crd_x, crd_y, type):
+	def map(crd_x, crd_y, poi_type):
 		""" Maps the given coordinates and type to a POI """
 
 		assert_size(PoiMapper.restaurants)
 		assert_size(PoiMapper.gas_stations)
 
-		assert(type in PoiMapper.poi_types)
+		assert(poi_type in PoiMapper.poi_types)
 
 		pass

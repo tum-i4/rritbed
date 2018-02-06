@@ -64,7 +64,8 @@ class RandomMoveStrategy(MoveStrategy):
 		# Remove remapping arguments and program name
 		filtered_argv = rospy.myargv(sys.argv)[1:]
 
-		parser = argparse.ArgumentParser(prog="random_mover", description="Randomly move a turtlesim around")
+		parser = argparse.ArgumentParser(
+			prog="random_mover", description="Randomly move a turtlesim around")
 
 		group = parser.add_mutually_exclusive_group()
 		group.add_argument("--seed", "-s", metavar="seed", type=float,

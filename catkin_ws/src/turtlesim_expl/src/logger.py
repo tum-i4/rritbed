@@ -9,13 +9,16 @@ import requests
 import rospy
 
 from turtlesim.msg import Color
+from turtlesim.msg import Pose
 from std_msgs.msg import Float32
 
 
 URL = "http://localhost:5000"
 PATH = "/log"
 
-COLOUR_PATH = "turtle/turtle1/color_sensor"
+TURTLE_PATH = "turtle/turtle1/"
+COLOUR_PATH = TURTLE_PATH + "color_sensor"
+POSE_PATH = TURTLE_PATH + "pose"
 
 
 class Logger(object):
@@ -28,6 +31,9 @@ class Logger(object):
 	}
 
 	_last_colour_broadcast = 0
+	_last_pose_broadcast = 0
+
+	_last_broadcast = {}
 
 	_last_conn_err = 0
 
@@ -61,16 +67,30 @@ class Logger(object):
 		self.send_log_request("data/" + generator_name, request)
 
 
-	def log_colour(self, log_data):
-		""" Colour logging """
+	def rate_limit(self, log_data, method, rate_in_sec=1):
+		""" Rate limiting for publishing messages """
 
 		time_now = time.time()
 
-		# Only broadcast once per second
-		if time_now < self._last_colour_broadcast + 1:
+		# Only broadcast once per rate_in_sec
+		if time_now < self._last_broadcast[method.__name__] + rate_in_sec:
 			return
 
-		self._last_colour_broadcast = time_now
+		self._last_broadcast[method.__name__] = time_now
+
+		method(log_data)
+
+
+	def log_colour(self, log_data):
+		""" Colour logging """
+
+		# time_now = time.time()
+
+		# # Only broadcast once per second
+		# if time_now < self._last_colour_broadcast + 1:
+		# 	return
+
+		# self._last_colour_broadcast = time_now
 
 		request = self._data
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)

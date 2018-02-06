@@ -10,6 +10,7 @@ from bottle import post, run, request, BaseResponse
 
 from log_entry import LogEntry
 from functionality.country_code_mapper import CountryCodeMapper
+from functionality.poi_mapper import PoiMapper
 
 LOG_FOLDER = "log"
 LOG_FILE_NAME = "log"
@@ -89,6 +90,55 @@ def get_country_code():
 	)
 
 	_append_to_log(cc_response_log_entry)
+
+
+@post("/get/poi")
+def get_poi():
+	""" Map coordinates to POI of given type and save request and response to log """
+
+	crd_x = request.params.x
+	crd_y = request.params.y
+	poi_type = request.params.type
+
+	origin = "com.get.poi"
+	lib_version = "6.4.2"
+	app_id = "POI"
+	position = _get_position_string(crd_x, crd_y)
+
+	# Save request to log
+	poi_request_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin=origin,
+		log_lib_version=lib_version,
+		appID=app_id,
+		log_message="Requesting POI of type {}".format(poi_type),
+		gps_position=position
+	)
+
+	_append_to_log(poi_request_log_entry)
+
+	poi_result = PoiMapper.map(poi_type, crd_x, crd_y)
+
+	log_message = "Invalid POI type {}!".format(poi_type)
+	level = LogEntry.LEVEL_ERROR
+
+	if poi_result is not None:
+		log_message = "POI {} returned for request [x: {}, y: {}, type: {}]".format(
+			poi_result, crd_x, crd_y, poi_type)
+		level = LogEntry.LEVEL_DEFAULT
+
+	# Save response to log
+	poi_response_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin=origin,
+		log_lib_version=lib_version,
+		appID=app_id,
+		log_message=log_message,
+		gps_position=position,
+		level=level
+	)
+
+	_append_to_log(poi_response_log_entry)
 
 
 @post("/log/colour")

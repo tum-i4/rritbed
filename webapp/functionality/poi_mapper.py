@@ -30,6 +30,14 @@ class PoiMapper(object):
 		[tot, arl, tot, tot, arl]
 	]
 
+	restaurants_field = "restaurant"
+	gas_stations_field = "gas station"
+
+	pois = {
+		restaurants_field: restaurants,
+		gas_stations_field: gas_stations
+	}
+
 	@staticmethod
 	def map(crd_x, crd_y, type):
 		""" Maps the given coordinates and type to a POI """

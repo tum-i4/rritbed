@@ -42,6 +42,7 @@ class PoiMapper(MapperBase):
 	def map(poi_type, crd_x, crd_y):
 		""" Maps the given coordinates to a POI of the given type """
 
-		assert(poi_type in PoiMapper.pois)
+		if poi_type not in PoiMapper.pois:
+			return None
 
 		return MapperBase._map(PoiMapper.pois[poi_type], crd_x, crd_y)

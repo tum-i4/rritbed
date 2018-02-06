@@ -61,6 +61,7 @@ def get_country_code():
 	origin = "com.get.countryCode"
 	lib_version = "6.4.1"
 	app_id = "COUNTRYCODE"
+	position = "{},{}".format(crd_x, crd_y)
 
 	cc_request_log_entry = LogEntry(
 		vin=request.params.vin,
@@ -68,7 +69,8 @@ def get_country_code():
 		log_lib_version=lib_version,
 		appID=app_id,
 		log_message="Requesting country code for coordinates x: {} and y: {}".format(
-			crd_x, crd_y)
+			crd_x, crd_y),
+		gps_position=position
 	)
 
 	# Save request to log
@@ -82,7 +84,8 @@ def get_country_code():
 		log_lib_version=lib_version,
 		appID=app_id,
 		log_message="Country code request for x: {} and y: {} returned {}".format(
-			crd_x, crd_y, country_code)
+			crd_x, crd_y, country_code),
+		gps_position=position
 	)
 
 	_append_to_log(cc_response_log_entry.get_log_string())

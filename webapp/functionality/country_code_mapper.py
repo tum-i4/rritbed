@@ -16,21 +16,13 @@ class CountryCodeMapper(object):
 
 	@staticmethod
 	def map(crd_x, crd_y):
-		"""
-		Maps given coordinates to country code
-		returns: "DE" if coordinates are malformed
-		"""
+		""" Maps given coordinates to country code """
 
 		# Throws if incorrect size
 		assert_size(CountryCodeMapper.codes)
 
+		# Throw if invalid value
 		mapped_x = map_coordinate(crd_x)
 		mapped_y = map_coordinate(crd_y)
-
-		# Coordinate is malformed: Return default
-		if (mapped_x < 0 or mapped_y < 0
-			or mapped_x >= len(CountryCodeMapper.codes)
-			or mapped_y >= len(CountryCodeMapper.codes[0])):
-			return "DE"
 
 		return CountryCodeMapper.codes[mapped_x][mapped_y]

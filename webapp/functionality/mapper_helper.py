@@ -40,5 +40,6 @@ def assert_size(matrix):
 def _dimension_invalid(value):
 	return value < 0 or value >= _SUB_SPACE_SIZE
 
+
 def _len_invalid(seq):
 	return len(seq) != _SUB_SPACE_SIZE

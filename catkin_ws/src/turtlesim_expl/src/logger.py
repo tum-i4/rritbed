@@ -14,7 +14,6 @@ from std_msgs.msg import Float32
 
 
 URL = "http://localhost:5000"
-PATH = "/log"
 
 TURTLE_PATH = "turtle/turtle1/"
 COLOUR_PATH = TURTLE_PATH + "color_sensor"
@@ -65,7 +64,7 @@ class Logger(object):
 		request = self._data
 		request["generated"] = data.data
 
-		self.send_log_request("data/" + generator_name, request)
+		self.send_request("data/" + generator_name, request)
 
 
 	def rate_limit(self, log_data, method, rate_in_sec=1):
@@ -96,7 +95,7 @@ class Logger(object):
 		request = self._data
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 
-		self.send_log_request("colour", request)
+		self.send_request("colour", request)
 
 
 	def log_pose(self, log_data):
@@ -107,10 +106,10 @@ class Logger(object):
 		# self.send_log_request
 
 
-	def send_log_request(self, log_method, data):
+	def send_request(self, log_method, data, path="/log"):
 		""" Send request to specified logging endpoint with given data """
 		try:
-			requests.post(URL + PATH + "/" + log_method, data)
+			requests.post(URL + path + "/" + log_method, data)
 		except requests.ConnectionError:
 			time_now = time.time()
 			# Only print an error every second

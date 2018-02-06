@@ -3,7 +3,7 @@
 
 from functionality.mapper_base import MapperBase
 
-class CountryCodeMapper(object):
+class CountryCodeMapper(MapperBase):
 	""" Mapping coordinates to country codes """
 
 	codes = [
@@ -18,11 +18,4 @@ class CountryCodeMapper(object):
 	def map(crd_x, crd_y):
 		""" Maps given coordinates to country code """
 
-		# Throws if incorrect size
-		MapperBase.assert_size(CountryCodeMapper.codes)
-
-		# Throw if invalid value
-		mapped_x = MapperBase.map_coordinate(crd_x, MapperBase._X)
-		mapped_y = MapperBase.map_coordinate(crd_y, MapperBase._Y)
-
-		return CountryCodeMapper.codes[mapped_x][mapped_y]
+		return MapperBase._map(CountryCodeMapper.codes, crd_x, crd_y)

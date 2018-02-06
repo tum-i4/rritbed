@@ -105,36 +105,46 @@ class Logger(object):
 		# Randomly choose which request to make
 
 		# 1) Country code request - 50 %
-		cc = "cc"
+		cco = "country code"
 		# 2) POI search - 25 %
 		poi = "poi"
 		# 3) TSPRouting - 25 %
 		tsp = "tsp"
 
-		choice = random.choice([cc, cc, poi, tsp])
+		choice = random.choice([cco, cco, poi, tsp])
 
-		if choice == cc:
+		if choice == cco:
 			self.request_country_code(log_data.x, log_data.y)
-
-		# self.send_log_request
+		elif choice == poi:
+			self.request_random_poi(log_data.x, log_data.y)
+		elif choice == tsp:
+			self.request_random_tsp_routing(log_data.x, log_data.y)
+		else:
+			raise NotImplementedError("Choice not implemented")
 
 
 	def request_country_code(self, crd_x, crd_y):
+		request = self._data
+		request["x"] = crd_x
+		request["y"] = crd_y
+
+		self.send_request("country-code", request, "get")
+
+
+	def request_random_poi(self, crd_x, crd_y):
+		# type="restaurant"
 		pass
 
 
-	def request_poi(self, crd_x, crd_y, type="restaurant"):
+	def request_random_tsp_routing(self, crd_x, crd_y):
+		# targ_x, targ_y
 		pass
 
 
-	def request_tsp_routing(self, crd_x, crd_y, targ_x, targ_y):
-		pass
-
-
-	def send_request(self, log_method, data, path="/log"):
+	def send_request(self, log_method, data, path="log"):
 		""" Send request to specified logging endpoint with given data """
 		try:
-			requests.post(URL + path + "/" + log_method, data)
+			requests.post(URL + "/" + path + "/" + log_method, data)
 		except requests.ConnectionError:
 			time_now = time.time()
 			# Only print an error every second

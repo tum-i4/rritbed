@@ -9,6 +9,11 @@ import uuid
 class LogEntry(object):
 	""" Container class for log data """
 
+	LEVEL_DEFAULT = "DEBUG"
+	LEVEL_ERROR = "ERROR"
+	ENV_DEFAULT = "TEST"
+
+
 	vin_field = "vin"
 	origin_field = "origin"
 	log_lib_version_field = "log_lib_version"
@@ -48,7 +53,7 @@ class LogEntry(object):
 
 	# pylint: disable-msg=R0913; (Too many arguments)
 	def __init__(self, vin, origin, log_lib_version, appID,
-		level="DEBUG", env="TEST", log_message="", userIDs="[null]", gps_position="",
+		level=LEVEL_DEFAULT, env=ENV_DEFAULT, log_message="", userIDs="[null]", gps_position="",
 		transactionID=None, logID=None, timeUnix=None):
 		""" Ctor """
 

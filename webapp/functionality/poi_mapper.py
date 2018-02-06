@@ -50,4 +50,6 @@ class PoiMapper(object):
 		assert_size(PoiMapper.restaurants)
 		assert_size(PoiMapper.gas_stations)
 
+		assert(type in PoiMapper.poi_types)
+
 		pass

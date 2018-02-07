@@ -234,8 +234,7 @@ class LaunchFileOrchestrator(object):
 		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
 		intell_choice = rand_gen.choice(["return"])
 		if intruded and self._intrude_turtle:
-			# TODO: Implement stay logic!
-			intell_choice = rand_gen.choice(["stay"])
+			intell_choice = rand_gen.choice(["stay", "dont-move"])
 
 		control_node_args = "--seed {}{}".format(
 			seed,

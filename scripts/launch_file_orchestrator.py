@@ -21,12 +21,16 @@ class LaunchFileOrchestrator(object):
 	""" Creates a launch file based on the given arguments """
 
 	_file_path = ""
+	_dump_mode = False
 
 	_manual_turtle_mode = False
 	_identifier_file_path = None
 	_namespace_count = None
 
-	_dump_mode = False
+	_intrusion_percentage = 0
+	_intrude_turtle = True
+	_intrude_generators = True
+	_duplicate_vins = False
 
 	def __init__(self):
 		""" Ctor """
@@ -109,6 +113,10 @@ class LaunchFileOrchestrator(object):
 		self._manual_turtle_mode = args.manual_turtle_mode
 		self._identifier_file_path = args.identifier_file_path
 		self._namespace_count = args.namespace_count
+		self._intrusion_percentage = args.intrusion_percentage
+		self._intrude_turtle = args.intrude_turtle
+		self._intrude_generators = args.intrude_generators
+		self._duplicate_vins = args.duplicate_vins
 
 		self._create()
 		exit()

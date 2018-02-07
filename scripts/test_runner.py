@@ -14,6 +14,8 @@ class TestRunner(object):
 	Runs all found test suites and prints results for each.
 	"""
 
+	DEFAULT_PATTERN = r"\w+\_tests"
+
 	@staticmethod
 	def run_with_args():
 		""" Parse arguments and run accordingly """
@@ -22,8 +24,8 @@ class TestRunner(object):
 			description="Discover and run all tests in a directory tree")
 
 		parser.add_argument("directory", help="The directory to search")
-		parser.add_argument("--pattern", "-p", default=r"\w+\_tests", metavar="PATTERN",
-			help="RegEx file name pattern to search for")
+		parser.add_argument("--pattern", "-p", default=TestRunner.DEFAULT_PATTERN,
+			metavar="PATTERN", help="RegEx file name pattern to search for")
 		parser.add_argument("--verbose", "-v", action="store_true",
 			help="Activate verbose output")
 

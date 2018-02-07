@@ -22,7 +22,7 @@ class MapperBase(object):
 		""" Maps given coordinates to the given matrix """
 
 		# Throws if incorrect size
-		MapperBase._assert_size(matrix)
+		MapperBase._assert_matrix_validity(matrix)
 
 		# Both throw if invalid value
 		crd_x = float(crd_x)
@@ -53,7 +53,7 @@ class MapperBase(object):
 
 
 	@staticmethod
-	def _assert_size(matrix):
+	def _assert_matrix_validity(matrix):
 		""" Verifies the given matrix' size """
 
 		# pylint: disable-msg=C1801; (Do not use len in conditions - more understandable this way)

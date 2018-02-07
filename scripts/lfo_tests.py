@@ -7,13 +7,14 @@ import unittest
 from vin_generator import VinGenerator
 
 
-class LfoTests(unittest.TestCase):
+class Tests(unittest.TestCase):
 
 	def test_lfo_file_mode_manual_mode(self):
 		# Manual mode
 		# Let LFO save to disk
 		# Compare files for only one namespace
 		# Check turtle for manual mode
+		raise NotImplementedError()
 		pass
 
 
@@ -22,6 +23,7 @@ class LfoTests(unittest.TestCase):
 		# Let LFO save to disk
 		# Compare files for namespace count
 		# Compare files for no manual mode
+		raise NotImplementedError()
 		pass
 
 
@@ -69,3 +71,7 @@ class LfoTests(unittest.TestCase):
 			self.assertGreater(number_of_plants, 1)
 		else:
 			self.assertEqual(number_of_plants, 1)
+
+
+if __name__ == "__main__":
+	raise NotImplementedError("Class was built to be run by a TestRunner")

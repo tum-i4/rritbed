@@ -23,5 +23,14 @@ class Tests(unittest.TestCase):
 		self.assertListEqual(expected, result)
 
 
+	def test_discover_invalid(self):
+		""" Test discovery on invalid pattern """
+
+		expected = []
+		result = TestRunner._discover(self.test_path, "cant-find-anything")
+
+		self.assertListEqual(expected, result)
+
+
 if __name__ == "__main__":
 	raise NotImplementedError("Class was built to be run by a TestRunner")

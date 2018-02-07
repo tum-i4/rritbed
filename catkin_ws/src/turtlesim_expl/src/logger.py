@@ -34,6 +34,8 @@ class Logger(object):
 
 	_last_conn_err = 0
 
+	_rand_gen = None
+
 	def init(self):
 		""" Initialise logger """
 
@@ -48,6 +50,8 @@ class Logger(object):
 
 		self._last_broadcast[self.log_colour.__name__] = 0
 		self._last_broadcast[self.log_pose.__name__] = 0
+
+		self._rand_gen = random.Random()
 
 		rospy.init_node('logger', anonymous=True)
 
@@ -75,7 +79,7 @@ class Logger(object):
 
 		# Add a degree of randomness to when exactly the logging will occur
 		if self._last_broadcast[method.__name__] == 0:
-			self._last_broadcast[method.__name__] = time_now + random.randrange(1, 3)
+			self._last_broadcast[method.__name__] = time_now + self._rand_gen.randrange(1, 3)
 
 		# Only broadcast once per rate_in_sec
 		if time_now < self._last_broadcast[method.__name__] + rate_in_sec:
@@ -106,7 +110,7 @@ class Logger(object):
 		tsp = "tsp"
 
 		# Randomly choose which request to make
-		choice = random.choice([cco, cco, poi, tsp])
+		choice = self._rand_gen.choice([cco, cco, poi, tsp])
 
 		request = self._data
 		request["x"] = log_data.x
@@ -137,7 +141,7 @@ class Logger(object):
 		gst = "gas station"
 
 		# Add random POI type
-		request["type"] = random.choice([rta, gst])
+		request["type"] = self._rand_gen.choice([rta, gst])
 
 		self.send_request("poi", request, "get")
 

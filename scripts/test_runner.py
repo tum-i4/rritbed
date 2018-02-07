@@ -61,6 +61,9 @@ class TestRunner(object):
 		if r"\\" in args.pattern or "/" in args.pattern:
 			TestRunner._print_and_exit("Supplied pattern contains illegal directory denotement")
 
+		if args.pattern.endswith(r"\.py"):
+			args.pattern = args.pattern[:-4]
+
 
 	@staticmethod
 	def _discover(directory, pattern):

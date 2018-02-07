@@ -14,6 +14,14 @@ class Tests(unittest.TestCase):
 
 	test_path = os.path.expanduser("~/test/test_runner_test")
 
+	def test_discover_valid(self):
+		""" Test discovery on valid pattern """
+
+		expected = [self.test_path + x for x in ["/file_tests.py", "/bla/bla_tests.py"]]
+		result = TestRunner._discover(self.test_path, TestRunner.DEFAULT_PATTERN)
+
+		self.assertListEqual(expected, result)
+
 
 if __name__ == "__main__":
 	raise NotImplementedError("Class was built to be run by a TestRunner")

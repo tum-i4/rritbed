@@ -98,8 +98,6 @@ class Logger(object):
 	def log_pose(self, log_data):
 		""" Pose logging """
 
-		# Randomly choose which request to make
-
 		# 1) Country code request - 50 %
 		cco = "country code"
 		# 2) POI search - 25 %
@@ -107,10 +105,15 @@ class Logger(object):
 		# 3) TSPRouting - 25 %
 		tsp = "tsp"
 
+		# Randomly choose which request to make
 		choice = random.choice([cco, cco, poi, tsp])
 
+		request = self._data
+		request["x"] = log_data.x
+		request["y"] = log_data.y
+
 		if choice == cco:
-			self.request_country_code(log_data.x, log_data.y)
+			self.request_country_code(request)
 		elif choice == poi:
 			self.request_random_poi(log_data.x, log_data.y)
 		elif choice == tsp:
@@ -119,12 +122,8 @@ class Logger(object):
 			raise NotImplementedError("Choice not implemented")
 
 
-	def request_country_code(self, crd_x, crd_y):
-		""" Get country code for given coordinates """
-
-		request = self._data
-		request["x"] = crd_x
-		request["y"] = crd_y
+	def request_country_code(self, request):
+		""" Send request as country code request """
 
 		self.send_request("country-code", request, "get")
 

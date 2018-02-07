@@ -56,7 +56,7 @@ class LaunchFileOrchestrator(object):
 			help=("Path to file with identifiers to use for namespaces. Limits number of "
 			"namespaces to the number of individual identifiers in file!"))
 		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
-			metavar="NS_COUNT", help="Number of namespaces to create")
+			metavar="NS_COUNT", default=1, help="Number of namespaces to create")
 
 		# Intrusions
 		optionals_group.add_argument("--intrusions", "-p", type=int, dest="intrusion_percentage",
@@ -76,30 +76,40 @@ class LaunchFileOrchestrator(object):
 
 		args = parser.parse_args()
 
+		# Make sure all set combinations are valid
 		self._sanity_check_args(args)
 
-		self._generate_launch_file_and_exit(args)
+		# Save arguments in separate variables for simpler access
+		self._save_args_to_class(args)
+
+		self._create()
+		exit()
 
 
 	def _sanity_check_args(self, args):
-		""" Makes sure that incompatible options aren't set at the same time """
+		"""
+		Makes sure that incompatible options aren't set at the same time
+		modifies: Given args object
+		"""
 
-		if args.manual_turtle_mode:
-			args.intrude_turtle = False
-
-
-	def _generate_launch_file_and_exit(self, args):
-		self._dump_mode = args.dump_mode
+		# In manual mode no other option can be chosen
+		if args.manual_turtle_mode and (
+			args.identifier_file_path is not None
+			or args.namespace_count != 1):
+			self._print_and_exit(
+				"When using manual mode, no identifier file or namespace count > 1 can be used")
 
 		# File mode: Sanity check and fix supplied path argument
-		if not self._dump_mode:
+		if not args.dump_mode:
 			path_expanded = os.path.expanduser(args.file_path)
 			path = os.path.dirname(path_expanded)
 			file_name = os.path.basename(path_expanded)
 			launch_ext = ".launch"
 
+			# Default file name if none was given
 			if file_name == "":
 				file_name = "ros.launch"
+			# Ensure '.launch' extension
 			elif not file_name.endswith(launch_ext):
 				file_name += launch_ext
 
@@ -110,29 +120,38 @@ class LaunchFileOrchestrator(object):
 			if os.path.lexists(file_path):
 				self._print_and_exit("File {} exists already".format(file_path))
 
-			self._file_path = file_path
+			args.file_path = file_path
 
-		# Make sure that in manual mode no other option has been chosen
-		if args.manual_turtle_mode and (
-			args.identifier_file_path is not None
-			or args.namespace_count is not None):
-			self._print_and_exit("When using manual mode, no other arguments are allowed")
+		# Prevent possible future programming errors
+		if args.manual_turtle_mode:
+			args.intrude_turtle = False
 
-		# Set other class variables
-		self._manual_turtle_mode = args.manual_turtle_mode
-		self._identifier_file_path = args.identifier_file_path
-		self._namespace_count = args.namespace_count
-		self._intrusion_percentage = args.intrusion_percentage
-		self._intrude_turtle = args.intrude_turtle
-		self._intrude_generators = args.intrude_generators
-		self._duplicate_vins = args.duplicate_vins
 
-		self._create()
-		exit()
+	def _save_args_to_class(self, args):
+		""" Saves args to class to allow direct access """
+
+		# Helper function to allow for shorthand syntax
+		def _return_valid_else_raise(value):
+			if value is None:
+				raise NotImplementedError("Expected argument but didn't receive it")
+			return value
+
+		self._dump_mode = _return_valid_else_raise(args.dump_mode)
+		if not args.dump_mode:
+			self._file_path = _return_valid_else_raise(args.file_path)
+
+		self._manual_turtle_mode = _return_valid_else_raise(args.manual_turtle_mode)
+		self._identifier_file_path = _return_valid_else_raise(args.identifier_file_path)
+		self._namespace_count = _return_valid_else_raise(args.namespace_count)
+		self._intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
+		self._intrude_turtle = _return_valid_else_raise(args.intrude_turtle)
+		self._intrude_generators = _return_valid_else_raise(args.intrude_generators)
+		self._duplicate_vins = _return_valid_else_raise(args.duplicate_vins)
 
 
 	def _create(self):
 		""" Create the launch file based on the set parameters """
+
 		rand_gen = random.Random()
 		root_element = ET.Element("launch")
 

@@ -76,7 +76,16 @@ class LaunchFileOrchestrator(object):
 
 		args = parser.parse_args()
 
+		self._sanity_check_args(args)
+
 		self._generate_launch_file_and_exit(args)
+
+
+	def _sanity_check_args(self, args):
+		""" Makes sure that incompatible options aren't set at the same time """
+
+		if args.manual_turtle_mode:
+			args.intrude_turtle = False
 
 
 	def _generate_launch_file_and_exit(self, args):

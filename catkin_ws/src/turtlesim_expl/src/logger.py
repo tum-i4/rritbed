@@ -147,9 +147,17 @@ class Logger(object):
 
 
 	def request_random_tsp_routing(self, request):
-		# We need: targ_x, targ_y
-		# TODO implement
-		print("NOT IMPLEMENTED!")
+		""" Send request as TSP request with random goal """
+
+		# Target coordinates
+		targ_x = self._rand_gen.randrange(0, 500)
+		targ_y = self._rand_gen.randrange(0, 500)
+
+		# Add target coordinates
+		request["targ_x"] = targ_x
+		request["targ_y"] = targ_y
+
+		self.send_request("tsp", request, "get")
 
 
 	def send_request(self, log_method, data, path="log"):

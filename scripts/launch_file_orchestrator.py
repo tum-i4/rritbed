@@ -334,6 +334,10 @@ class LaunchFileOrchestrator(object):
 
 	def _create_padded_comment(self, text):
 		""" Creates a comment padded front and back with a space for legibility """
+
+		if "--" in text:
+			text.replace("--", "__")
+
 		return ET.Comment(" {} ".format(text.strip()))
 
 

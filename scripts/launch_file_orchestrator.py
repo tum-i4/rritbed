@@ -63,16 +63,16 @@ class LaunchFileOrchestrator(object):
 			metavar="INTR_PERCENT", default=0, choices=range(1, 101),
 			help="Percentage of intrusions to be included in the launch file")
 		# Additional intrusion options
-		requires_intrusions_text = "requires --intrusions"
+		requires_intrusions_text = "[requires --intrusions]"
 		optionals_group.add_argument("--dont-intrude-turtle", "-t", action="store_false",
 			dest="intrude_turtle",
-			help="Set this flag to disallow turtle intrusions - " + requires_intrusions_text)
+			help="Set this flag to disallow turtle intrusions " + requires_intrusions_text)
 		optionals_group.add_argument("--dont-intrude-generators", "-g", action="store_false",
 			dest="intrude_generators",
-			help="Set this flag to disallow generator intrusions - " + requires_intrusions_text)
+			help="Set this flag to disallow generator intrusions " + requires_intrusions_text)
 		optionals_group.add_argument("--allow-duplicate-vins", "-v", action="store_true",
 			dest="duplicate_vins",
-			help="Set this flag to allow duplicate VINs - " + requires_intrusions_text)
+			help="Set this flag to allow duplicate VINs " + requires_intrusions_text)
 
 		args = parser.parse_args()
 

@@ -11,6 +11,7 @@ from bottle import post, run, request, BaseResponse
 from log_entry import LogEntry
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
+from functionality.tsp_routing_mapper import TspRoutingMapper
 
 LOG_FOLDER = "log"
 LOG_FILE_NAME = "log"
@@ -168,7 +169,23 @@ def get_tsp_routing():
 
 	_append_to_log(tsp_request_log_entry)
 
-	# TODO response
+	tsp_message = TspRoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
+
+	if tsp_message == TspRoutingMapper.GOAL_REACHED_MSG:
+		tsp_message = "Goal already reached at {}/{}".format(crd_x, crd_y)
+
+	# Save request to log
+	tsp_response_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin=origin,
+		log_lib_version=lib_version,
+		appID=app_id,
+		log_message=("TSP routing response [{}] returned for request ".format(tsp_message) +
+			"[x: {}, y: {}, target_x: {}, target_y: {}]".format(crd_x, crd_y, targ_x, targ_y)),
+		gps_position=position
+	)
+
+	_append_to_log(tsp_response_log_entry)
 
 
 @post("/log/colour")

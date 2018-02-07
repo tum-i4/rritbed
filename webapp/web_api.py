@@ -141,6 +141,36 @@ def get_poi():
 	_append_to_log(poi_response_log_entry)
 
 
+@post("/get/tsp")
+def get_tsp_routing():
+	""" Map current and goal coordinates to TSP and save request and response to log """
+
+	crd_x = request.params.x
+	crd_y = request.params.y
+	targ_x = request.params.targ_x
+	targ_y = request.params.targ_y
+
+	origin = "com.get.tspRouting"
+	lib_version = "6.4.5"
+	app_id = "TSPROUTING"
+	position = _get_position_string(crd_x, crd_y)
+
+	# Save request to log
+	tsp_request_log_entry = LogEntry(
+		vin=request.params.vin,
+		origin=origin,
+		log_lib_version=lib_version,
+		appID=app_id,
+		log_message="Requesting TSP routing to target [x: {}, y: {}]".format(
+			targ_x, targ_y),
+		gps_position=position
+	)
+
+	_append_to_log(tsp_request_log_entry)
+
+	# TODO response
+
+
 @post("/log/colour")
 def log_colour():
 	""" Log endpoint with colour input """

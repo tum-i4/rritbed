@@ -65,8 +65,7 @@ class MapperBase(object):
 
 		# We definitely have a two-dimensional matrix at this point
 
-		if (MapperBase._len_invalid(matrix, MapperBase._get_width())
-			or MapperBase._len_invalid(matrix[0], MapperBase._get_height())):
+		if MapperBase._matrix_size_invalid(matrix):
 			raise AssertionError("Given matrix has incorrect dimensions.\nx: {}\ny: {}".format(
 				len(matrix), len(matrix[0])))
 
@@ -77,8 +76,10 @@ class MapperBase(object):
 
 
 	@staticmethod
-	def _len_invalid(seq, dimension):
-		return len(seq) != MapperBase._SUB_SPACE_SIZE[dimension]
+	def _matrix_size_invalid(matrix):
+		return (
+			len(matrix) != MapperBase._get_width()
+			and len(matrix[0]) != MapperBase._get_height())
 
 
 	@staticmethod

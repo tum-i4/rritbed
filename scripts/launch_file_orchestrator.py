@@ -270,6 +270,8 @@ class LaunchFileOrchestrator(object):
 			json_line = file_content[0]
 
 		generator_definitions = json.loads(json_line)
+		# pylint: disable-msg=C1801; (Do not use len for conditions)
+		assert(len(generator_definitions) > 0)
 
 		selected_generators = []
 		selected_generator_frequency = {}
@@ -285,6 +287,7 @@ class LaunchFileOrchestrator(object):
 		#   args="-i gaussian_1 gen gaussian 1.0 2.0" />
 		group_element.append(self._create_padded_comment("Generators"))
 
+		# Each generator gets a unique key used in the logger to identify it
 		selected_generator_keys = []
 
 		for gen_name in selected_generators:
@@ -292,10 +295,19 @@ class LaunchFileOrchestrator(object):
 			gen_key = "{}_{}".format(gen_name, selected_generator_frequency[gen_name])
 			selected_generator_keys.append(gen_key)
 
+			intrusion_mode = None
+
+			# If the client is intruded, currently all of their generators will be broken
+			if intruded and self._intrude_generators:
+				blunt_choices = random.choice["zeroes", "huge"]
+				subtle_choices = [] # currently none implemented
+				intrusion_mode = random.choice(blunt_choices + subtle_choices)
+
 			group_element.append(self._create_generator_node_element(
 				gen_key,
 				gen_name,
-				generator_definitions[gen_name]))
+				generator_definitions[gen_name]),
+				intrusion_mode=intrusion_mode)
 
 		assert(len(selected_generators) == len(selected_generator_keys))
 
@@ -332,10 +344,15 @@ class LaunchFileOrchestrator(object):
 		return node_element
 
 
-	def _create_generator_node_element(self, gen_id, gen_key, gen_def):
+	def _create_generator_node_element(self, gen_id, gen_name, gen_def, intrusion_mode=None):
 		""" Creates a generator node element """
 
-		args = "--id {} gen {}".format(gen_id, gen_key)
+		args = "--id {}".format(gen_id)
+
+		if intrusion_mode is not None:
+			args += " --intrusion " + intrusion_mode
+
+		args += " gen {}".format(gen_name)
 
 		for arg_def in gen_def:
 			arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))

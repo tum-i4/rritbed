@@ -162,8 +162,11 @@ class LaunchFileOrchestrator(object):
 			"s" if len(vin_list) > 1 else "",
 			" in manual mode" if self._manual_turtle_mode else ""))
 
-		for vin in vin_list:
-			root_element.append(self._create_unit(vin, rand_gen))
+		# Generate a boolean for each VIN denoting if it was intruded
+		intrusions = self._generate_intrusions_flags(vin_list, rand_gen)
+
+		for i in range(0, len(vin_list)):
+			root_element.append(self._create_unit(vin_list[i], rand_gen, intrusions[i]))
 
 		# Add header comment at top of file
 		header_comment = self._create_padded_comment(
@@ -183,7 +186,7 @@ class LaunchFileOrchestrator(object):
 		print("Successfully saved launch file {}".format(self._file_path))
 
 
-	def _create_unit(self, vin, rand_gen):
+	def _create_unit(self, vin, rand_gen, intruded=False):
 		""" Creates a 'unit' (a 'car') consisting of logging, turtle and data generation """
 
 		group_element = self._create_group([], vin)
@@ -339,6 +342,30 @@ class LaunchFileOrchestrator(object):
 			text.replace("--", "__")
 
 		return ET.Comment(" {} ".format(text.strip()))
+
+
+	def _generate_intrusions_flags(self, vin_list, rand_gen):
+		""" Fills a list of the length of the given list with booleans
+		according to the intrusion percentage saved in self """
+
+		# Default: No intrusions
+		if self._intrusion_percentage == 0:
+			return [False for _ in vin_list]
+
+		# Sample from a ten times bigger list to increase precision
+		total_count = len(vin_list) * 10
+		intruded_share = int(total_count * (float(self._intrusion_percentage) / 100.0))
+
+		intrusion_choices = (
+			[True for _ in range(0, intruded_share)]
+			+ [False for _ in range(0, total_count - intruded_share)])
+
+		intrusions = rand_gen.sample(intrusion_choices, len(vin_list))
+
+		assert (len(intrusion_choices) == total_count)
+		assert (len(intrusions) == len(vin_list))
+
+		return intrusions
 
 
 	def _load_identifiers_from_file(self):

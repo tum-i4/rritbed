@@ -149,9 +149,13 @@ class Logger(object):
 	def request_random_tsp_routing(self, request):
 		""" Send request as TSP request with random goal """
 
+		# 1 % chance we request a routing to exactly our own position
+		targ_x_choices = [request["x"]] + [self._rand_gen.randrange(0, 500) for _ in range(0, 99)]
+		targ_y_choices = [request["y"]] + [self._rand_gen.randrange(0, 500) for _ in range(0, 99)]
+
 		# Target coordinates
-		targ_x = self._rand_gen.randrange(0, 500)
-		targ_y = self._rand_gen.randrange(0, 500)
+		targ_x = self._rand_gen.choice(targ_x_choices)
+		targ_y = self._rand_gen.choice(targ_y_choices)
 
 		# Add target coordinates
 		request["targ_x"] = targ_x

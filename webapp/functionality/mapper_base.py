@@ -29,22 +29,23 @@ class MapperBase(object):
 		crd_y = float(crd_y)
 
 		# Both throw if invalid value
-		mapped_x = MapperBase._map_coordinate(crd_x, MapperBase._X_FIELD)
-		mapped_y = MapperBase._map_coordinate(crd_y, MapperBase._Y_FIELD)
+		mapped_x = MapperBase._map_coordinate(crd_x, MapperBase._get_width())
+		mapped_y = MapperBase._map_coordinate(crd_y, MapperBase._get_height())
 
 		return matrix[mapped_x][mapped_y]
 
 
 	@staticmethod
-	def _map_coordinate(original_coordinate, dimension):
+	def _map_coordinate(original_coordinate, size_bound):
 		""" Maps the original coordinate to our space """
 
 		converted_coordinate = (
 			int(
 				math.floor(
-					original_coordinate / 500.0)))
+					(size_bound - 1) * (
+						original_coordinate / 500.0))))
 
-		if MapperBase._dimension_invalid(converted_coordinate, dimension):
+		if MapperBase._dimension_invalid(converted_coordinate, size_bound):
 			raise ArithmeticError("Resulting coordinate is invalid - "+
 				"was the given value from an invalid space?\n" +
 				"Given value: {}".format(original_coordinate))
@@ -71,8 +72,8 @@ class MapperBase(object):
 
 
 	@staticmethod
-	def _dimension_invalid(value, dimension):
-		return value < 0 or value >= MapperBase._SUB_SPACE_SIZE[dimension]
+	def _dimension_invalid(value, size_bound):
+		return value < 0 or value >= size_bound
 
 
 	@staticmethod

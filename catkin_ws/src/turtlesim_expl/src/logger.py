@@ -115,9 +115,9 @@ class Logger(object):
 		if choice == cco:
 			self.request_country_code(request)
 		elif choice == poi:
-			self.request_random_poi(log_data.x, log_data.y)
+			self.request_random_poi(request)
 		elif choice == tsp:
-			self.request_random_tsp_routing(log_data.x, log_data.y)
+			self.request_random_tsp_routing(request)
 		else:
 			raise NotImplementedError("Choice not implemented")
 
@@ -128,14 +128,15 @@ class Logger(object):
 		self.send_request("country-code", request, "get")
 
 
-	def request_random_poi(self, crd_x, crd_y):
-		# type="restaurant"
+	def request_random_poi(self, request):
+		""" Send request as POI request of random type """
 		pass
 
 
-	def request_random_tsp_routing(self, crd_x, crd_y):
-		# targ_x, targ_y
-		pass
+	def request_random_tsp_routing(self, request):
+		# We need: targ_x, targ_y
+		# TODO implement
+		print("NOT IMPLEMENTED!")
 
 
 	def send_request(self, log_method, data, path="log"):

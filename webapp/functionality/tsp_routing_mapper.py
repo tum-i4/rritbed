@@ -24,17 +24,13 @@ class TspRoutingMapper(MapperBase):
 
 	@staticmethod
 	def _get_coordinate_matrix():
-		coordinates = [
-			[],
-			[],
-			[],
-			[],
-			[]
-		]
+		coordinates = []
 
 		for i in range(0, MapperBase._get_width()):
+			coordinates.append([])
+
 			for j in range(0, MapperBase._get_height()):
-				coordinates[i][j] = "{},{}".format(i, j)
+				coordinates[i].append("{},{}".format(i, j))
 
 		MapperBase._assert_matrix_validity(coordinates)
 

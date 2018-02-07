@@ -84,7 +84,7 @@ def get_country_code():
 		origin=origin,
 		log_lib_version=lib_version,
 		appID=app_id,
-		log_message="Country code {} returned for request [x: {} and y: {}]".format(
+		log_message="Country code response [{}] returned for request [x: {} and y: {}]".format(
 			country_code, crd_x, crd_y),
 		gps_position=position
 	)
@@ -123,7 +123,7 @@ def get_poi():
 	level = LogEntry.LEVEL_ERROR
 
 	if poi_result is not None:
-		log_message = "POI {} returned for request [x: {}, y: {}, type: {}]".format(
+		log_message = "POI response [{}] returned for request [x: {}, y: {}, type: {}]".format(
 			poi_result, crd_x, crd_y, poi_type)
 		level = LogEntry.LEVEL_DEFAULT
 

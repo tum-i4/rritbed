@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Launch file orchestrator
-For usage see _help() method.
+For usage see --help output.
 """
 
 import argparse
@@ -11,6 +11,8 @@ import random
 import json
 from sys import maxint as MAXINT
 from lxml import etree as ET
+
+from vin_generator import VinGenerator
 
 GEN_DEFS_FILE_PATH = "~/ros/gens"
 
@@ -31,20 +33,15 @@ class LaunchFileOrchestrator(object):
 
 		object.__init__(self)
 
-		parser = argparse.ArgumentParser(prog="lfo")
+		parser = argparse.ArgumentParser(prog="lfo", description="Create a ROS launch file")
 
-		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
-
-		# GEN mode
-		parser_default_mode = sub_parsers.add_parser("gen", help="Create a ROS launch file")
-
-		file_or_dump_group = parser_default_mode.add_mutually_exclusive_group(required=True)
+		file_or_dump_group = parser.add_mutually_exclusive_group(required=True)
 		file_or_dump_group.add_argument("--file", "-f", metavar="/FILE/PATH", dest="file_path",
 			help="Write result to specified file")
 		file_or_dump_group.add_argument("--dump", "-d", action="store_true", dest="dump_mode",
 			help="Dump result to stdout")
 
-		optionals_group = parser_default_mode.add_argument_group(title="additional options")
+		optionals_group = parser.add_argument_group(title="additional options")
 		optionals_group.add_argument("--manual", "-m", action="store_true", dest="manual_turtle_mode",
 			help=("Create launch file with only one manually controlled turtle, a logger node and "
 			"rosbag recording.\nExcludes other options!"))
@@ -55,25 +52,9 @@ class LaunchFileOrchestrator(object):
 		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
 			metavar="NS_COUNT", help="Number of namespaces to create")
 
-		# VIN mode
-		parser_vin_mode = sub_parsers.add_parser("vin", help="Generate VINs and output to stdout")
-
-		parser_vin_mode.add_argument("vin_count", type=int, help="Number of VINs to generate")
-		parser_vin_mode.add_argument("--dont-vary-plant", "-p", action="store_false", dest="vary_plant",
-			help="Vary plant letter (default: yes)")
-
 		args = parser.parse_args()
 
-		# GEN mode
-		if args.mode == "gen":
-			self._generate_launch_file_and_exit(args)
-
-		# VIN mode
-		if args.mode == "vin":
-			self._print_vins_and_exit(args.vin_count, args.vary_plant)
-
-		# Missing implementation
-		raise NotImplementedError
+		self._generate_launch_file_and_exit(args)
 
 
 	def _generate_launch_file_and_exit(self, args):
@@ -143,12 +124,12 @@ class LaunchFileOrchestrator(object):
 		# Namespace number given: Generate or load appropriate amount of identifiers
 		if self._namespace_count is not None:
 			if self._identifier_file_path is None:
-				vin_list = self._generate_vins(self._namespace_count)
+				vin_list = VinGenerator.generate_vins(self._namespace_count)
 			else:
 				vin_list = rand_gen.sample(vin_list, self._namespace_count)
 
 		if self._identifier_file_path is None and self._namespace_count is None:
-			vin_list = self._generate_vins(1)
+			vin_list = VinGenerator.generate_vins(1)
 
 		print("Creating {} group{}{}".format(
 			len(vin_list),
@@ -341,39 +322,6 @@ class LaunchFileOrchestrator(object):
 			identifiers = file_reader.readlines()
 
 		return identifiers
-
-
-	def _generate_vins(self, number_of_vins, vary_plant=True):
-		""" Generates VIN tails in the format [A-Z][0-9]{6} (from WBAUV710X0A192738) """
-
-		# Maximum start for one VIN: 999999
-		possible_starts = range(100000, 1000001-number_of_vins)
-		start = random.choice(possible_starts)
-
-		vins = []
-		plant_letter = self._get_plant_letter()
-
-		for serial_number in range(start, start+number_of_vins):
-			if vary_plant:
-				plant_letter = self._get_plant_letter()
-			vins.append(plant_letter + str(serial_number))
-
-		return vins
-
-
-	def _get_plant_letter(self):
-		""" Returns char between A and Z """
-		return chr(random.choice(range(65, 91)))
-
-
-	def _print_vins_and_exit(self, number_of_vins, vary_plant=True):
-		""" Generate VINs with the given arguments, print them one by one and exit """
-
-		vins = self._generate_vins(number_of_vins, vary_plant)
-		for vin in vins:
-			print(vin)
-
-		exit()
 
 
 	def _print_and_exit(self, text):

@@ -4,8 +4,11 @@
 import random
 import unittest
 
+from test_runner import TestRunner
+
 
 class Tests(unittest.TestCase):
+	""" Tests for the TestRunner """
 	pass
 
 

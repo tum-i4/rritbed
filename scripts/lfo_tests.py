@@ -8,7 +8,7 @@ from vin_generator import VinGenerator
 
 
 class Tests(unittest.TestCase):
-	""" Tests for the launch file orchestrator """
+	""" Tests for the LaunchFileOrchestrator """
 
 	def test_lfo_file_mode_manual_mode(self):
 		# Manual mode

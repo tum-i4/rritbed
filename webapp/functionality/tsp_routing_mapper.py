@@ -19,7 +19,7 @@ class TspRoutingMapper(MapperBase):
 		start = MapperBase._map(coordinates, crd_x, crd_y)
 		end = MapperBase._map(coordinates, targ_x, targ_y)
 
-		return "TSP Route from <{}> to <{}>"
+		return "TSP Route from <{}> to <{}>".format(start, end)
 
 
 	@staticmethod

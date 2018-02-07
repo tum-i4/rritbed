@@ -76,9 +76,11 @@ class RandomMoveStrategy(MoveStrategy):
 							help="Use pi*10B as seed")
 
 		return_choice = "return"
+		stay_choice = "stay"
+		dont_move_choice = "dont-move"
 		parser.add_argument("--intelligence", "-i", metavar="intelligence_mode",
-							choices=[return_choice],
-							help="Specify intelligence mode;")
+							choices=[return_choice, stay_choice, dont_move_choice],
+							help="Specify intelligence mode")
 
 		args = parser.parse_args(filtered_argv)
 
@@ -92,11 +94,20 @@ class RandomMoveStrategy(MoveStrategy):
 		if args.intelligence is None:
 			rospy.loginfo("No intelligence mode specified")
 			self.get_next = self._get_next_impl
-		elif args.intelligence == return_choice:
+		elif args.intelligence == [return_choice, stay_choice]:
+			impl_choices = {
+				return_choice: self._turn_around_impl,
+				stay_choice: self._stay_impl
+			}
+			# All intelligence modes need the last pose and colour
 			rospy.loginfo("Intelligence mode \"%s\" specified", return_choice)
 			rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
 			rospy.Subscriber(COLOUR_PATH, Color, self._save_colour)
-			self.get_next = self._react_impl
+			# Select implementation based on specified intelligence
+			self.get_next = impl_choices[args.intelligence]
+		elif args.intelligence == dont_move_choice:
+			rospy.loginfo("\"Don't move\" mode specified")
+			self.get_next = self._dont_move_impl
 		else:
 			raise NotImplementedError
 
@@ -132,9 +143,9 @@ class RandomMoveStrategy(MoveStrategy):
 		return vel_msg
 
 
-	def _react_impl(self):
+	def _turn_around_impl(self):
 		""" Alternative to get_next with basic intelligence:
-		Turn robot around when approaching a red field """
+		Turn robot around when hitting illegal colour """
 
 		# No need to react - generate normal next step
 		if self._get_last_colour() != self._illegal_colour:
@@ -166,6 +177,22 @@ class RandomMoveStrategy(MoveStrategy):
 				reversed_pose_twist.linear.x += time_since_illegal
 
 		return reversed_pose_twist
+
+
+	def _stay_impl(self):
+		""" Alternative to get_next with compromised intelligence:
+		Stop moving as soon as the illegal colour is hit """
+
+		# Normal steps
+		if self._get_last_colour() != self._illegal_colour:
+			return self._get_next_impl()
+
+		return move_helper.get_zero_twist()
+
+
+	def _dont_move_impl(self):
+		""" Alternative to get_next that never moves """
+		return move_helper.get_zero_twist()
 
 
 	def _jmp_and_rndint(self, start, stop, jmp=79):

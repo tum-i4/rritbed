@@ -41,6 +41,8 @@ class LaunchFileOrchestrator(object):
 		file_or_dump_group.add_argument("--dump", "-d", action="store_true", dest="dump_mode",
 			help="Dump result to stdout")
 
+		# Optional arguments
+
 		optionals_group = parser.add_argument_group(title="additional options")
 		optionals_group.add_argument("--manual", "-m", action="store_true", dest="manual_turtle_mode",
 			help=("Create launch file with only one manually controlled turtle, a logger node and "
@@ -51,6 +53,22 @@ class LaunchFileOrchestrator(object):
 			"namespaces to the number of individual identifiers in file!"))
 		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
 			metavar="NS_COUNT", help="Number of namespaces to create")
+
+		# Intrusions
+		optionals_group.add_argument("--intrusions", "-p", type=int, dest="intrusion_percentage",
+			metavar="INTR_PERCENT", default=0, choices=range(1, 101),
+			help="Percentage of intrusions to be included in the launch file")
+		# Additional intrusion options
+		requires_intrusions_text = "requires --intrusions"
+		optionals_group.add_argument("--dont-intrude-turtle", "-t", action="store_false",
+			dest="intrude_turtle",
+			help="Set this flag to disallow turtle intrusions - " + requires_intrusions_text)
+		optionals_group.add_argument("--dont-intrude-generators", "-g", action="store_false",
+			dest="intrude_generators",
+			help="Set this flag to disallow generator intrusions - " + requires_intrusions_text)
+		optionals_group.add_argument("--allow-duplicate-vins", "-v", action="store_true",
+			dest="duplicate_vins",
+			help="Set this flag to allow duplicate VINs - " + requires_intrusions_text)
 
 		args = parser.parse_args()
 

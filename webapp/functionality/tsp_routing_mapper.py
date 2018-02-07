@@ -6,10 +6,20 @@ from functionality.mapper_base import MapperBase
 class TspRoutingMapper(MapperBase):
 	""" Mapping position and target to some TSP route """
 
+	GOAL_REACHED_MSG = "GOAL"
+
 	@staticmethod
 	def map(crd_x, crd_y, targ_x, targ_y):
 		""" Maps the given position and target to some TSP route """
-		pass
+		if crd_x == targ_x and crd_y == targ_y:
+			return TspRoutingMapper.GOAL_REACHED_MSG
+
+		coordinates = TspRoutingMapper._get_coordinate_matrix()
+
+		start = MapperBase._map(coordinates, crd_x, crd_y)
+		end = MapperBase._map(coordinates, targ_x, targ_y)
+
+		return "TSP Route from <{}> to <{}>"
 
 
 	@staticmethod

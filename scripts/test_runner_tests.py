@@ -12,12 +12,14 @@ from test_runner import TestRunner
 class Tests(unittest.TestCase):
 	""" Tests for the TestRunner """
 
-	test_path = os.path.expanduser("~/test/test_runner_test")
+	test_path = os.path.expanduser("~/test/test_runner_test/")
+	valid_module = "file_tests.py"
+	invalid_module = "bla/bla_tests.py"
 
 	def test_discover_valid(self):
 		""" Test discovery on valid pattern """
 
-		expected = [self.test_path + x for x in ["/file_tests.py", "/bla/bla_tests.py"]]
+		expected = [self.test_path + x for x in [self.valid_module, self.invalid_module]]
 		result = TestRunner._discover(self.test_path, TestRunner.DEFAULT_PATTERN)
 
 		self.assertListEqual(expected, result)

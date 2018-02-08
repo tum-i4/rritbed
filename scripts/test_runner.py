@@ -15,6 +15,7 @@ class TestRunner(object):
 	"""
 
 	DEFAULT_PATTERN = r"\w+\_tests"
+	SEP_LEN = 50
 
 	@staticmethod
 	def run_with_args():
@@ -105,7 +106,7 @@ class TestRunner(object):
 		not_runnable = 0
 
 		for path in test_class_paths:
-			print("-" * 30)
+			print("-" * TestRunner.SEP_LEN)
 
 			name = os.path.basename(path)
 			module = TestRunner._load_test_module(path)
@@ -130,6 +131,9 @@ class TestRunner(object):
 
 			TestRunner._print_if_elements(test_result.errors, "errors", verbose)
 			TestRunner._print_if_elements(test_result.failures, "failures", verbose)
+
+			# Add newline
+			print("")
 
 			test_results.append(test_result.wasSuccessful())
 
@@ -197,7 +201,7 @@ class TestRunner(object):
 		number_of_tests = len(test_results)
 		number_of_successes = len([x for x in test_results if x])
 
-		print("\n" + "=" * 30)
+		print("=" * TestRunner.SEP_LEN)
 		print("Finished running {0} test module{3}. Successful: {1}, Failed: {2}".format(
 			number_of_tests, number_of_successes, number_of_tests - number_of_successes,
 			TestRunner._s_if_multiple(number_of_tests)))

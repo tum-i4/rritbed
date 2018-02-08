@@ -91,5 +91,15 @@ class Tests(unittest.TestCase):
 		self.assertIsNotNone(actual)
 
 
+	def test_run_test_class(self):
+		""" Tests running a valid test class """
+
+		module = TestRunner._load_test_module(self.test_path + self.valid_module)
+		test_result = TestRunner._run_test_class(module, False, suppress_output=True)
+
+		self.assertEqual(len(test_result.failures), 1)
+		self.assertEqual(test_result.testsRun, 2)
+
+
 if __name__ == "__main__":
 	raise NotImplementedError("Class was built to be run by a TestRunner")

@@ -117,7 +117,20 @@ class TestRunner(object):
 				continue
 
 			print("Running tests in module <{}>...".format(name))
-			test_result = TestRunner._run_test_class(module, verbose)
+			test_result = TestRunner._run_test_class(module)
+
+			if test_result.testsRun == 0:
+				print("No tests found in module!")
+				continue
+
+			print("Ran {} tests - run {} successful\n".format(
+					test_result.testsRun, "was" if test_result.wasSuccessful() else "NOT")
+				+ "{} errors, {} failures".format(
+					len(test_result.errors), len(test_result.failures)))
+
+			TestRunner._print_if_elements(test_result.errors, "errors", verbose)
+			TestRunner._print_if_elements(test_result.failures, "failures", verbose)
+
 			test_results.append(test_result.wasSuccessful())
 
 		TestRunner._print_summary(test_results, not_runnable)
@@ -141,7 +154,7 @@ class TestRunner(object):
 
 
 	@staticmethod
-	def _run_test_class(test_module, verbose, suppress_output=False):
+	def _run_test_class(test_module):
 		"""
 		Runs the given test class and prints result to stdout.
 		returns: True if the run was successful
@@ -150,20 +163,6 @@ class TestRunner(object):
 		suite = unittest.TestLoader().loadTestsFromTestCase(test_module.Tests)
 		result = unittest.TestResult()
 		suite.run(result)
-
-		if result.testsRun == 0:
-			if not suppress_output:
-				print("No tests found in module!")
-			return True
-
-		if not suppress_output:
-			print("Ran {} tests - run {} successful\n".format(
-					result.testsRun, "was" if result.wasSuccessful() else "NOT")
-				+ "{} errors, {} failures".format(
-					len(result.errors), len(result.failures)))
-
-			TestRunner._print_if_elements(result.errors, "errors", verbose)
-			TestRunner._print_if_elements(result.failures, "failures", verbose)
 
 		return result
 

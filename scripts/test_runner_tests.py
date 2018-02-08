@@ -37,7 +37,11 @@ class Tests(unittest.TestCase):
 	def test_load_module_valid(self):
 		""" Tests loading a valid test module """
 
-		pass
+		name = "name"
+		result = TestRunner._load_test_module(self.test_path + self.valid_module, name)
+
+		self.assertIsNotNone(result)
+		self.assertEqual(result.__name__, name)
 
 
 	def test_load_module_invalid(self):

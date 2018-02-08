@@ -107,13 +107,12 @@ class TestRunner(object):
 		for path in test_class_paths:
 			print("-" * 30)
 
-			module = imp.load_source("module", path)
 			name = os.path.basename(path)
-			try:
-				module.Tests
-			except AttributeError:
+			module = TestRunner._load_test_module(path, name)
+
+			if module is None:
 				print("Module <{}> does not contain expected \"Tests\" class.\nFull path: {}\n".format(
-					name, path))
+					module.__name__, path))
 				not_runnable += 1
 				continue
 
@@ -122,6 +121,23 @@ class TestRunner(object):
 			test_results.append(success)
 
 		TestRunner._print_summary(test_results, not_runnable)
+
+
+	@staticmethod
+	def _load_test_module(path, name):
+		"""
+		Loads module and checks if it consists a valid module "Tests".
+		returns: None if no valid module was found.
+		"""
+
+		module = imp.load_source(name, path)
+
+		try:
+			module.Tests
+		except AttributeError:
+			return None
+
+		return module
 
 
 	@staticmethod

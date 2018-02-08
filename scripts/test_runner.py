@@ -117,8 +117,8 @@ class TestRunner(object):
 				continue
 
 			print("Running tests in module <{}>...".format(name))
-			success = TestRunner._run_test_class(module.Tests, verbose)
-			test_results.append(success)
+			test_result = TestRunner._run_test_class(module, verbose)
+			test_results.append(test_result.wasSuccessful())
 
 		TestRunner._print_summary(test_results, not_runnable)
 
@@ -141,13 +141,13 @@ class TestRunner(object):
 
 
 	@staticmethod
-	def _run_test_class(test_class, verbose):
+	def _run_test_class(test_module, verbose):
 		"""
 		Runs the given test class and prints result to stdout.
 		returns: True if the run was successful
 		"""
 
-		suite = unittest.TestLoader().loadTestsFromTestCase(test_class)
+		suite = unittest.TestLoader().loadTestsFromTestCase(test_module.Tests)
 		result = unittest.TestResult()
 		suite.run(result)
 
@@ -163,7 +163,7 @@ class TestRunner(object):
 		TestRunner._print_if_elements(result.errors, "errors", verbose)
 		TestRunner._print_if_elements(result.failures, "failures", verbose)
 
-		return result.wasSuccessful()
+		return result
 
 
 	@staticmethod

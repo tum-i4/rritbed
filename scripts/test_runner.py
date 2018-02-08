@@ -141,7 +141,7 @@ class TestRunner(object):
 
 
 	@staticmethod
-	def _run_test_class(test_module, verbose):
+	def _run_test_class(test_module, verbose, suppress_output=False):
 		"""
 		Runs the given test class and prints result to stdout.
 		returns: True if the run was successful
@@ -152,16 +152,18 @@ class TestRunner(object):
 		suite.run(result)
 
 		if result.testsRun == 0:
-			print("No tests found in module!")
+			if not suppress_output:
+				print("No tests found in module!")
 			return True
 
-		print("Ran {} tests - run {} successful\n".format(
-				result.testsRun, "was" if result.wasSuccessful() else "NOT")
-			+ "{} errors, {} failures".format(
-				len(result.errors), len(result.failures)))
+		if not suppress_output:
+			print("Ran {} tests - run {} successful\n".format(
+					result.testsRun, "was" if result.wasSuccessful() else "NOT")
+				+ "{} errors, {} failures".format(
+					len(result.errors), len(result.failures)))
 
-		TestRunner._print_if_elements(result.errors, "errors", verbose)
-		TestRunner._print_if_elements(result.failures, "failures", verbose)
+			TestRunner._print_if_elements(result.errors, "errors", verbose)
+			TestRunner._print_if_elements(result.failures, "failures", verbose)
 
 		return result
 

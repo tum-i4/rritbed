@@ -108,7 +108,7 @@ class TestRunner(object):
 			print("-" * 30)
 
 			name = os.path.basename(path)
-			module = TestRunner._load_test_module(path, name)
+			module = TestRunner._load_test_module(path)
 
 			if module is None:
 				print("Module <{}> does not contain expected \"Tests\" class.\nFull path: {}\n".format(
@@ -124,13 +124,13 @@ class TestRunner(object):
 
 
 	@staticmethod
-	def _load_test_module(path, name):
+	def _load_test_module(path):
 		"""
 		Loads module and checks if it consists a valid module "Tests".
 		returns: None if no valid module was found.
 		"""
 
-		module = imp.load_source(name, path)
+		module = imp.load_source("module", path)
 
 		try:
 			module.Tests

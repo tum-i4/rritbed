@@ -34,5 +34,11 @@ class Tests(unittest.TestCase):
 		self.assertListEqual(expected, result)
 
 
+	def test_load_module_valid(self):
+		""" Tests loading a valid test module """
+
+		pass
+
+
 if __name__ == "__main__":
 	raise NotImplementedError("Class was built to be run by a TestRunner")

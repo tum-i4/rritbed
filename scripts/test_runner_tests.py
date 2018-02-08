@@ -70,32 +70,25 @@ class Tests(unittest.TestCase):
 		""" Test discovery on valid pattern """
 
 		expected = [self.test_path + x for x in [self.valid_module, self.invalid_module]]
-		result = TestRunner._discover(self.test_path, TestRunner.DEFAULT_PATTERN)
+		actual = TestRunner._discover(self.test_path, TestRunner.DEFAULT_PATTERN)
 
-		self.assertListEqual(expected, result)
+		self.assertListEqual(expected, actual)
 
 
 	def test_discover_invalid(self):
 		""" Test discovery on invalid pattern """
 
 		expected = []
-		result = TestRunner._discover(self.test_path, "cant-find-anything")
+		actual = TestRunner._discover(self.test_path, "cant-find-anything")
 
-		self.assertListEqual(expected, result)
+		self.assertListEqual(expected, actual)
 
 
 	def test_load_module_valid(self):
 		""" Tests loading a valid test module """
 
-		result = TestRunner._load_test_module(self.test_path + self.valid_module)
-		self.assertIsNotNone(result)
-
-
-	def test_load_module_invalid(self):
-		""" Tests loading an invalid test module """
-
-		result = TestRunner._load_test_module(self.test_path + self.invalid_module)
-		self.assertIsNone(result)
+		actual = TestRunner._load_test_module(self.test_path + self.valid_module)
+		self.assertIsNotNone(actual)
 
 
 if __name__ == "__main__":

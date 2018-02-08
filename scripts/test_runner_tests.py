@@ -63,6 +63,9 @@ class Tests(unittest.TestCase):
 				outfile.write(contents)
 
 
+	### Test methods ###
+
+
 	def test_discover_valid(self):
 		""" Test discovery on valid pattern """
 

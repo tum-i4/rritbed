@@ -95,7 +95,7 @@ class Tests(unittest.TestCase):
 		""" Tests running a valid test class """
 
 		module = TestRunner._load_test_module(self.test_path + self.valid_module)
-		test_result = TestRunner._run_test_class(module, False, suppress_output=True)
+		test_result = TestRunner._run_test_class(module)
 
 		self.assertEqual(len(test_result.failures), 1)
 		self.assertEqual(test_result.testsRun, 2)

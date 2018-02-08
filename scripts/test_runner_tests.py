@@ -32,7 +32,7 @@ class Tests(unittest.TestCase):
 
 		self._check_or_create_dir(self.test_path)
 		self._check_or_create_file(self.test_path, "file.py")
-		self._check_or_create_file(self.test_path, "file_tests.py",
+		self._check_or_create_file(self.test_path, self.valid_module,
 			("import unittest\n"
 			+ "class Tests(unittest.TestCase):\n"
 			+ "\tdef test_method_success(self):\n"
@@ -43,7 +43,7 @@ class Tests(unittest.TestCase):
 
 		path = os.path.join(self.test_path, "bla")
 		self._check_or_create_dir(path)
-		self._check_or_create_file(path, "bla_tests.py")
+		self._check_or_create_file(path, os.path.basename(self.invalid_module))
 		self._check_or_create_file(path, ".ignore_me_tests.py")
 
 		path = os.path.join(path, ".blub")

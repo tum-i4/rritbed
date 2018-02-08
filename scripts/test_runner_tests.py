@@ -40,5 +40,11 @@ class Tests(unittest.TestCase):
 		pass
 
 
+	def test_load_module_invalid(self):
+		""" Tests loading an invalid test module """
+
+		pass
+
+
 if __name__ == "__main__":
 	raise NotImplementedError("Class was built to be run by a TestRunner")

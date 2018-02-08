@@ -16,6 +16,53 @@ class Tests(unittest.TestCase):
 	valid_module = "file_tests.py"
 	invalid_module = "bla/bla_tests.py"
 
+	def setUp(self):
+		""" Ensures the expected folders and files are there """
+
+		# Expected structure:
+		# test_runner_test
+		# - file.py
+		# - file_tests.py
+		# - file_tests.pyc
+		# - bla
+		#   - bla_tests.py
+		#   - .ignore_me_tests.py
+		#   - .blub
+		#     - dont_find_me_tests.py
+
+		self._check_or_create_dir(self.test_path)
+		self._check_or_create_file(self.test_path, "file.py")
+		self._check_or_create_file(self.test_path, "file_tests.py",
+			("import unittest\n"
+			+ "class Tests(unittest.TestCase):\n"
+			+ "\tdef test_method_success(self):\n"
+			+ "\t\tpass\n"
+			+ "\tdef test_method_fail(self):\n"
+			+ "\t\tself.fail()\n"))
+		self._check_or_create_file(self.test_path, "file_tests.pyc")
+
+		path = os.path.join(self.test_path, "bla")
+		self._check_or_create_dir(path)
+		self._check_or_create_file(path, "bla_tests.py")
+		self._check_or_create_file(path, ".ignore_me_tests.py")
+
+		path = os.path.join(path, ".blub")
+		self._check_or_create_dir(path)
+		self._check_or_create_file(path, "dont_find_me_tests.py")
+
+
+	def _check_or_create_dir(self, path):
+		if not os.path.lexists(path):
+			os.mkdir(path)
+
+
+	def _check_or_create_file(self, path, name, contents="# Test file"):
+		file_path = os.path.join(path, name)
+		if not os.path.lexists(file_path):
+			with open(file_path, "w") as outfile:
+				outfile.write(contents)
+
+
 	def test_discover_valid(self):
 		""" Test discovery on valid pattern """
 

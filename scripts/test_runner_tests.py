@@ -47,7 +47,9 @@ class Tests(unittest.TestCase):
 	def test_load_module_invalid(self):
 		""" Tests loading an invalid test module """
 
-		pass
+		result = TestRunner._load_test_module(self.test_path + self.invalid_module, "")
+
+		self.assertIsNone(result)
 
 
 if __name__ == "__main__":

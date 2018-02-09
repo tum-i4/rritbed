@@ -82,16 +82,6 @@ class DistributionGenerator(object):
 			raise NotImplementedError("IMPLEMENTATION MISSING")
 
 
-	def get_args_count(self):
-		""" Get the required number of arguments """
-		return len(self.args_constraints)
-
-
-	def get_default_values(self):
-		""" Get the default arguments """
-		return [x.default_value for x in self.args_constraints]
-
-
 	### Intrusions ###
 
 
@@ -110,3 +100,16 @@ class DistributionGenerator(object):
 			return next_num
 		else:
 			return next_num - (next_num * 100)
+
+
+	### Getter ###
+
+
+	def get_args_count(self):
+		""" Get the required number of arguments """
+		return len(self.args_constraints)
+
+
+	def get_default_values(self):
+		""" Get the default arguments """
+		return [x.default_value for x in self.args_constraints]

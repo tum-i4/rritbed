@@ -28,7 +28,7 @@ import rospy
 import generators as GENS
 from std_msgs.msg import Float32
 
-from intrusion_generator import IntrusionGenerator as IG
+from distribution_generator import DistributionGenerator as DG
 
 _BASE_PATH = "~/ros"
 
@@ -49,8 +49,8 @@ class DistributionPublisher(object):
 	_generator = None
 	_generator_arguments = []
 
-	_only_zero_choice = IG.ONLY_ZEROES
-	_huge_error_choice = IG.HUGE_ERROR
+	_only_zero_choice = DG.ONLY_ZEROES
+	_huge_error_choice = DG.HUGE_ERROR
 
 
 	def __init__(self):

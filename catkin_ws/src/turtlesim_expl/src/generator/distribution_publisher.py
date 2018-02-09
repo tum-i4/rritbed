@@ -97,7 +97,7 @@ class DistributionPublisher(object):
 			return_message = self._setup_generator(args.generator, args.params, args.intrusion_mode)
 			queue_size = self._generator.queue_size
 		else:
-			raise NotImplementedError
+			raise NotImplementedError()
 
 		# We use the ID as a topic to publish to
 		publish_topic = args.id

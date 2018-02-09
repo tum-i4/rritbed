@@ -6,11 +6,23 @@ from argument_constraint import ArgumentConstraint
 class DistributionGenerator(object):
 	""" Container class for distribution parameters """
 
-	_method = None
+	ONLY_ZEROES = "zeroes"
+	HUGE_ERROR = "huge-error"
+
 	name = ""
 	args_constraints = []
 	rate_in_hz = 0
 	queue_size = 0
+
+	_method = None
+
+	_intrusion_generators = {
+		ONLY_ZEROES: _generate_intrusion_zeroes,
+		HUGE_ERROR: None
+	}
+
+	# Huge error
+	_h_e_last_was_error = True
 
 	def __init__(
 		self, method, name, args_constraints=None, rate_in_hz=10, queue_size=10):

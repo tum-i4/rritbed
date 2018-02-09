@@ -22,7 +22,7 @@ class DistributionGenerator(object):
 	}
 
 	# Huge error
-	_h_e_last_was_error = True
+	_h_e_last_was_normal = True
 
 	def __init__(
 		self, method, name, args_constraints=None, rate_in_hz=10, queue_size=10):
@@ -99,10 +99,12 @@ class DistributionGenerator(object):
 
 		next_num = self._generate_impl(values)
 
-		if self._h_e_last_was_error:
-			return next_num
-		else:
-			return next_num - (next_num * 100)
+		if self._h_e_last_was_normal:
+			next_num -= (next_num * 100)
+
+		self._h_e_last_was_normal = not self._h_e_last_was_normal
+
+		return next_num
 
 
 	### Getter ###

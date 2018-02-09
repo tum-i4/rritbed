@@ -17,8 +17,8 @@ class DistributionGenerator(object):
 	_method = None
 
 	_intrusion_generators = {
-		ONLY_ZEROES: _generate_intrusion_zeroes,
-		HUGE_ERROR: _generate_intrusion_huge_error
+		ONLY_ZEROES: None,
+		HUGE_ERROR: None
 	}
 
 	# Huge error
@@ -29,6 +29,9 @@ class DistributionGenerator(object):
 		""" Ctor """
 
 		object.__init__(self)
+
+		self._intrusion_generators[self.ONLY_ZEROES] = self._generate_intrusion_zeroes
+		self._intrusion_generators[self.HUGE_ERROR] = self._generate_intrusion_huge_error
 
 		self.generate = self._generate_impl
 		self._method = method

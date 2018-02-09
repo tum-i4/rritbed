@@ -55,8 +55,10 @@ class DistributionGenerator(object):
 
 
 	def get_args_count(self):
+		""" Get the required number of arguments """
 		return len(self.args_constraints)
 
 
 	def get_default_values(self):
+		""" Get the default arguments """
 		return [x.default_value for x in self.args_constraints]

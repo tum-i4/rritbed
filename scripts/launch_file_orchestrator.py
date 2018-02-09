@@ -136,17 +136,19 @@ class LaunchFileOrchestrator(object):
 				raise NotImplementedError("Expected argument but didn't receive it")
 			return value
 
+		# Must not be None
 		self._dump_mode = _return_valid_else_raise(args.dump_mode)
 		if not args.dump_mode:
 			self._file_path = _return_valid_else_raise(args.file_path)
-
 		self._manual_turtle_mode = _return_valid_else_raise(args.manual_turtle_mode)
-		self._identifier_file_path = _return_valid_else_raise(args.identifier_file_path)
 		self._namespace_count = _return_valid_else_raise(args.namespace_count)
 		self._intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
 		self._intrude_turtle = _return_valid_else_raise(args.intrude_turtle)
 		self._intrude_generators = _return_valid_else_raise(args.intrude_generators)
 		self._duplicate_vins = _return_valid_else_raise(args.duplicate_vins)
+
+		# May be None
+		self._identifier_file_path = args.identifier_file_path
 
 
 	def _create(self):
@@ -309,8 +311,8 @@ class LaunchFileOrchestrator(object):
 			group_element.append(self._create_generator_node_element(
 				gen_key,
 				gen_name,
-				generator_definitions[gen_name]),
-				intrusion_mode=intrusion_mode)
+				generator_definitions[gen_name],
+				intrusion_mode=intrusion_mode))
 
 		assert(len(selected_generators) == len(selected_generator_keys))
 

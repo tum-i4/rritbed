@@ -18,7 +18,7 @@ class DistributionGenerator(object):
 
 	_intrusion_generators = {
 		ONLY_ZEROES: _generate_intrusion_zeroes,
-		HUGE_ERROR: None
+		HUGE_ERROR: _generate_intrusion_huge_error
 	}
 
 	# Huge error

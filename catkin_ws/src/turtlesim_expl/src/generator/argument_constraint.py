@@ -19,9 +19,12 @@ class ArgumentConstraint(object):
 		if min_value > max_value:
 			raise ValueError("min <= max")
 
-		self.default_value = default_value * 1.0
-		self.min_value = min_value * 1.0
-		self.max_value = max_value * 1.0
+		self.default_value = float(default_value)
+		self.min_value = float(min_value)
+		self.max_value = float(max_value)
+
+		if not self.fits(default_value):
+			raise ValueError("Default value must fit the constraint")
 
 
 	def fits(self, value):

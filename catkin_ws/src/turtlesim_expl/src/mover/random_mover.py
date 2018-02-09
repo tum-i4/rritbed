@@ -20,12 +20,11 @@ from turtle_control import TurtleControl
 from turtlesim.msg import Color, Pose
 
 
-POSE_PATH = "turtle1/pose"
-COLOUR_PATH = "turtle1/color_sensor"
-
-
 class RandomMoveStrategy(MoveStrategy):
 	""" Random move strategy based on random.random """
+
+	_POSE_PATH = "turtle1/pose"
+	_COLOUR_PATH = "turtle1/color_sensor"
 
 	_rand_gen = random.Random()
 
@@ -102,8 +101,8 @@ class RandomMoveStrategy(MoveStrategy):
 			}
 			# All intelligence modes need the last pose and colour
 			rospy.loginfo("Intelligence mode \"%s\" specified", return_choice)
-			rospy.Subscriber(POSE_PATH, Pose, self._save_pose)
-			rospy.Subscriber(COLOUR_PATH, Color, self._save_colour)
+			rospy.Subscriber(self._POSE_PATH, Pose, self._save_pose)
+			rospy.Subscriber(self._COLOUR_PATH, Color, self._save_colour)
 			# Select implementation based on specified intelligence
 			self.get_next = impl_choices[args.intelligence]
 		elif args.intelligence == dont_move_choice:

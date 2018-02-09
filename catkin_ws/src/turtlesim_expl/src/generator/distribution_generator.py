@@ -74,3 +74,23 @@ class DistributionGenerator(object):
 	def get_default_values(self):
 		""" Get the default arguments """
 		return [x.default_value for x in self.args_constraints]
+
+
+	### Intrusions ###
+
+
+	# pylint: disable-msg=W0613; (Unused argument - is necessary)
+	def _generate_intrusion_zeroes(self, values=None):
+		""" Hide the generator behind a only-zero-generator """
+		return 0
+
+
+	def _generate_intrusion_huge_error(self, values=None):
+		""" Subtract every second generated number by itself * 100 """
+
+		next_num = self._generate_impl(values)
+
+		if self._h_e_last_was_error:
+			return next_num
+		else:
+			return next_num - (next_num * 100)

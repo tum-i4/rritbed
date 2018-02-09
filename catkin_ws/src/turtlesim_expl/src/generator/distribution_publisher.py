@@ -95,7 +95,7 @@ class DistributionPublisher(object):
 			return_message = self._setup_reader(args.pub_file_path, args.repeat_file)
 		#    b) Generator based
 		elif args.mode == "gen":
-			return_message = self._setup_generator(args.generator, args.params)
+			return_message = self._setup_generator(args.generator, args.params, args.intrusion_mode)
 			queue_size = GENS.GENERATORS[self._sub_routine].queue_size
 		else:
 			raise NotImplementedError
@@ -134,7 +134,7 @@ class DistributionPublisher(object):
 			file_path, " (repeating)" if self._repeat_file else "")
 
 
-	def _setup_generator(self, gen_name, parameters):
+	def _setup_generator(self, gen_name, parameters, intrusion_mode):
 		""" Setup for data generation """
 
 		try:

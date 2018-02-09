@@ -233,6 +233,8 @@ class LaunchFileOrchestrator(object):
 		# TODO: Add more intelligence options
 		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
 		intell_choice = rand_gen.choice(["return"])
+
+		# [Intrusions] Intruded turtle
 		if intruded and self._intrude_turtle:
 			intell_choice = rand_gen.choice(["stay", "dont-move"])
 

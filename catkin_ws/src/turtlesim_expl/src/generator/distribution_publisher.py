@@ -47,6 +47,9 @@ class DistributionPublisher(object):
 	_sub_routine = ""
 	_generator_arguments = []
 
+	_only_zero_choice = "zeroes"
+	_huge_error_choice = "huge"
+
 
 	def __init__(self):
 		""" Ctor """
@@ -59,10 +62,8 @@ class DistributionPublisher(object):
 
 		parser = argparse.ArgumentParser(prog="dist_pub")
 		parser.add_argument("--id", "-i", required=True, help="ID to publish to")
-		only_zero_choice = "zeroes"
-		huge_error_choice = "huge"
-		intrusion_choices = [only_zero_choice, huge_error_choice]
-		parser.add_argument("--intrusion-mode", "-e", choices=intrusion_choices,
+		intrusion_choices = [self._only_zero_choice, self._huge_error_choice]
+		parser.add_argument("--intrusion-mode", "-e", choices=intrusion_choices, dest="intrusion_mode",
 			help="One of the possible intrusion modes: {}".format(intrusion_choices))
 
 		# TODO implement intrusions

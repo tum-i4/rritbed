@@ -92,7 +92,7 @@ class DistributionGenerator(object):
 
 
 	def _generate_intrusion_huge_error(self, values=None):
-		""" Subtract every second generated number by itself * 100 """
+		""" Subtract every second generated number by (itself * 100) """
 
 		next_num = self._generate_impl(values)
 

@@ -10,7 +10,7 @@ class IntrusionGenerator(DistributionGenerator):
 	HUGE_ERROR = "huge-error"
 
 	_intrusion_generators = {
-		ONLY_ZEROES: None,
+		ONLY_ZEROES: _generate_intrusion_zeroes,
 		HUGE_ERROR: None
 	}
 
@@ -31,5 +31,11 @@ class IntrusionGenerator(DistributionGenerator):
 	# pylint: disable-msg=E0202; (Attribute hides this method - intentional)
 	def generate(self, values=None):
 		""" Generate a new value based on the intrusion-wrapped distribution method """
-		# Is replaced by the respective intrusion generator
+		# Method is replaced by the respective intrusion generator
 		pass
+
+
+	# pylint: disable-msg=W0613; (Unused argument - is necessary)
+	def _generate_intrusion_zeroes(self, values=None):
+		""" Hide the generator behind a only-zero-generator """
+		return 0

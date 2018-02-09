@@ -68,9 +68,6 @@ class DistributionPublisher(object):
 		parser.add_argument("--intrusion-mode", "-e", choices=intrusion_choices, dest="intrusion_mode",
 			help="One of the possible intrusion modes: {}".format(intrusion_choices))
 
-		# TODO implement intrusions
-		raise NotImplementedError()
-
 		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
 
 		# Live gen mode

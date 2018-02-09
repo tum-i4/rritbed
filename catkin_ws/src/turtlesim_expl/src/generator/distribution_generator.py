@@ -44,6 +44,16 @@ class DistributionGenerator(object):
 		self.queue_size = queue_size
 
 
+	def activate_intrusion(self, intrusion_mode):
+		""" Activate an intrusion mode specified """
+
+		try:
+			self.generate = self._intrusion_generators[intrusion_mode]
+		except KeyError:
+			raise NotImplementedError("Intrusion mode not implemented")
+
+
+	# pylint: disable-msg=E0202; (Attribute hides this method - intentional)
 	def generate(self, values=None):
 		""" Generate a new value based on the distribution method """
 		pass

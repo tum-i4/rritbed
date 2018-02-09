@@ -68,7 +68,7 @@ class DistributionGenerator(object):
 		elif args_count is 2:
 			return self._method(values[0], values[1])
 		else:
-			raise Exception("IMPLEMENTATION MISSING")
+			raise NotImplementedError("IMPLEMENTATION MISSING")
 
 
 	def get_args_count(self):

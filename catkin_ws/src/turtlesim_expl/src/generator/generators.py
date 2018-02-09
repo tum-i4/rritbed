@@ -9,6 +9,7 @@ import numpy as np
 from argument_constraint import ArgumentConstraint as AC
 from distribution_generator import DistributionGenerator
 
+
 GAUSSIAN_STR = "gaussian"
 GUMBEL_STR = "gumbel"
 LAPLACE_STR = "laplace"

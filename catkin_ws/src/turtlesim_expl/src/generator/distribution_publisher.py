@@ -19,7 +19,6 @@ Possible arguments:
 file <file name> [-r]  : Repeat after reaching EOF
 """
 
-
 import argparse
 import os
 import sys
@@ -30,13 +29,11 @@ from std_msgs.msg import Float32
 
 from distribution_generator import DistributionGenerator as DG
 
-_BASE_PATH = "~/ros"
-
 
 class DistributionPublisher(object):
 	""" Data generation class based on distribution """
 
-	_base_path_expanded = ""
+	_base_path = os.path.expanduser("~/ros")
 
 	_publisher = None
 
@@ -57,8 +54,6 @@ class DistributionPublisher(object):
 		""" Ctor """
 
 		object.__init__(self)
-
-		self._base_path_expanded = os.path.expanduser(_BASE_PATH)
 
 		generator_choices = GENS.get_generator_names()
 
@@ -114,7 +109,7 @@ class DistributionPublisher(object):
 
 		# Either a full path was given (contains sep), otherwise the name is appended to the default path
 		if os.sep not in file_path:
-			file_path = os.path.join(self._base_path_expanded, "data", file_path)
+			file_path = os.path.join(self._base_path, "data", file_path)
 
 		if not os.path.isfile(file_path):
 			raise Exception("No file found at {}".format(file_path))

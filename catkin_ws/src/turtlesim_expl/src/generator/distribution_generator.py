@@ -3,6 +3,7 @@
 
 from argument_constraint import ArgumentConstraint
 
+
 class DistributionGenerator(object):
 	""" Container class for distribution parameters """
 
@@ -23,6 +24,7 @@ class DistributionGenerator(object):
 
 	# Huge error
 	_h_e_last_was_normal = True
+
 
 	def __init__(
 		self, method, name, args_constraints=None, rate_in_hz=10, queue_size=10):

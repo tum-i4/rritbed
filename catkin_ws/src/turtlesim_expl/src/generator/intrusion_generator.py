@@ -14,13 +14,16 @@ class IntrusionGenerator(DistributionGenerator):
 		HUGE_ERROR: None
 	}
 
-	_generator = None
+	_parent_generate_method = None
 
 	def __init__(self, method, name, intrusion_mode,
 		args_constraints=None, rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
 		DistributionGenerator.__init__(self, method, name, args_constraints, rate_in_hz, queue_size)
+
+		# TODO Test!!
+		self._parent_generate_method = self.generate
 
 		try:
 			self.generate = self._intrusion_generators[intrusion_mode]

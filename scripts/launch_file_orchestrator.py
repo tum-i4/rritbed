@@ -299,9 +299,10 @@ class LaunchFileOrchestrator(object):
 
 			intrusion_mode = None
 
+			# [Intrusions] Intruded generator
 			# If the client is intruded, currently all of their generators will be broken
 			if intruded and self._intrude_generators:
-				blunt_choices = random.choice["zeroes", "huge"]
+				blunt_choices = ["zeroes", "huge"]
 				subtle_choices = [] # currently none implemented
 				intrusion_mode = random.choice(blunt_choices + subtle_choices)
 

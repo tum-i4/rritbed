@@ -45,6 +45,11 @@ class DistributionGenerator(object):
 
 	def generate(self, values=None):
 		""" Generate a new value based on the distribution method """
+		pass
+
+
+	def _generate_impl(self, values=None):
+		""" Implementation for generate() """
 
 		if values is None:
 			values = self.get_default_values()

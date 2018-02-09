@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" All generator definitions and corresponding methods """
 
 import argparse
 import json

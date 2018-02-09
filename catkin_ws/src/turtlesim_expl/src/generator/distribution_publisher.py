@@ -100,7 +100,7 @@ class DistributionPublisher(object):
 		else:
 			raise NotImplementedError
 
-		# If ID was set we use it as a topic to publish to
+		# We use the ID as a topic to publish to
 		publish_topic = args.id
 
 		rospy.init_node(args.id, anonymous=True)
@@ -156,9 +156,11 @@ class DistributionPublisher(object):
 	def run(self):
 		""" Run the distribution publisher with the given rate limiter and create num method """
 
+		# Default values for file-based publishing
 		rate_in_hz = 10
 		create_num = self._read
 
+		# Update for generation
 		if not self._file_based:
 			rate_in_hz = GENS.GENERATORS[self._sub_routine].rate_in_hz
 			create_num = self._generate

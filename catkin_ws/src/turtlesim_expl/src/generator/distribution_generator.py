@@ -47,9 +47,6 @@ class DistributionGenerator(object):
 	def activate_intrusion(self, intrusion_mode):
 		""" Activate an intrusion mode specified """
 
-		if intrusion_mode is None:
-			return
-
 		try:
 			self.generate = self._intrusion_generators[intrusion_mode]
 		except KeyError:

@@ -16,6 +16,9 @@ class IntrusionGenerator(DistributionGenerator):
 
 	_parent_generate_method = None
 
+	# Huge error
+	_h_e_last_was_error = True
+
 	def __init__(self, method, name, intrusion_mode,
 		args_constraints=None, rate_in_hz=10, queue_size=10):
 		""" Ctor """
@@ -42,3 +45,14 @@ class IntrusionGenerator(DistributionGenerator):
 	def _generate_intrusion_zeroes(self, values=None):
 		""" Hide the generator behind a only-zero-generator """
 		return 0
+
+
+	def _generate_intrusion_huge_error(self, values=None):
+		""" Subtract every second generated number by itself * 100 """
+
+		next_num = self._parent_generate_method(values)
+
+		if self._h_e_last_was_error:
+			return next_num
+		else:
+			return next_num - (next_num * 100)

@@ -46,7 +46,7 @@ class DistributionPublisher(object):
 	_current_line = 0
 	_repeat_file = False
 
-	_sub_routine = ""
+	_generator = None
 	_generator_arguments = []
 
 	_only_zero_choice = IG.ONLY_ZEROES
@@ -98,7 +98,7 @@ class DistributionPublisher(object):
 		#    b) Generator based
 		elif args.mode == "gen":
 			return_message = self._setup_generator(args.generator, args.params, args.intrusion_mode)
-			queue_size = GENS.GENERATORS[self._sub_routine].queue_size
+			queue_size = self._generator.queue_size
 		else:
 			raise NotImplementedError
 
@@ -144,7 +144,10 @@ class DistributionPublisher(object):
 		except KeyError:
 			raise Exception("Could not find specified sub-routine {}".format(gen_name))
 
-		self._sub_routine = gen_name
+		if intrusion_mode is not None:
+			generator.activate_intrusion(intrusion_mode)
+
+		self._generator = generator
 
 		# pylint: disable-msg=W1202
 		if len(parameters) != generator.get_args_count():
@@ -164,7 +167,7 @@ class DistributionPublisher(object):
 
 		# Update for generation
 		if not self._file_based:
-			rate_in_hz = GENS.GENERATORS[self._sub_routine].rate_in_hz
+			rate_in_hz = self._generator.rate_in_hz
 			create_num = self._generate
 
 		rate_limiter = rospy.Rate(rate_in_hz)
@@ -201,7 +204,7 @@ class DistributionPublisher(object):
 
 	def _generate(self):
 		""" Generate data with current generator """
-		return GENS.GENERATORS[self._sub_routine].generate()
+		return self._generator.generate()
 
 
 if __name__ == "__main__":

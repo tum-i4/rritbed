@@ -30,6 +30,7 @@ class DistributionGenerator(object):
 
 		object.__init__(self)
 
+		self.generate = self._generate_impl
 		self._method = method
 		self.name = name
 

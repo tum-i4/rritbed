@@ -4,8 +4,8 @@
 import random
 import unittest
 
-from parameterized import parameterized
 from sys import maxint as MAXINT
+from parameterized import parameterized
 
 from argument_constraint import ArgumentConstraint
 
@@ -13,7 +13,7 @@ from argument_constraint import ArgumentConstraint
 class Tests(unittest.TestCase):
 	""" Tests for the generator module """
 
-	@parameterized([
+	@parameterized.expand([
 		(1, 1, 1), # all overlapping
 		(-1, -1, 1), # default overlapping min
 		(1, -1, 1), # default overlapping max
@@ -25,7 +25,7 @@ class Tests(unittest.TestCase):
 		ArgumentConstraint(default_value, min_value, max_value)
 
 
-	@parameterized([
+	@parameterized.expand([
 		(1, 0, 0), # default > max
 		(-1, 0, 0), # default < min
 		(0, 1, -1), # max < min
@@ -35,7 +35,7 @@ class Tests(unittest.TestCase):
 		self.assertRaises(ArgumentConstraint(default_value, min_value, max_value))
 
 
-	@parameterized([
+	@parameterized.expand([
 		(1, 1, 1, 1), # hits both ends
 		(0, -1, 1, 0), # is default value
 		(0, -1, 1, -1), # hits min
@@ -47,7 +47,7 @@ class Tests(unittest.TestCase):
 		self._test_fits(default_value, min_value, max_value, test_value, True)
 
 
-	@parameterized([
+	@parameterized.expand([
 		(0, 0, 0, 1), # too big
 		(0, 0, 0, -1), # too small
 		(0, -1, 1, 100), # way too big

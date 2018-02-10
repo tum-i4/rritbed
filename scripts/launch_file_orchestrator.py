@@ -14,11 +14,11 @@ from lxml import etree as ET
 
 from vin_generator import VinGenerator
 
-GEN_DEFS_FILE_PATH = "~/ros/gens"
-
 
 class LaunchFileOrchestrator(object):
 	""" Creates a launch file based on the given arguments """
+
+	_GEN_DEFS_FILE_PATH = "~/ros/gens"
 
 	_file_path = ""
 	_dump_mode = False
@@ -263,7 +263,7 @@ class LaunchFileOrchestrator(object):
 		# - A few parameters
 		# - Live and file based
 
-		gen_defs_file_path_expanded = os.path.expanduser(GEN_DEFS_FILE_PATH)
+		gen_defs_file_path_expanded = os.path.expanduser(self._GEN_DEFS_FILE_PATH)
 		if not os.path.lexists(gen_defs_file_path_expanded):
 			raise Exception("Generator definitions file not found at {}".format(gen_defs_file_path_expanded))
 

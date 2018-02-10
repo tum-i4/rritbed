@@ -23,6 +23,17 @@ class Tests(unittest.TestCase):
 		self._test_fits(default_value, min_value, max_value, test_value, True)
 
 
+	@parameterized([
+		(0, 0, 0, 1), # too big
+		(0, 0, 0, -1), # too small
+		(0, -1, 1, 100), # way too big
+		(0, -1, 1, -100) # way too small
+	])
+	def test_fits_doesnt(self, default_value, min_value, max_value, test_value):
+		""" Tests invalid fits """
+		self._test_fits(default_value, min_value, max_value, test_value, False)
+
+
 	def _test_fits(self, default_value, min_value, max_value, test_value, expected):
 		constraint = ArgumentConstraint(default_value, min_value, max_value)
 		self.assertEqual(constraint.fits(test_value), expected)

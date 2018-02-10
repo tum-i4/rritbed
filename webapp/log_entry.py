@@ -24,8 +24,8 @@ class LogEntry(object):
 	transactionID_field = "transactionID"
 	logID_field = "logID"
 	userIDs_field = "userIDs"
-	timeUTC_field = "timeUTC"
-	timeUnix_field = "timeUnix"
+	time_utc_field = "timeUTC"
+	time_unix_field = "timeUnix"
 	session_id_field = "session_id"
 	gps_position_field = "gps_position"
 	execution_time_field = "execution_time"
@@ -42,8 +42,8 @@ class LogEntry(object):
 		transactionID_field : "",   # UUID of the request made to the server
 		logID_field : "",           # UUID of this log entry
 		userIDs_field : "[null]",   # List of (always one?) ints or [null] in string
-		timeUTC_field : "",         # When the logging event has happened
-		timeUnix_field : 0,         # !Caution! At COMPANY not the same time as timeUTC
+		time_utc_field : "",        # When the logging event has happened
+		time_unix_field : 0,        # !Caution! At COMPANY not the same time as time_utc
 
 		session_id_field : "",
 		gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
@@ -52,7 +52,7 @@ class LogEntry(object):
 
 
 	# pylint: disable-msg=R0913; (Too many arguments)
-	def __init__(self, vin, origin, log_lib_version, appID, timeUnix,
+	def __init__(self, vin, origin, log_lib_version, appID, time_unix,
 		level=LEVEL_DEFAULT, env=ENV_DEFAULT, log_message="", userIDs="[null]", gps_position="",
 		transactionID=None, logID=None):
 		""" Ctor """
@@ -72,7 +72,7 @@ class LogEntry(object):
 		self.log_entry[self.transactionID_field] = self._verify_or_generate_id(transactionID)
 		self.log_entry[self.logID_field] = self._verify_or_generate_id(logID)
 
-		self._set_time(timeUnix)
+		self._set_time(time_unix)
 
 
 	# pylint: disable-msg=R0201; (Method could be a function)
@@ -93,8 +93,8 @@ class LogEntry(object):
 
 		time_utc_now = time.gmtime(time_unix)
 
-		self.log_entry[self.timeUnix_field] = int(time_unix)
-		self.log_entry[self.timeUTC_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
+		self.log_entry[self.time_unix_field] = int(time_unix)
+		self.log_entry[self.time_utc_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
 
 
 	def get_log_string(self):

@@ -108,9 +108,13 @@ class LogEntry(object):
 		return entry
 
 
-	def complete(self, origin, log_lib_version, app_id):
+	def complete(self, origin, log_lib_version, app_id,
+		level=None, env=None, log_message=None, user_ids=None, gps_position=None,
+		transaction_id=None, log_id=None):
 		""" Completes this entry from an invalid base entry to a full log entry """
-		self.set_all(origin=origin, log_lib_version=log_lib_version, app_id=app_id)
+		self.set_all(origin=origin, log_lib_version=log_lib_version, app_id=app_id,
+			level=level, env=env, log_message=log_message, user_ids=user_ids, gps_position=gps_position,
+			transaction_id=transaction_id, log_id=log_id)
 
 
 	def _set_if_not_none(self, field_key, value):

@@ -101,13 +101,14 @@ class LaunchFileOrchestrator(object):
 
 		# File mode: Sanity check and fix supplied path argument
 		if not args.dump_mode:
-			if args.file_path == ".":
-				# Join to make sure the path ends with a separator
-				args.file_path = os.path.join(os.getcwd(), "")
 			path_expanded = os.path.expanduser(args.file_path)
 			path = os.path.dirname(path_expanded)
 			file_name = os.path.basename(path_expanded)
 			launch_ext = ".launch"
+
+			# Allow using "." as directory name
+			if path == ".":
+				path = os.getcwd()
 
 			# Default file name if none was given
 			if file_name == "":

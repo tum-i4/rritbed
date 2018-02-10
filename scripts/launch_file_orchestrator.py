@@ -197,7 +197,7 @@ class LaunchFileOrchestrator(object):
 			len(vin_list),
 			"s" if len(vin_list) > 1 else "",
 			" in manual mode" if self._manual_turtle_mode else ""))
-		
+
 		# [Intrusions] Add double-VIN error to file if requested by user
 		vin_list = self._add_double_vin(vin_list, rand_gen)
 

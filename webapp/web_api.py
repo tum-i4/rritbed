@@ -3,9 +3,10 @@
 
 # pylint: disable-msg=E1101
 
-import time
 import datetime
 import os.path
+import random
+import time
 from bottle import post, run, request, BaseResponse
 
 from log_entry import LogEntry
@@ -16,6 +17,8 @@ from functionality.tsp_routing_mapper import TspRoutingMapper
 LOG_FOLDER = "log"
 LOG_FILE_NAME = "log"
 LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
+
+CURRENT_CLIENT_TIME = {}
 
 
 ### API endpoints ###
@@ -239,6 +242,13 @@ def reset_log():
 
 
 ### Helper methods ###
+
+
+def _get_client_time(identifier):
+	""" Creates a time for the client. Randomly increments time with 50 % chance. """
+
+	time_unix = time.time()
+	raise NotImplementedError()
 
 
 def _get_time_string(time_unix):

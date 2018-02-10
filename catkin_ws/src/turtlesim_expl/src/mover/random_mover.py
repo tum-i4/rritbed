@@ -94,7 +94,7 @@ class RandomMoveStrategy(MoveStrategy):
 		if args.intelligence is None:
 			rospy.loginfo("No intelligence mode specified")
 			self.get_next = self._get_next_impl
-		elif args.intelligence == [return_choice, stay_choice]:
+		elif args.intelligence in [return_choice, stay_choice]:
 			impl_choices = {
 				return_choice: self._turn_around_impl,
 				stay_choice: self._stay_impl
@@ -109,7 +109,7 @@ class RandomMoveStrategy(MoveStrategy):
 			rospy.loginfo("\"Don't move\" mode specified")
 			self.get_next = self._dont_move_impl
 		else:
-			raise NotImplementedError()
+			raise NotImplementedError("Intelligence mode %s not implemented", args.intelligence)
 
 
 	# pylint: disable-msg=E0202; (An attribute hides this method)

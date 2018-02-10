@@ -32,7 +32,8 @@ class Tests(unittest.TestCase):
 	])
 	def test_ctor_invalid(self, default_value, min_value, max_value):
 		""" Tests for the constructor with invalid inputs """
-		self.assertRaises(ArgumentConstraint(default_value, min_value, max_value))
+		with self.assertRaises(ValueError):
+			ArgumentConstraint(default_value, min_value, max_value)
 
 
 	@parameterized.expand([

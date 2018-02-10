@@ -100,6 +100,19 @@ class LogEntry(object):
 			self._set_time(time_unix)
 
 
+	@staticmethod
+	def create_base_entry(vin=None, time_unix=None):
+		""" Creates an invalid base log entry for step-by-step creation """
+		invalid = "INVALID"
+		entry = LogEntry(vin, invalid, invalid, invalid, time_unix)
+		return entry
+
+
+	def complete(self, origin, log_lib_version, app_id):
+		""" Completes this entry from an invalid base entry to a full log entry """
+		self.set_all(origin=origin, log_lib_version=log_lib_version, app_id=app_id)
+
+
 	def _set_if_not_none(self, field_key, value):
 		""" Sets the field with the given key to the value specified if that is not None """
 		if value is not None:

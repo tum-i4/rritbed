@@ -109,12 +109,12 @@ class RandomMoveStrategy(MoveStrategy):
 			rospy.loginfo("\"Don't move\" mode specified")
 			self.get_next = self._dont_move_impl
 		else:
-			raise NotImplementedError
+			raise NotImplementedError()
 
 
 	# pylint: disable-msg=E0202; (An attribute hides this method)
 	def get_next(self):
-		raise NotImplementedError
+		raise NotImplementedError()
 
 
 	def _get_next_impl(self):

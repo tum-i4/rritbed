@@ -101,6 +101,9 @@ class LaunchFileOrchestrator(object):
 
 		# File mode: Sanity check and fix supplied path argument
 		if not args.dump_mode:
+			if args.file_path == ".":
+				# Join to make sure the path ends with a separator
+				args.file_path = os.path.join(os.getcwd(), "")
 			path_expanded = os.path.expanduser(args.file_path)
 			path = os.path.dirname(path_expanded)
 			file_name = os.path.basename(path_expanded)
@@ -108,9 +111,10 @@ class LaunchFileOrchestrator(object):
 
 			# Default file name if none was given
 			if file_name == "":
-				file_name = "ros.launch"
+				file_name = "ros"
+
 			# Ensure '.launch' extension
-			elif not file_name.endswith(launch_ext):
+			if not file_name.endswith(launch_ext):
 				file_name += launch_ext
 
 			if not os.path.lexists(path):

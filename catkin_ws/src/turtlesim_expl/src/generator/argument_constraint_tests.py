@@ -24,6 +24,16 @@ class Tests(unittest.TestCase):
 
 
 	@parameterized([
+		(1, 0, 0), # default > max
+		(-1, 0, 0), # default < min
+		(0, 1, -1), # max < min
+	])
+	def test_ctor_invalid(self, default_value, min_value, max_value):
+		""" Tests for the constructor with invalid inputs """
+		self.assertRaises(ArgumentConstraint(default_value, min_value, max_value))
+
+
+	@parameterized([
 		(1, 1, 1, 1), # hits both ends
 		(0, -1, 1, 0), # is default value
 		(0, -1, 1, -1), # hits min

@@ -414,13 +414,20 @@ class LaunchFileOrchestrator(object):
 			return vin_list
 
 		number_of_vins = len(vin_list)
-		number_of_duplicates = math.ceil(number_of_vins * (float(self._intrusion_percentage) / 100))
+		number_of_duplicates = number_of_vins * 0.5 * (float(self._intrusion_percentage) / 100)
+
+		if self._intrusion_percentage < 50:
+			number_of_duplicates = math.ceil(number_of_duplicates)
+		else:
+			number_of_duplicates = math.floor(number_of_duplicates)
+
+		number_of_duplicates = int(number_of_duplicates)
 
 		# Select random indices
 		duplicates_indices = rand_gen.sample(range(0, number_of_vins), number_of_duplicates * 2)
 
 		# Take two pairs of indices and copy the VIN from one to the other
-		for i in range(0, len(duplicates_indices) - 1):
+		for i in range(0, len(duplicates_indices) - 1, 2):
 			first_index = duplicates_indices[i]
 			second_index = duplicates_indices[i + 1]
 			vin_list[second_index] = vin_list[first_index]

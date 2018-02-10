@@ -75,7 +75,7 @@ class LogEntry(object):
 		self._set_time(time_unix)
 
 
-	def set_all(self, vin=None, origin=None, log_lib_version=None, app_id=None, time_unix=None,
+	def set_any(self, vin=None, origin=None, log_lib_version=None, app_id=None, time_unix=None,
 		level=None, env=None, log_message=None, user_ids=None, gps_position=None,
 		transaction_id=None, log_id=None):
 		""" Setter for all fields at once """
@@ -112,7 +112,7 @@ class LogEntry(object):
 		level=None, env=None, log_message=None, user_ids=None, gps_position=None,
 		transaction_id=None, log_id=None):
 		""" Completes this entry from an invalid base entry to a full log entry """
-		self.set_all(origin=origin, log_lib_version=log_lib_version, app_id=app_id,
+		self.set_any(origin=origin, log_lib_version=log_lib_version, app_id=app_id,
 			level=level, env=env, log_message=log_message, user_ids=user_ids, gps_position=gps_position,
 			transaction_id=transaction_id, log_id=log_id)
 

@@ -5,6 +5,7 @@ For usage see --help output.
 """
 
 import argparse
+import math
 import os
 import random
 
@@ -196,8 +197,11 @@ class LaunchFileOrchestrator(object):
 			len(vin_list),
 			"s" if len(vin_list) > 1 else "",
 			" in manual mode" if self._manual_turtle_mode else ""))
+		
+		# [Intrusions] Add double-VIN error to file if requested by user
+		vin_list = self._add_double_vin(vin_list)
 
-		# Generate a boolean for each VIN denoting if it was intruded
+		# [Intrusions] Generate a boolean for each VIN denoting if it was intruded
 		intrusions = self._generate_intrusions_flags(vin_list, rand_gen)
 
 		for i in range(0, len(vin_list)):
@@ -403,11 +407,19 @@ class LaunchFileOrchestrator(object):
 		return ET.Comment(" {} ".format(text.strip()))
 
 
+	def _add_double_vin(self, vin_list):
+		""" If the intrusion percentage is set to > 0, duplicates some VINs in the list """
+
+		if self._intrusion_percentage == 0:
+			return vin_list
+
+		raise NotImplementedError()
+
+
 	def _generate_intrusions_flags(self, vin_list, rand_gen):
 		""" Fills a list of the length of the given list with booleans
 		according to the intrusion percentage saved in self """
 
-		# Default: No intrusions
 		if self._intrusion_percentage == 0:
 			return [False for _ in vin_list]
 

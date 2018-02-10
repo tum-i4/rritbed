@@ -17,13 +17,13 @@ class LogEntry(object):
 	vin_field = "vin"
 	origin_field = "origin"
 	log_lib_version_field = "log_lib_version"
-	appID_field = "appID"
+	app_id_field = "appID"
 	level_field = "level"
 	env_field = "env"
 	log_message_field = "log_message"
-	transactionID_field = "transactionID"
-	logID_field = "logID"
-	userIDs_field = "userIDs"
+	transaction_id_field = "transactionID"
+	log_id_field = "logID"
+	user_ids_field = "userIDs"
 	time_utc_field = "timeUTC"
 	time_unix_field = "timeUnix"
 	session_id_field = "session_id"
@@ -35,13 +35,13 @@ class LogEntry(object):
 		origin_field : "",          # Class name sending this log entry - some.java.method
 		log_lib_version_field : "", # Version of the logging library used for storing this event -
 									# each microservice has their own
-		appID_field : "",           # Name of the microservice using this
+		app_id_field : "",           # Name of the microservice using this
 		level_field : "",           # INFO, DEBUG, ...
 		env_field : "",             # PROD, INT, TEST
 		log_message_field : "",
-		transactionID_field : "",   # UUID of the request made to the server
-		logID_field : "",           # UUID of this log entry
-		userIDs_field : "[null]",   # List of (always one?) ints or [null] in string
+		transaction_id_field : "",   # UUID of the request made to the server
+		log_id_field : "",           # UUID of this log entry
+		user_ids_field : "[null]",   # List of (always one?) ints or [null] in string
 		time_utc_field : "",        # When the logging event has happened
 		time_unix_field : 0,        # !Caution! At COMPANY not the same time as time_utc
 
@@ -52,9 +52,9 @@ class LogEntry(object):
 
 
 	# pylint: disable-msg=R0913; (Too many arguments)
-	def __init__(self, vin, origin, log_lib_version, appID, time_unix,
-		level=LEVEL_DEFAULT, env=ENV_DEFAULT, log_message="", userIDs="[null]", gps_position="",
-		transactionID=None, logID=None):
+	def __init__(self, vin, origin, log_lib_version, app_id, time_unix,
+		level=LEVEL_DEFAULT, env=ENV_DEFAULT, log_message="", user_ids="[null]", gps_position="",
+		transaction_id=None, log_id=None):
 		""" Ctor """
 
 		object.__init__(self)

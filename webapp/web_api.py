@@ -32,7 +32,7 @@ def log():
 	time_unix = _get_client_time(vin)
 
 	basic_log_entry = LogEntry(
-		vin=vin, origin="com.status", log_lib_version="5.6.1", appID="STATUS", time_unix=time_unix)
+		vin=vin, origin="com.status", log_lib_version="5.6.1", app_id="STATUS", time_unix=time_unix)
 
 	_append_to_log(basic_log_entry)
 	return
@@ -56,7 +56,7 @@ def _log_num(name, num):
 		vin=vin,
 		origin="com.api." + method_name,
 		log_lib_version="5.3.2",
-		appID=name.upper(),
+		app_id=name.upper(),
 		log_message=num,
 		time_unix=time_unix
 	)
@@ -84,7 +84,7 @@ def get_country_code():
 		vin=vin,
 		origin=origin,
 		log_lib_version=lib_version,
-		appID=app_id,
+		app_id=app_id,
 		log_message="Requesting country code",
 		gps_position=position,
 		time_unix=time_unix
@@ -99,7 +99,7 @@ def get_country_code():
 		vin=vin,
 		origin=origin,
 		log_lib_version=lib_version,
-		appID=app_id,
+		app_id=app_id,
 		log_message="Country code response [{}] returned for request [x: {} and y: {}]".format(
 			country_code, crd_x, crd_y),
 		gps_position=position,
@@ -127,7 +127,7 @@ def get_poi():
 		vin=request.params.vin,
 		origin=origin,
 		log_lib_version=lib_version,
-		appID=app_id,
+		app_id=app_id,
 		log_message="Requesting POI of type {}".format(poi_type),
 		gps_position=position
 	)
@@ -149,7 +149,7 @@ def get_poi():
 		vin=request.params.vin,
 		origin=origin,
 		log_lib_version=lib_version,
-		appID=app_id,
+		app_id=app_id,
 		log_message=log_message,
 		gps_position=position,
 		level=level
@@ -177,7 +177,7 @@ def get_tsp_routing():
 		vin=request.params.vin,
 		origin=origin,
 		log_lib_version=lib_version,
-		appID=app_id,
+		app_id=app_id,
 		log_message="Requesting TSP routing to target [x: {}, y: {}]".format(
 			targ_x, targ_y),
 		gps_position=position
@@ -195,7 +195,7 @@ def get_tsp_routing():
 		vin=request.params.vin,
 		origin=origin,
 		log_lib_version=lib_version,
-		appID=app_id,
+		app_id=app_id,
 		log_message=("TSP routing response [{}] returned for request ".format(tsp_message) +
 			"[x: {}, y: {}, target_x: {}, target_y: {}]".format(crd_x, crd_y, targ_x, targ_y)),
 		gps_position=position
@@ -212,7 +212,7 @@ def log_colour():
 		vin=request.params.vin,
 		origin="com.api.web.callColour",
 		log_lib_version="5.6.1",
-		appID="COLOUR",
+		app_id="COLOUR",
 		log_message=request.params.colour
 	)
 
@@ -228,7 +228,7 @@ def log_num(num):
 		vin=request.params.vin,
 		origin="com.api.web.getVins",
 		log_lib_version="5.3.2",
-		appID="GETVINS",
+		app_id="GETVINS",
 		log_message="getVins returned {} vins".format(num))
 
 	_append_to_log(numbered_log_entry)

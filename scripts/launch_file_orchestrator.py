@@ -413,7 +413,19 @@ class LaunchFileOrchestrator(object):
 		if self._intrusion_percentage == 0:
 			return vin_list
 
-		raise NotImplementedError()
+		number_of_vins = len(vin_list)
+		number_of_duplicates = math.ceil(number_of_vins * (float(self._intrusion_percentage) / 100))
+
+		# Select random indices
+		duplicates_indices = rand_gen.sample(range(0, number_of_vins), number_of_duplicates * 2)
+
+		# Take two pairs of indices and copy the VIN from one to the other
+		for i in range(0, len(duplicates_indices) - 1):
+			first_index = duplicates_indices[i]
+			second_index = duplicates_indices[i + 1]
+			vin_list[second_index] = vin_list[first_index]
+
+		return vin_list
 
 
 	def _generate_intrusions_flags(self, vin_list, rand_gen):

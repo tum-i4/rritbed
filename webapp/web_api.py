@@ -244,6 +244,14 @@ def reset_log():
 ### Helper methods ###
 
 
+def _verify_and_get_vin(vin):
+	""" Checks if the given VIN is None """
+
+	if vin is None:
+		raise ValueError("No VIN given!")
+	return vin
+
+
 def _get_client_time(identifier):
 	""" Creates a time for the client. Randomly increments time with 50 % chance. """
 

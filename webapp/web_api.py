@@ -31,7 +31,8 @@ def log():
 	vin = _verify_and_get_vin(request.params.vin)
 	time_unix = _get_client_time(vin)
 
-	basic_log_entry = LogEntry(vin=vin, origin="com.status", log_lib_version="5.6.1", appID="STATUS", time_unix=time_unix)
+	basic_log_entry = LogEntry(
+		vin=vin, origin="com.status", log_lib_version="5.6.1", appID="STATUS", time_unix=time_unix)
 
 	_append_to_log(basic_log_entry)
 	return
@@ -46,14 +47,18 @@ def log_data(generator):
 def _log_num(name, num):
 	""" Log the given number under the given method name """
 
+	vin = _verify_and_get_vin(request.params.vin)
+	time_unix = _get_client_time(vin)
+
 	method_name = "register" + name.capitalize()
 
 	number_log_entry = LogEntry(
-		vin=request.params.vin,
+		vin=vin,
 		origin="com.api." + method_name,
 		log_lib_version="5.3.2",
 		appID=name.upper(),
-		log_message=num
+		log_message=num,
+		time_unix=time_unix
 	)
 
 	_append_to_log(number_log_entry)

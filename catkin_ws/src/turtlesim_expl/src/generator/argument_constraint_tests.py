@@ -12,6 +12,18 @@ class Tests(unittest.TestCase):
 	""" Tests for the generator module """
 
 	@parameterized([
+		(1, 1, 1), # all overlapping
+		(-1, -1, 1), # default overlapping min
+		(1, -1, 1), # default overlapping max
+		(0, -2, 2) # default not overlapping
+	])
+	def test_ctor_valid(self, default_value, min_value, max_value):
+		""" Tests for the constructor with valid inputs """
+		# Test will fail if the constructor raises an error
+		ArgumentConstraint(default_value, min_value, max_value)
+
+
+	@parameterized([
 		(1, 1, 1, 1), # hits both ends
 		(0, -1, 1, 0), # is default value
 		(0, -1, 1, -1), # hits min

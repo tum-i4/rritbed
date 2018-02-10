@@ -106,6 +106,8 @@ def get_country_code():
 def get_poi():
 	""" Map coordinates to POI of given type and save request and response to log """
 
+	poi_request_log_entry = _create_base_log_entry(request.params.vin)
+
 	crd_x = request.params.x
 	crd_y = request.params.y
 	poi_type = request.params.type
@@ -116,8 +118,7 @@ def get_poi():
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
-	poi_request_log_entry = LogEntry(
-		vin=request.params.vin,
+	poi_request_log_entry.complete(
 		origin=origin,
 		log_lib_version=lib_version,
 		app_id=app_id,
@@ -129,6 +130,7 @@ def get_poi():
 
 	poi_result = PoiMapper.map(poi_type, crd_x, crd_y)
 
+	poi_response_log_entry = _create_base_log_entry(request.params.vin)
 	log_message = "Invalid POI type {}!".format(poi_type)
 	level = LogEntry.LEVEL_ERROR
 
@@ -138,8 +140,7 @@ def get_poi():
 		level = LogEntry.LEVEL_DEFAULT
 
 	# Save response to log
-	poi_response_log_entry = LogEntry(
-		vin=request.params.vin,
+	poi_response_log_entry.complete(
 		origin=origin,
 		log_lib_version=lib_version,
 		app_id=app_id,
@@ -155,6 +156,8 @@ def get_poi():
 def get_tsp_routing():
 	""" Map current and goal coordinates to TSP and save request and response to log """
 
+	tsp_request_log_entry = _create_base_log_entry(request.params.vin)
+
 	crd_x = request.params.x
 	crd_y = request.params.y
 	targ_x = request.params.targ_x
@@ -166,8 +169,7 @@ def get_tsp_routing():
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
-	tsp_request_log_entry = LogEntry(
-		vin=request.params.vin,
+	tsp_request_log_entry.complete(
 		origin=origin,
 		log_lib_version=lib_version,
 		app_id=app_id,
@@ -180,12 +182,13 @@ def get_tsp_routing():
 
 	tsp_message = TspRoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
 
+	tsp_response_log_entry = _create_base_log_entry(request.params.vin)
+
 	if tsp_message == TspRoutingMapper.GOAL_REACHED_MSG:
 		tsp_message = "Goal already reached at {}/{}".format(crd_x, crd_y)
 
 	# Save request to log
-	tsp_response_log_entry = LogEntry(
-		vin=request.params.vin,
+	tsp_response_log_entry.complete(
 		origin=origin,
 		log_lib_version=lib_version,
 		app_id=app_id,
@@ -201,8 +204,9 @@ def get_tsp_routing():
 def log_colour():
 	""" Log endpoint with colour input """
 
-	colour_log_entry = LogEntry(
-		vin=request.params.vin,
+	colour_log_entry = _create_base_log_entry(request.params.vin)
+
+	colour_log_entry.complete(
 		origin="com.api.web.callColour",
 		log_lib_version="5.6.1",
 		app_id="COLOUR",
@@ -216,9 +220,9 @@ def log_colour():
 def log_num(num):
 	""" Log endpoint with number input """
 
-	# pylint: disable-msg=E1101
-	numbered_log_entry = LogEntry(
-		vin=request.params.vin,
+	numbered_log_entry = _create_base_log_entry(request.params.vin)
+
+	numbered_log_entry.complete(
 		origin="com.api.web.getVins",
 		log_lib_version="5.3.2",
 		app_id="GETVINS",

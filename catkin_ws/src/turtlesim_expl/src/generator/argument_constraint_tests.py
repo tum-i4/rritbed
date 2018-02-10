@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Unit and system tests for LFO and related classes """
+""" Unit tests for the ArgumentConstraint class """
 
 import random
 import unittest
@@ -11,7 +11,7 @@ from argument_constraint import ArgumentConstraint
 
 
 class Tests(unittest.TestCase):
-	""" Tests for the generator module """
+	""" All tests """
 
 	@parameterized.expand([
 		(1, 1, 1), # all overlapping

@@ -30,7 +30,7 @@ class LogEntry(object):
 	gps_position_field = "gps_position"
 	execution_time_field = "execution_time"
 
-	log_entry = {
+	data = {
 		vin_field : "",             # Identifier of the car calling the microservice
 		origin_field : "",          # Class name sending this log entry - some.java.method
 		log_lib_version_field : "", # Version of the logging library used for storing this event -
@@ -59,20 +59,51 @@ class LogEntry(object):
 
 		object.__init__(self)
 
-		self.log_entry[self.vin_field] = vin
-		self.log_entry[self.origin_field] = origin
-		self.log_entry[self.log_lib_version_field] = log_lib_version
-		self.log_entry[self.appID_field] = appID
-		self.log_entry[self.level_field] = level
-		self.log_entry[self.env_field] = env
-		self.log_entry[self.log_message_field] = log_message
-		self.log_entry[self.userIDs_field] = userIDs
-		self.log_entry[self.gps_position_field] = gps_position
+		self.data[self.vin_field] = vin
+		self.data[self.origin_field] = origin
+		self.data[self.log_lib_version_field] = log_lib_version
+		self.data[self.app_id_field] = app_id
+		self.data[self.level_field] = level
+		self.data[self.env_field] = env
+		self.data[self.log_message_field] = log_message
+		self.data[self.user_ids_field] = user_ids
+		self.data[self.gps_position_field] = gps_position
 
-		self.log_entry[self.transactionID_field] = self._verify_or_generate_id(transactionID)
-		self.log_entry[self.logID_field] = self._verify_or_generate_id(logID)
+		self.data[self.transaction_id_field] = self._verify_or_generate_id(transaction_id)
+		self.data[self.log_id_field] = self._verify_or_generate_id(log_id)
 
 		self._set_time(time_unix)
+
+
+	def set_all(self, vin=None, origin=None, log_lib_version=None, app_id=None, time_unix=None,
+		level=None, env=None, log_message=None, user_ids=None, gps_position=None,
+		transaction_id=None, log_id=None):
+		""" Setter for all fields at once """
+
+		self._set_if_not_none(self.vin_field, vin)
+		self._set_if_not_none(self.origin_field, origin)
+		self._set_if_not_none(self.log_lib_version_field, log_lib_version)
+		self._set_if_not_none(self.app_id_field, app_id)
+		self._set_if_not_none(self.level_field, level)
+		self._set_if_not_none(self.env_field, env)
+		self._set_if_not_none(self.log_message_field, log_message)
+		self._set_if_not_none(self.user_ids_field, user_ids)
+		self._set_if_not_none(self.gps_position_field, gps_position)
+
+		if transaction_id is not None:
+			self._set_if_not_none(self.transaction_id_field, self._verify_or_generate_id(transaction_id))
+
+		if log_id is not None:
+			self._set_if_not_none(self.log_id_field, self._verify_or_generate_id(log_id))
+
+		if time_unix is not None:
+			self._set_time(time_unix)
+
+
+	def _set_if_not_none(self, field_key, value):
+		""" Sets the field with the given key to the value specified if that is not None """
+		if value is not None:
+			self.data[field_key] = value
 
 
 	# pylint: disable-msg=R0201; (Method could be a function)
@@ -93,11 +124,11 @@ class LogEntry(object):
 
 		time_utc_now = time.gmtime(time_unix)
 
-		self.log_entry[self.time_unix_field] = int(time_unix)
-		self.log_entry[self.time_utc_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
+		self.data[self.time_unix_field] = int(time_unix)
+		self.data[self.time_utc_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
 
 
 	def get_log_string(self):
 		""" Creates a log string from this item's log data, sorted by key """
 
-		return json.dumps(self.log_entry, sort_keys=True)
+		return json.dumps(self.data, sort_keys=True)

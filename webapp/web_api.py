@@ -28,11 +28,10 @@ CURRENT_CLIENT_TIME = {}
 def log():
 	""" Default log endpoint with no arguments """
 
-	vin = _verify_and_get_vin(request.params.vin)
-	time_unix = _get_client_time(vin)
+	basic_log_entry = _create_base_log_entry(request.params.vin)
 
-	basic_log_entry = LogEntry(
-		vin=vin, origin="com.status", log_lib_version="5.6.1", app_id="STATUS", time_unix=time_unix)
+	basic_log_entry.complete(
+		origin="com.status", log_lib_version="5.6.1", app_id="STATUS")
 
 	_append_to_log(basic_log_entry)
 	return
@@ -47,18 +46,15 @@ def log_data(generator):
 def _log_num(name, num):
 	""" Log the given number under the given method name """
 
-	vin = _verify_and_get_vin(request.params.vin)
-	time_unix = _get_client_time(vin)
+	number_log_entry = _create_base_log_entry(request.params.vin)
 
 	method_name = "register" + name.capitalize()
 
-	number_log_entry = LogEntry(
-		vin=vin,
+	number_log_entry.complete(
 		origin="com.api." + method_name,
 		log_lib_version="5.3.2",
 		app_id=name.upper(),
-		log_message=num,
-		time_unix=time_unix
+		log_message=num
 	)
 
 	_append_to_log(number_log_entry)
@@ -68,8 +64,7 @@ def _log_num(name, num):
 def get_country_code():
 	""" Map coordinates to country code and save request and response to log """
 
-	vin = _verify_and_get_vin(request.params.vin)
-	time_unix = _get_client_time(vin)
+	cc_request_log_entry = _create_base_log_entry(request.params.vin)
 
 	crd_x = request.params.x
 	crd_y = request.params.y
@@ -80,30 +75,28 @@ def get_country_code():
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
-	cc_request_log_entry = LogEntry(
-		vin=vin,
+	cc_request_log_entry.complete(
 		origin=origin,
 		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message="Requesting country code",
-		gps_position=position,
-		time_unix=time_unix
+		gps_position=position
 	)
 
 	_append_to_log(cc_request_log_entry)
 
 	country_code = CountryCodeMapper.map(crd_x, crd_y)
 
+	cc_response_log_entry = _create_base_log_entry(request.params.vin)
+
 	# Save response to log
-	cc_response_log_entry = LogEntry(
-		vin=vin,
+	cc_response_log_entry.complete(
 		origin=origin,
 		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message="Country code response [{}] returned for request [x: {} and y: {}]".format(
 			country_code, crd_x, crd_y),
-		gps_position=position,
-		time_unix=time_unix
+		gps_position=position
 	)
 
 	_append_to_log(cc_response_log_entry)
@@ -257,12 +250,14 @@ def reset_log():
 ### Helper methods ###
 
 
-def _verify_and_get_vin(vin):
-	""" Checks if the given VIN is None """
+def _create_base_log_entry(vin):
+	""" Verifies the given VIN and creates a log entry with the current client time. """
 
 	if vin is None:
 		raise ValueError("No VIN given!")
-	return vin
+
+	time_unix = _get_client_time(vin)
+	return LogEntry.base_log_entry(vin, time_unix)
 
 
 def _get_client_time(identifier):

@@ -28,7 +28,10 @@ CURRENT_CLIENT_TIME = {}
 def log():
 	""" Default log endpoint with no arguments """
 
-	basic_log_entry = LogEntry(vin="", origin="com.status", log_lib_version="5.6.1", appID="STATUS")
+	vin = _verify_and_get_vin(request.params.vin)
+	time_unix = _get_client_time(vin)
+
+	basic_log_entry = LogEntry(vin=vin, origin="com.status", log_lib_version="5.6.1", appID="STATUS", time_unix=time_unix)
 
 	_append_to_log(basic_log_entry)
 	return

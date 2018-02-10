@@ -68,6 +68,9 @@ def _log_num(name, num):
 def get_country_code():
 	""" Map coordinates to country code and save request and response to log """
 
+	vin = _verify_and_get_vin(request.params.vin)
+	time_unix = _get_client_time(vin)
+
 	crd_x = request.params.x
 	crd_y = request.params.y
 
@@ -78,12 +81,13 @@ def get_country_code():
 
 	# Save request to log
 	cc_request_log_entry = LogEntry(
-		vin=request.params.vin,
+		vin=vin,
 		origin=origin,
 		log_lib_version=lib_version,
 		appID=app_id,
 		log_message="Requesting country code",
-		gps_position=position
+		gps_position=position,
+		time_unix=time_unix
 	)
 
 	_append_to_log(cc_request_log_entry)
@@ -92,13 +96,14 @@ def get_country_code():
 
 	# Save response to log
 	cc_response_log_entry = LogEntry(
-		vin=request.params.vin,
+		vin=vin,
 		origin=origin,
 		log_lib_version=lib_version,
 		appID=app_id,
 		log_message="Country code response [{}] returned for request [x: {} and y: {}]".format(
 			country_code, crd_x, crd_y),
-		gps_position=position
+		gps_position=position,
+		time_unix=time_unix
 	)
 
 	_append_to_log(cc_response_log_entry)

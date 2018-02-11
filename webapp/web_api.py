@@ -9,6 +9,7 @@ import os.path
 import random
 import time
 from bottle import post, run, request, BaseResponse
+from shutil import copyfile
 
 from log_entry import LogEntry
 from functionality.country_code_mapper import CountryCodeMapper
@@ -258,9 +259,13 @@ def cut_log():
 	print("Minimum time is {}. Now reading the whole log file - this might take some time...".format(
 		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
 
+	new_file_path = _create_unique_log_file_path()
+
+	copyfile(LOG_FILE_PATH, new_file_path)
+
 	log_lines = []
-	with open(LOG_FILE_PATH, "r") as log_file:
-		log_lines = log_file.readlines()
+	with open(new_file_path, "r") as new_log_file:
+		log_lines = new_log_file.readlines()
 
 	log_length = len(log_lines)
 
@@ -274,15 +279,13 @@ def cut_log():
 		log_lines.pop()
 		current_index -= 1
 
-	new_file_name = _create_unique_log_file_name()
+	print("Writing results back to disk as {}...".format(new_file_path))
 
-	print("Writing results back to disk as {}...".format(new_file_name))
-
-	with open(new_file_name, "w") as outfile:
+	with open(new_file_path, "w") as outfile:
 		outfile.writelines(log_lines)
 
 	message = "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
-		log_length - len(log_lines), log_length, new_file_name)
+		log_length - len(log_lines), log_length, new_file_path)
 	print(message)
 
 	return BaseResponse(body=message, status=200)
@@ -295,7 +298,7 @@ def reset_log():
 	if not os.path.isfile(LOG_FILE_PATH):
 		return BaseResponse(body="Log file doesn't exist", status=200)
 
-	new_file_name = _create_unique_log_file_name()
+	new_file_name = _create_unique_log_file_path()
 	os.rename(LOG_FILE_PATH, new_file_name)
 
 	return BaseResponse(body="Successfully cleared the log file", status=200)
@@ -347,7 +350,7 @@ def _get_client_time(identifier):
 		return None
 
 
-def _create_unique_log_file_name():
+def _create_unique_log_file_path():
 	""" Creates a unique log file name for backups """
 
 	time_unix = time.time()

@@ -240,6 +240,47 @@ def log_num(num):
 	_append_to_log(numbered_log_entry)
 
 
+@post("/DANGER/cut-log")
+def cut_log():
+	""" Cuts the log off at the common minimum time of all clients """
+
+	minimum_time = _get_state()[CMT_KEY]
+
+	if not os.path.isfile(LOG_FILE_PATH):
+		return BaseResponse(body="Log is empty", status=200)
+
+	print("Minimum time is {}. Now reading the whole log file - this might take some time...".format(
+		_get_time_string(minimum_time)))
+
+	log_lines = []
+	with open(LOG_FILE_PATH, "r") as log_file:
+		log_lines = log_file.readlines()
+
+	log_length = len(log_lines)
+
+	print("Processing...")
+
+	current_index = len(log_lines) - 1
+	while True:
+		entry = json.loads(log_lines[current_index])
+		if entry[LogEntry.time_unix_field] <= minimum_time:
+			break
+		log_lines.pop()
+		current_index -= 1
+
+	print("Writing results back to disk...")
+
+	os.remove(LOG_FILE_PATH)
+	with open(LOG_FILE_PATH, "w") as outfile:
+		outfile.writelines(log_lines)
+
+	message = "Process finished! Removed {} from the original {} lines.".format(
+		log_length - len(log_lines), log_length)
+	print(message)
+
+	return BaseResponse(body=message, status=200)
+
+
 @post("/DANGER/reset-log")
 def reset_log():
 	""" Clears the log file """

@@ -240,6 +240,10 @@ def log_num(num):
 	_append_to_log(numbered_log_entry)
 
 
+
+### DANGER zone
+
+
 @post("/DANGER/cut-log")
 def cut_log():
 	""" Cuts the log off at the common minimum time of all clients """
@@ -250,7 +254,7 @@ def cut_log():
 		return BaseResponse(body="Log is empty", status=200)
 
 	print("Minimum time is {}. Now reading the whole log file - this might take some time...".format(
-		_get_time_string(minimum_time)))
+		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
 
 	log_lines = []
 	with open(LOG_FILE_PATH, "r") as log_file:
@@ -304,6 +308,11 @@ def reset_log():
 ### Helper methods ###
 
 
+def _get_position_string(crd_x, crd_y):
+	""" Creates a position string of the format '41.123,40.31312' """
+	return "{},{}".format(crd_x, crd_y)
+
+
 def _create_base_log_entry(vin):
 	""" Verifies the given VIN and creates a log entry with the current client time. """
 
@@ -339,6 +348,22 @@ def _get_client_time(identifier):
 	except KeyError:
 		_set_client_time(identifier, None)
 		return None
+
+
+
+### Writing to log
+
+
+def _append_to_log(new_log_entry):
+	""" Appends the given string plus a newline to the log file """
+
+	with open(LOG_FILE_PATH, "a") as outfile:
+		outfile.write(new_log_entry.get_log_string() + "\n")
+	return
+
+
+
+### STATE handling
 
 
 def _get_state():
@@ -387,24 +412,8 @@ def _init_state():
 	STATE[CMT_KEY] = state_from_file[CMT_KEY]
 
 
-def _get_time_string(time_unix):
-	""" Creates time string of the format '2017-12-20_18:08:25' """
 
-	return time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
-
-
-def _get_position_string(crd_x, crd_y):
-	""" Creates a position string of the format '41.123,40.31312' """
-
-	return "{},{}".format(crd_x, crd_y)
-
-
-def _append_to_log(new_log_entry):
-	""" Appends the given string plus a newline to the log file """
-
-	with open(LOG_FILE_PATH, "a") as outfile:
-		outfile.write(new_log_entry.get_log_string() + "\n")
-	return
+### Starting the server
 
 
 run(host="localhost", port=5000)

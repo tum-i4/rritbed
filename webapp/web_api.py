@@ -261,7 +261,7 @@ def _create_base_log_entry(vin):
 		raise ValueError("No VIN given!")
 
 	time_unix = _get_client_time(vin)
-	return LogEntry.base_log_entry(vin, time_unix)
+	return LogEntry.create_base_entry(vin, time_unix)
 
 
 def _get_client_time(identifier):

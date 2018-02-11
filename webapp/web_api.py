@@ -267,8 +267,17 @@ def _create_base_log_entry(vin):
 def _get_client_time(identifier):
 	""" Creates a time for the client. Randomly increments time with 50 % chance. """
 
-	time_unix = time.time()
-	raise NotImplementedError()
+	client_time = CURRENT_CLIENT_TIME[identifier]
+	time_now = time.time()
+
+	if client_time is None:
+		CURRENT_CLIENT_TIME[identifier] = time_now
+		return time_now
+
+	time_choice = [client_time, client_time + random.randint(3600, 57600)]
+	CURRENT_CLIENT_TIME[identifier] = time_choice
+
+	return time_choice
 
 
 def _get_time_string(time_unix):

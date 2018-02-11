@@ -4,12 +4,13 @@
 # pylint: disable-msg=E1101
 
 import datetime
+import io
 import json
 import os.path
 import random
+import shutil
 import time
 from bottle import post, run, request, BaseResponse
-from shutil import copyfile
 
 from log_entry import LogEntry
 from functionality.country_code_mapper import CountryCodeMapper
@@ -261,7 +262,7 @@ def cut_log():
 
 	new_file_path = _create_unique_log_file_path()
 
-	copyfile(LOG_FILE_PATH, new_file_path)
+	shutil.copyfile(LOG_FILE_PATH, new_file_path)
 
 	log_lines = []
 	with open(new_file_path, "r") as new_log_file:
@@ -433,7 +434,8 @@ def _init_state():
 ### Starting the server
 
 
-LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a")
+# Buffer size increased for improved performance
+LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a", io.DEFAULT_BUFFER_SIZE * 10000)
 
 run(host="localhost", port=5000)
 

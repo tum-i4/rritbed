@@ -9,8 +9,7 @@ import time
 import requests
 import rospy
 
-from turtlesim.msg import Color
-from turtlesim.msg import Pose
+from turtlesim.msg import Pose, Color
 from std_msgs.msg import Float32
 
 

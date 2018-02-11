@@ -437,4 +437,4 @@ LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a")
 
 run(host="localhost", port=5000)
 
-os.close(LOG_FILE_HANDLE)
+LOG_FILE_HANDLE.close()

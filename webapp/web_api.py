@@ -292,13 +292,7 @@ def reset_log():
 	if not os.path.isfile(LOG_FILE_PATH):
 		return BaseResponse(body="Log file doesn't exist", status=200)
 
-	time_unix = time.time()
-	new_file_name = LOG_FILE_PATH + "_until_" + _get_time_string(time_unix)
-
-	while os.path.isfile(new_file_name):
-		time_unix += datetime.timedelta(seconds=1)
-		new_file_name = LOG_FILE_PATH + _get_time_string(time_unix)
-
+	new_file_name = _create_unique_log_file_name()
 	os.rename(LOG_FILE_PATH, new_file_name)
 
 	return BaseResponse(body="Successfully cleared the log file", status=200)
@@ -348,6 +342,24 @@ def _get_client_time(identifier):
 	except KeyError:
 		_set_client_time(identifier, None)
 		return None
+
+
+def _create_unique_log_file_name():
+	""" Creates a unique log file name for backups """
+
+	time_unix = time.time()
+	new_file_name = _create_log_file_name_from_time(LOG_FILE_PATH, time_unix)
+
+	while os.path.isfile(new_file_name):
+		time_unix += datetime.timedelta(seconds=1)
+		new_file_name = _create_log_file_name_from_time(LOG_FILE_PATH, time_unix)
+
+	return new_file_name
+
+
+def _create_log_file_name_from_time(path, time_unix):
+	""" Creates a log file name of the format 'log/log_until_2017-12-20_18:08:25' """
+	return path + "_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 
 
 

@@ -20,6 +20,8 @@ LOG_FILE_NAME = "log"
 LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
 STATE_FILE_PATH = "state"
 
+LOG_FILE_HANDLE = None
+
 INI_KEY = "State initialised"
 CCT_KEY = "Current client times"
 CMT_KEY = "Current minimum time"
@@ -370,8 +372,7 @@ def _create_log_file_name_from_time(path, time_unix):
 def _append_to_log(new_log_entry):
 	""" Appends the given string plus a newline to the log file """
 
-	with open(LOG_FILE_PATH, "a") as outfile:
-		outfile.write(new_log_entry.get_log_string() + "\n")
+	LOG_FILE_HANDLE.write(new_log_entry.get_log_string() + "\n")
 	return
 
 
@@ -429,4 +430,8 @@ def _init_state():
 ### Starting the server
 
 
+LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a")
+
 run(host="localhost", port=5000)
+
+os.close(LOG_FILE_HANDLE)

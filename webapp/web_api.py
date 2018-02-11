@@ -279,8 +279,8 @@ def cut_log():
 	with open(new_file_name, "w") as outfile:
 		outfile.writelines(log_lines)
 
-	message = "Process finished! Removed {} from the original {} lines.".format(
-		log_length - len(log_lines), log_length)
+	message = "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
+		log_length - len(log_lines), log_length, new_file_name)
 	print(message)
 
 	return BaseResponse(body=message, status=200)

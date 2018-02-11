@@ -272,10 +272,11 @@ def cut_log():
 		log_lines.pop()
 		current_index -= 1
 
-	print("Writing results back to disk...")
+	new_file_name = _create_unique_log_file_name()
 
-	os.remove(LOG_FILE_PATH)
-	with open(LOG_FILE_PATH, "w") as outfile:
+	print("Writing results back to disk as {}...".format(new_file_name))
+
+	with open(new_file_name, "w") as outfile:
 		outfile.writelines(log_lines)
 
 	message = "Process finished! Removed {} from the original {} lines.".format(

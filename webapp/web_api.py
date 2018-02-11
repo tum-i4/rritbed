@@ -269,29 +269,35 @@ def _create_base_log_entry(vin):
 	if vin is None:
 		raise ValueError("No VIN given!")
 
-	time_unix = _get_client_time(vin)
+	time_unix = _create_client_time(vin)
 	return LogEntry.create_base_entry(vin, time_unix)
 
 
-def _get_client_time(identifier):
+def _create_client_time(identifier):
 	""" Creates a time for the client. Randomly increments time with 5 % chance. """
 
-	try:
-		CURRENT_CLIENT_TIME[identifier]
-	except KeyError:
-		CURRENT_CLIENT_TIME[identifier] = None
-
-	client_time = CURRENT_CLIENT_TIME[identifier]
+	client_time = _get_client_time(identifier)
 	time_now = time.time()
 
 	if client_time is None:
-		CURRENT_CLIENT_TIME[identifier] = time_now
+		_set_client_time(identifier, time_now)
 		return time_now
 
 	time_choice = random.choice([client_time] * 19 + [client_time + random.randint(3600, 57600)])
-	CURRENT_CLIENT_TIME[identifier] = time_choice
+	_set_client_time(identifier, time_choice)
 
 	return time_choice
+
+
+def _get_client_time(identifier):
+	""" Getter for the client time. Initialises empty field. """
+
+	state = _get_state()
+	try:
+		return state[CCT_KEY][identifier]
+	except KeyError:
+		_set_client_time(identifier, None)
+		return None
 
 
 def _get_state():

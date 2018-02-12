@@ -61,7 +61,7 @@ class Turtle(object):
 		self._y_vel = data.linear.y
 
 
-	def update(self, dtime, path_image, canvas_width, canvas_height):
+	def update(self, dtime, background, canvas_width, canvas_height):
 		"""
 		Update the turtle state and position
 		canvas_width: Expected to be max index of the x side
@@ -93,10 +93,10 @@ class Turtle(object):
 
 		# Figure out (and publish) the color underneath the turtle
 		colour = Color()
-		pixel = path_image[self._pos.x][self._pos.y]
-		colour.r = pixel.r
-		colour.g = pixel.g
-		colour.b = pixel.b
+		rgb = background[self._pos.x][self._pos.y]
+		colour.r = rgb.r
+		colour.g = rgb.g
+		colour.b = rgb.b
 		self._colour_pub.publish(colour)
 
 		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self._pos.x, self._pos.y)

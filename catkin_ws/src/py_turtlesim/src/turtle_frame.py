@@ -135,3 +135,26 @@ class TurtleFrame(object):
 		#       spawnTurtle(name.toStdString(), 1.0 + 1.5 * (index % 7), 1.0 + 1.5 * (index / 7), PI / 2.0, index);
 		#     }
 		#   }
+
+
+	def drawArea(self):
+		""" Draw defined area in defined colour """
+		pass
+
+		# void TurtleFrame::vauDrawArea(QColor vauColour, QPoint vauTopLeft, QPoint vauBottomRight)
+		# {
+		# path_painter_.setPen(QPen(vauColour, 1, Qt::SolidLine, Qt::SquareCap));
+		# path_painter_.setBrush(vauColour);
+
+		# // === TL ===       BR x, TL y
+		# // TL x, BR y       === BR ===
+
+		# QPoint points[4] = {
+		# 	vauTopLeft,
+		# 	QPoint(vauBottomRight.x(), vauTopLeft.y()),
+		# 	vauBottomRight,
+		# 	QPoint(vauTopLeft.x(), vauBottomRight.y())
+		# };
+
+		# path_painter_.drawPolygon(points, 4);
+		# }

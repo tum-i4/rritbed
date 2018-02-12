@@ -20,6 +20,8 @@ DEFAULT_PEN_B = 0xff
 
 PI = 3.14159265
 
+NS = "turtle1"
+
 
 class Turtle(object):
 	""" The turtle class """
@@ -50,9 +52,9 @@ class Turtle(object):
 
 		rospy.init_node("turtle", anonymous=True)
 
-		rospy.Subscriber("cmd_vel", Twist, self._velocityCallback)
-		self._pose_pub = rospy.Publisher("pose", Pose)
-		self._colour_pub = rospy.Publisher("color_sensor", Color)
+		rospy.Subscriber(NS + "/cmd_vel", Twist, self._velocity_callback)
+		self._pose_pub = rospy.Publisher(NS + "/pose", Pose, queue_size=10)
+		self._colour_pub = rospy.Publisher(NS + "/color_sensor", Color, queue_size=10)
 
 		# meter_ = turtle_image_.height();
 		# rotateImage();

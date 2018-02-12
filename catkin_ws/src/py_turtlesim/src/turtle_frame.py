@@ -17,6 +17,7 @@ Rebuilding turtle_frame.cpp in Python
 #   - clear
 
 import argparse
+import os
 import random
 from turtle import Turtle
 
@@ -76,18 +77,18 @@ class TurtleFrame(object):
 		self._spawn_turtle(trt_x, trt_y)
 
 		# Colouring the background
-		# Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500
+		# Window is 500 x 500, starting bottom left at 0,0 and ending top right at 500,500
 
 		# Top left: Pastel purple
-		self._draw_area(Rgb(r=150, g=125, b=210), Point(0, 0), Point(250, 250))
+		self._draw_area(Rgb.pastel_purple(), Point(0, 500), Point(250, 250))
 		# Top right: Pastel yellow
-		self._draw_area(Rgb(r=255, g=240, b=120), Point(250, 0), Point(500, 250))
+		self._draw_area(Rgb.pastel_yellow(), Point(250, 500), Point(500, 250))
 		# Bottom left: Pastel green
-		self._draw_area(Rgb(r=100, g=180, b=100), Point(0, 250), Point(250, 500))
+		self._draw_area(Rgb.pastel_green(), Point(0, 250), Point(250, 0))
 		# Bottom right: Pastel blue
-		self._draw_area(Rgb(r=100, g=180, b=250), Point(250, 250), Point(500, 500))
+		self._draw_area(Rgb.pastel_blue(), Point(250, 250), Point(500, 0))
 		# Intrusion zone (middle): Red
-		self._draw_area(Rgb(r=255), Point(245, 245), Point(255, 255))
+		self._draw_area(Rgb.red(), Point(245, 245), Point(255, 255))
 
 		# Initialise update timer (16 msec)
 		self._update_interval = rospy.Duration(0.016)

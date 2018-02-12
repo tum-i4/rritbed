@@ -45,8 +45,12 @@ class TurtleFrame(object):
 	_gui_output = [[]]
 
 
-	def __init__(self, has_gui=False):
+	def __init__(self):
 		""" Ctor """
+
+		parser = argparse.ArgumentParser(prog="tf")
+		parser.add_argument("--draw-gui", "-g", action="store_true", dest="has_gui")
+		args = parser.parse_args()
 
 		object.__init__(self)
 
@@ -54,7 +58,7 @@ class TurtleFrame(object):
 		self._background = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
 		self._width = len(self._background)
 		self._height = len(self._background[0])
-		self._has_gui = has_gui
+		self._has_gui = args.has_gui
 
 		rospy.init_node("turtle_frame")
 		rospy.set_param("background_r", DEFAULT_BG_R)
@@ -165,4 +169,5 @@ class TurtleFrame(object):
 
 	def _redraw(self):
 		""" Create an updated GUI output """
-		pass
+		if self._has_gui:
+			pass

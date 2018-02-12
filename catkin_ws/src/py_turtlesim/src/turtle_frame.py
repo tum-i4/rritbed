@@ -7,6 +7,7 @@ Rebuilding turtle_frame.cpp in Python
 # - graphical output
 #   - 2D space
 #   - turtle images
+#   - all Qt fields and callbacks
 # - services
 #   - clear
 #   - reset
@@ -16,9 +17,9 @@ Rebuilding turtle_frame.cpp in Python
 #   - clear
 
 import random
-import rospy
-
 from turtle import Turtle
+
+import rospy
 from util.rgb import Rgb
 from util.point import Point
 
@@ -34,27 +35,14 @@ class TurtleFrame(object):
 	_height = 0
 	_2d_plane = [[]]
 	_turtles = {}
+
 	_id_counter = 0
+	_last_turtle_update = None
+	_update_interval = None
 
-	# path_image_(500, 500, QImage::Format_ARGB32)
-	# path_painter_(&path_image_)
-	# frame_count_(0)
-	# id_counter_(0)
+	_has_gui = False
+	_frame_count = 0
 
-	# ros::NodeHandle nh_;
-	# QTimer* update_timer_;
-	# QImage path_image_;
-	# QPainter path_painter_;
-
-	# uint64_t frame_count_;
-
-	# ros::WallTime last_turtle_update_;
-
-	# typedef std::map<std::string, TurtlePtr> M_Turtle;
-
-	# float meter_;
-	# float width_in_meters_;
-	# float height_in_meters_;
 
 	def __init__(self):
 		""" Ctor """
@@ -93,7 +81,8 @@ class TurtleFrame(object):
 		self._draw_area(Rgb(r=255), Point(245, 245), Point(255, 255))
 
 		# Initialise update timer (16 msec)
-		rospy.Timer(rospy.Duration(0.016), self._update_turtles)
+		self._update_interval = rospy.Duration(0.016)
+		rospy.Timer(self._update_interval, self._update_turtles)
 
 		# Block until shut down
 		rospy.spin()

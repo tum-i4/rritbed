@@ -13,7 +13,7 @@ Rebuilding turtle_frame.cpp in Python
 #   - spawn
 #   - kill
 # - methods
-#   - hasTurtle
+#   - clear
 
 import random
 import rospy
@@ -66,22 +66,10 @@ class TurtleFrame(object):
 		self._width = len(self._2d_plane)
 		self._height = len(self._2d_plane[0])
 
-		# Initialise update timer (16 msec)
-
-		#   srand(time(NULL));
-
-		#   update_timer_ = new QTimer(this);
-		#   update_timer_->setInterval(16);
-		#   update_timer_->start();
-
-		#   connect(update_timer_, SIGNAL(timeout()), this, SLOT(onUpdate()));
-
 		rospy.init_node("turtle_frame")
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)
 		rospy.set_param("background_b", DEFAULT_BG_B)
-
-		#   clear();
 
 		rospy.loginfo("Starting turtle frame, %s", rospy.get_name())
 
@@ -95,18 +83,20 @@ class TurtleFrame(object):
 
 		# Top left: Pastel purple
 		self._draw_area(Rgb(r=150, g=125, b=210), Point(0, 0), Point(250, 250))
-
 		# Top right: Pastel yellow
 		self._draw_area(Rgb(r=255, g=240, b=120), Point(250, 0), Point(500, 250))
-
 		# Bottom left: Pastel green
 		self._draw_area(Rgb(r=100, g=180, b=100), Point(0, 250), Point(250, 500))
-
 		# Bottom right: Pastel blue
 		self._draw_area(Rgb(r=100, g=180, b=250), Point(250, 250), Point(500, 500))
-
 		# Intrusion zone (middle): Red
 		self._draw_area(Rgb(r=255), Point(245, 245), Point(255, 255))
+
+		# Initialise update timer (16 msec)
+		rospy.Timer(rospy.Duration(0.016), self._update_turtles)
+
+		# Block until shut down
+		rospy.spin()
 
 
 	def _draw_area(self, colour, top_left, bottom_right):
@@ -146,7 +136,7 @@ class TurtleFrame(object):
 
 
 	def _create_unique_turtle_name(self):
-		""" Increases the ID counter until a unique name of the form "turtle<id>" is found """
+		""" Increase the ID counter until a unique name of the form "turtle<id>" is found """
 
 		new_name = "turtle" + self._id_counter
 		self._id_counter += 1
@@ -158,5 +148,30 @@ class TurtleFrame(object):
 
 
 	def _has_turtle(self, name):
-		""" Checks the turtles for the given name """
+		""" Check the turtles for the given name """
 		return name in self._turtles
+
+
+	def _update_turtles(self):
+		""" Update callback: Call update() on all turtles and redraws GUI """
+		pass
+
+		#  if (last_turtle_update_.isZero())
+		#   {
+		#     last_turtle_update_ = ros::WallTime::now();
+		#     return;
+		#   }
+
+		#   bool modified = false;
+		#   M_Turtle::iterator it = turtles_.begin();
+		#   M_Turtle::iterator end = turtles_.end();
+		#   for (; it != end; ++it)
+		#   {
+		#     modified |= it->second->update(0.001 * update_timer_->interval(), path_painter_, path_image_, width_in_meters_, height_in_meters_);
+		#   }
+		#   if (modified)
+		#   {
+		#     update();
+		#   }
+
+		#   ++frame_count_;

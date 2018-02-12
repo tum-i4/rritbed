@@ -206,6 +206,8 @@ class TurtleFrame(object):
 		elif rgb == Rgb.red():
 			return "R"
 
+		return "?"
+
 
 
 if __name__ == "__main__":

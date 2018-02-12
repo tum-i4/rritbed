@@ -170,9 +170,41 @@ class TurtleFrame(object):
 
 
 	def _redraw(self):
-		""" Create an updated GUI output """
-		if self._has_gui:
-			pass
+		""" Draw an updated GUI output. """
+
+		if not self._has_gui:
+			return
+
+		self._update_output()
+
+		os.system("clear")
+		print(self._gui_output)
+
+
+	def _update_output(self):
+		""" Update the GUI output. Turtle is marked with "X". """
+
+		self._gui_output = [
+			[self._get_output_letter(rgb) for rgb in line]
+			for line in self._background]
+
+		for turtle in self._turtles:
+			self._gui_output[turtle.pos.x][turtle.pos.y] = "X"
+
+
+	def _get_output_letter(self, rgb):
+		""" Produce a letter for the given Rgb. Returns "?" for unknown colours. """
+
+		if rgb == Rgb.pastel_purple():
+			return "u"
+		elif rgb == Rgb.pastel_yellow():
+			return "y"
+		elif rgb == Rgb.pastel_green():
+			return "g"
+		elif rgb == Rgb.pastel_blue():
+			return "b"
+		elif rgb == Rgb.red():
+			return "R"
 
 
 

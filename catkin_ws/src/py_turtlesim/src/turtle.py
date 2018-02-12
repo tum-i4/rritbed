@@ -79,8 +79,12 @@ class Turtle(object):
 		self._y_vel = data.linear.y
 
 
-	def update(self, canvas_width, canvas_height):
-		""" Update the turtle state and position """
+	def update(self, path_image, canvas_width, canvas_height):
+		"""
+		Update the turtle state and position
+		canvas_width: Expected to be max index of the x side
+		canvas_height: Like canvas_width, but for y
+		"""
 
 		# Movement commands are only valid for one second
 		if (rospy.Time.now() - self._last_command_time > rospy.Duration(1.0)):

@@ -49,7 +49,7 @@ class Turtle(object):
 
 
 	def _velocity_callback(self, data):
-		""" Set the velocity based on the callback """
+		""" Set the velocity based on the callback. """
 
 		self._last_command_time = rospy.Time.now()
 		self._x_vel = data.linear.x
@@ -58,7 +58,7 @@ class Turtle(object):
 
 	def update(self, dtime, background, canvas_width, canvas_height):
 		"""
-		Update the turtle state and position
+		Update the turtle state and position.
 		canvas_width: Expected to be max index of the x side
 		canvas_height: Like canvas_width, but for y
 		"""

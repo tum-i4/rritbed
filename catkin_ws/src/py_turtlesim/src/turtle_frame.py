@@ -100,7 +100,7 @@ class TurtleFrame(object):
 
 	def _draw_area(self, colour, top_left, bottom_right):
 		"""
-		Draw defined area in defined colour\n
+		Draw defined area in defined colour.\n
 		colour: Instance of Rgb class\n
 		top_left/bottom_right: Instances of Point class
 		"""
@@ -119,7 +119,7 @@ class TurtleFrame(object):
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):
-		""" Add a turtle to the field at the given coordinates """
+		""" Add a turtle to the field at the given coordinates. """
 
 		if name is None or name == "":
 			name = self._create_unique_turtle_name()
@@ -135,7 +135,7 @@ class TurtleFrame(object):
 
 
 	def _create_unique_turtle_name(self):
-		""" Increase the ID counter until a unique name of the form "turtle<id>" is found """
+		""" Increase the ID counter until a unique name of the form "turtle<id>" is found. """
 
 		self._id_counter += 1
 		new_name = "turtle" + self._id_counter
@@ -147,12 +147,12 @@ class TurtleFrame(object):
 
 
 	def _has_turtle(self, name):
-		""" Check the turtles for the given name """
+		""" Check the turtles for the given name. """
 		return name in self._turtles
 
 
 	def _update_turtles(self):
-		""" Update callback: Call update() on all turtles and redraws GUI """
+		""" Update callback: Call update() on all turtles and redraws GUI. """
 
 		if self._last_turtle_update is None:
 			self._last_turtle_update = rospy.Time.now()

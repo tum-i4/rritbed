@@ -23,8 +23,6 @@ DEFAULT_PEN_B = 0xff
 
 PI = 3.14159265
 
-NS = "turtle1"
-
 
 class Turtle(object):
 	""" The turtle class """
@@ -40,36 +38,21 @@ class Turtle(object):
 
 	_pos = Point()
 
-	# QImage turtle_image_;
-	# QImage turtle_rotated_image_;
-
-	# QPointF pos_;
-	# qreal orient_;
-
-	# bool pen_on_;
-	# QPen pen_;
-
-	# ros::WallTime last_command_time_;
-
 	# float meter_;
 
-	# const QImage& turtle_image, float orient
-	def __init__(self, pos):
+	def __init__(self, name, point):
 		""" Ctor """
 
 		object.__init__(self)
 
-		assert(isinstance(pos, Point))
-		self._pos = pos
+		assert(isinstance(point, Point))
+		self._pos = point
 
-		rospy.init_node("turtle", anonymous=True)
+		rospy.init_node(name)
 
-		rospy.Subscriber(NS + "/cmd_vel", Twist, self._velocity_callback)
-		self._pose_pub = rospy.Publisher(NS + "/pose", Pose, queue_size=10)
-		self._colour_pub = rospy.Publisher(NS + "/color_sensor", Color, queue_size=10)
-
-		# meter_ = turtle_image_.height();
-		# rotateImage();
+		rospy.Subscriber(name + "/cmd_vel", Twist, self._velocity_callback)
+		self._pose_pub = rospy.Publisher(name + "/pose", Pose, queue_size=10)
+		self._colour_pub = rospy.Publisher(name + "/color_sensor", Color, queue_size=10)
 
 
 	def _velocity_callback(self, data):
@@ -122,5 +105,5 @@ class Turtle(object):
 
 
 if __name__ == "__main__":
-	T = Turtle(Point())
+	T = Turtle("turtle1", Point())
 	rospy.spin()

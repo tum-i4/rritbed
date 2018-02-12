@@ -3,6 +3,13 @@
 Rebuilding turtle.cpp in Python
 """
 
+# Currently not supported:
+# - pen
+# - services
+#   - pen callback
+#   - teleport relative
+#   - teleport absolute
+
 import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
@@ -30,10 +37,6 @@ class Turtle(object):
 	# qreal ang_vel_;
 	# bool pen_on_;
 	# QPen pen_;
-	
-	# ros::ServiceServer set_pen_srv_;
-	# ros::ServiceServer teleport_relative_srv_;
-	# ros::ServiceServer teleport_absolute_srv_;
 
 	# ros::WallTime last_command_time_;
 
@@ -51,15 +54,9 @@ class Turtle(object):
 		self._pose_pub = rospy.Publisher("pose", Pose)
 		self._colour_pub = rospy.Publisher("color_sensor", Color)
 
-
-		# val_future_color_pub = nh_.advertise<Color>("future_color_sensor", 1);
-		# set_pen_srv_ = nh_.advertiseService("set_pen", &Turtle::setPenCallback, this);
-		# teleport_relative_srv_ = nh_.advertiseService("teleport_relative", &Turtle::teleportRelativeCallback, this);
-		# teleport_absolute_srv_ = nh_.advertiseService("teleport_absolute", &Turtle::teleportAbsoluteCallback, this);
-
 		# meter_ = turtle_image_.height();
 		# rotateImage();
-	
+
 
 	def _velocityCallback(self, data):
 		pass

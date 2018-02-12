@@ -20,26 +20,41 @@ class Rgb(object):
 		self.b = b
 
 
-	def pastel_purple(self):
-		""" Return a pastel purple colour """
+	def __eq__(self, other):
+		if type(other) is type(self):
+			return self.r == other.r and self.g == other.g and self.b == other.b
+		return False
+
+
+	def __ne__(self, other):
+		return not self.__eq__(other)
+
+
+	@staticmethod
+	def pastel_purple():
+		""" Return a pastel purple Rgb object """
 		return Rgb(r=150, g=125, b=210)
 
 
-	def pastel_yellow(self):
-		""" Return a pastel yellow colour """
+	@staticmethod
+	def pastel_yellow():
+		""" Return a pastel yellow Rgb object """
 		return Rgb(r=255, g=240, b=120)
 
 
-	def pastel_green(self):
-		""" Return a pastel green colour """
+	@staticmethod
+	def pastel_green():
+		""" Return a pastel green Rgb object """
 		return Rgb(r=100, g=180, b=100)
 
 
-	def pastel_blue(self):
-		""" Return a pastel blue colour """
+	@staticmethod
+	def pastel_blue():
+		""" Return a pastel blue Rgb object """
 		return Rgb(r=100, g=180, b=250)
 
 
-	def red(self):
-		""" Return a red colour """
+	@staticmethod
+	def red():
+		""" Return a red Rgb object """
 		return Rgb(r=Rgb.MAX)

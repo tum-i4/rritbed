@@ -15,6 +15,7 @@ from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
 
 from util.pos import Pos
+from util.pixel import Pixel
 
 DEFAULT_PEN_R = 0xb3
 DEFAULT_PEN_G = 0xb8
@@ -108,6 +109,14 @@ class Turtle(object):
 		pose.x = self._pos.x
 		pose.y = canvas_height - self._pos.y
 		self._pose_pub.publish(pose)
+
+		# Figure out (and publish) the color underneath the turtle
+		colour = Color()
+		pixel = path_image[self._pos.x][self._pos.y]
+		colour.r = pixel.r
+		colour.g = pixel.g
+		colour.b = pixel.b
+		self._colour_pub.publish(colour)
 
 		pass
 

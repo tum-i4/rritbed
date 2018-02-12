@@ -159,8 +159,8 @@ class TurtleFrame(object):
 			return
 
 		modified = False
-		for turtle in self._turtles:
-			modified |= turtle.update(
+		for key in self._turtles:
+			modified |= self._turtles[key].update(
 				self._update_interval.to_sec(), self._background, self._width, self._height)
 
 		if modified:
@@ -188,7 +188,7 @@ class TurtleFrame(object):
 			[self._get_output_letter(rgb) for rgb in line]
 			for line in self._background]
 
-		for turtle in self._turtles:
+		for turtle in self._turtles.values():
 			self._gui_output[turtle.pos.x][turtle.pos.y] = "X"
 
 

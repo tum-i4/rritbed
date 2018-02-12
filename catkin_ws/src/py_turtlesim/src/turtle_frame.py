@@ -33,7 +33,7 @@ class TurtleFrame(object):
 
 	_width = 0
 	_height = 0
-	_2d_plane = [[]]
+	_background = [[]]
 	_turtles = {}
 
 	_id_counter = 0
@@ -50,9 +50,9 @@ class TurtleFrame(object):
 		object.__init__(self)
 
 		# Initialise plain (500 x 500)
-		self._2d_plane = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
-		self._width = len(self._2d_plane)
-		self._height = len(self._2d_plane[0])
+		self._background = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
+		self._width = len(self._background)
+		self._height = len(self._background[0])
 
 		rospy.init_node("turtle_frame")
 		rospy.set_param("background_r", DEFAULT_BG_R)
@@ -105,7 +105,7 @@ class TurtleFrame(object):
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
 		for x in range(top_left.x, bottom_right.x + 1):
 			for y in range(top_left.y, bottom_right.y + 1):
-				self._2d_plane[x][y] = colour
+				self._background[x][y] = colour
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):

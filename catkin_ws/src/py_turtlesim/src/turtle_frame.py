@@ -143,24 +143,22 @@ class TurtleFrame(object):
 
 	def _update_turtles(self):
 		""" Update callback: Call update() on all turtles and redraws GUI """
+
+		if self._last_turtle_update is None:
+			self._last_turtle_update = rospy.Time.now()
+			return
+
+		modified = False
+		for turtle in self._turtles:
+			modified |= turtle.update(
+				self._update_interval.to_sec(), self._background, self._width, self._height)
+
+		if modified and self._has_gui:
+			self._redraw()
+
+		self._frame_count += 1
+
+
+	def _redraw(self):
+		""" Create an updated GUI output """
 		pass
-
-		#  if (last_turtle_update_.isZero())
-		#   {
-		#     last_turtle_update_ = ros::WallTime::now();
-		#     return;
-		#   }
-
-		#   bool modified = false;
-		#   M_Turtle::iterator it = turtles_.begin();
-		#   M_Turtle::iterator end = turtles_.end();
-		#   for (; it != end; ++it)
-		#   {
-		#     modified |= it->second->update(0.001 * update_timer_->interval(), path_painter_, path_image_, width_in_meters_, height_in_meters_);
-		#   }
-		#   if (modified)
-		#   {
-		#     update();
-		#   }
-
-		#   ++frame_count_;

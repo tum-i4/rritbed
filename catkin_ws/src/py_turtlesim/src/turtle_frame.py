@@ -12,7 +12,10 @@ Rebuilding turtle_frame.cpp in Python
 #   - reset
 #   - spawn
 #   - kill
+# - methods
+#   - hasTurtle
 
+from turtle import Turtle
 from util.rgb import Rgb
 from util.point import Point
 
@@ -25,6 +28,8 @@ class TurtleFrame(object):
 	""" The turtle frame class """
 
 	_2d_plane = [[]]
+	_turtles = {}
+	_id_counter = 0
 
 	# path_image_(500, 500, QImage::Format_ARGB32)
 	# path_painter_(&path_image_)
@@ -41,8 +46,6 @@ class TurtleFrame(object):
 	# ros::WallTime last_turtle_update_;
 
 	# typedef std::map<std::string, TurtlePtr> M_Turtle;
-	# M_Turtle turtles_;
-	# uint32_t id_counter_;
 
 	# float meter_;
 	# float width_in_meters_;
@@ -150,10 +153,32 @@ class TurtleFrame(object):
 		assert(isinstance(top_left, Point))
 		assert(isinstance(bottom_right, Point))
 
-		# === TL ===       BR x, TL y
-		# TL x, BR y       === BR ===
+		# === TL ===      BR x, TL y
+		# TL x, BR y      === BR ===
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
 		for x in range(top_left.x, bottom_right.x + 1):
 			for y in range(top_left.y, bottom_right.y + 1):
 				self._2d_plane[x][y] = colour
+
+
+	# std::string TurtleFrame::spawnTurtle(const std::string& name, float x, float y, float angle, size_t index)
+	def _spawn_turtle(self, name, trt_x, trt_y):
+		""" Add a turtle to the field at the given coordinates """
+
+		if name is None or name == "":
+			name = self._create_unique_turtle_name()
+		elif self._has_turtle(name):
+			return ""
+
+		turtle = Turtle(name, Point(trt_x, trt_y))
+		pass
+
+
+		# TurtlePtr t(new Turtle(ros::NodeHandle(real_name), turtle_images_[index], QPointF(x, height_in_meters_ - y), angle));
+		# turtles_[real_name] = t;
+		# update();
+
+		# ROS_INFO("New SCHNAPPI at [%s] at x=[%f], y=[%f], theta=[%f]", real_name.c_str(), x, y, angle);
+
+		# return real_name;

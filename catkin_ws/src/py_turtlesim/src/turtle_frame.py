@@ -143,34 +143,17 @@ class TurtleFrame(object):
 		#   }
 
 
-	def drawArea(self, colour, topLeft, bottomRight):
+	def _draw_area(self, colour, top_left, bottom_right):
 		""" Draw defined area in defined colour """
 
 		assert(isinstance(colour, Rgb))
-		assert(isinstance(topLeft, Point))
-		assert(isinstance(bottomRight, Point))
+		assert(isinstance(top_left, Point))
+		assert(isinstance(bottom_right, Point))
 
 		# === TL ===       BR x, TL y
 		# TL x, BR y       === BR ===
 
-		topRight = Point(bottomRight.x, topLeft.y)
-		bottomLeft = Point(topLeft.x, bottomRight.y)
-
-		pass
-
-		# void TurtleFrame::vauDrawArea(QColor vauColour, QPoint vauTopLeft, QPoint vauBottomRight)
-		# {
-		# path_painter_.setPen(QPen(vauColour, 1, Qt::SolidLine, Qt::SquareCap));
-		# path_painter_.setBrush(vauColour);
-
-		
-
-		# QPoint points[4] = {
-		# 	vauTopLeft,
-		# 	QPoint(vauBottomRight.x(), vauTopLeft.y()),
-		# 	vauBottomRight,
-		# 	QPoint(vauTopLeft.x(), vauBottomRight.y())
-		# };
-
-		# path_painter_.drawPolygon(points, 4);
-		# }
+		# pylint: disable-msg=C0103; (Invalid variable names x, y)
+		for x in range(top_left.x, bottom_right.x + 1):
+			for y in range(top_left.y, bottom_right.y + 1):
+				self._2d_plane[x][y] = colour

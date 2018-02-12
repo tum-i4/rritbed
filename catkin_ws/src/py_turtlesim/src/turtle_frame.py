@@ -138,8 +138,8 @@ class TurtleFrame(object):
 	def _create_unique_turtle_name(self):
 		""" Increase the ID counter until a unique name of the form "turtle<id>" is found """
 
-		new_name = "turtle" + self._id_counter
 		self._id_counter += 1
+		new_name = "turtle" + self._id_counter
 
 		if self._has_turtle(new_name):
 			return self._create_unique_turtle_name()

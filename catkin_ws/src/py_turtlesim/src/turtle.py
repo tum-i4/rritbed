@@ -63,6 +63,8 @@ class Turtle(object):
 		canvas_height: Like canvas_width, but for y
 		"""
 
+		old_pos = Point.copy(self._pos)
+
 		# Movement commands are only valid for one second
 		if (rospy.Time.now().to_sec() - self._last_command_time > rospy.Duration(1.0).to_sec()):
 			self._x_vel = 0.0
@@ -95,6 +97,8 @@ class Turtle(object):
 		self._colour_pub.publish(colour)
 
 		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self._pos.x, self._pos.y)
+
+		return self._pos != old_pos
 
 
 

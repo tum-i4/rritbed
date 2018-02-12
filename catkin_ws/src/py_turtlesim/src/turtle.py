@@ -10,6 +10,7 @@ Rebuilding turtle.cpp in Python
 #   - teleport relative
 #   - teleport absolute
 
+import math
 import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
@@ -32,6 +33,8 @@ class Turtle(object):
 	_last_command_time = 0
 	_x_vel = 0.0
 	_y_vel = 0.0
+	_x_float = 0.0
+	_y_float = 0.0
 
 	def __init__(self, name, point):
 		""" Ctor """
@@ -40,6 +43,8 @@ class Turtle(object):
 
 		assert(isinstance(point, Point))
 		self._pos = point
+		self._x_float = float(point.x)
+		self._y_float = float(point.y)
 
 		rospy.init_node(name)
 
@@ -70,8 +75,10 @@ class Turtle(object):
 			self._x_vel = 0.0
 			self._y_vel = 0.0
 
-		self._pos.x += self._x_vel * dtime
-		self._pos.y += self._y_vel * dtime
+		self._x_float += self._x_vel * dtime
+		self._y_float += self._y_vel * dtime
+
+		self._pos = Point(math.floor(self._x_float), math.floor(self._y_float))
 
 		# Clamp to screen size
 		if (self._pos.x < 0 or self._pos.x > canvas_width
@@ -79,8 +86,9 @@ class Turtle(object):
 			rospy.logwarn("Oh no! I hit the wall! (Clamping from [x=%f, y=%f])", self._pos.x, self._pos.y)
 
 
-		self._pos.x = min(max(float(self._pos.x), 0.0), float(canvas_width))
-		self._pos.y = min(max(float(self._pos.y), 0.0), float(canvas_height))
+		self._pos.update(
+			x=min(max(self._pos.x, 0), canvas_width),
+			y=min(max(self._pos.y, 0), canvas_height))
 
 		# Publish pose of the turtle
 		pose = Pose()

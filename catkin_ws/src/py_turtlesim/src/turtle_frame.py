@@ -182,3 +182,20 @@ class TurtleFrame(object):
 		# ROS_INFO("New SCHNAPPI at [%s] at x=[%f], y=[%f], theta=[%f]", real_name.c_str(), x, y, angle);
 
 		# return real_name;
+
+
+	def _create_unique_turtle_name(self):
+		""" Increases the ID counter until a unique name of the form "turtle<id>" is found """
+
+		new_name = "turtle" + self._id_counter
+		self._id_counter += 1
+
+		if self._has_turtle(new_name):
+			return self._create_unique_turtle_name()
+
+		return new_name
+
+
+	def _has_turtle(self, name):
+		""" Checks the turtles for the given name """
+		return name in self._turtles

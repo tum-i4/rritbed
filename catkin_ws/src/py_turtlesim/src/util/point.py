@@ -30,3 +30,9 @@ class Point(object):
 
 	def __ne__(self, other):
 		return not self.__eq__(other)
+
+
+	@staticmethod
+	def copy(point):
+		""" Value-copy the given point. """
+		return Point(point.x, point.y)

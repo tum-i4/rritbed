@@ -3,6 +3,16 @@
 Rebuilding turtle_frame.cpp in Python
 """
 
+# Currently not supported:
+# - graphical output
+#   - 2D space
+#   - turtle images
+# - services
+#   - clear
+#   - reset
+#   - spawn
+#   - kill
+
 DEFAULT_BG_R = 0x45
 DEFAULT_BG_G = 0x56
 DEFAULT_BG_B = 0xff

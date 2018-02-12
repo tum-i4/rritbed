@@ -21,8 +21,6 @@ DEFAULT_PEN_R = 0xb3
 DEFAULT_PEN_G = 0xb8
 DEFAULT_PEN_B = 0xff
 
-PI = 3.14159265
-
 
 class Turtle(object):
 	""" The turtle class """
@@ -63,7 +61,7 @@ class Turtle(object):
 		self._y_vel = data.linear.y
 
 
-	def update(self, path_image, canvas_width, canvas_height):
+	def update(self, dtime, path_image, canvas_width, canvas_height):
 		"""
 		Update the turtle state and position
 		canvas_width: Expected to be max index of the x side
@@ -75,8 +73,8 @@ class Turtle(object):
 			self._x_vel = 0.0
 			self._y_vel = 0.0
 
-		self._pos.x += self._x_vel
-		self._pos.y += self._y_vel
+		self._pos.x += self._x_vel * dtime
+		self._pos.y += self._y_vel * dtime
 
 		# Clamp to screen size
 		if (self._pos.x < 0 or self._pos.x > canvas_width

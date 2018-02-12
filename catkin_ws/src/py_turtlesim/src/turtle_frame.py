@@ -151,7 +151,7 @@ class TurtleFrame(object):
 		return name in self._turtles
 
 
-	def _update_turtles(self):
+	def _update_turtles(self, _):
 		""" Update callback: Call update() on all turtles and redraws GUI. """
 
 		if self._last_turtle_update is None:

@@ -20,3 +20,13 @@ class Point(object):
 
 		self.x = int(x) if x is not None else self.x
 		self.y = int(y) if y is not None else self.y
+
+
+	def __eq__(self, other):
+		if type(other) is type(self):
+			return self.x == other.x and self.y == other.y
+		return False
+
+
+	def __ne__(self, other):
+		return not self.__eq__(other)

@@ -118,7 +118,7 @@ class Turtle(object):
 		colour.b = pixel.b
 		self._colour_pub.publish(colour)
 
-		pass
+		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self._pos.x, self._pos.y)
 
 
 if __name__ == "__main__":

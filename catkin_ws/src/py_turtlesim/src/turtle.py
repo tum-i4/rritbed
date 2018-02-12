@@ -14,7 +14,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
 
-from util.pixel import Pixel
+from util.rgb import Rgb
 from util.point import Point
 
 DEFAULT_PEN_R = 0xb3

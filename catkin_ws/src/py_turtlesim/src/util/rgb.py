@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """ Storage class for RGB information """
 
-class Pixel(object):
-	""" Pixel class """
+class Rgb(object):
+	""" RGB class """
 
 	# pylint: disable-msg=C0103; (Invalid class attribute name)
 	r = 0

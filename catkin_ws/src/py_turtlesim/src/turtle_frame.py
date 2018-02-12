@@ -13,7 +13,7 @@ Rebuilding turtle_frame.cpp in Python
 #   - spawn
 #   - kill
 
-from util.pixel import Pixel
+from util.rgb import Rgb
 from util.point import Point
 
 DEFAULT_BG_R = 0x45

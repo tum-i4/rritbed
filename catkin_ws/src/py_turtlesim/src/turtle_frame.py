@@ -15,6 +15,7 @@ Rebuilding turtle_frame.cpp in Python
 # - methods
 #   - hasTurtle
 
+import random
 import rospy
 
 from turtle import Turtle
@@ -84,11 +85,10 @@ class TurtleFrame(object):
 
 		rospy.loginfo("Starting turtle frame, %s", rospy.get_name())
 
-		#   // TODO
-		#   float x_pct = (rand() % 101) / 100.0; // * width_in_meters_;
-		#   float y_pct = (rand() % 101) / 100.0; // * height_in_meters_;
+		trt_x = random.randint(0, self._width - 1)
+		trt_y = random.randint(0, self._height - 1)
 
-		#   spawnTurtle("", width_in_meters_ * x_pct, height_in_meters_ * y_pct, 0);
+		self._spawn_turtle(trt_x, trt_y)
 
 		#   // === VAU ===
 		#   // Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500

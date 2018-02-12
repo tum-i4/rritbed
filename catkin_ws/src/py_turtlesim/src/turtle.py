@@ -102,6 +102,7 @@ class Turtle(object):
 		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self._pos.x, self._pos.y)
 
 
+
 if __name__ == "__main__":
 	T = Turtle("turtle1", Point())
 	rospy.spin()

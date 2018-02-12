@@ -42,22 +42,26 @@ class TurtleFrame(object):
 
 	_has_gui = False
 	_frame_count = 0
+	_gui_output = [[]]
 
 
-	def __init__(self):
+	def __init__(self, has_gui=False):
 		""" Ctor """
 
 		object.__init__(self)
 
-		# Initialise plain (500 x 500)
+		# Initialise background (500 x 500)
 		self._background = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
 		self._width = len(self._background)
 		self._height = len(self._background[0])
+		self._has_gui = has_gui
 
 		rospy.init_node("turtle_frame")
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)
 		rospy.set_param("background_b", DEFAULT_BG_B)
+
+		self._redraw()
 
 		rospy.loginfo("Starting turtle frame, %s", rospy.get_name())
 
@@ -153,7 +157,7 @@ class TurtleFrame(object):
 			modified |= turtle.update(
 				self._update_interval.to_sec(), self._background, self._width, self._height)
 
-		if modified and self._has_gui:
+		if modified:
 			self._redraw()
 
 		self._frame_count += 1

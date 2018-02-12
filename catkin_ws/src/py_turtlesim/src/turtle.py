@@ -26,8 +26,14 @@ NS = "turtle1"
 class Turtle(object):
 	""" The turtle class """
 
-	_pose_pub
-	_colour_pub
+	_pose_pub = None
+	_colour_pub = None
+
+	# qreal lin_vel_;
+	# qreal ang_vel_;
+	_last_command_time = 0
+	_x_vel = 0.0
+	_y_vel = 0.0
 
 	# QImage turtle_image_;
 	# QImage turtle_rotated_image_;
@@ -35,8 +41,6 @@ class Turtle(object):
 	# QPointF pos_;
 	# qreal orient_;
 
-	# qreal lin_vel_;
-	# qreal ang_vel_;
 	# bool pen_on_;
 	# QPen pen_;
 

@@ -72,6 +72,17 @@ class Turtle(object):
 		self._y_vel = data.linear.y
 
 
+	def update(self):
+		""" Update the turtle state and position """
+
+		# Movement commands are only valid for one second
+		if (rospy.Time.now() - self._last_command_time > rospy.Duration(1.0)):
+			self._x_vel = 0.0
+			self._y_vel = 0.0
+
+		pass
+
+
 if __name__ == "__main__":
 	T = Turtle()
 	rospy.spin()

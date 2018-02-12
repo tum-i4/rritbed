@@ -13,6 +13,9 @@ Rebuilding turtle_frame.cpp in Python
 #   - spawn
 #   - kill
 
+from util.pixel import Pixel
+from util.point import Point
+
 DEFAULT_BG_R = 0x45
 DEFAULT_BG_G = 0x56
 DEFAULT_BG_B = 0xff
@@ -20,6 +23,8 @@ DEFAULT_BG_B = 0xff
 
 class TurtleFrame(object):
 	""" The turtle frame class """
+
+	_2d_plane = [[]]
 
 	# path_image_(500, 500, QImage::Format_ARGB32)
 	# path_painter_(&path_image_)
@@ -35,16 +40,9 @@ class TurtleFrame(object):
 
 	# ros::WallTime last_turtle_update_;
 
-	# ros::ServiceServer clear_srv_;
-	# ros::ServiceServer reset_srv_;
-	# ros::ServiceServer spawn_srv_;
-	# ros::ServiceServer kill_srv_;
-
 	# typedef std::map<std::string, TurtlePtr> M_Turtle;
 	# M_Turtle turtles_;
 	# uint32_t id_counter_;
-
-	# QVector<QImage> turtle_images_;
 
 	# float meter_;
 	# float width_in_meters_;
@@ -55,10 +53,8 @@ class TurtleFrame(object):
 
 		object.__init__(self)
 
-		# Init window
-
-		#   setFixedSize(500, 500);
-		#   setWindowTitle("TurtleSim");
+		# Init plain (500 x 500)
+		self._2d_plane = [[Pixel(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
 
 		# Init update timer (16 msec)
 

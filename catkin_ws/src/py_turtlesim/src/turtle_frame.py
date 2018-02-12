@@ -16,6 +16,7 @@ Rebuilding turtle_frame.cpp in Python
 # - methods
 #   - clear
 
+import argparse
 import random
 from turtle import Turtle
 
@@ -171,3 +172,8 @@ class TurtleFrame(object):
 		""" Create an updated GUI output """
 		if self._has_gui:
 			pass
+
+
+
+if __name__ == "__main__":
+	TF = TurtleFrame()

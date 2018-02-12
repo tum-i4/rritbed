@@ -143,8 +143,19 @@ class TurtleFrame(object):
 		#   }
 
 
-	def drawArea(self):
+	def drawArea(self, colour, topLeft, bottomRight):
 		""" Draw defined area in defined colour """
+
+		assert(isinstance(colour, Rgb))
+		assert(isinstance(topLeft, Point))
+		assert(isinstance(bottomRight, Point))
+
+		# === TL ===       BR x, TL y
+		# TL x, BR y       === BR ===
+
+		topRight = Point(bottomRight.x, topLeft.y)
+		bottomLeft = Point(topLeft.x, bottomRight.y)
+
 		pass
 
 		# void TurtleFrame::vauDrawArea(QColor vauColour, QPoint vauTopLeft, QPoint vauBottomRight)
@@ -152,8 +163,7 @@ class TurtleFrame(object):
 		# path_painter_.setPen(QPen(vauColour, 1, Qt::SolidLine, Qt::SquareCap));
 		# path_painter_.setBrush(vauColour);
 
-		# // === TL ===       BR x, TL y
-		# // TL x, BR y       === BR ===
+		
 
 		# QPoint points[4] = {
 		# 	vauTopLeft,

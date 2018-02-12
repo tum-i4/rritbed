@@ -90,45 +90,31 @@ class TurtleFrame(object):
 
 		self._spawn_turtle(trt_x, trt_y)
 
-		#   // === VAU ===
-		#   // Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500
+		# Colouring the background
+		# Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500
 
-		#   // TOP LEFT: PURPLE
-		#   QColor pastelPurple = QColor(150, 125, 210);
-		#   vauDrawArea(pastelPurple, QPoint(0, 0), QPoint(250, 250));
+		# Top left: Pastel purple
+		self._draw_area(Rgb(r=150, g=125, b=210), Point(0, 0), Point(250, 250))
 
-		#   // // TOP RIGHT: YELLOW
-		#   QColor pastelYellow = QColor(255, 240, 120);
-		#   vauDrawArea(pastelYellow, QPoint(250, 0), QPoint(500, 250));
+		# Top right: Pastel yellow
+		self._draw_area(Rgb(r=255, g=240, b=120), Point(250, 0), Point(500, 250))
 
-		#   // // BOTTOM LEFT: GREEN
-		#   QColor pastelGreen = QColor(100, 180, 100);
-		#   vauDrawArea(pastelGreen, QPoint(0, 250), QPoint(250, 500));
+		# Bottom left: Pastel green
+		self._draw_area(Rgb(r=100, g=180, b=100), Point(0, 250), Point(250, 500))
 
-		#   // // BOTTOM RIGHT: BLUE
-		#   QColor pastelBlue = QColor(100, 180, 250);
-		#   vauDrawArea(pastelBlue, QPoint(250, 250), QPoint(500, 500));
+		# Bottom right: Pastel blue
+		self._draw_area(Rgb(r=100, g=180, b=250), Point(250, 250), Point(500, 500))
 
-		#   // DANGER ZONE MIDDLE: RED
-		#   vauDrawArea(Qt::red, QPoint(245, 245), QPoint(255, 255));
-
-		#   // END TODO
-
-		#   // spawn all available turtle types
-		#   if(false)
-		#   {
-		#     for(int index = 0; index < turtles.size(); ++index)
-		#     {
-		#       QString name = turtles[index];
-		#       name = name.split(".").first();
-		#       name.replace(QString("-"), QString(""));
-		#       spawnTurtle(name.toStdString(), 1.0 + 1.5 * (index % 7), 1.0 + 1.5 * (index / 7), PI / 2.0, index);
-		#     }
-		#   }
+		# Intrusion zone (middle): Red
+		self._draw_area(Rgb(r=255), Point(245, 245), Point(255, 255))
 
 
 	def _draw_area(self, colour, top_left, bottom_right):
-		""" Draw defined area in defined colour """
+		"""
+		Draw defined area in defined colour\n
+		colour: Instance of Rgb class\n
+		top_left/bottom_right: Instances of Point class
+		"""
 
 		assert(isinstance(colour, Rgb))
 		assert(isinstance(top_left, Point))

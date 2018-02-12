@@ -53,10 +53,10 @@ class TurtleFrame(object):
 
 		object.__init__(self)
 
-		# Init plain (500 x 500)
-		self._2d_plane = [[Pixel(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
+		# Initialise plain (500 x 500)
+		self._2d_plane = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
 
-		# Init update timer (16 msec)
+		# Initialise update timer (16 msec)
 
 		#   srand(time(NULL));
 

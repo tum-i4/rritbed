@@ -29,6 +29,8 @@ DEFAULT_BG_B = 0xff
 class TurtleFrame(object):
 	""" The turtle frame class """
 
+	_width = 0
+	_height = 0
 	_2d_plane = [[]]
 	_turtles = {}
 	_id_counter = 0
@@ -60,6 +62,8 @@ class TurtleFrame(object):
 
 		# Initialise plain (500 x 500)
 		self._2d_plane = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
+		self._width = len(self._2d_plane)
+		self._height = len(self._2d_plane[0])
 
 		# Initialise update timer (16 msec)
 

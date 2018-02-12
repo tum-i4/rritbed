@@ -64,5 +64,9 @@ class Turtle(object):
 		# rotateImage();
 
 
-	def _velocityCallback(self, data):
-		pass
+	def _velocity_callback(self, data):
+		""" Set the velocity based on the callback """
+
+		self._last_command_time = rospy.Time.now()
+		self._x_vel = data.linear.x
+		self._y_vel = data.linear.y

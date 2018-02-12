@@ -85,8 +85,8 @@ class TurtleFrame(object):
 
 		rospy.loginfo("Starting turtle frame, %s", rospy.get_name())
 
-		trt_x = random.randint(0, self._width - 1)
-		trt_y = random.randint(0, self._height - 1)
+		trt_x = random.randrange(0, self._width)
+		trt_y = random.randrange(0, self._height)
 
 		self._spawn_turtle(trt_x, trt_y)
 

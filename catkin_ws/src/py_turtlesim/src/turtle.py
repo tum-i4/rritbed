@@ -14,6 +14,8 @@ import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
 
+from util.pos import Pos
+
 DEFAULT_PEN_R = 0xb3
 DEFAULT_PEN_G = 0xb8
 DEFAULT_PEN_B = 0xff
@@ -35,6 +37,8 @@ class Turtle(object):
 	_x_vel = 0.0
 	_y_vel = 0.0
 
+	_pos = Pos()
+
 	# QImage turtle_image_;
 	# QImage turtle_rotated_image_;
 
@@ -48,11 +52,14 @@ class Turtle(object):
 
 	# float meter_;
 
-	# const QImage& turtle_image, const QPointF& pos, float orient
-	def __init__(self):
+	# const QImage& turtle_image, float orient
+	def __init__(self, pos):
 		""" Ctor """
 
 		object.__init__(self)
+
+		assert(isinstance(pos, Pos))
+		self._pos = pos
 
 		rospy.init_node("turtle", anonymous=True)
 
@@ -84,5 +91,5 @@ class Turtle(object):
 
 
 if __name__ == "__main__":
-	T = Turtle()
+	T = Turtle(Pos())
 	rospy.spin()

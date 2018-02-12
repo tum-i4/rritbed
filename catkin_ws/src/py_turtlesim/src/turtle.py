@@ -79,13 +79,21 @@ class Turtle(object):
 		self._y_vel = data.linear.y
 
 
-	def update(self):
+	def update(self, canvas_width, canvas_height):
 		""" Update the turtle state and position """
 
 		# Movement commands are only valid for one second
 		if (rospy.Time.now() - self._last_command_time > rospy.Duration(1.0)):
 			self._x_vel = 0.0
 			self._y_vel = 0.0
+
+		self._pos.x += self._x_vel
+		self._pos.y += self._y_vel
+
+		# Clamp to screen size
+		if (self._pos.x < 0 or self._pos.x > canvas_width
+			or self._pos.y < 0 or self._pos.y > canvas_height):
+			rospy.logwarn("Oh no! I hit the wall! (Clamping from [x=%f, y=%f])", self._pos.x, self._pos.y)
 
 		pass
 

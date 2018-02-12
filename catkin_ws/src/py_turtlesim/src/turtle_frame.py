@@ -15,6 +15,8 @@ Rebuilding turtle_frame.cpp in Python
 # - methods
 #   - hasTurtle
 
+import rospy
+
 from turtle import Turtle
 from util.rgb import Rgb
 from util.point import Point
@@ -162,8 +164,7 @@ class TurtleFrame(object):
 				self._2d_plane[x][y] = colour
 
 
-	# std::string TurtleFrame::spawnTurtle(const std::string& name, float x, float y, float angle, size_t index)
-	def _spawn_turtle(self, name, trt_x, trt_y):
+	def _spawn_turtle(self, trt_x, trt_y, name=None):
 		""" Add a turtle to the field at the given coordinates """
 
 		if name is None or name == "":
@@ -172,16 +173,11 @@ class TurtleFrame(object):
 			return ""
 
 		turtle = Turtle(name, Point(trt_x, trt_y))
-		pass
+		self._turtles[name] = turtle
 
+		rospy.loginfo("New turtle at [%s] at x=[%f], y=[%f]", name, trt_x, trt_y)
 
-		# TurtlePtr t(new Turtle(ros::NodeHandle(real_name), turtle_images_[index], QPointF(x, height_in_meters_ - y), angle));
-		# turtles_[real_name] = t;
-		# update();
-
-		# ROS_INFO("New SCHNAPPI at [%s] at x=[%f], y=[%f], theta=[%f]", real_name.c_str(), x, y, angle);
-
-		# return real_name;
+		return name
 
 
 	def _create_unique_turtle_name(self):

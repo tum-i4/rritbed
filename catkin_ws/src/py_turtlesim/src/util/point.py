@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-""" Storage class for turtle position """
+""" Storage class for a point on a 2D grid """
 
-class Pos(object):
-	""" Pos class """
+class Point(object):
+	""" Point class """
 
 	# pylint: disable-msg=C0103; (Invalid class attribute name)
 	x = 0

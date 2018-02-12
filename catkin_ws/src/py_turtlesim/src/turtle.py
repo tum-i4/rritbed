@@ -14,7 +14,6 @@ import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
 
-from util.rgb import Rgb
 from util.point import Point
 
 DEFAULT_PEN_R = 0xb3
@@ -25,18 +24,14 @@ DEFAULT_PEN_B = 0xff
 class Turtle(object):
 	""" The turtle class """
 
+	pos = Point()
+
 	_pose_pub = None
 	_colour_pub = None
 
-	# qreal lin_vel_;
-	# qreal ang_vel_;
 	_last_command_time = 0
 	_x_vel = 0.0
 	_y_vel = 0.0
-
-	_pos = Point()
-
-	# float meter_;
 
 	def __init__(self, name, point):
 		""" Ctor """
@@ -88,7 +83,7 @@ class Turtle(object):
 		# Publish pose of the turtle
 		pose = Pose()
 		pose.x = self._pos.x
-		pose.y = canvas_height - self._pos.y
+		pose.y = self._pos.y
 		self._pose_pub.publish(pose)
 
 		# Figure out (and publish) the color underneath the turtle

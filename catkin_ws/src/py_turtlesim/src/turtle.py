@@ -95,6 +95,16 @@ class Turtle(object):
 			or self._pos.y < 0 or self._pos.y > canvas_height):
 			rospy.logwarn("Oh no! I hit the wall! (Clamping from [x=%f, y=%f])", self._pos.x, self._pos.y)
 
+
+		self._pos.x = min(max(float(self._pos.x), 0.0), float(canvas_width))
+		self._pos.y = min(max(float(self._pos.y), 0.0), float(canvas_height))
+
+		# Publish pose of the turtle
+		pose = Pose()
+		pose.x = self._pos.x
+		pose.y = canvas_height - self._pos.y
+		self._pose_pub.publish(pose)
+
 		pass
 
 

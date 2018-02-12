@@ -70,3 +70,8 @@ class Turtle(object):
 		self._last_command_time = rospy.Time.now()
 		self._x_vel = data.linear.x
 		self._y_vel = data.linear.y
+
+
+if __name__ == "__main__":
+	T = Turtle()
+	rospy.spin()

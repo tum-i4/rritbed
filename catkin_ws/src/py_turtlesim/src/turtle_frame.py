@@ -75,39 +75,14 @@ class TurtleFrame(object):
 
 		#   connect(update_timer_, SIGNAL(timeout()), this, SLOT(onUpdate()));
 
-		#   nh_.setParam("background_r", DEFAULT_BG_R);
-		#   nh_.setParam("background_g", DEFAULT_BG_G);
-		#   nh_.setParam("background_b", DEFAULT_BG_B);
-
-		#   QString images_path = (ros::package::getPath("turtlesim") + "/images/").c_str();
-		#   /*for (int i = 0; i < turtles.size(); ++i)
-		#   {
-		#     QImage img;
-		#     img.load(images_path + turtles[i]);
-		#     turtle_images_.append(img);
-		#   }*/
-
-		#   // TODO
-		#   QImage img;
-		#   img.load(images_path + turtles[0]);
-		#   turtle_images_.append(img);
-
-		#   // END TODO
-
-		#   meter_ = turtle_images_[0].height();
+		rospy.init_node("turtle_frame")
+		rospy.set_param("background_r", DEFAULT_BG_R)
+		rospy.set_param("background_g", DEFAULT_BG_G)
+		rospy.set_param("background_b", DEFAULT_BG_B)
 
 		#   clear();
 
-		#   clear_srv_ = nh_.advertiseService("clear", &TurtleFrame::clearCallback, this);
-		#   reset_srv_ = nh_.advertiseService("reset", &TurtleFrame::resetCallback, this);
-		#   spawn_srv_ = nh_.advertiseService("spawn", &TurtleFrame::spawnCallback, this);
-		#   kill_srv_ = nh_.advertiseService("kill", &TurtleFrame::killCallback, this);
-
-		#   ROS_INFO("LET'S GOOOOOO, %s", ros::this_node::getName().c_str()) ;
-
-		#   width_in_meters_ = (width() - 1) / meter_;
-		#   height_in_meters_ = (height() - 1) / meter_;
-		#   // spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);
+		rospy.loginfo("Starting turtle frame, %s", rospy.get_name())
 
 		#   // TODO
 		#   float x_pct = (rand() % 101) / 100.0; // * width_in_meters_;

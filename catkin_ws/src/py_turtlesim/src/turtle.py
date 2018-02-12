@@ -64,7 +64,7 @@ class Turtle(object):
 		"""
 
 		# Movement commands are only valid for one second
-		if (rospy.Time.now() - self._last_command_time > rospy.Duration(1.0)):
+		if (rospy.Time.now().to_sec() - self._last_command_time > rospy.Duration(1.0).to_sec()):
 			self._x_vel = 0.0
 			self._y_vel = 0.0
 

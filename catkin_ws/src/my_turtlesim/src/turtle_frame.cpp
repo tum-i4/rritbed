@@ -108,32 +108,33 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   // spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);
 
   // TODO
-  float x_pct = (rand() % 101) / 100.0; // * width_in_meters_;
-  float y_pct = (rand() % 101) / 100.0; // * height_in_meters_;
+  float x_pct = ((rand() % 101) / 100.0) * width_in_meters_; // * width_in_meters_;
+  float y_pct = ((rand() % 101) / 100.0) * height_in_meters_; // * height_in_meters_;
 
-  spawnTurtle("", width_in_meters_ * x_pct, height_in_meters_ * y_pct, 0);
+  spawnTurtle("", x_pct, y_pct, 0);
 
-  // === VAU ===
+  // === VAU: Colouring the background ===
   // Window is 500 x 500, starting top left at 0,0 and ending bottom right at 500,500
+  {
+    // TOP LEFT: PURPLE
+    QColor pastelPurple = QColor(150, 125, 210);
+    vauDrawArea(pastelPurple, QPoint(0, 0), QPoint(250, 250));
 
-  // TOP LEFT: PURPLE
-  QColor pastelPurple = QColor(150, 125, 210);
-  vauDrawArea(pastelPurple, QPoint(0, 0), QPoint(250, 250));
+    // // TOP RIGHT: YELLOW
+    QColor pastelYellow = QColor(255, 240, 120);
+    vauDrawArea(pastelYellow, QPoint(250, 0), QPoint(500, 250));
 
-  // // TOP RIGHT: YELLOW
-  QColor pastelYellow = QColor(255, 240, 120);
-  vauDrawArea(pastelYellow, QPoint(250, 0), QPoint(500, 250));
+    // // BOTTOM LEFT: GREEN
+    QColor pastelGreen = QColor(100, 180, 100);
+    vauDrawArea(pastelGreen, QPoint(0, 250), QPoint(250, 500));
 
-  // // BOTTOM LEFT: GREEN
-  QColor pastelGreen = QColor(100, 180, 100);
-  vauDrawArea(pastelGreen, QPoint(0, 250), QPoint(250, 500));
+    // // BOTTOM RIGHT: BLUE
+    QColor pastelBlue = QColor(100, 180, 250);
+    vauDrawArea(pastelBlue, QPoint(250, 250), QPoint(500, 500));
 
-  // // BOTTOM RIGHT: BLUE
-  QColor pastelBlue = QColor(100, 180, 250);
-  vauDrawArea(pastelBlue, QPoint(250, 250), QPoint(500, 500));
-
-  // DANGER ZONE MIDDLE: RED
-  vauDrawArea(Qt::red, QPoint(245, 245), QPoint(255, 255));
+    // DANGER ZONE MIDDLE: RED
+    vauDrawArea(Qt::red, QPoint(245, 245), QPoint(255, 255));
+  }
 
   // END TODO
 

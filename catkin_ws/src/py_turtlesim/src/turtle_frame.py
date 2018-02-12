@@ -98,7 +98,7 @@ class TurtleFrame(object):
 		rospy.spin()
 
 
-	def _draw_area(self, colour, top_left, bottom_right):
+	def _draw_area(self, colour, from_point, to_point):
 		"""
 		Draw defined area in defined colour.\n
 		colour: Instance of Rgb class\n
@@ -106,16 +106,21 @@ class TurtleFrame(object):
 		"""
 
 		assert(isinstance(colour, Rgb))
-		assert(isinstance(top_left, Point))
-		assert(isinstance(bottom_right, Point))
+		assert(isinstance(from_point, Point))
+		assert(isinstance(to_point, Point))
 
-		# === TL ===      BR x, TL y
-		# TL x, BR y      === BR ===
+		from_x = min(from_point.x, to_point.x)
+		to_x = max(from_point.x, to_point.x)
+		from_y = min(from_point.y, to_point.y)
+		to_y = max(from_point.y, to_point.y)
+
+		# BL x, TR y      === TR ===
+		# === BL ===      TR x, BL y
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
-		for x in range(top_left.x, bottom_right.x + 1):
-			for y in range(top_left.y, bottom_right.y + 1):
-				self._background[x][y] = colour
+		for a in range(from_x, to_x + 1):
+			for b in range(from_y, to_y + 1):
+				self._background[a][b] = colour
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):

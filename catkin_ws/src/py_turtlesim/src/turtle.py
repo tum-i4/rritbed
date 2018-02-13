@@ -87,8 +87,8 @@ class Turtle(object):
 
 
 		self.pos.update(
-			x=min(max(self.pos.x, 0), canvas_width),
-			y=min(max(self.pos.y, 0), canvas_height))
+			x=min(max(self.pos.x, 0), canvas_width - 1),
+			y=min(max(self.pos.y, 0), canvas_height - 1))
 
 		# Publish pose of the turtle
 		pose = Pose()

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='ASCII'?>
+<launch>
+	<!-- Launch file for testing the py_turtlesim -->
+	<group ns="PYSIMTEST">
+		<!-- Turtle group -->
+		<group ns="turtle">
+			<node name="py_turtlesim" type="py_turtlesim.py" pkg="py_turtlesim"/>
+		</group>
+	</group>
+</launch>

@@ -6,6 +6,8 @@ Rebuilding turtlesim.cpp in Python
 # pylint: disable-msg=R0903; (Too few public methods)
 
 import argparse
+import sys
+
 import rospy
 from turtle_frame import TurtleFrame
 
@@ -36,7 +38,9 @@ class Turtlesim(object):
 if __name__ == "__main__":
 	PARSER = argparse.ArgumentParser(prog="tf")
 	PARSER.add_argument("--draw-gui", "-g", action="store_true", dest="draw_gui")
-	ARGS = PARSER.parse_args()
+	# Remove remapping arguments and program name
+	FILTERED_ARGV = rospy.myargv(sys.argv)[1:]
+	ARGS = PARSER.parse_args(FILTERED_ARGV)
 
 	SIM = Turtlesim()
 	SIM.execute(ARGS.draw_gui)

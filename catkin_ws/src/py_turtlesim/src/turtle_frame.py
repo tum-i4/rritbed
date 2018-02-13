@@ -44,7 +44,7 @@ class TurtleFrame(object):
 
 	_has_gui = False
 	_frame_count = 0
-	_gui_output = [[]]
+	_gui_output = None
 
 
 	def __init__(self):
@@ -182,6 +182,9 @@ class TurtleFrame(object):
 
 		if not self._has_gui:
 			return
+
+		if self._gui_output is None:
+			self._gui_output = [["" for _ in range(0, 50)] for _ in range(0, 50)]
 
 		self._update_output()
 

@@ -31,7 +31,7 @@ DEFAULT_BG_B = 0xff
 
 
 class TurtleFrame(object):
-	""" The turtle frame class """
+	""" The frame for all turtles """
 
 	_width = 0
 	_height = 0
@@ -48,12 +48,8 @@ class TurtleFrame(object):
 	_gui_output = None
 
 
-	def __init__(self):
+	def __init__(self, draw_gui=False):
 		""" Ctor """
-
-		parser = argparse.ArgumentParser(prog="tf")
-		parser.add_argument("--draw-gui", "-g", action="store_true", dest="has_gui")
-		args = parser.parse_args()
 
 		object.__init__(self)
 
@@ -63,10 +59,8 @@ class TurtleFrame(object):
 			] for _ in range(0, 500)]
 		self._width = len(self._background)
 		self._height = len(self._background[0])
-		self._has_gui = args.has_gui
+		self._has_gui = draw_gui
 
-		# Only one node can be active at a time. For multiple turtles, rework implementation.
-		# rospy.init_node("turtle_frame")
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)
 		rospy.set_param("background_b", DEFAULT_BG_B)
@@ -244,4 +238,7 @@ class TurtleFrame(object):
 
 
 if __name__ == "__main__":
-	TF = TurtleFrame()
+	PARSER = argparse.ArgumentParser(prog="tf")
+	PARSER.add_argument("--draw-gui", "-g", action="store_true", dest="draw_gui")
+	ARGS = PARSER.parse_args()
+	TF = TurtleFrame(ARGS.draw_gui)

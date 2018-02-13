@@ -83,7 +83,7 @@ class Turtle(object):
 		# Clamp to screen size
 		if (self.pos.x < 0 or self.pos.x > canvas_width
 			or self.pos.y < 0 or self.pos.y > canvas_height):
-			rospy.logwarn("Oh no! I hit the wall! (Clamping from [x=%f, y=%f])", self.pos.x, self.pos.y)
+			rospy.logdebug("I hit the wall! (Clamping from [x=%f, y=%f])", self.pos.x, self.pos.y)
 
 
 		self.pos.update(

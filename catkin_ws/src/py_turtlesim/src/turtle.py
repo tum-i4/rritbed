@@ -30,7 +30,7 @@ class Turtle(object):
 	_pose_pub = None
 	_colour_pub = None
 
-	_last_command_time = 0
+	_last_command_time = rospy.Time.from_sec(0)
 	_x_vel = 0.0
 	_y_vel = 0.0
 	_x_float = 0.0
@@ -71,7 +71,7 @@ class Turtle(object):
 		old_pos = Point.copy(self._pos)
 
 		# Movement commands are only valid for one second
-		if (rospy.Time.now().to_sec() - self._last_command_time > rospy.Duration(1.0).to_sec()):
+		if (rospy.Time.now() - self._last_command_time > rospy.Duration(1.0)):
 			self._x_vel = 0.0
 			self._y_vel = 0.0
 

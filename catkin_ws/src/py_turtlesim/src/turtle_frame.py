@@ -189,7 +189,14 @@ class TurtleFrame(object):
 		self._update_output()
 
 		os.system("clear")
-		print(self._gui_output)
+
+		# pylint: disable-msg=C0103; (Invalid variable names x, y)
+		# We draw from top left (0,49) to bottom right (49,0)
+		for y in range(49, -1, -1):
+			line_output = ""
+			for x in range(0, 50):
+				line_output += self._gui_output[x][y] + " "
+			print(line_output)
 
 
 	def _update_output(self):

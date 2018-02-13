@@ -46,8 +46,6 @@ class Turtle(object):
 		self._x_float = float(point.x)
 		self._y_float = float(point.y)
 
-		rospy.init_node(name)
-
 		rospy.Subscriber(name + "/cmd_vel", Twist, self._velocity_callback)
 		self._pose_pub = rospy.Publisher(name + "/pose", Pose, queue_size=10)
 		self._colour_pub = rospy.Publisher(name + "/color_sensor", Color, queue_size=10)
@@ -107,9 +105,3 @@ class Turtle(object):
 		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self.pos.x, self.pos.y)
 
 		return self.pos != old_pos
-
-
-
-if __name__ == "__main__":
-	T = Turtle("turtle1", Point())
-	rospy.spin()

@@ -29,3 +29,17 @@ class PointF(Point):
 	def copy(point):
 		""" Value-copy the given point. """
 		return PointF(point.x, point.y)
+
+
+	@staticmethod
+	def from_point(point):
+		""" Create a new PointF instance (value-copy) from the given Point. """
+		assert(isinstance(point, Point))
+		return PointF.copy(point)
+
+
+	@staticmethod
+	def to_point(point_f):
+		""" Create a new Point instance (value-copy) from the given PointF. """
+		assert(isinstance(point_f, PointF))
+		return Point.copy(point_f)

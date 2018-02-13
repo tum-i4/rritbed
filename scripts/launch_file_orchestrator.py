@@ -394,7 +394,8 @@ class LaunchFileOrchestrator(object):
 	def _create_turtle_group(self, control_node):
 		""" Creates a group of ns "turtle" with a turtle and the given control node """
 
-		turtle_node = self._create_node_element("turtlesim", "turtlesim_node", "turtlesim")
+		turtle_node = self._create_node_element(
+			n_name="py_turtlesim", n_type="py_turtlesim.py", n_pkg="py_turtlesim")
 		return self._create_group([turtle_node, control_node], n_ns="turtle")
 
 

@@ -13,12 +13,12 @@ Rebuilding turtle.cpp in Python
 # pylint: disable-msg=R0903; (Too few public methods)
 
 
-import math
 import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose, Color
 
 from util.point import Point
+from util.point_f import PointF
 
 DEFAULT_PEN_R = 0xb3
 DEFAULT_PEN_G = 0xb8
@@ -29,6 +29,7 @@ class Turtle(object):
 	""" The turtle class """
 
 	pos = Point()
+	_pos_f = PointF()
 
 	_pose_pub = None
 	_colour_pub = None
@@ -36,8 +37,6 @@ class Turtle(object):
 	_last_command_time = rospy.Time.from_sec(0)
 	_x_vel = 0.0
 	_y_vel = 0.0
-	_x_float = 0.0
-	_y_float = 0.0
 
 	def __init__(self, name, point):
 		""" Ctor """
@@ -46,8 +45,7 @@ class Turtle(object):
 
 		assert(isinstance(point, Point))
 		self.pos = point
-		self._x_float = float(point.x)
-		self._y_float = float(point.y)
+		self._pos_f = PointF.from_point(point)
 
 		rospy.Subscriber(name + "/cmd_vel", Twist, self._velocity_callback)
 		self._pose_pub = rospy.Publisher(name + "/pose", Pose, queue_size=10)
@@ -76,10 +74,10 @@ class Turtle(object):
 			self._x_vel = 0.0
 			self._y_vel = 0.0
 
-		self._x_float += self._x_vel * dtime
-		self._y_float += self._y_vel * dtime
+		self._pos_f.x += self._x_vel * dtime
+		self._pos_f.y += self._y_vel * dtime
 
-		self.pos = Point(math.floor(self._x_float), math.floor(self._y_float))
+		self.pos = PointF.to_point(self._pos_f)
 
 		# Clamp to screen size
 		if (self.pos.x < 0 or self.pos.x > canvas_width

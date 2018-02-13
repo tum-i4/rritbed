@@ -93,9 +93,6 @@ class TurtleFrame(object):
 		self._update_interval = rospy.Duration(0.016)
 		rospy.Timer(self._update_interval, self._update_turtles)
 
-		# Block until shut down
-		rospy.spin()
-
 
 	def _draw_area(self, colour, from_point, to_point):
 		"""
@@ -234,11 +231,3 @@ class TurtleFrame(object):
 			return " "
 
 		return "?"
-
-
-
-if __name__ == "__main__":
-	PARSER = argparse.ArgumentParser(prog="tf")
-	PARSER.add_argument("--draw-gui", "-g", action="store_true", dest="draw_gui")
-	ARGS = PARSER.parse_args()
-	TF = TurtleFrame(ARGS.draw_gui)

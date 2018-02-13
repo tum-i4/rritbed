@@ -64,7 +64,8 @@ class TurtleFrame(object):
 		self._height = len(self._background[0])
 		self._has_gui = args.has_gui
 
-		rospy.init_node("turtle_frame")
+		# Only one node can be active at a time. For multiple turtles, rework implementation.
+		# rospy.init_node("turtle_frame")
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)
 		rospy.set_param("background_b", DEFAULT_BG_B)

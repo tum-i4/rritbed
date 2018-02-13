@@ -193,14 +193,16 @@ class TurtleFrame(object):
 
 
 	def _update_output(self):
-		""" Update the GUI output. Turtle is marked with "X". """
+		""" Update the GUI output in scale 1:10. Turtle is marked with "-". """
 
-		self._gui_output = [
-			[self._get_output_letter(rgb) for rgb in line]
-			for line in self._background]
+		# pylint: disable-msg=C0103; (Invalid variable names x, y)
+		for x in range(0, 50):
+			for y in range(0, 50):
+				self._gui_output[x][y] = self._get_output_letter(
+					self._background[x*10][y*10])
 
 		for turtle in self._turtles.values():
-			self._gui_output[turtle.pos.x][turtle.pos.y] = "X"
+			self._gui_output[turtle.pos.x / 10][turtle.pos.y / 10] = "-"
 
 
 	def _get_output_letter(self, rgb):

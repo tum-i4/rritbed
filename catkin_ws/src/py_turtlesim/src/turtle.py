@@ -42,7 +42,7 @@ class Turtle(object):
 		object.__init__(self)
 
 		assert(isinstance(point, Point))
-		self._pos = point
+		self.pos = point
 		self._x_float = float(point.x)
 		self._y_float = float(point.y)
 
@@ -68,7 +68,7 @@ class Turtle(object):
 		canvas_height: Like canvas_width, but for y
 		"""
 
-		old_pos = Point.copy(self._pos)
+		old_pos = Point.copy(self.pos)
 
 		# Movement commands are only valid for one second
 		if (rospy.Time.now() - self._last_command_time > rospy.Duration(1.0)):
@@ -78,35 +78,35 @@ class Turtle(object):
 		self._x_float += self._x_vel * dtime
 		self._y_float += self._y_vel * dtime
 
-		self._pos = Point(math.floor(self._x_float), math.floor(self._y_float))
+		self.pos = Point(math.floor(self._x_float), math.floor(self._y_float))
 
 		# Clamp to screen size
-		if (self._pos.x < 0 or self._pos.x > canvas_width
-			or self._pos.y < 0 or self._pos.y > canvas_height):
-			rospy.logwarn("Oh no! I hit the wall! (Clamping from [x=%f, y=%f])", self._pos.x, self._pos.y)
+		if (self.pos.x < 0 or self.pos.x > canvas_width
+			or self.pos.y < 0 or self.pos.y > canvas_height):
+			rospy.logwarn("Oh no! I hit the wall! (Clamping from [x=%f, y=%f])", self.pos.x, self.pos.y)
 
 
-		self._pos.update(
-			x=min(max(self._pos.x, 0), canvas_width),
-			y=min(max(self._pos.y, 0), canvas_height))
+		self.pos.update(
+			x=min(max(self.pos.x, 0), canvas_width),
+			y=min(max(self.pos.y, 0), canvas_height))
 
 		# Publish pose of the turtle
 		pose = Pose()
-		pose.x = self._pos.x
-		pose.y = self._pos.y
+		pose.x = self.pos.x
+		pose.y = self.pos.y
 		self._pose_pub.publish(pose)
 
 		# Figure out (and publish) the color underneath the turtle
 		colour = Color()
-		rgb = background[self._pos.x][self._pos.y]
+		rgb = background[self.pos.x][self.pos.y]
 		colour.r = rgb.r
 		colour.g = rgb.g
 		colour.b = rgb.b
 		self._colour_pub.publish(colour)
 
-		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self._pos.x, self._pos.y)
+		rospy.logdebug("[%s]: pos_x: %f pos_y: %f", rospy.get_namespace(), self.pos.x, self.pos.y)
 
-		return self._pos != old_pos
+		return self.pos != old_pos
 
 
 

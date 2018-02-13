@@ -57,7 +57,9 @@ class TurtleFrame(object):
 		object.__init__(self)
 
 		# Initialise background (500 x 500)
-		self._background = [[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B)] * 500] * 500
+		self._background = [[
+			Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B) for _ in range(0, 500)
+			] for _ in range(0, 500)]
 		self._width = len(self._background)
 		self._height = len(self._background[0])
 		self._has_gui = args.has_gui
@@ -119,9 +121,9 @@ class TurtleFrame(object):
 		# === BL ===      TR x, BL y
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
-		for a in range(from_x, to_x + 1):
-			for b in range(from_y, to_y + 1):
-				self._background[a][b] = colour
+		for x in range(from_x, to_x + 1):
+			for y in range(from_y, to_y + 1):
+				self._background[x][y] = colour
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):

@@ -118,11 +118,11 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _get_next_impl(self):
-		""" Move robot randomly """
+		""" Move robot randomly. """
 
 		vel_msg = move_helper.get_zero_twist()
 
-		linear_x_choices = [
+		linear_choices = [
 			0,
 			self._jmp_and_rndint(-5, 5),
 			self._jmp_and_rndint(-7, 7),
@@ -136,7 +136,9 @@ class RandomMoveStrategy(MoveStrategy):
 			self._jmp_and_rndint(-5, 5)
 		]
 
-		vel_msg.linear.x = self._rand_gen.choice(linear_x_choices)
+		vel_msg.linear.x = self._rand_gen.choice(linear_choices)
+		self._rand_gen.jumpahead(7)
+		vel_msg.linear.y = self._rand_gen.choice(linear_choices)
 		self._rand_gen.jumpahead(7)
 		vel_msg.angular.z = self._rand_gen.choice(angular_z_choices)
 
@@ -145,7 +147,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 	def _turn_around_impl(self):
 		""" Alternative to get_next with basic intelligence:
-		Turn robot around when hitting illegal colour """
+		Turn robot around when hitting illegal colour. """
 
 		# No need to react - generate normal next step
 		if self._get_last_colour() != self._illegal_colour:
@@ -181,7 +183,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 	def _stay_impl(self):
 		""" Alternative to get_next with compromised intelligence:
-		Stop moving as soon as the illegal colour is hit """
+		Stop moving as soon as the illegal colour is hit. """
 
 		# Normal steps
 		if self._get_last_colour() != self._illegal_colour:
@@ -191,12 +193,12 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _dont_move_impl(self):
-		""" Alternative to get_next that never moves """
+		""" Alternative to get_next that never moves. """
 		return move_helper.get_zero_twist()
 
 
 	def _jmp_and_rndint(self, start, stop, jmp=79):
-		""" Jumpahead and return a random integer in the specified range [start, stop] """
+		""" Jumpahead and return a random integer in the specified range [start, stop]. """
 		self._rand_gen.jumpahead(jmp)
 		return self._rand_gen.randint(start, stop)
 

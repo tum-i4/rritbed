@@ -237,7 +237,7 @@ class TurtleFrame(object):
 		elif rgb == Rgb.pastel_blue():
 			return "b"
 		elif rgb == Rgb.red():
-			return "R"
+			return " "
 
 		return "?"
 

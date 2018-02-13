@@ -229,7 +229,7 @@ class TurtleFrame(object):
 		""" Produce a letter for the given Rgb. Returns "?" for unknown colours. """
 
 		if rgb == Rgb.pastel_purple():
-			return "u"
+			return "p"
 		elif rgb == Rgb.pastel_yellow():
 			return "y"
 		elif rgb == Rgb.pastel_green():

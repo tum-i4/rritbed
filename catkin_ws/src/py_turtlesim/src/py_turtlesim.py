@@ -3,7 +3,7 @@
 Rebuilding turtlesim.cpp in Python
 """
 
-import sys
+import argparse
 import rospy
 from turtle_frame import TurtleFrame
 
@@ -16,14 +16,14 @@ class Turtlesim(object):
 
 		object.__init__(self)
 
-		rospy.init_node("turtlesim", argv=sys.argv)
+		rospy.init_node("turtlesim")
 
 
-	def execute(self):
+	def execute(self, draw_gui=False):
 		""" Run the simulation. """
 
 		# pylint: disable-msg=W0612; (Unused variable - need to hold reference)
-		frame = TurtleFrame()
+		frame = TurtleFrame(draw_gui)
 
 		# Block until shut down
 		rospy.spin()
@@ -31,5 +31,8 @@ class Turtlesim(object):
 
 
 if __name__ == "__main__":
+	PARSER = argparse.ArgumentParser(prog="tf")
+	PARSER.add_argument("--draw-gui", "-g", action="store_true", dest="draw_gui")
+	ARGS = PARSER.parse_args()
 	SIM = Turtlesim()
-	SIM.execute()
+	SIM.execute(ARGS.draw_gui)

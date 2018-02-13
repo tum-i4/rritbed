@@ -50,6 +50,8 @@ class RandomMoveStrategy(MoveStrategy):
 
 	_illegal_colour = Color()
 
+	_speedup = False
+
 
 	def __init__(self):
 		""" Ctor """
@@ -82,6 +84,8 @@ class RandomMoveStrategy(MoveStrategy):
 							choices=[return_choice, stay_choice, dont_move_choice],
 							help="Specify intelligence mode")
 
+		parser.add_argument("--speedup", "-f", action="store_true", help="Increase speed")
+
 		args = parser.parse_args(filtered_argv)
 
 		if args.seed is not None:
@@ -89,6 +93,8 @@ class RandomMoveStrategy(MoveStrategy):
 			self._rand_gen.seed(args.seed)
 		else:
 			rospy.loginfo("No seed specified")
+
+		self._speedup = args.speedup
 
 		# Set get_next implementation based on intelligence selected
 		if args.intelligence is None:
@@ -128,6 +134,14 @@ class RandomMoveStrategy(MoveStrategy):
 			self._jmp_and_rndint(-7, 7),
 			self._jmp_and_rndint(-10, 10)
 		]
+
+		if self._speedup:
+			linear_choices = [
+				0,
+				self._jmp_and_rndint(-20, 20),
+				self._jmp_and_rndint(-50, 50),
+				self._jmp_and_rndint(-100, 100)
+			]
 
 		angular_z_choices = [
 			0,

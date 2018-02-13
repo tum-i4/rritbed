@@ -43,6 +43,7 @@ class TurtleFrame(object):
 	_update_interval = None
 
 	_has_gui = False
+	_gui_size = 0
 	_frame_count = 0
 	_gui_output = None
 
@@ -63,6 +64,8 @@ class TurtleFrame(object):
 		self._width = len(self._background)
 		self._height = len(self._background[0])
 		self._has_gui = args.has_gui
+		rows, _ = os.popen('stty size', 'r').read().split()
+		self._gui_size = int(rows)
 
 		# Only one node can be active at a time. For multiple turtles, rework implementation.
 		# rospy.init_node("turtle_frame")
@@ -185,7 +188,7 @@ class TurtleFrame(object):
 			return
 
 		if self._gui_output is None:
-			self._gui_output = [["" for _ in range(0, 50)] for _ in range(0, 50)]
+			self._gui_output = [["" for _ in range(0, self._gui_size)] for _ in range(0, self._gui_size)]
 
 		self._update_output()
 
@@ -193,30 +196,32 @@ class TurtleFrame(object):
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
 		# We draw from top left (0,49) to bottom right (49,0)
-		for y in range(49, -1, -1):
+		for y in range(self._gui_size - 1, -1, -1):
 			line_output = ""
-			for x in range(0, 50):
+			for x in range(0, self._gui_size):
 				line_output += self._gui_output[x][y] + " "
 			print(line_output)
 
 
 	def _update_output(self):
-		""" Update the GUI output in scale 1:10. Turtle is marked with "-". """
+		""" Update the GUI output in scale of self._gui_size. Turtle is marked with index. """
+
+		scale = min(self._height, self._height / self._gui_size)
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
-		for x in range(0, 50):
-			for y in range(0, 50):
+		for x in range(0, self._gui_size):
+			for y in range(0, self._gui_size):
 				self._gui_output[x][y] = self._get_output_letter(
-					self._background[x*10][y*10])
+					self._background[x*scale][y*scale])
 
 		for name, turtle in self._turtles.items():
-			trt_x = turtle.pos.x / 10
-			trt_y = turtle.pos.y / 10
-			for x in range(max(trt_x-1, 0), min(trt_x+2, 50)):
-				for y in range(max(trt_y-1, 0), min(trt_y+2, 50)):
+			trt_x = turtle.pos.x / scale
+			trt_y = turtle.pos.y / scale
+			for x in range(max(trt_x-1, 0), min(trt_x+2, self._gui_size)):
+				for y in range(max(trt_y-1, 0), min(trt_y+2, self._gui_size)):
 					self._gui_output[x][y] = " "
 
-			self._gui_output[turtle.pos.x / 10][turtle.pos.y / 10] = name[-1:]
+			self._gui_output[turtle.pos.x / scale][turtle.pos.y / scale] = name[-1:]
 
 
 	def _get_output_letter(self, rgb):

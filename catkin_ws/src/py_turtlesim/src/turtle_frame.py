@@ -64,8 +64,6 @@ class TurtleFrame(object):
 		self._width = len(self._background)
 		self._height = len(self._background[0])
 		self._has_gui = args.has_gui
-		rows, _ = os.popen('stty size', 'r').read().split()
-		self._gui_size = int(rows)
 
 		# Only one node can be active at a time. For multiple turtles, rework implementation.
 		# rospy.init_node("turtle_frame")
@@ -187,7 +185,10 @@ class TurtleFrame(object):
 		if not self._has_gui:
 			return
 
-		if self._gui_output is None:
+		rows, _ = os.popen('stty size', 'r').read().split()
+		self._gui_size = int(rows)
+
+		if self._gui_output is None or len(self._gui_output) != self._gui_size:
 			self._gui_output = [["" for _ in range(0, self._gui_size)] for _ in range(0, self._gui_size)]
 
 		self._update_output()

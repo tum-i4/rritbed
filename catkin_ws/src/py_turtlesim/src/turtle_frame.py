@@ -81,13 +81,13 @@ class TurtleFrame(object):
 		# Window is 500 x 500, starting bottom left at 0,0 and ending top right at 499,499
 
 		# Top left: Pastel purple
-		self._draw_area(Rgb.pastel_purple(), Point(0, 250), Point(250, 499))
+		self._draw_area(Rgb.pastel_purple(), Point(0, 250), Point(249, 499))
 		# Top right: Pastel yellow
 		self._draw_area(Rgb.pastel_yellow(), Point(250, 250), Point(499, 499))
 		# Bottom left: Pastel green
-		self._draw_area(Rgb.pastel_green(), Point(0, 0), Point(250, 250))
+		self._draw_area(Rgb.pastel_green(), Point(0, 0), Point(249, 249))
 		# Bottom right: Pastel blue
-		self._draw_area(Rgb.pastel_blue(), Point(250, 0), Point(499, 250))
+		self._draw_area(Rgb.pastel_blue(), Point(250, 0), Point(499, 249))
 		# Intrusion zone (middle): Red
 		self._draw_area(Rgb.red(), Point(245, 245), Point(255, 255))
 

@@ -209,14 +209,14 @@ class TurtleFrame(object):
 				self._gui_output[x][y] = self._get_output_letter(
 					self._background[x*10][y*10])
 
-		for turtle in self._turtles.values():
+		for name, turtle in self._turtles.items():
 			trt_x = turtle.pos.x / 10
 			trt_y = turtle.pos.y / 10
 			for x in range(max(trt_x-1, 0), min(trt_x+2, 50)):
 				for y in range(max(trt_y-1, 0), min(trt_y+2, 50)):
 					self._gui_output[x][y] = " "
 
-			self._gui_output[turtle.pos.x / 10][turtle.pos.y / 10] = "-"
+			self._gui_output[turtle.pos.x / 10][turtle.pos.y / 10] = name[-1:]
 
 
 	def _get_output_letter(self, rgb):

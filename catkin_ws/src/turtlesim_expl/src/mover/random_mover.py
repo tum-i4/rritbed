@@ -138,9 +138,10 @@ class RandomMoveStrategy(MoveStrategy):
 		if self._speedup:
 			linear_choices = [
 				0,
-				self._jmp_and_rndint(-20, 20),
-				self._jmp_and_rndint(-50, 50),
-				self._jmp_and_rndint(-100, 100)
+				self._jmp_and_rndint(-20, -10),
+				self._jmp_and_rndint(10, 20),
+				self._jmp_and_rndint(-100, -30),
+				self._jmp_and_rndint(30, 100)
 			]
 
 		angular_z_choices = [

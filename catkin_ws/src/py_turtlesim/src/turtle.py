@@ -10,6 +10,9 @@ Rebuilding turtle.cpp in Python
 #   - teleport relative
 #   - teleport absolute
 
+# pylint: disable-msg=R0903; (Too few public methods)
+
+
 import math
 import rospy
 from geometry_msgs.msg import Twist

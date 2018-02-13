@@ -16,7 +16,9 @@ Rebuilding turtle_frame.cpp in Python
 # - methods
 #   - clear
 
-import argparse
+# pylint: disable-msg=R0903; (Too few public methods)
+
+
 import os
 import random
 from turtle import Turtle
@@ -33,8 +35,6 @@ DEFAULT_BG_B = 0xff
 class TurtleFrame(object):
 	""" The frame for all turtles """
 
-	_width = 0
-	_height = 0
 	_background = [[]]
 	_turtles = {}
 
@@ -57,18 +57,16 @@ class TurtleFrame(object):
 		self._background = [[
 			Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B) for _ in range(0, 500)
 			] for _ in range(0, 500)]
-		self._width = len(self._background)
-		self._height = len(self._background[0])
 		self._has_gui = draw_gui
 
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)
 		rospy.set_param("background_b", DEFAULT_BG_B)
 
-		rospy.loginfo("Starting turtle frame, %s", rospy.get_name())
+		rospy.loginfo("Starting turtle frame with parent node %s", rospy.get_name())
 
-		trt_x = random.randrange(0, self._width)
-		trt_y = random.randrange(0, self._height)
+		trt_x = random.randrange(0, self.get_width())
+		trt_y = random.randrange(0, self.get_height())
 
 		self._spawn_turtle(trt_x, trt_y)
 
@@ -92,6 +90,16 @@ class TurtleFrame(object):
 		# Initialise update timer (16 msec)
 		self._update_interval = rospy.Duration(0.016)
 		rospy.Timer(self._update_interval, self._update_turtles)
+
+
+	def get_width(self):
+		""" Get the current background width. """
+		return len(self._background) if self._background else 0
+
+
+	def get_height(self):
+		""" Get the current background height. """
+		return len(self._background[0]) if self.get_width() > 0 and self._background[0] else 0
 
 
 	def _draw_area(self, colour, from_point, to_point):
@@ -130,7 +138,7 @@ class TurtleFrame(object):
 		turtle = Turtle(name, Point(trt_x, trt_y))
 		self._turtles[name] = turtle
 
-		rospy.loginfo("New turtle at [%s] at x=[%f], y=[%f]", name, trt_x, trt_y)
+		rospy.loginfo("New turtle [%s] at x=[%d], y=[%d]", name, trt_x, trt_y)
 
 		return name
 
@@ -162,7 +170,7 @@ class TurtleFrame(object):
 		modified = False
 		for key in self._turtles:
 			modified |= self._turtles[key].update(
-				self._update_interval.to_sec(), self._background, self._width, self._height)
+				self._update_interval.to_sec(), self._background, self.get_width(), self.get_height())
 
 		if modified:
 			self._redraw()
@@ -198,7 +206,7 @@ class TurtleFrame(object):
 	def _update_output(self):
 		""" Update the GUI output in scale of self._gui_size. Turtle is marked with index. """
 
-		scale = min(self._height, float(self._height) / self._gui_size)
+		scale = min(self.get_height(), float(self.get_height()) / self._gui_size)
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
 		for x in range(0, self._gui_size):
@@ -216,7 +224,8 @@ class TurtleFrame(object):
 			self._gui_output[trt_x][trt_y] = str(self._turtles.keys().index(name) + 1)
 
 
-	def _get_output_letter(self, rgb):
+	@staticmethod
+	def _get_output_letter(rgb):
 		""" Produce a letter for the given Rgb. Returns "?" for unknown colours. """
 
 		if rgb == Rgb.pastel_purple():

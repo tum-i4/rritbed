@@ -39,7 +39,6 @@ class TurtleFrame(object):
 	_turtles = {}
 
 	_id_counter = 0
-	_last_turtle_update = None
 	_update_interval = None
 
 	_has_gui = False
@@ -162,10 +161,6 @@ class TurtleFrame(object):
 
 	def _update_turtles(self, _):
 		""" Update callback: Call update() on all turtles and redraws GUI. """
-
-		if self._last_turtle_update is None:
-			self._last_turtle_update = rospy.Time.now()
-			return
 
 		modified = False
 		for key in self._turtles:

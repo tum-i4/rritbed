@@ -95,6 +95,8 @@ class RandomMoveStrategy(MoveStrategy):
 			rospy.loginfo("No seed specified")
 
 		self._speedup = args.speedup
+		if self._speedup:
+			rospy.loginfo("Speedup activated")
 
 		# Set get_next implementation based on intelligence selected
 		if args.intelligence is None:

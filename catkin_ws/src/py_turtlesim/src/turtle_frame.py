@@ -90,7 +90,7 @@ class TurtleFrame(object):
 		# Bottom right: Pastel blue
 		self._draw_area(Rgb.pastel_blue(), Point(250, 0), Point(499, 249))
 		# Intrusion zone (middle): Red
-		self._draw_area(Rgb.red(), Point(245, 245), Point(255, 255))
+		self._draw_area(Rgb.red(), Point(245, 245), Point(254, 254))
 
 		# Initialise GUI (if requested)
 		self._redraw()

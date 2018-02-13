@@ -207,22 +207,22 @@ class TurtleFrame(object):
 	def _update_output(self):
 		""" Update the GUI output in scale of self._gui_size. Turtle is marked with index. """
 
-		scale = min(self._height, self._height / self._gui_size)
+		scale = min(self._height, float(self._height) / self._gui_size)
 
 		# pylint: disable-msg=C0103; (Invalid variable names x, y)
 		for x in range(0, self._gui_size):
 			for y in range(0, self._gui_size):
 				self._gui_output[x][y] = self._get_output_letter(
-					self._background[x*scale][y*scale])
+					self._background[int(x * scale)][int(y * scale)])
 
 		for name, turtle in self._turtles.items():
-			trt_x = turtle.pos.x / scale
-			trt_y = turtle.pos.y / scale
+			trt_x = int(turtle.pos.x / scale)
+			trt_y = int(turtle.pos.y / scale)
 			for x in range(max(trt_x-1, 0), min(trt_x+2, self._gui_size)):
 				for y in range(max(trt_y-1, 0), min(trt_y+2, self._gui_size)):
 					self._gui_output[x][y] = " "
 
-			self._gui_output[turtle.pos.x / scale][turtle.pos.y / scale] = name[-1:]
+			self._gui_output[trt_x][trt_y] = str(self._turtles.keys().index(name) + 1)
 
 
 	def _get_output_letter(self, rgb):

@@ -32,12 +32,16 @@ class StateDao(object):
 	@staticmethod
 	def get_client_time(identifier):
 		"""
-		Getter for the STATE. Reads from disk and updates internal state.\n
-		raises: KeyError if identifier does not have a STATE.
+		Get current time for the specified client. Reads from disk and updates internal state.\n
+		returns: Unix time or None for not initialised clients.
 		"""
 
 		StateDao._ensure_state_is_initialised()
-		return CLIENT_TIMES[identifier]
+		try:
+			return CLIENT_TIMES[identifier]
+		except KeyError:
+			StateDao.set_client_time(identifier, None)
+			return None
 
 
 	@staticmethod

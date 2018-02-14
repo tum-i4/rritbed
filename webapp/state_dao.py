@@ -92,4 +92,4 @@ class StateDao(object):
 
 
 if __name__ == "__main__":
-	pass # StateDao._init_state()
+	StateDao._ensure_state_is_initialised()

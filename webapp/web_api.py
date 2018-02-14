@@ -320,15 +320,15 @@ def _create_base_log_entry(vin):
 def _create_client_time(identifier):
 	""" Creates a time for the client. Randomly increments time with 5 % chance. """
 
-	client_time = _get_client_time(identifier)
+	client_time = StateDao.get_client_time(identifier)
 	time_now = time.time()
 
 	if client_time is None:
-		_set_client_time(identifier, time_now)
+		StateDao.set_client_time(identifier, time_now)
 		return time_now
 
 	time_choice = random.choice([client_time] * 19 + [client_time + random.randint(3600, 57600)])
-	_set_client_time(identifier, time_choice)
+	StateDao.set_client_time(identifier, time_choice)
 
 	return time_choice
 

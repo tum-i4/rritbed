@@ -333,17 +333,6 @@ def _create_client_time(identifier):
 	return time_choice
 
 
-def _get_client_time(identifier):
-	""" Getter for the client time. Initialises empty field. """
-
-	state = _get_state()
-	try:
-		return state[CCT_KEY][identifier]
-	except KeyError:
-		_set_client_time(identifier, None)
-		return None
-
-
 def _create_unique_log_file_path():
 	""" Creates a unique log file name for backups """
 

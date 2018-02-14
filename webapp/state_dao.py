@@ -21,6 +21,22 @@ CLIENT_TIMES = {}
 class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
+	_state_handle = None
+	_client_handles = {}
+
+
+	@staticmethod
+	def connect():
+		# Call before running server
+		pass
+
+
+	@staticmethod
+	def disconnect():
+		# Call after closing server
+		pass
+
+
 	@staticmethod
 	def get_current_min_time():
 		""" Getter for the STATE. Reads from disk and updates internal state. """

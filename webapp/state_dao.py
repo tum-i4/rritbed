@@ -5,22 +5,21 @@ import json
 import os
 
 
-IS_INIT_KEY = "State initialised"
-CURR_MIN_KEY = "Current minimum time"
-
-STATE = {
-	IS_INIT_KEY: False,
-	CURR_MIN_KEY: None
-}
-CLIENT_TIMES = {}
-
-
 class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
 	_connected = False
 	_path = "state"
 	_state_file_name = "state"
+
+
+	_is_init_key = "State initialised"
+	_curr_min_key = "Current minimum time"
+	_state = {
+		_is_init_key: False,
+		_curr_min_key: None
+	}
+	_client_times = {}
 
 
 	@staticmethod
@@ -30,11 +29,11 @@ class StateDao(object):
 		if StateDao._connected:
 			raise UserWarning("This method should only be called once!")
 
-		STATE[IS_INIT_KEY] = True
+		StateDao._state[StateDao._is_init_key] = True
 
 		# List all files in state directory
 		files = []
-		for (_, _, filenames) in os.walk(PATH):
+		for (_, _, filenames) in os.walk(StateDao._path):
 			files.extend(filenames)
 			break
 
@@ -58,7 +57,7 @@ class StateDao(object):
 		""" Getter for the STATE. Reads from disk and updates internal state. """
 
 		StateDao._ensure_state_is_initialised()
-		return STATE[CURR_MIN_KEY]
+		return StateDao._state[StateDao._curr_min_key]
 
 
 	@staticmethod
@@ -70,7 +69,7 @@ class StateDao(object):
 
 		StateDao._ensure_state_is_initialised()
 		try:
-			return CLIENT_TIMES[identifier]
+			return StateDao._client_times[identifier]
 		except KeyError:
 			StateDao.set_client_time(identifier, None)
 			return None
@@ -82,13 +81,13 @@ class StateDao(object):
 
 		StateDao._ensure_state_is_initialised()
 
-		CLIENT_TIMES[identifier] = new_time
+		StateDao._client_times[identifier] = new_time
 
 		# Initialise or set current minimum time
-		if STATE[CURR_MIN_KEY] is None:
-			STATE[CURR_MIN_KEY] = new_time
+		if StateDao._state[StateDao._curr_min_key] is None:
+			StateDao._state[StateDao._curr_min_key] = new_time
 		else:
-			STATE[CURR_MIN_KEY] = min(CLIENT_TIMES.values())
+			StateDao._state[StateDao._curr_min_key] = min(StateDao._client_times.values())
 
 
 	### Assertion ###
@@ -97,7 +96,7 @@ class StateDao(object):
 	@staticmethod
 	def _ensure_state_is_initialised():
 		""" Assert initialised state. """
-		assert(STATE[IS_INIT_KEY])
+		assert(StateDao._state[StateDao._is_init_key])
 
 
 	### File access ###
@@ -112,9 +111,9 @@ class StateDao(object):
 			state_from_file = json.loads(state_file.read())
 
 		if is_state_file:
-			STATE[CURR_MIN_KEY] = state_from_file
+			StateDao._state[StateDao._curr_min_key] = state_from_file
 		else:
-			CLIENT_TIMES[file_name] = state_from_file
+			StateDao._client_times[file_name] = state_from_file
 
 
 	@staticmethod
@@ -123,10 +122,10 @@ class StateDao(object):
 
 		# Write STATE (current minimum time)
 		with open(StateDao._get_file_path(StateDao._state_file_name), "w") as state_file:
-			state_file.write(json.dumps(STATE[CURR_MIN_KEY]))
+			state_file.write(json.dumps(StateDao._state[StateDao._curr_min_key]))
 
 		# Write clients (current time)
-		for key, value in CLIENT_TIMES.items():
+		for key, value in StateDao._client_times.items():
 			with open(StateDao._get_file_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
 

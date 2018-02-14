@@ -26,7 +26,8 @@ class StateDao(object):
 
 	@staticmethod
 	def connect():
-		""" Connect to the STATE files. """
+		""" Load STATE from file. """
+
 		if StateDao._connected:
 			raise UserWarning("This method should only be called once!")
 
@@ -45,7 +46,8 @@ class StateDao(object):
 
 	@staticmethod
 	def disconnect():
-		# Call after closing server
+		""" Write STATE to file. """
+
 		if not StateDao._connected:
 			raise UserWarning("This method should only be called when connected.")
 

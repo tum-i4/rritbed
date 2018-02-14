@@ -22,6 +22,14 @@ class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
 	@staticmethod
+	def get_current_min_time():
+		""" Getter for the STATE. Reads from disk and updates internal state. """
+
+		StateDao._ensure_state_is_initialised()
+		return STATE[CURR_MIN_KEY]
+
+
+	@staticmethod
 	def get_client_time(identifier):
 		"""
 		Getter for the STATE. Reads from disk and updates internal state.\n
@@ -29,7 +37,6 @@ class StateDao(object):
 		"""
 
 		StateDao._ensure_state_is_initialised()
-
 		return CLIENT_TIMES[identifier]
 
 

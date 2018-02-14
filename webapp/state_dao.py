@@ -56,7 +56,7 @@ class StateDao(object):
 	def get_current_min_time():
 		""" Getter for the STATE. Reads from disk and updates internal state. """
 
-		StateDao._ensure_state_is_initialised()
+		assert(StateDao._connected)
 		return StateDao._curr_min_time
 
 
@@ -67,7 +67,8 @@ class StateDao(object):
 		returns: Unix time or None for not initialised clients.
 		"""
 
-		StateDao._ensure_state_is_initialised()
+		assert(StateDao._connected)
+
 		try:
 			return StateDao._client_times[identifier]
 		except KeyError:
@@ -79,7 +80,7 @@ class StateDao(object):
 	def set_client_time(identifier, new_time):
 		""" Setter for the STATE. Updates the internal state and saves to disk. """
 
-		StateDao._ensure_state_is_initialised()
+		assert(StateDao._connected)
 
 		StateDao._client_times[identifier] = new_time
 
@@ -88,15 +89,6 @@ class StateDao(object):
 			StateDao._curr_min_time = new_time
 		else:
 			StateDao._curr_min_time = min(StateDao._client_times.values())
-
-
-	### Assertion ###
-
-
-	@staticmethod
-	def _ensure_state_is_initialised():
-		""" Assert initialised state. """
-		assert(StateDao._connected)
 
 
 	### File access ###

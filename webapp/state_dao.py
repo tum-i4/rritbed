@@ -120,5 +120,20 @@ class StateDao(object):
 			CLIENT_TIMES[file_name] = state_from_file
 
 
+	@staticmethod
+	def _write_state_to_file():
+		""" Save the internal state to the corresponding files. """
+
+		# Write STATE (current minimum time)
+		with open(os.path.join(PATH, STATE_FILE_NAME), "w") as state_file:
+			state_file.write(json.dumps(STATE[CURR_MIN_KEY]))
+
+		# Write clients (current time)
+		for key, value in CLIENT_TIMES.items():
+			with open(os.path.join(PATH, key), "w") as client_file:
+				client_file.write(json.dumps(value))
+
+
+
 if __name__ == "__main__":
 	StateDao._ensure_state_is_initialised()

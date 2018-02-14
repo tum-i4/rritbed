@@ -12,10 +12,7 @@ class StateDao(object):
 	_path = "state"
 	_state_file_name = "state"
 
-	_curr_min_key = "Current minimum time"
-	_state = {
-		_curr_min_key: None
-	}
+	_curr_min_time = None
 	_client_times = {}
 
 
@@ -60,7 +57,7 @@ class StateDao(object):
 		""" Getter for the STATE. Reads from disk and updates internal state. """
 
 		StateDao._ensure_state_is_initialised()
-		return StateDao._state[StateDao._curr_min_key]
+		return StateDao._curr_min_time
 
 
 	@staticmethod
@@ -87,10 +84,10 @@ class StateDao(object):
 		StateDao._client_times[identifier] = new_time
 
 		# Initialise or set current minimum time
-		if StateDao._state[StateDao._curr_min_key] is None:
-			StateDao._state[StateDao._curr_min_key] = new_time
+		if StateDao._curr_min_time is None:
+			StateDao._curr_min_time = new_time
 		else:
-			StateDao._state[StateDao._curr_min_key] = min(StateDao._client_times.values())
+			StateDao._curr_min_time = min(StateDao._client_times.values())
 
 
 	### Assertion ###
@@ -114,7 +111,7 @@ class StateDao(object):
 			state_from_file = json.loads(state_file.read())
 
 		if is_state_file:
-			StateDao._state[StateDao._curr_min_key] = state_from_file
+			StateDao._curr_min_time = state_from_file
 		else:
 			StateDao._client_times[file_name] = state_from_file
 
@@ -123,11 +120,11 @@ class StateDao(object):
 	def _write_state_to_file():
 		""" Save the internal state to the corresponding files. """
 
-		# Write STATE (current minimum time)
+		# Write current minimum time
 		with open(StateDao._get_file_path(StateDao._state_file_name), "w") as state_file:
-			state_file.write(json.dumps(StateDao._state[StateDao._curr_min_key]))
+			state_file.write(json.dumps(StateDao._curr_min_time))
 
-		# Write clients (current time)
+		# Write clients' current time
 		for key, value in StateDao._client_times.items():
 			with open(StateDao._get_file_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))

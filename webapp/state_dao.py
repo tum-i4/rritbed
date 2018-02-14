@@ -12,11 +12,8 @@ class StateDao(object):
 	_path = "state"
 	_state_file_name = "state"
 
-
-	_is_init_key = "State initialised"
 	_curr_min_key = "Current minimum time"
 	_state = {
-		_is_init_key: False,
 		_curr_min_key: None
 	}
 	_client_times = {}
@@ -30,7 +27,6 @@ class StateDao(object):
 			raise UserWarning("This method should only be called once!")
 
 		StateDao._connected = True
-		StateDao._state[StateDao._is_init_key] = True
 
 		# List all files in state directory
 		files = []
@@ -103,7 +99,7 @@ class StateDao(object):
 	@staticmethod
 	def _ensure_state_is_initialised():
 		""" Assert initialised state. """
-		assert(StateDao._state[StateDao._is_init_key])
+		assert(StateDao._connected)
 
 
 	### File access ###

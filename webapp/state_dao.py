@@ -21,14 +21,18 @@ CLIENT_TIMES = {}
 class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
+	_connected = False
 	_state_handle = None
 	_client_handles = {}
 
 
 	@staticmethod
 	def connect():
-		# Call before running server
-		pass
+		""" Connect to the STATE files. """
+		if StateDao._connected:
+			raise UserWarning("This method should only be called once!")
+
+		StateDao._state_handle = open(os.path.join(PATH, STATE_FILE_NAME), "w")
 
 
 	@staticmethod

@@ -14,6 +14,7 @@ import time
 from bottle import post, run, request, BaseResponse
 
 from log_entry import LogEntry
+from state_dao import StateDao
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
 from functionality.tsp_routing_mapper import TspRoutingMapper
@@ -244,7 +245,7 @@ def log_num(num):
 def cut_log():
 	""" Cuts the log off at the common minimum time of all clients """
 
-	minimum_time = _get_state()[CMT_KEY]
+	minimum_time = StateDao.get_current_min_time()
 
 	if not os.path.isfile(LOG_FILE_PATH):
 		return BaseResponse(body="Log is empty", status=200)

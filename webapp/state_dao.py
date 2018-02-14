@@ -56,7 +56,7 @@ class StateDao(object):
 		StateDao._write_state_to_file()
 
 		if not quiet:
-			print("Saved state to disk.")
+			print("Successfully saved state to disk.")
 
 
 	@staticmethod

@@ -30,7 +30,17 @@ class StateDao(object):
 		if StateDao._connected:
 			raise UserWarning("This method should only be called once!")
 
-		pass
+		STATE[IS_INIT_KEY] = True
+
+		# List all files in state directory
+		files = []
+		for (_, _, filenames) in os.walk(PATH):
+			files.extend(filenames)
+			break
+
+		for file_name in files:
+			# State not initialised and files exist - load from file
+			StateDao._load_state_from_file(file_name)
 
 
 	@staticmethod

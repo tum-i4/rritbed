@@ -63,10 +63,7 @@ class StateDao(object):
 
 		STATE[IS_INIT_KEY] = True
 
-		# TODO List all files in state directory
-		# TODO For each file: If STATE_FILE: set new state
-		# TODO                If CLIEN_FILE: set client
-
+		# List all files in state directory
 		files = []
 		for (_, _, filenames) in os.walk(PATH):
 			files.extend(filenames)
@@ -74,11 +71,11 @@ class StateDao(object):
 
 		for file_name in files:
 			# State not initialised and files exist - load from file
-			StateDao._init_state_from_file(file_name)
+			StateDao._load_state_from_file(file_name)
 
 
 	@staticmethod
-	def _init_state_from_file(file_name):
+	def _load_state_from_file(file_name):
 		is_state_file = file_name == STATE_FILE_NAME
 
 		state_from_file = None

@@ -5,9 +5,6 @@ import json
 import os
 
 
-PATH = "state"
-STATE_FILE_NAME = "state"
-
 IS_INIT_KEY = "State initialised"
 CURR_MIN_KEY = "Current minimum time"
 
@@ -22,6 +19,8 @@ class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
 	_connected = False
+	_path = "state"
+	_state_file_name = "state"
 
 
 	@staticmethod
@@ -106,7 +105,7 @@ class StateDao(object):
 
 	@staticmethod
 	def _load_state_from_file(file_name):
-		is_state_file = file_name == STATE_FILE_NAME
+		is_state_file = file_name == StateDao._state_file_name
 
 		state_from_file = None
 		with open(file_name, "r") as state_file:
@@ -123,13 +122,19 @@ class StateDao(object):
 		""" Save the internal state to the corresponding files. """
 
 		# Write STATE (current minimum time)
-		with open(os.path.join(PATH, STATE_FILE_NAME), "w") as state_file:
+		with open(StateDao._get_file_path(StateDao._state_file_name), "w") as state_file:
 			state_file.write(json.dumps(STATE[CURR_MIN_KEY]))
 
 		# Write clients (current time)
 		for key, value in CLIENT_TIMES.items():
-			with open(os.path.join(PATH, key), "w") as client_file:
+			with open(StateDao._get_file_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
+
+
+	@staticmethod
+	def _get_file_path(file_name):
+		""" Build a file path to the given file. """
+		return os.path.join(StateDao._path, file_name)
 
 
 

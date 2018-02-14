@@ -23,7 +23,7 @@ class StateDao(object):
 
 
 	@staticmethod
-	def connect():
+	def connect(quiet=False):
 		""" Load STATE from file. """
 
 		if StateDao._connected:
@@ -41,6 +41,9 @@ class StateDao(object):
 		for file_name in files:
 			# State not initialised and files exist - load from file
 			StateDao._load_state_from_file(file_name)
+
+		if not quiet:
+			print("Loaded state from {} files from disk.".format(len(files)))
 
 
 	@staticmethod

@@ -21,6 +21,17 @@ CLIENT_TIMES = {}
 class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
+	@staticmethod
+	def get_client_time(identifier):
+		"""
+		Getter for the STATE. Reads from disk and updates internal state.\n
+		raises: KeyError if identifier does not have a STATE.
+		"""
+
+		StateDao._ensure_state_is_initialised()
+
+		return CLIENT_TIMES[identifier]
+
 
 	@staticmethod
 	def _ensure_state_is_initialised():

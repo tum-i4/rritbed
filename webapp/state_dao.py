@@ -92,6 +92,18 @@ class StateDao(object):
 			STATE[CURR_MIN_KEY] = min(CLIENT_TIMES.values())
 
 
+	### Assertion ###
+
+
+	@staticmethod
+	def _ensure_state_is_initialised():
+		""" Assert initialised state. """
+		assert(STATE[IS_INIT_KEY])
+
+
+	### File access ###
+
+
 	@staticmethod
 	def _load_state_from_file(file_name):
 		is_state_file = file_name == STATE_FILE_NAME
@@ -118,12 +130,6 @@ class StateDao(object):
 		for key, value in CLIENT_TIMES.items():
 			with open(os.path.join(PATH, key), "w") as client_file:
 				client_file.write(json.dumps(value))
-
-
-	@staticmethod
-	def _ensure_state_is_initialised():
-		""" Assert initialised state. """
-		assert(STATE[IS_INIT_KEY])
 
 
 

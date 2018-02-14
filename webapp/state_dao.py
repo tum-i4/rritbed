@@ -138,4 +138,5 @@ class StateDao(object):
 
 
 if __name__ == "__main__":
-	StateDao._ensure_state_is_initialised()
+	StateDao.connect()
+	StateDao.disconnect()

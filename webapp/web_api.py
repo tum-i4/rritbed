@@ -375,9 +375,9 @@ if ARGS.quiet:
 
 # Buffer size increased for improved performance
 LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a", io.DEFAULT_BUFFER_SIZE * 10000)
-StateDao.connect()
+StateDao.connect(ARGS.quiet)
 
 run(host="localhost", port=5000, quiet=ARGS.quiet)
 
 LOG_FILE_HANDLE.close()
-StateDao.disconnect()
+StateDao.disconnect(ARGS.quiet)

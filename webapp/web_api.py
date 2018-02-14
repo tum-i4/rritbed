@@ -25,15 +25,6 @@ STATE_FILE_PATH = "state"
 
 LOG_FILE_HANDLE = None
 
-INI_KEY = "State initialised"
-CCT_KEY = "Current client times"
-CMT_KEY = "Current minimum time"
-STATE = {
-	INI_KEY: False,
-	CCT_KEY: {},
-	CMT_KEY: None
-}
-
 
 ### API endpoints ###
 
@@ -381,54 +372,6 @@ def _append_to_log(new_log_entry):
 	return
 
 
-
-### STATE handling
-
-
-def _get_state():
-	""" Getter for the STATE. Reads from disk and updates internal state. """
-
-	if STATE[INI_KEY]:
-		return STATE
-
-	_init_state()
-
-	return STATE
-
-
-def _set_client_time(identifier, new_time):
-	""" Setter for the STATE. Updates the internal state and saves to disk. """
-
-	if not STATE[INI_KEY]:
-		_init_state()
-
-	STATE[CCT_KEY][identifier] = new_time
-
-	if STATE[CMT_KEY] is None:
-		STATE[CMT_KEY] = new_time
-	else:
-		STATE[CMT_KEY] = min(STATE[CCT_KEY].values())
-
-	with open(STATE_FILE_PATH, "w") as state_file:
-		state_file.write(json.dumps(STATE))
-
-
-def _init_state():
-	""" Initialise the STATE by reading from file or by creating the object. """
-
-	STATE[INI_KEY] = True
-
-	if not os.path.lexists(STATE_FILE_PATH):
-		return
-
-	# State not initialised and file exists - load from file
-	state_file_contents = None
-	with open(STATE_FILE_PATH, "r") as state_file:
-		state_file_contents = state_file.read()
-
-	state_from_file = json.loads(state_file_contents)
-	STATE[CCT_KEY] = state_from_file[CCT_KEY]
-	STATE[CMT_KEY] = state_from_file[CMT_KEY]
 
 ### Starting the server
 

@@ -107,8 +107,8 @@ class LaunchFileOrchestrator(object):
 			file_name = os.path.basename(path_expanded)
 			launch_ext = ".launch"
 
-			# Allow using "." as directory name
-			if path == ".":
+			# Allow using "." or nothing as directory name
+			if path == "." or path == "":
 				path = os.getcwd()
 
 			# Default file name if none was given

@@ -29,6 +29,7 @@ class StateDao(object):
 		if StateDao._connected:
 			raise UserWarning("This method should only be called once!")
 
+		StateDao._connected = True
 		StateDao._state[StateDao._is_init_key] = True
 
 		# List all files in state directory

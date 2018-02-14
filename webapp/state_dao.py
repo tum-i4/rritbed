@@ -91,12 +91,6 @@ class StateDao(object):
 		else:
 			STATE[CURR_MIN_KEY] = min(CLIENT_TIMES.values())
 
-		with open(os.path.join(PATH, STATE_FILE_NAME), "w") as state_file:
-			state_file.write(json.dumps(STATE[CURR_MIN_KEY]))
-
-		with open(os.path.join(PATH, identifier), "w") as client_file:
-			client_file.write(json.dumps(CLIENT_TIMES[identifier]))
-
 
 	@staticmethod
 	def _load_state_from_file(file_name):

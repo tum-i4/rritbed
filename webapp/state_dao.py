@@ -22,8 +22,6 @@ class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
 	_connected = False
-	_state_handle = None
-	_client_handles = {}
 
 
 	@staticmethod
@@ -32,13 +30,16 @@ class StateDao(object):
 		if StateDao._connected:
 			raise UserWarning("This method should only be called once!")
 
-		StateDao._state_handle = open(os.path.join(PATH, STATE_FILE_NAME), "w")
+		pass
 
 
 	@staticmethod
 	def disconnect():
 		# Call after closing server
-		pass
+		if not StateDao._connected:
+			raise UserWarning("This method should only be called when connected.")
+
+		StateDao._write_state_to_file()
 
 
 	@staticmethod

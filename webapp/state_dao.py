@@ -47,13 +47,16 @@ class StateDao(object):
 
 
 	@staticmethod
-	def disconnect():
+	def disconnect(quiet=False):
 		""" Write STATE to file. """
 
 		if not StateDao._connected:
 			raise UserWarning("This method should only be called when connected.")
 
 		StateDao._write_state_to_file()
+
+		if not quiet:
+			print("Saved state to disk.")
 
 
 	@staticmethod

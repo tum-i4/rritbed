@@ -2,7 +2,7 @@
 <!-- Exemplary launch file with different node types and how to use them -->
 <launch>
   <group ns="turtle">
-  	<node name="turtlesim" pkg="turtlesim" type="turtlesim_node" />
+  	<node name="py_turtlesim" pkg="py_turtlesim" type="py_turtlesim.py" />
     <!-- A random mover with seed pi1000 (31415...) -->
 	  <node name="mover" pkg="turtlesim_expl" type="random_mover.py" 
       args="-pi1000" />

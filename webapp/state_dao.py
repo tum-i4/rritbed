@@ -97,26 +97,6 @@ class StateDao(object):
 
 
 	@staticmethod
-	def _ensure_state_is_initialised():
-		""" Initialise the STATE by reading from all files or by creating the object. """
-
-		if STATE[IS_INIT_KEY]:
-			return
-
-		STATE[IS_INIT_KEY] = True
-
-		# List all files in state directory
-		files = []
-		for (_, _, filenames) in os.walk(PATH):
-			files.extend(filenames)
-			break
-
-		for file_name in files:
-			# State not initialised and files exist - load from file
-			StateDao._load_state_from_file(file_name)
-
-
-	@staticmethod
 	def _load_state_from_file(file_name):
 		is_state_file = file_name == STATE_FILE_NAME
 
@@ -142,6 +122,12 @@ class StateDao(object):
 		for key, value in CLIENT_TIMES.items():
 			with open(os.path.join(PATH, key), "w") as client_file:
 				client_file.write(json.dumps(value))
+
+
+	@staticmethod
+	def _ensure_state_is_initialised():
+		""" Assert initialised state. """
+		assert(STATE[IS_INIT_KEY])
 
 
 

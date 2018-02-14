@@ -3,6 +3,7 @@
 
 # pylint: disable-msg=E1101
 
+import argparse
 import datetime
 import io
 import json
@@ -429,14 +430,19 @@ def _init_state():
 	STATE[CCT_KEY] = state_from_file[CCT_KEY]
 	STATE[CMT_KEY] = state_from_file[CMT_KEY]
 
-
-
 ### Starting the server
 
+
+PARSER = argparse.ArgumentParser()
+PARSER.add_argument("--quiet", "-q", action="store_true")
+ARGS = PARSER.parse_args()
+
+if ARGS.quiet:
+	print("Starting server in quiet mode")
 
 # Buffer size increased for improved performance
 LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a", io.DEFAULT_BUFFER_SIZE * 10000)
 
-run(host="localhost", port=5000)
+run(host="localhost", port=5000, quiet=ARGS.quiet)
 
 LOG_FILE_HANDLE.close()

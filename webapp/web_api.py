@@ -373,6 +373,9 @@ ARGS = PARSER.parse_args()
 if ARGS.quiet:
 	print("Starting server in quiet mode")
 
+if not os.path.lexists(LOG_FOLDER):
+	os.mkdir(LOG_FOLDER)
+
 # Buffer size increased for improved performance
 LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a", io.DEFAULT_BUFFER_SIZE * 10000)
 StateDao.connect(ARGS.quiet)

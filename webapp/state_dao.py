@@ -112,6 +112,9 @@ class StateDao(object):
 	def _write_state_to_file():
 		""" Save the internal state to the corresponding files. """
 
+		if not os.path.lexists(StateDao._path):
+			os.mkdir(StateDao._path)
+
 		# Write current minimum time
 		with open(StateDao._get_file_path(StateDao._state_file_name), "w") as state_file:
 			state_file.write(json.dumps(StateDao._curr_min_time))

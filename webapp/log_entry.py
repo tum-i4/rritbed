@@ -20,36 +20,36 @@ class LogEntry(object):
 	level_field = "level"
 	log_message_field = "log_message"
 	log_id_field = "log_id"
-	time_utc_field = "time_utc"
 	time_unix_field = "time_unix"
 	session_id_field = "session_id"
 	gps_position_field = "gps_position"
-	execution_time_field = "execution_time"
 
+	# execution_time_field = "execution_time"
 	# log_lib_version_field = "log_lib_version"
 	# env_field = "env"
 	# transaction_id_field = "transaction_id"
 	# user_ids_field = "user_ids"
+	# time_utc_field = "time_utc"
 
 	data = {
 		vin_field : "",             # Identifier of the car calling the microservice
 		origin_field : "",          # Class name sending this log entry - some.java.method
-		app_id_field : "",           # Name of the microservice using this
+		app_id_field : "",          # Name of the microservice using this
 		level_field : "",           # INFO, DEBUG, ...
 		log_message_field : "",
-		log_id_field : "",           # UUID of this log entry
-		time_utc_field : "",        # When the logging event has happened
+		log_id_field : "",          # UUID of this log entry
 		time_unix_field : 0,        # !Caution! At COMPANY not the same time as time_utc
 
 		session_id_field : "",
-		gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
-		execution_time_field : 0    # How long the execution took
+		gps_position_field : ""     # GPS position of car - "12.12312312,42.32321"
 
-		# log_lib_version_field : "", # Version of the logging library used for storing this event -
+		# execution_time_field : 0,    # How long the execution took
+		# log_lib_version_field : "" # Version of the logging library used for storing this event -
 									# each microservice has their own
 		# env_field : "",             # PROD, INT, TEST
 		# transaction_id_field : "",   # UUID of the request made to the server
-		# user_ids_field : "[null]"   # List of (always one?) ints or [null] in string
+		# user_ids_field : "[null]",   # List of (always one?) ints or [null] in string
+		# time_utc_field : ""        # When the logging event has happened
 	}
 
 
@@ -135,7 +135,7 @@ class LogEntry(object):
 		time_utc_now = time.gmtime(time_unix)
 
 		self.data[self.time_unix_field] = int(time_unix)
-		self.data[self.time_utc_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
+		# self.data[self.time_utc_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
 
 
 	def get_log_string(self):

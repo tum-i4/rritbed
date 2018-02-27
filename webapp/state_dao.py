@@ -28,6 +28,9 @@ class StateDao(object):
 
 		StateDao._connected = True
 
+		# Replace interfaces with implementations
+		StateDao._replace_interfaces_with_impl()
+
 		# List all files in state directory
 		files = []
 		for (_, _, filenames) in os.walk(StateDao._state_path):
@@ -109,6 +112,16 @@ class StateDao(object):
 	@staticmethod
 	def _dao_not_connected_error():
 		raise ValueError("DAO not connected")
+
+
+	@staticmethod
+	def _replace_interfaces_with_impl():
+		""" Switch implementations of interface methods. """
+
+		StateDao.get_current_min_time = StateDao._get_current_min_time_impl
+		StateDao.get_client_time = StateDao._get_client_time_impl
+		StateDao.set_client_time = StateDao._set_client_time_impl
+		StateDao.append_to_log = StateDao._append_to_log_impl
 
 
 	@staticmethod

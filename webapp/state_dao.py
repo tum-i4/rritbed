@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 """ DAO for the STATE """
 
+import datetime
 import json
 import os
+import time
 
 
 class StateDao(object):
@@ -268,16 +270,20 @@ class StateDao(object):
 	def _create_unique_log_file_path():
 		""" Creates a unique log file name for backups """
 
-		pass
+		time_unix = time.time()
+		new_file_name = StateDao._create_log_file_name_from_time(StateDao._get_log_file_path(), time_unix)
 
-		# time_unix = time.time()
-		# new_file_name = _create_log_file_name_from_time(LOG_FILE_PATH, time_unix)
+		while os.path.isfile(new_file_name):
+			time_unix += datetime.timedelta(seconds=1)
+			new_file_name = StateDao._create_log_file_name_from_time(StateDao._get_log_file_path(), time_unix)
 
-		# while os.path.isfile(new_file_name):
-		# 	time_unix += datetime.timedelta(seconds=1)
-		# 	new_file_name = _create_log_file_name_from_time(LOG_FILE_PATH, time_unix)
+		return new_file_name
 
-		# return new_file_name
+
+	@staticmethod
+	def _create_log_file_name_from_time(path, time_unix):
+		""" Creates a log file name of the format 'log/log_until_2017-12-20_18:08:25' """
+		return path + "_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 
 
 

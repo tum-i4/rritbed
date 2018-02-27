@@ -125,6 +125,29 @@ class StateDao(object):
 				client_file.write(json.dumps(value))
 
 
+	@staticmethod
+	def _delete_files():
+		""" Delete all underlying files. """
+
+		if not os.path.lexists(StateDao._path):
+			return
+
+		# Delete state file
+		StateDao._delete_file_if_existing(
+			StateDao._get_state_file_path())
+
+		# Delete client files
+		for client_file_path in StateDao._get_client_file_paths():
+			StateDao._delete_file_if_existing(
+				client_file_path)
+
+
+	@staticmethod
+	def _delete_file_if_existing(file_path):
+		if os.path.lexists(file_path):
+			os.remove(file_path)
+
+
 
 	### File paths ###
 

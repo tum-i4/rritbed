@@ -271,18 +271,19 @@ class StateDao(object):
 		""" Creates a unique log file name for backups """
 
 		time_unix = time.time()
-		new_file_name = StateDao._create_log_file_name_from_time(StateDao._get_log_file_path(), time_unix)
+		new_file_name = StateDao._create_log_file_name_from_time(time_unix)
 
 		while os.path.isfile(new_file_name):
 			time_unix += datetime.timedelta(seconds=1)
-			new_file_name = StateDao._create_log_file_name_from_time(StateDao._get_log_file_path(), time_unix)
+			new_file_name = StateDao._create_log_file_name_from_time(time_unix)
 
 		return new_file_name
 
 
 	@staticmethod
-	def _create_log_file_name_from_time(path, time_unix):
+	def _create_log_file_name_from_time(time_unix):
 		""" Creates a log file name of the format 'log/log_until_2017-12-20_18:08:25' """
+		path = StateDao._get_log_file_path()
 		return path + "_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 
 

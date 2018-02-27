@@ -4,7 +4,10 @@
 import datetime
 import json
 import os
+import shutil
 import time
+
+from log_entry import LogEntry
 
 
 class StateDao(object):
@@ -63,9 +66,40 @@ class StateDao(object):
 
 
 	@staticmethod
-	def flush_log():
-		""" Force a write of the new log entries to disk. """
-		pass
+	def cut_log():
+		""" Save a copy of the log that is cut at the current minimum time. """
+
+		log_file_path = StateDao._get_log_file_path()
+
+		if not os.path.lexists(log_file_path):
+			return "Log is empty"
+
+		new_file_path = StateDao.create_unique_log_file_path()
+
+		StateDao._flush_log()
+
+		shutil.copyfile(log_file_path, new_file_path)
+
+		log_lines = []
+		with open(new_file_path, "r") as new_log_file:
+			log_lines = new_log_file.readlines()
+
+		log_length = len(log_lines)
+
+		current_index = len(log_lines) - 1
+		while True:
+			entry = json.loads(log_lines[current_index])
+			if entry[LogEntry.time_unix_field] <= StateDao.get_current_min_time():
+				break
+			log_lines.pop()
+			current_index -= 1
+
+		with open(new_file_path, "w") as outfile:
+			outfile.writelines(log_lines)
+
+		message = "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
+			log_length - len(log_lines), log_length, new_file_path)
+		return message
 
 
 	@staticmethod
@@ -102,7 +136,7 @@ class StateDao(object):
 
 
 
-	### Interface methods: Are replaced with implementations when connecting DAO. ###
+	### Interface methods that are replaced with implementations when connecting DAO. ###
 
 
 	@staticmethod

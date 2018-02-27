@@ -94,6 +94,11 @@ class StateDao(object):
 
 
 	@staticmethod
+	def append_to_log(log_entry):
+		raise NotImplementedError()
+
+
+	@staticmethod
 	def reset():
 		""" Reset the STATE by deleting the underlying files.\nOnly possible when connected. """
 

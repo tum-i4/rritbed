@@ -169,11 +169,13 @@ class StateDao(object):
 
 	@staticmethod
 	def _get_state_file_path():
+		""" Create the relative path of the state file. """
 		return StateDao._get_state_path(StateDao._state_file_name)
 
 
 	@staticmethod
 	def _get_client_file_paths():
+		""" Create the relative paths of all client files. """
 		paths = []
 		for key in StateDao._client_times:
 			paths.append(StateDao._get_state_path(key))
@@ -184,6 +186,12 @@ class StateDao(object):
 	def _get_state_path(file_name):
 		""" Build a state path to the given file. """
 		return os.path.join(StateDao._state_path, file_name)
+
+
+	@staticmethod
+	def _get_log_file_path():
+		""" Create the realative path of the log file. """
+		return StateDao._get_log_path(StateDao._log_file_name)
 
 
 	@staticmethod

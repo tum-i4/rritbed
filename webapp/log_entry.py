@@ -33,15 +33,15 @@ class LogEntry(object):
 	data = {
 		vin_field : "",             # Identifier of the car calling the microservice
 		origin_field : "",          # Class name sending this log entry - some.java.method
-		log_lib_version_field : "", # Version of the logging library used for storing this event -
+		# log_lib_version_field : "", # Version of the logging library used for storing this event -
 									# each microservice has their own
 		app_id_field : "",           # Name of the microservice using this
 		level_field : "",           # INFO, DEBUG, ...
-		env_field : "",             # PROD, INT, TEST
+		# env_field : "",             # PROD, INT, TEST
 		log_message_field : "",
-		transaction_id_field : "",   # UUID of the request made to the server
+		# transaction_id_field : "",   # UUID of the request made to the server
 		log_id_field : "",           # UUID of this log entry
-		user_ids_field : "[null]",   # List of (always one?) ints or [null] in string
+		# user_ids_field : "[null]",   # List of (always one?) ints or [null] in string
 		time_utc_field : "",        # When the logging event has happened
 		time_unix_field : 0,        # !Caution! At COMPANY not the same time as time_utc
 
@@ -52,46 +52,46 @@ class LogEntry(object):
 
 
 	# pylint: disable-msg=R0913; (Too many arguments)
-	def __init__(self, vin, origin, log_lib_version, app_id, time_unix,
-		level=LEVEL_DEFAULT, env=ENV_DEFAULT, log_message="", user_ids="[null]", gps_position="",
-		transaction_id=None, log_id=None):
+	def __init__(self, vin, origin, app_id, time_unix,
+		level=LEVEL_DEFAULT, log_message="", gps_position="",
+		log_id=None):
 		""" Ctor """
 
 		object.__init__(self)
 
 		self.data[self.vin_field] = vin
 		self.data[self.origin_field] = origin
-		self.data[self.log_lib_version_field] = log_lib_version
+		# self.data[self.log_lib_version_field] = log_lib_version
 		self.data[self.app_id_field] = app_id
 		self.data[self.level_field] = level
-		self.data[self.env_field] = env
+		# self.data[self.env_field] = env
 		self.data[self.log_message_field] = log_message
-		self.data[self.user_ids_field] = user_ids
+		# self.data[self.user_ids_field] = user_ids
 		self.data[self.gps_position_field] = gps_position
 
-		self.data[self.transaction_id_field] = self._verify_or_generate_id(transaction_id)
+		# self.data[self.transaction_id_field] = self._verify_or_generate_id(transaction_id)
 		self.data[self.log_id_field] = self._verify_or_generate_id(log_id)
 
 		self._set_time(time_unix)
 
 
-	def set_any(self, vin=None, origin=None, log_lib_version=None, app_id=None, time_unix=None,
-		level=None, env=None, log_message=None, user_ids=None, gps_position=None,
-		transaction_id=None, log_id=None):
+	def set_any(self, vin=None, origin=None, app_id=None, time_unix=None,
+		level=None, log_message=None, gps_position=None,
+		log_id=None):
 		""" Setter for all fields at once """
 
 		self._set_if_not_none(self.vin_field, vin)
 		self._set_if_not_none(self.origin_field, origin)
-		self._set_if_not_none(self.log_lib_version_field, log_lib_version)
+		# self._set_if_not_none(self.log_lib_version_field, log_lib_version)
 		self._set_if_not_none(self.app_id_field, app_id)
 		self._set_if_not_none(self.level_field, level)
-		self._set_if_not_none(self.env_field, env)
+		# self._set_if_not_none(self.env_field, env)
 		self._set_if_not_none(self.log_message_field, log_message)
-		self._set_if_not_none(self.user_ids_field, user_ids)
+		# self._set_if_not_none(self.user_ids_field, user_ids)
 		self._set_if_not_none(self.gps_position_field, gps_position)
 
-		if transaction_id is not None:
-			self._set_if_not_none(self.transaction_id_field, self._verify_or_generate_id(transaction_id))
+		# if transaction_id is not None:
+		# 	self._set_if_not_none(self.transaction_id_field, self._verify_or_generate_id(transaction_id))
 
 		if log_id is not None:
 			self._set_if_not_none(self.log_id_field, self._verify_or_generate_id(log_id))
@@ -108,14 +108,14 @@ class LogEntry(object):
 		return entry
 
 
-	def complete(self, origin, log_lib_version, app_id, vin=None, time_unix=None,
-		level=None, env=None, log_message=None, user_ids=None, gps_position=None,
-		transaction_id=None, log_id=None):
+	def complete(self, origin, app_id, vin=None, time_unix=None,
+		level=None, log_message=None, gps_position=None,
+		log_id=None):
 		""" Completes this entry from an invalid base entry to a full log entry """
 		self.set_any(
-			vin=vin, origin=origin, log_lib_version=log_lib_version, app_id=app_id, time_unix=time_unix,
-			level=level, env=env, log_message=log_message, user_ids=user_ids, gps_position=gps_position,
-			transaction_id=transaction_id, log_id=log_id)
+			vin=vin, origin=origin, app_id=app_id, time_unix=time_unix,
+			level=level, log_message=log_message, gps_position=gps_position,
+			log_id=log_id)
 
 
 	def _set_if_not_none(self, field_key, value):

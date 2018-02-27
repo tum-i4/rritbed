@@ -338,7 +338,7 @@ def _create_log_file_name_from_time(path, time_unix):
 def _append_to_log(new_log_entry):
 	""" Appends the given string plus a newline to the log file """
 
-	LOG_FILE_HANDLE.write(new_log_entry.get_log_string() + "\n")
+	StateDao.append_to_log(new_log_entry)
 	return
 
 

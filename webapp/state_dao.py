@@ -48,7 +48,7 @@ class StateDao(object):
 		if not StateDao._connected:
 			raise UserWarning("This method should only be called when connected.")
 
-		StateDao._write_state_to_file()
+		StateDao._write_all_to_files()
 
 		if not quiet:
 			print("Successfully saved state to disk.")
@@ -124,7 +124,7 @@ class StateDao(object):
 
 
 	@staticmethod
-	def _write_state_to_file():
+	def _write_all_to_files():
 		""" Save the internal state to the corresponding files. """
 
 		if not os.path.lexists(StateDao._state_path):
@@ -138,6 +138,9 @@ class StateDao(object):
 		for key, value in StateDao._client_times.items():
 			with open(StateDao._get_state_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
+
+		# TODO write to log file (append!)
+		raise NotImplementedError()
 
 
 	@staticmethod
@@ -155,6 +158,9 @@ class StateDao(object):
 		for client_file_path in StateDao._get_client_file_paths():
 			StateDao._delete_file_if_existing(
 				client_file_path)
+
+		# TODO rename log file
+		raise NotImplementedError()
 
 
 	@staticmethod

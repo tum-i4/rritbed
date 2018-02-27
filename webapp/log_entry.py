@@ -22,15 +22,6 @@ class LogEntry(object):
 	log_id_field = "log_id"
 	time_unix_field = "time_unix"
 
-	# origin_field = "origin"
-	# execution_time_field = "execution_time"
-	# log_lib_version_field = "log_lib_version"
-	# env_field = "env"
-	# transaction_id_field = "transaction_id"
-	# session_id_field = "session_id"
-	# user_ids_field = "user_ids"
-	# time_utc_field = "time_utc"
-
 	data = {
 		vin_field : "",             # Identifier of the car calling the microservice
 		app_id_field : "",          # Name of the microservice using this
@@ -39,16 +30,6 @@ class LogEntry(object):
 		log_message_field : "",
 		log_id_field : "",          # UUID of this log entry
 		time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
-
-		# origin_field : "",          # Class name sending this log entry - some.java.method
-		# execution_time_field : 0,    # How long the execution took
-		# log_lib_version_field : "" # Version of the logging library used for storing this event -
-									# each microservice has their own
-		# env_field : "",             # PROD, INT, TEST
-		# transaction_id_field : "",   # UUID of the request made to the server
-		# session_id_field : "",
-		# user_ids_field : "[null]",   # List of (always one?) ints or [null] in string
-		# time_utc_field : ""        # When the logging event has happened
 	}
 
 

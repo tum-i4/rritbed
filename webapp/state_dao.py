@@ -55,12 +55,15 @@ class StateDao(object):
 			print("Successfully saved state to disk.")
 
 
+
+
+	### Interface methods: Are replaced with implementations when connecting DAO. ###
+
+
 	@staticmethod
 	def get_current_min_time():
 		""" Getter for the STATE. Reads from disk and updates internal state. """
-
-		assert(StateDao._connected)
-		return StateDao._curr_min_time
+		StateDao._dao_not_connected_error()
 
 
 	@staticmethod
@@ -69,38 +72,19 @@ class StateDao(object):
 		Get current time for the specified client. Reads from disk and updates internal state.\n
 		returns: Unix time or None for not initialised clients.
 		"""
-
-		assert(StateDao._connected)
-
-		try:
-			return StateDao._client_times[identifier]
-		except KeyError:
-			StateDao.set_client_time(identifier, None)
-			return None
+		StateDao._dao_not_connected_error()
 
 
 	@staticmethod
 	def set_client_time(identifier, new_time):
 		""" Setter for the STATE. Updates the internal state and saves to disk. """
-
-		assert(StateDao._connected)
-
-		StateDao._client_times[identifier] = new_time
-
-		# Initialise or set current minimum time
-		if StateDao._curr_min_time is None:
-			StateDao._curr_min_time = new_time
-		else:
-			StateDao._curr_min_time = min(StateDao._client_times.values())
+		StateDao._dao_not_connected_error()
 
 
 	@staticmethod
 	def append_to_log(log_entry):
 		""" Append the given LogEntry object to the log. """
-
-		assert(StateDao._connected)
-
-		StateDao._new_log_entries.append(log_entry)
+		StateDao._dao_not_connected_error()
 
 
 	@staticmethod
@@ -113,6 +97,50 @@ class StateDao(object):
 		StateDao.disconnect()
 		StateDao._delete_files()
 		StateDao.connect()
+
+
+
+	### Implementations ###
+
+
+	@staticmethod
+	def _dao_not_connected_error():
+		raise ValueError("DAO not connected")
+
+
+	@staticmethod
+	def _get_current_min_time_impl():
+		""" Implementation of get_current_min_time() """
+		return StateDao._curr_min_time
+
+
+	@staticmethod
+	def _get_client_time_impl(identifier):
+		""" Implementation of get_client_time() """
+
+		try:
+			return StateDao._client_times[identifier]
+		except KeyError:
+			StateDao.set_client_time(identifier, None)
+			return None
+
+
+	@staticmethod
+	def _set_client_time_impl(identifier, new_time):
+		""" Implementation of set_client_time() """
+
+		StateDao._client_times[identifier] = new_time
+
+		if StateDao._curr_min_time is None:
+			StateDao._curr_min_time = new_time
+		else:
+			StateDao._curr_min_time = min(StateDao._client_times.values())
+
+
+	@staticmethod
+	def _append_to_log_impl(log_entry):
+		""" Implementation of append_to_log() """
+		StateDao._new_log_entries.append(log_entry)
 
 
 

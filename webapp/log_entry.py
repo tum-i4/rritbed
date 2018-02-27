@@ -2,7 +2,6 @@
 """ Log entry """
 
 import json
-import time
 import uuid
 
 # pylint: disable-msg=R0903; (Too few public methods (1/2))
@@ -49,7 +48,7 @@ class LogEntry(object):
 
 		self.data[self.time_unix_field] = int(time_unix)
 
-		self.data[self.log_id_field] = self._verify_or_generate_id(log_id)
+		self.data[self.log_id_field] = self._verify_uuid_or_generate_if_none(log_id)
 
 
 	def set_any(self, vin=None, app_id=None, time_unix=None,
@@ -65,12 +64,12 @@ class LogEntry(object):
 		self._set_if_not_none(self.time_unix_field, int(time_unix))
 
 		if log_id is not None:
-			self._set_if_not_none(self.log_id_field, self._verify_or_generate_id(log_id))
+			self._set_if_not_none(self.log_id_field, self._verify_uuid_or_generate_if_none(log_id))
 
 
 	@staticmethod
 	def create_base_entry(vin=None, time_unix=None):
-		""" Creates an invalid base log entry for step-by-step creation """
+		""" Create an invalid base log entry for step-by-step creation. """
 		invalid = "INVALID"
 		entry = LogEntry(vin, invalid, invalid, invalid, time_unix)
 		return entry
@@ -79,7 +78,7 @@ class LogEntry(object):
 	def complete(self, app_id, vin=None, time_unix=None,
 		level=None, log_message=None, gps_position=None,
 		log_id=None):
-		""" Completes this entry from an invalid base entry to a full log entry """
+		""" Complete this entry from an invalid base entry to a full log entry. """
 		self.set_any(
 			vin=vin, app_id=app_id, time_unix=time_unix,
 			level=level, log_message=log_message, gps_position=gps_position,
@@ -87,22 +86,20 @@ class LogEntry(object):
 
 
 	def _set_if_not_none(self, field_key, value):
-		""" Sets the field with the given key to the value specified if that is not None """
+		""" Set the field with the given key to the value specified if that is not None. """
 		if value is not None:
 			self.data[field_key] = value
 
 
 	# pylint: disable-msg=R0201; (Method could be a function)
-	def _verify_or_generate_id(self, given_id):
-		""" Checks to see if the id is set, otherwise generates a new UUID """
-
+	def _verify_uuid_or_generate_if_none(self, given_id):
+		""" Check to see if the id is set, otherwise generates a new UUID. """
 		if given_id is None:
 			return uuid.uuid4().__str__()
 
-		return given_id
+		return uuid.UUID(given_id)
 
 
 	def get_log_string(self):
-		""" Creates a log string from this item's log data, sorted by key """
-
+		""" Create a log string from this item's log data, sorted by key. """
 		return json.dumps(self.data, sort_keys=True)

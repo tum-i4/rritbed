@@ -256,17 +256,28 @@ def cut_log():
 	return BaseResponse(body=message, status=200)
 
 
-@post("/DANGER/reset-log")
+@post("/DANGER/reset")
 def reset_log():
-	""" Clears the log file """
+	""" Clears the log and state """
+
+	statusMsg = "Log file: "
 
 	if not os.path.isfile(LOG_FILE_PATH):
-		return BaseResponse(body="Log file doesn't exist", status=200)
+		statusMsg += "File doesn't exist"
+	else:
+		new_file_name = _create_unique_log_file_path()
+		os.rename(LOG_FILE_PATH, new_file_name)
+		statusMsg += "Reset was successful"
 
-	new_file_name = _create_unique_log_file_path()
-	os.rename(LOG_FILE_PATH, new_file_name)
+	StateDao.disconnect()
 
-	return BaseResponse(body="Successfully cleared the log file", status=200)
+	StateDao.reset()
+
+	StateDao.connect()
+
+	statusMsg += "\nSTATE: Reset was successful"
+
+	return BaseResponse(body=statusMsg, status=200)
 
 
 

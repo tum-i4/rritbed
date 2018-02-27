@@ -93,12 +93,14 @@ class StateDao(object):
 
 	@staticmethod
 	def reset():
-		""" Reset the STATE by deleting the underlying files.\nOnly possible when not connected. """
+		""" Reset the STATE by deleting the underlying files.\nOnly possible when connected. """
 
-		if StateDao._connected:
+		if not StateDao._connected:
 			raise ValueError("DAO should not be connected - file access might happen otherwise")
 
+		StateDao.disconnect()
 		StateDao._delete_files()
+		StateDao.connect()
 
 
 

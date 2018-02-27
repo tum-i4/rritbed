@@ -4,12 +4,10 @@
 # pylint: disable-msg=E1101
 
 import argparse
-import datetime
 import io
 import json
 import os.path
 import random
-import shutil
 import time
 from bottle import post, run, request, BaseResponse
 
@@ -18,13 +16,6 @@ from state_dao import StateDao
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
 from functionality.tsp_routing_mapper import TspRoutingMapper
-
-LOG_FOLDER = "log"
-LOG_FILE_NAME = "log"
-LOG_FILE_PATH = os.path.join(LOG_FOLDER, LOG_FILE_NAME)
-STATE_FILE_PATH = "state"
-
-LOG_FILE_HANDLE = None
 
 
 ### API endpoints ###
@@ -329,11 +320,8 @@ if ARGS.quiet:
 if not os.path.lexists(LOG_FOLDER):
 	os.mkdir(LOG_FOLDER)
 
-# Buffer size increased for improved performance
-LOG_FILE_HANDLE = open(LOG_FILE_PATH, "a", io.DEFAULT_BUFFER_SIZE * 10000)
 StateDao.connect(ARGS.quiet)
 
 run(host="localhost", port=5000, quiet=ARGS.quiet)
 
-LOG_FILE_HANDLE.close()
 StateDao.disconnect(ARGS.quiet)

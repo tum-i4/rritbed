@@ -204,8 +204,28 @@ class StateDao(object):
 
 
 	@staticmethod
-	def _delete_files():
-		""" Delete all underlying files. """
+	def _rename_log_file():
+		"""
+		Rename the log file to a unique time-based name.\n
+		returns: Status message denoting success.
+		"""
+
+		log_file_path = StateDao._get_log_file_path()
+
+		if not os.path.lexists(log_file_path):
+			return "File doesn't exist"
+		else:
+			new_file_name = StateDao._create_unique_log_file_path()
+			os.rename(log_file_path, new_file_name)
+			return "File was renamed successfully"
+
+
+	@staticmethod
+	def _delete_state_files():
+		"""
+		Delete all underlying files.\n
+		returns: Status message denoting success.
+		"""
 
 		if not os.path.lexists(StateDao._state_path):
 			return
@@ -219,8 +239,7 @@ class StateDao(object):
 			StateDao._delete_file_if_existing(
 				client_file_path)
 
-		# TODO rename log file
-		raise NotImplementedError()
+		return "Clear was successful"
 
 
 	@staticmethod

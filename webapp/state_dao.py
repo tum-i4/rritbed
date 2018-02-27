@@ -211,6 +211,9 @@ class StateDao(object):
 			for new_log_entry in StateDao._new_log_entries:
 				log_file.write(new_log_entry.get_log_string() + "\n")
 
+		# Clear log entry list as file is only appended
+		StateDao._new_log_entries = []
+
 
 	@staticmethod
 	def _rename_log_file():

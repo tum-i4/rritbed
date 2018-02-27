@@ -258,22 +258,13 @@ def cut_log():
 
 @post("/DANGER/reset")
 def reset():
-	""" Clear the log and state. """
+	""" Rename the log and clear the state. """
 
-	status_msg = "Log file: "
-	if not os.path.isfile(LOG_FILE_PATH):
-		status_msg += "File doesn't exist"
-	else:
-		new_file_name = _create_unique_log_file_path()
-		os.rename(LOG_FILE_PATH, new_file_name)
-		status_msg += "Reset was successful"
-
-	status_msg += "\nSTATE: "
+	status_msg = ""
 	try:
-		StateDao.reset()
-		status_msg += "Reset was successful"
-	except ValueError as ve:
-		status_msg += ve.message
+		status_msg = StateDao.reset()
+	except ValueError as error:
+		status_msg = error.message
 
 	return BaseResponse(body=status_msg, status=200)
 

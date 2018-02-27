@@ -94,8 +94,8 @@ class StateDao(object):
 			log_lines.pop()
 			current_index -= 1
 
-		with open(new_file_path, "w") as outfile:
-			outfile.writelines(log_lines)
+		with open(new_file_path, "w") as new_log_file:
+			new_log_file.writelines(log_lines)
 
 		message = "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
 			log_length - len(log_lines), log_length, new_file_path)
@@ -257,13 +257,8 @@ class StateDao(object):
 			with open(StateDao._get_state_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
 
-		# Append new entries to log
-		with open(StateDao._get_log_file_path(), "a") as log_file:
-			for new_log_entry in StateDao._new_log_entries:
-				log_file.write(new_log_entry.get_log_string() + "\n")
-
-		# Clear log entry list as file is only appended
-		StateDao._new_log_entries = []
+		# Append new log entries
+		StateDao._flush_log()
 
 
 	@staticmethod

@@ -198,6 +198,7 @@ class StateDao(object):
 
 		# TODO write to log file (append!)
 		raise NotImplementedError()
+		# LOG_FILE_HANDLE.write(new_log_entry.get_log_string() + "\n")
 
 
 	@staticmethod

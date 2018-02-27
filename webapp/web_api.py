@@ -209,40 +209,10 @@ def cut_log():
 
 	minimum_time = StateDao.get_current_min_time()
 
-	if not os.path.isfile(LOG_FILE_PATH):
-		return BaseResponse(body="Log is empty", status=200)
-
-	print("Minimum time is {}. Now reading the whole log file - this might take some time...".format(
+	print("Minimum time is {}. Now processing - this might take some time...".format(
 		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
 
-	new_file_path = StateDao.create_unique_log_file_path()
-
-	shutil.copyfile(LOG_FILE_PATH, new_file_path)
-
-	log_lines = []
-	with open(new_file_path, "r") as new_log_file:
-		log_lines = new_log_file.readlines()
-
-	log_length = len(log_lines)
-
-	print("Processing...")
-
-	current_index = len(log_lines) - 1
-	while True:
-		entry = json.loads(log_lines[current_index])
-		if entry[LogEntry.time_unix_field] <= minimum_time:
-			break
-		log_lines.pop()
-		current_index -= 1
-
-	print("Writing results back to disk as {}...".format(new_file_path))
-
-	with open(new_file_path, "w") as outfile:
-		outfile.writelines(log_lines)
-
-	message = "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
-		log_length - len(log_lines), log_length, new_file_path)
-	print(message)
+	message = StateDao.cut_log()
 
 	return BaseResponse(body=message, status=200)
 

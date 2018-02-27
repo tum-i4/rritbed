@@ -64,15 +64,23 @@ class StateDao(object):
 	def reset():
 		"""
 		Reset the STATE by deleting the underlying files.\n
-		Only possible when connected.
+		Only possible when connected.\n
+		returns: Status message denoting success of underlying operations.
 		"""
 
 		if not StateDao._connected:
 			raise ValueError("DAO not connected.")
 
 		StateDao.disconnect()
-		StateDao._delete_files()
+
+		status_msg = "Log file: "
+		status_msg += StateDao._rename_log_file()
+		status_msg += "\n State files: "
+		status_msg += StateDao._delete_state_files()
+
 		StateDao.connect()
+
+		return status_msg
 
 
 

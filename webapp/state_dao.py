@@ -18,6 +18,7 @@ class StateDao(object):
 	_state_file_name = "state"
 	_log_path = "log"
 	_log_file_name = "log"
+	_log_file_path = os.path.join(_log_path, _log_file_name)
 
 	_curr_min_time = None
 	_client_times = {}
@@ -34,6 +35,11 @@ class StateDao(object):
 			raise UserWarning("This method should only be called once!")
 
 		StateDao._connected = True
+
+		# Make sure the required directories exist
+		for directory_path in [StateDao._state_path, StateDao._log_path]:
+			if not os.path.lexists(directory_path):
+				os.mkdir(directory_path)
 
 		# Replace interfaces with implementations
 		StateDao._replace_interfaces_with_impl()
@@ -69,16 +75,14 @@ class StateDao(object):
 	def cut_log():
 		""" Save a copy of the log that is cut at the current minimum time. """
 
-		log_file_path = StateDao._get_log_file_path()
-
-		if not os.path.lexists(log_file_path):
+		if not os.path.lexists(StateDao._log_file_path):
 			return "Log is empty"
 
 		new_file_path = StateDao.create_unique_log_file_path()
 
 		StateDao._flush_log()
 
-		shutil.copyfile(log_file_path, new_file_path)
+		shutil.copyfile(StateDao._log_file_path, new_file_path)
 
 		log_lines = []
 		with open(new_file_path, "r") as new_log_file:
@@ -268,13 +272,11 @@ class StateDao(object):
 		returns: Status message denoting success.
 		"""
 
-		log_file_path = StateDao._get_log_file_path()
-
-		if not os.path.lexists(log_file_path):
+		if not os.path.lexists(StateDao._log_file_path):
 			return "File doesn't exist"
 		else:
 			new_file_name = StateDao._create_unique_log_file_path()
-			os.rename(log_file_path, new_file_name)
+			os.rename(StateDao._log_file_path, new_file_name)
 			return "File was renamed successfully"
 
 
@@ -313,7 +315,7 @@ class StateDao(object):
 		number_of_entries = len(StateDao._new_log_entries)
 
 		# Remove new entries from list and save them to disk
-		with open(StateDao._get_log_file_path(), "a") as log_file:
+		with open(StateDao._log_file_path, "a") as log_file:
 			for _ in range(0, number_of_entries):
 				new_log_entry = StateDao._new_log_entries.pop(0)
 				log_file.write(new_log_entry.get_log_string() + "\n")
@@ -344,18 +346,6 @@ class StateDao(object):
 
 
 	@staticmethod
-	def _get_log_file_path():
-		""" Create the realative path of the log file. """
-		return StateDao._get_log_path(StateDao._log_file_name)
-
-
-	@staticmethod
-	def _get_log_path(file_name):
-		""" Build a log path to the given file. """
-		return os.path.join(StateDao._log_path, file_name)
-
-
-	@staticmethod
 	def _create_unique_log_file_path():
 		""" Create a unique log file name for backups. """
 
@@ -374,8 +364,8 @@ class StateDao(object):
 	@staticmethod
 	def _create_log_file_name_from_time(time_unix):
 		""" Create a log file name of the format 'log/log_until_2017-12-20_18:08:25'. """
-		path = StateDao._get_log_file_path()
-		return path + "_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
+		time_str = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
+		return StateDao._log_file_path + "_until_" + time_str
 
 
 

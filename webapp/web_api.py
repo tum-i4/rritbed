@@ -37,7 +37,7 @@ def log():
 	basic_log_entry = _create_base_log_entry(request.params.vin)
 
 	basic_log_entry.complete(
-		origin="com.status", log_lib_version="5.6.1", app_id="STATUS")
+		origin="com.status", app_id="STATUS")
 
 	_append_to_log(basic_log_entry)
 	return
@@ -58,7 +58,6 @@ def _log_num(name, num):
 
 	number_log_entry.complete(
 		origin="com.api." + method_name,
-		log_lib_version="5.3.2",
 		app_id=name.upper(),
 		log_message=num
 	)
@@ -76,14 +75,12 @@ def get_country_code():
 	crd_y = request.params.y
 
 	origin = "com.get.countryCode"
-	lib_version = "6.4.1"
 	app_id = "COUNTRYCODE"
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
 	cc_request_log_entry.complete(
 		origin=origin,
-		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message="Requesting country code",
 		gps_position=position
@@ -98,7 +95,6 @@ def get_country_code():
 	# Save response to log
 	cc_response_log_entry.complete(
 		origin=origin,
-		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message="Country code response [{}] returned for request [x: {} and y: {}]".format(
 			country_code, crd_x, crd_y),
@@ -119,14 +115,12 @@ def get_poi():
 	poi_type = request.params.type
 
 	origin = "com.get.poi"
-	lib_version = "6.4.2"
 	app_id = "POI"
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
 	poi_request_log_entry.complete(
 		origin=origin,
-		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message="Requesting POI of type {}".format(poi_type),
 		gps_position=position
@@ -148,7 +142,6 @@ def get_poi():
 	# Save response to log
 	poi_response_log_entry.complete(
 		origin=origin,
-		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message=log_message,
 		gps_position=position,
@@ -170,14 +163,12 @@ def get_tsp_routing():
 	targ_y = request.params.targ_y
 
 	origin = "com.get.tspRouting"
-	lib_version = "6.4.5"
 	app_id = "TSPROUTING"
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
 	tsp_request_log_entry.complete(
 		origin=origin,
-		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message="Requesting TSP routing to target [x: {}, y: {}]".format(
 			targ_x, targ_y),
@@ -196,7 +187,6 @@ def get_tsp_routing():
 	# Save request to log
 	tsp_response_log_entry.complete(
 		origin=origin,
-		log_lib_version=lib_version,
 		app_id=app_id,
 		log_message=("TSP routing response [{}] returned for request ".format(tsp_message) +
 			"[x: {}, y: {}, target_x: {}, target_y: {}]".format(crd_x, crd_y, targ_x, targ_y)),
@@ -214,7 +204,6 @@ def log_colour():
 
 	colour_log_entry.complete(
 		origin="com.api.web.callColour",
-		log_lib_version="5.6.1",
 		app_id="COLOUR",
 		log_message=request.params.colour
 	)
@@ -230,7 +219,6 @@ def log_num(num):
 
 	numbered_log_entry.complete(
 		origin="com.api.web.getVins",
-		log_lib_version="5.3.2",
 		app_id="GETVINS",
 		log_message="getVins returned {} vins".format(num))
 

@@ -9,8 +9,10 @@ class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
 	_connected = False
-	_path = "state"
+	_state_path = "state"
 	_state_file_name = "state"
+	_log_path = "log"
+	_log_file_name = "log"
 
 	_curr_min_time = None
 	_client_times = {}
@@ -27,7 +29,7 @@ class StateDao(object):
 
 		# List all files in state directory
 		files = []
-		for (_, _, filenames) in os.walk(StateDao._path):
+		for (_, _, filenames) in os.walk(StateDao._state_path):
 			files.extend(filenames)
 			break
 
@@ -112,7 +114,7 @@ class StateDao(object):
 		is_state_file = file_name == StateDao._state_file_name
 
 		state_from_file = None
-		with open(StateDao._get_file_path(file_name), "r") as state_file:
+		with open(StateDao._get_state_path(file_name), "r") as state_file:
 			state_from_file = json.loads(state_file.read())
 
 		if is_state_file:
@@ -125,8 +127,8 @@ class StateDao(object):
 	def _write_state_to_file():
 		""" Save the internal state to the corresponding files. """
 
-		if not os.path.lexists(StateDao._path):
-			os.mkdir(StateDao._path)
+		if not os.path.lexists(StateDao._state_path):
+			os.mkdir(StateDao._state_path)
 
 		# Write current minimum time
 		with open(StateDao._get_state_file_path(), "w") as state_file:
@@ -134,7 +136,7 @@ class StateDao(object):
 
 		# Write clients' current time
 		for key, value in StateDao._client_times.items():
-			with open(StateDao._get_file_path(key), "w") as client_file:
+			with open(StateDao._get_state_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
 
 
@@ -142,7 +144,7 @@ class StateDao(object):
 	def _delete_files():
 		""" Delete all underlying files. """
 
-		if not os.path.lexists(StateDao._path):
+		if not os.path.lexists(StateDao._state_path):
 			return
 
 		# Delete state file
@@ -167,21 +169,27 @@ class StateDao(object):
 
 	@staticmethod
 	def _get_state_file_path():
-		return StateDao._get_file_path(StateDao._state_file_name)
+		return StateDao._get_state_path(StateDao._state_file_name)
 
 
 	@staticmethod
 	def _get_client_file_paths():
 		paths = []
 		for key in StateDao._client_times:
-			paths.append(StateDao._get_file_path(key))
+			paths.append(StateDao._get_state_path(key))
 		return paths
 
 
 	@staticmethod
-	def _get_file_path(file_name):
-		""" Build a file path to the given file. """
-		return os.path.join(StateDao._path, file_name)
+	def _get_state_path(file_name):
+		""" Build a state path to the given file. """
+		return os.path.join(StateDao._state_path, file_name)
+
+
+	@staticmethod
+	def _get_log_path(file_name):
+		""" Build a log path to the given file. """
+		return os.path.join(StateDao._log_path, file_name)
 
 
 

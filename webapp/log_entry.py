@@ -16,38 +16,40 @@ class LogEntry(object):
 
 	vin_field = "vin"
 	origin_field = "origin"
-	log_lib_version_field = "log_lib_version"
 	app_id_field = "app_id"
 	level_field = "level"
-	env_field = "env"
 	log_message_field = "log_message"
-	transaction_id_field = "transaction_id"
 	log_id_field = "log_id"
-	user_ids_field = "user_ids"
 	time_utc_field = "time_utc"
 	time_unix_field = "time_unix"
 	session_id_field = "session_id"
 	gps_position_field = "gps_position"
 	execution_time_field = "execution_time"
 
+	# log_lib_version_field = "log_lib_version"
+	# env_field = "env"
+	# transaction_id_field = "transaction_id"
+	# user_ids_field = "user_ids"
+
 	data = {
 		vin_field : "",             # Identifier of the car calling the microservice
 		origin_field : "",          # Class name sending this log entry - some.java.method
-		# log_lib_version_field : "", # Version of the logging library used for storing this event -
-									# each microservice has their own
 		app_id_field : "",           # Name of the microservice using this
 		level_field : "",           # INFO, DEBUG, ...
-		# env_field : "",             # PROD, INT, TEST
 		log_message_field : "",
-		# transaction_id_field : "",   # UUID of the request made to the server
 		log_id_field : "",           # UUID of this log entry
-		# user_ids_field : "[null]",   # List of (always one?) ints or [null] in string
 		time_utc_field : "",        # When the logging event has happened
 		time_unix_field : 0,        # !Caution! At COMPANY not the same time as time_utc
 
 		session_id_field : "",
 		gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
 		execution_time_field : 0    # How long the execution took
+
+		# log_lib_version_field : "", # Version of the logging library used for storing this event -
+									# each microservice has their own
+		# env_field : "",             # PROD, INT, TEST
+		# transaction_id_field : "",   # UUID of the request made to the server
+		# user_ids_field : "[null]"   # List of (always one?) ints or [null] in string
 	}
 
 
@@ -61,15 +63,11 @@ class LogEntry(object):
 
 		self.data[self.vin_field] = vin
 		self.data[self.origin_field] = origin
-		# self.data[self.log_lib_version_field] = log_lib_version
 		self.data[self.app_id_field] = app_id
 		self.data[self.level_field] = level
-		# self.data[self.env_field] = env
 		self.data[self.log_message_field] = log_message
-		# self.data[self.user_ids_field] = user_ids
 		self.data[self.gps_position_field] = gps_position
 
-		# self.data[self.transaction_id_field] = self._verify_or_generate_id(transaction_id)
 		self.data[self.log_id_field] = self._verify_or_generate_id(log_id)
 
 		self._set_time(time_unix)
@@ -82,16 +80,10 @@ class LogEntry(object):
 
 		self._set_if_not_none(self.vin_field, vin)
 		self._set_if_not_none(self.origin_field, origin)
-		# self._set_if_not_none(self.log_lib_version_field, log_lib_version)
 		self._set_if_not_none(self.app_id_field, app_id)
 		self._set_if_not_none(self.level_field, level)
-		# self._set_if_not_none(self.env_field, env)
 		self._set_if_not_none(self.log_message_field, log_message)
-		# self._set_if_not_none(self.user_ids_field, user_ids)
 		self._set_if_not_none(self.gps_position_field, gps_position)
-
-		# if transaction_id is not None:
-		# 	self._set_if_not_none(self.transaction_id_field, self._verify_or_generate_id(transaction_id))
 
 		if log_id is not None:
 			self._set_if_not_none(self.log_id_field, self._verify_or_generate_id(log_id))

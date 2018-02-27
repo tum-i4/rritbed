@@ -311,6 +311,18 @@ class StateDao(object):
 			os.remove(file_path)
 
 
+	@staticmethod
+	def _flush_log():
+		""" Force a write of all new log entries to disk. """
+
+		number_of_entries = len(StateDao._new_log_entries)
+
+		# Remove new entries from list and save them to disk
+		with open(StateDao._get_log_file_path(), "a") as log_file:
+			for _ in range(0, number_of_entries):
+				new_log_entry = StateDao._new_log_entries.pop(0)
+				log_file.write(new_log_entry.get_log_string() + "\n")
+
 
 	### File paths ###
 

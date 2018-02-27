@@ -96,7 +96,7 @@ class StateDao(object):
 		""" Reset the STATE by deleting the underlying files.\nOnly possible when connected. """
 
 		if not StateDao._connected:
-			raise ValueError("DAO should not be connected - file access might happen otherwise")
+			raise ValueError("DAO not connected.")
 
 		StateDao.disconnect()
 		StateDao._delete_files()

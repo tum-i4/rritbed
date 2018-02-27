@@ -224,7 +224,7 @@ def cut_log():
 	print("Minimum time is {}. Now reading the whole log file - this might take some time...".format(
 		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
 
-	new_file_path = _create_unique_log_file_path()
+	new_file_path = StateDao.create_unique_log_file_path()
 
 	shutil.copyfile(LOG_FILE_PATH, new_file_path)
 

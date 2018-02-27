@@ -16,6 +16,7 @@ class StateDao(object):
 	_connected = False
 	_state_path = "state"
 	_state_file_name = "state"
+	_state_file_path = os.path.join(_state_path, _state_file_name)
 	_log_path = "log"
 	_log_file_name = "log"
 	_log_file_path = os.path.join(_log_path, _log_file_name)
@@ -253,7 +254,7 @@ class StateDao(object):
 			os.mkdir(StateDao._state_path)
 
 		# Write current minimum time
-		with open(StateDao._get_state_file_path(), "w") as state_file:
+		with open(StateDao._state_file_path, "w") as state_file:
 			state_file.write(json.dumps(StateDao._curr_min_time))
 
 		# Write clients' current time
@@ -292,7 +293,7 @@ class StateDao(object):
 
 		# Delete state file
 		StateDao._delete_file_if_existing(
-			StateDao._get_state_file_path())
+			StateDao._state_file_path)
 
 		# Delete client files
 		for client_file_path in StateDao._get_client_file_paths():
@@ -322,12 +323,6 @@ class StateDao(object):
 
 
 	### File paths ###
-
-
-	@staticmethod
-	def _get_state_file_path():
-		""" Create the relative path of the state file. """
-		return StateDao._get_state_path(StateDao._state_file_name)
 
 
 	@staticmethod

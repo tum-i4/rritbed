@@ -82,7 +82,7 @@ def get_country_code():
 	cc_request_log_entry.complete(
 		origin=origin,
 		app_id=app_id,
-		log_message="Requesting country code",
+		log_message="Req",
 		gps_position=position
 	)
 
@@ -96,8 +96,7 @@ def get_country_code():
 	cc_response_log_entry.complete(
 		origin=origin,
 		app_id=app_id,
-		log_message="Country code response [{}] returned for request [x: {} and y: {}]".format(
-			country_code, crd_x, crd_y),
+		log_message="Resp [{}]".format(country_code),
 		gps_position=position
 	)
 
@@ -122,7 +121,7 @@ def get_poi():
 	poi_request_log_entry.complete(
 		origin=origin,
 		app_id=app_id,
-		log_message="Requesting POI of type {}".format(poi_type),
+		log_message="Req {}".format(poi_type),
 		gps_position=position
 	)
 
@@ -131,12 +130,11 @@ def get_poi():
 	poi_result = PoiMapper.map(poi_type, crd_x, crd_y)
 
 	poi_response_log_entry = _create_base_log_entry(request.params.vin)
-	log_message = "Invalid POI type {}!".format(poi_type)
+	log_message = "Invalid type {}!".format(poi_type)
 	level = LogEntry.LEVEL_ERROR
 
 	if poi_result is not None:
-		log_message = "POI response [{}] returned for request [x: {}, y: {}, type: {}]".format(
-			poi_result, crd_x, crd_y, poi_type)
+		log_message = "Resp [{}]".format(poi_result)
 		level = LogEntry.LEVEL_DEFAULT
 
 	# Save response to log
@@ -170,7 +168,7 @@ def get_tsp_routing():
 	tsp_request_log_entry.complete(
 		origin=origin,
 		app_id=app_id,
-		log_message="Requesting TSP routing to target [x: {}, y: {}]".format(
+		log_message="Req [x: {}, y: {}]".format(
 			targ_x, targ_y),
 		gps_position=position
 	)
@@ -182,14 +180,14 @@ def get_tsp_routing():
 	tsp_response_log_entry = _create_base_log_entry(request.params.vin)
 
 	if tsp_message == TspRoutingMapper.GOAL_REACHED_MSG:
-		tsp_message = "Goal already reached at {}/{}".format(crd_x, crd_y)
+		tsp_message = "Goal {}/{} reached".format(crd_x, crd_y)
 
 	# Save request to log
 	tsp_response_log_entry.complete(
 		origin=origin,
 		app_id=app_id,
-		log_message=("TSP routing response [{}] returned for request ".format(tsp_message) +
-			"[x: {}, y: {}, target_x: {}, target_y: {}]".format(crd_x, crd_y, targ_x, targ_y)),
+		log_message="Resp [{}] for [x: {}, y: {}]".format(
+			tsp_message, targ_x, targ_y),
 		gps_position=position
 	)
 
@@ -220,7 +218,7 @@ def log_num(num):
 	numbered_log_entry.complete(
 		origin="com.api.web.getVins",
 		app_id="GETVINS",
-		log_message="getVins returned {} vins".format(num))
+		log_message="Resp {}".format(num))
 
 	_append_to_log(numbered_log_entry)
 

@@ -70,7 +70,7 @@ class LogEntry(object):
 
 		self.data[self.log_id_field] = self._verify_or_generate_id(log_id)
 
-		self._set_time(time_unix)
+		self.data[self.time_unix_field] = int(time_unix)
 
 
 	def set_any(self, vin=None, origin=None, app_id=None, time_unix=None,
@@ -84,12 +84,10 @@ class LogEntry(object):
 		self._set_if_not_none(self.level_field, level)
 		self._set_if_not_none(self.log_message_field, log_message)
 		self._set_if_not_none(self.gps_position_field, gps_position)
+		self._set_if_not_none(self.time_unix_field, int(time_unix))
 
 		if log_id is not None:
 			self._set_if_not_none(self.log_id_field, self._verify_or_generate_id(log_id))
-
-		if time_unix is not None:
-			self._set_time(time_unix)
 
 
 	@staticmethod
@@ -124,18 +122,6 @@ class LogEntry(object):
 			return uuid.uuid4().__str__()
 
 		return given_id
-
-
-	def _set_time(self, time_unix):
-		""" Sets timeUnix and timeUTC fields in this item's log data """
-
-		if time_unix is None:
-			time_unix = time.time()
-
-		time_utc_now = time.gmtime(time_unix)
-
-		self.data[self.time_unix_field] = int(time_unix)
-		# self.data[self.time_utc_field] = time.strftime("%a %b %d %H:%M:%S UTC %Y", time_utc_now)
 
 
 	def get_log_string(self):

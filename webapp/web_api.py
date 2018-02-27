@@ -214,7 +214,7 @@ def log_num(num):
 
 @post("/DANGER/cut-log")
 def cut_log():
-	""" Cuts the log off at the common minimum time of all clients """
+	""" Cut the log off at the common minimum time of all clients. """
 
 	minimum_time = StateDao.get_current_min_time()
 
@@ -257,8 +257,8 @@ def cut_log():
 
 
 @post("/DANGER/reset")
-def reset_log():
-	""" Clears the log and state """
+def reset():
+	""" Clear the log and state. """
 
 	statusMsg = "Log file: "
 

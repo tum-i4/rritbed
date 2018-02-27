@@ -63,6 +63,12 @@ class StateDao(object):
 
 
 	@staticmethod
+	def flush_log():
+		""" Force a write of the new log entries to disk. """
+		pass
+
+
+	@staticmethod
 	def reset():
 		"""
 		Reset the STATE by deleting the underlying files.\n

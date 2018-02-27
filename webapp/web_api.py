@@ -260,24 +260,22 @@ def cut_log():
 def reset():
 	""" Clear the log and state. """
 
-	statusMsg = "Log file: "
-
+	status_msg = "Log file: "
 	if not os.path.isfile(LOG_FILE_PATH):
-		statusMsg += "File doesn't exist"
+		status_msg += "File doesn't exist"
 	else:
 		new_file_name = _create_unique_log_file_path()
 		os.rename(LOG_FILE_PATH, new_file_name)
-		statusMsg += "Reset was successful"
+		status_msg += "Reset was successful"
 
-	StateDao.disconnect()
+	status_msg += "\nSTATE: "
+	try:
+		StateDao.reset()
+		status_msg += "Reset was successful"
+	except ValueError as ve:
+		status_msg += ve.message
 
-	StateDao.reset()
-
-	StateDao.connect()
-
-	statusMsg += "\nSTATE: Reset was successful"
-
-	return BaseResponse(body=statusMsg, status=200)
+	return BaseResponse(body=status_msg, status=200)
 
 
 

@@ -83,6 +83,12 @@ class StateDao(object):
 		return status_msg
 
 
+	@staticmethod
+	def create_unique_log_file_path():
+		""" Create a unique time-based log file name for log file backups. """
+		return StateDao._create_unique_log_file_path()
+
+
 
 
 	### Interface methods: Are replaced with implementations when connecting DAO. ###
@@ -299,7 +305,7 @@ class StateDao(object):
 
 	@staticmethod
 	def _create_unique_log_file_path():
-		""" Creates a unique log file name for backups """
+		""" Create a unique log file name for backups. """
 
 		time_unix = time.time()
 		new_file_name = StateDao._create_log_file_name_from_time(time_unix)
@@ -313,7 +319,7 @@ class StateDao(object):
 
 	@staticmethod
 	def _create_log_file_name_from_time(time_unix):
-		""" Creates a log file name of the format 'log/log_until_2017-12-20_18:08:25' """
+		""" Create a log file name of the format 'log/log_until_2017-12-20_18:08:25'. """
 		path = StateDao._get_log_file_path()
 		return path + "_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 

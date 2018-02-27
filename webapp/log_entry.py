@@ -15,7 +15,6 @@ class LogEntry(object):
 
 
 	vin_field = "vin"
-	origin_field = "origin"
 	app_id_field = "app_id"
 	level_field = "level"
 	gps_position_field = "gps_position"
@@ -23,6 +22,7 @@ class LogEntry(object):
 	log_id_field = "log_id"
 	time_unix_field = "time_unix"
 
+	# origin_field = "origin"
 	# execution_time_field = "execution_time"
 	# log_lib_version_field = "log_lib_version"
 	# env_field = "env"
@@ -33,7 +33,6 @@ class LogEntry(object):
 
 	data = {
 		vin_field : "",             # Identifier of the car calling the microservice
-		origin_field : "",          # Class name sending this log entry - some.java.method
 		app_id_field : "",          # Name of the microservice using this
 		level_field : "",           # INFO, DEBUG, ...
 		gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
@@ -41,6 +40,7 @@ class LogEntry(object):
 		log_id_field : "",          # UUID of this log entry
 		time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
 
+		# origin_field : "",          # Class name sending this log entry - some.java.method
 		# execution_time_field : 0,    # How long the execution took
 		# log_lib_version_field : "" # Version of the logging library used for storing this event -
 									# each microservice has their own
@@ -53,7 +53,7 @@ class LogEntry(object):
 
 
 	# pylint: disable-msg=R0913; (Too many arguments)
-	def __init__(self, vin, origin, app_id, time_unix,
+	def __init__(self, vin, app_id, time_unix,
 		level=LEVEL_DEFAULT, log_message="", gps_position="",
 		log_id=None):
 		""" Ctor """
@@ -61,7 +61,6 @@ class LogEntry(object):
 		object.__init__(self)
 
 		self.data[self.vin_field] = vin
-		self.data[self.origin_field] = origin
 		self.data[self.app_id_field] = app_id
 		self.data[self.level_field] = level
 		self.data[self.log_message_field] = log_message
@@ -72,13 +71,12 @@ class LogEntry(object):
 		self.data[self.log_id_field] = self._verify_or_generate_id(log_id)
 
 
-	def set_any(self, vin=None, origin=None, app_id=None, time_unix=None,
+	def set_any(self, vin=None, app_id=None, time_unix=None,
 		level=None, log_message=None, gps_position=None,
 		log_id=None):
 		""" Setter for all fields at once """
 
 		self._set_if_not_none(self.vin_field, vin)
-		self._set_if_not_none(self.origin_field, origin)
 		self._set_if_not_none(self.app_id_field, app_id)
 		self._set_if_not_none(self.level_field, level)
 		self._set_if_not_none(self.log_message_field, log_message)
@@ -97,12 +95,12 @@ class LogEntry(object):
 		return entry
 
 
-	def complete(self, origin, app_id, vin=None, time_unix=None,
+	def complete(self, app_id, vin=None, time_unix=None,
 		level=None, log_message=None, gps_position=None,
 		log_id=None):
 		""" Completes this entry from an invalid base entry to a full log entry """
 		self.set_any(
-			vin=vin, origin=origin, app_id=app_id, time_unix=time_unix,
+			vin=vin, app_id=app_id, time_unix=time_unix,
 			level=level, log_message=log_message, gps_position=gps_position,
 			log_id=log_id)
 

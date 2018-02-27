@@ -116,13 +116,30 @@ class StateDao(object):
 			os.mkdir(StateDao._path)
 
 		# Write current minimum time
-		with open(StateDao._get_file_path(StateDao._state_file_name), "w") as state_file:
+		with open(StateDao._get_state_file_path(), "w") as state_file:
 			state_file.write(json.dumps(StateDao._curr_min_time))
 
 		# Write clients' current time
 		for key, value in StateDao._client_times.items():
 			with open(StateDao._get_file_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
+
+
+
+	### File paths ###
+
+
+	@staticmethod
+	def _get_state_file_path():
+		return StateDao._get_file_path(StateDao._state_file_name)
+
+
+	@staticmethod
+	def _get_client_file_paths():
+		paths = []
+		for key in StateDao._client_times:
+			paths.append(StateDao._get_file_path(key))
+		return paths
 
 
 	@staticmethod

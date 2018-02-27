@@ -178,13 +178,13 @@ class StateDao(object):
 
 	@staticmethod
 	def _load_state_from_file(file_name):
-		is_state_file = file_name == StateDao._state_file_name
+		""" Load the state from file. Differentiates between client and state files. """
 
 		state_from_file = None
 		with open(StateDao._get_state_path(file_name), "r") as state_file:
 			state_from_file = json.loads(state_file.read())
 
-		if is_state_file:
+		if file_name == StateDao._state_file_name:
 			StateDao._curr_min_time = state_from_file
 		else:
 			StateDao._client_times[file_name] = state_from_file

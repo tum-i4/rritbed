@@ -264,6 +264,22 @@ class StateDao(object):
 		return os.path.join(StateDao._log_path, file_name)
 
 
+	@staticmethod
+	def _create_unique_log_file_path():
+		""" Creates a unique log file name for backups """
+
+		pass
+
+		# time_unix = time.time()
+		# new_file_name = _create_log_file_name_from_time(LOG_FILE_PATH, time_unix)
+
+		# while os.path.isfile(new_file_name):
+		# 	time_unix += datetime.timedelta(seconds=1)
+		# 	new_file_name = _create_log_file_name_from_time(LOG_FILE_PATH, time_unix)
+
+		# return new_file_name
+
+
 
 if __name__ == "__main__":
 	StateDao.connect()

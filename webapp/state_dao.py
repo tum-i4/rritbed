@@ -16,6 +16,7 @@ class StateDao(object):
 
 	_curr_min_time = None
 	_client_times = {}
+	_new_log_entries = [] # LogEntry objects
 
 
 	@staticmethod
@@ -95,7 +96,11 @@ class StateDao(object):
 
 	@staticmethod
 	def append_to_log(log_entry):
-		raise NotImplementedError()
+		""" Append the given LogEntry object to the log. """
+
+		assert(StateDao._connected)
+
+		StateDao._new_log_entries.append(log_entry)
 
 
 	@staticmethod

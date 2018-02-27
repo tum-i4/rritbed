@@ -20,6 +20,8 @@ class StateDao(object):
 	_client_times = {}
 	_new_log_entries = [] # LogEntry objects
 
+	_unique_log_file_names = []
+
 
 	@staticmethod
 	def connect(quiet=False):
@@ -85,7 +87,10 @@ class StateDao(object):
 
 	@staticmethod
 	def create_unique_log_file_path():
-		""" Create a unique time-based log file name for log file backups. """
+		"""
+		Create a unique time-based log file name for log file backups.\n
+		Uniqueness is guaranteed for an active session even if no file is created.
+		"""
 		return StateDao._create_unique_log_file_path()
 
 
@@ -310,9 +315,11 @@ class StateDao(object):
 		time_unix = time.time()
 		new_file_name = StateDao._create_log_file_name_from_time(time_unix)
 
-		while os.path.isfile(new_file_name):
+		while os.path.lexists(new_file_name) or (new_file_name in StateDao._unique_log_file_names):
 			time_unix += datetime.timedelta(seconds=1)
 			new_file_name = StateDao._create_log_file_name_from_time(time_unix)
+
+		StateDao._unique_log_file_names.append(new_file_name)
 
 		return new_file_name
 

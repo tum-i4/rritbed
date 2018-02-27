@@ -206,9 +206,10 @@ class StateDao(object):
 			with open(StateDao._get_state_path(key), "w") as client_file:
 				client_file.write(json.dumps(value))
 
-		# TODO write to log file (append!)
-		raise NotImplementedError()
-		# LOG_FILE_HANDLE.write(new_log_entry.get_log_string() + "\n")
+		# Append new entries to log
+		with open(StateDao._get_log_file_path(), "a") as log_file:
+			for new_log_entry in StateDao._new_log_entries:
+				log_file.write(new_log_entry.get_log_string() + "\n")
 
 
 	@staticmethod

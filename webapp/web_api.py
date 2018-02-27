@@ -36,8 +36,7 @@ def log():
 
 	basic_log_entry = _create_base_log_entry(request.params.vin)
 
-	basic_log_entry.complete(
-		origin="com.status", app_id="STATUS")
+	basic_log_entry.complete(app_id="STATUS")
 
 	_append_to_log(basic_log_entry)
 	return
@@ -54,10 +53,7 @@ def _log_num(name, num):
 
 	number_log_entry = _create_base_log_entry(request.params.vin)
 
-	method_name = "register" + name.capitalize()
-
 	number_log_entry.complete(
-		origin="com.api." + method_name,
 		app_id=name.upper(),
 		log_message=num
 	)
@@ -74,13 +70,11 @@ def get_country_code():
 	crd_x = request.params.x
 	crd_y = request.params.y
 
-	origin = "com.get.countryCode"
 	app_id = "COUNTRYCODE"
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
 	cc_request_log_entry.complete(
-		origin=origin,
 		app_id=app_id,
 		log_message="Req",
 		gps_position=position
@@ -94,7 +88,6 @@ def get_country_code():
 
 	# Save response to log
 	cc_response_log_entry.complete(
-		origin=origin,
 		app_id=app_id,
 		log_message="Resp [{}]".format(country_code),
 		gps_position=position
@@ -113,13 +106,11 @@ def get_poi():
 	crd_y = request.params.y
 	poi_type = request.params.type
 
-	origin = "com.get.poi"
 	app_id = "POI"
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
 	poi_request_log_entry.complete(
-		origin=origin,
 		app_id=app_id,
 		log_message="Req {}".format(poi_type),
 		gps_position=position
@@ -139,7 +130,6 @@ def get_poi():
 
 	# Save response to log
 	poi_response_log_entry.complete(
-		origin=origin,
 		app_id=app_id,
 		log_message=log_message,
 		gps_position=position,
@@ -160,13 +150,11 @@ def get_tsp_routing():
 	targ_x = request.params.targ_x
 	targ_y = request.params.targ_y
 
-	origin = "com.get.tspRouting"
 	app_id = "TSPROUTING"
 	position = _get_position_string(crd_x, crd_y)
 
 	# Save request to log
 	tsp_request_log_entry.complete(
-		origin=origin,
 		app_id=app_id,
 		log_message="Req [x: {}, y: {}]".format(
 			targ_x, targ_y),
@@ -184,7 +172,6 @@ def get_tsp_routing():
 
 	# Save request to log
 	tsp_response_log_entry.complete(
-		origin=origin,
 		app_id=app_id,
 		log_message="Resp [{}] for [x: {}, y: {}]".format(
 			tsp_message, targ_x, targ_y),
@@ -201,7 +188,6 @@ def log_colour():
 	colour_log_entry = _create_base_log_entry(request.params.vin)
 
 	colour_log_entry.complete(
-		origin="com.api.web.callColour",
 		app_id="COLOUR",
 		log_message=request.params.colour
 	)
@@ -216,7 +202,6 @@ def log_num(num):
 	numbered_log_entry = _create_base_log_entry(request.params.vin)
 
 	numbered_log_entry.complete(
-		origin="com.api.web.getVins",
 		app_id="GETVINS",
 		log_message="Resp {}".format(num))
 

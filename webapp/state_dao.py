@@ -84,6 +84,7 @@ class StateDao(object):
 		StateDao._dao_not_connected_error()
 
 
+	# pylint: disable-msg=W0613; (Unused argument)
 	@staticmethod
 	def get_client_time(identifier):
 		"""
@@ -93,12 +94,14 @@ class StateDao(object):
 		StateDao._dao_not_connected_error()
 
 
+	# pylint: disable-msg=W0613; (Unused argument)
 	@staticmethod
 	def set_client_time(identifier, new_time):
 		""" Setter for the STATE. Updates the internal state and saves to disk. """
 		StateDao._dao_not_connected_error()
 
 
+	# pylint: disable-msg=W0613; (Unused argument)
 	@staticmethod
 	def append_to_log(log_entry):
 		""" Append the given LogEntry object to the log. """

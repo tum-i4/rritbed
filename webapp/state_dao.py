@@ -55,6 +55,21 @@ class StateDao(object):
 			print("Successfully saved state to disk.")
 
 
+	@staticmethod
+	def reset():
+		"""
+		Reset the STATE by deleting the underlying files.\n
+		Only possible when connected.
+		"""
+
+		if not StateDao._connected:
+			raise ValueError("DAO not connected.")
+
+		StateDao.disconnect()
+		StateDao._delete_files()
+		StateDao.connect()
+
+
 
 
 	### Interface methods: Are replaced with implementations when connecting DAO. ###
@@ -85,18 +100,6 @@ class StateDao(object):
 	def append_to_log(log_entry):
 		""" Append the given LogEntry object to the log. """
 		StateDao._dao_not_connected_error()
-
-
-	@staticmethod
-	def reset():
-		""" Reset the STATE by deleting the underlying files.\nOnly possible when connected. """
-
-		if not StateDao._connected:
-			raise ValueError("DAO not connected.")
-
-		StateDao.disconnect()
-		StateDao._delete_files()
-		StateDao.connect()
 
 
 

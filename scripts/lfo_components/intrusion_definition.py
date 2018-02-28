@@ -86,6 +86,8 @@ class IntrusionDefinition(object):
 		for generator in selected_generators:
 			generator_tuples.append((generator, random.choice(choices)))
 
+		return generator_tuples
+
 
 	def _add_double_vin(self, vin_list):
 		"""

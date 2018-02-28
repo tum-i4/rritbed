@@ -15,6 +15,12 @@ class IntrusionDefinition(object):
 	_duplicate_vins = False
 
 	_levels = ["easy", "med", "hard"]
+	_easy_intelligence = ["stay", "dont-move"]
+	_turtle_intelligence_choices = {
+		0 : _easy_intelligence,
+		1 : _easy_intelligence,
+		2 : _easy_intelligence
+	}
 
 
 	def __init__(self, intrusion_percentage, intrusion_level,
@@ -45,6 +51,17 @@ class IntrusionDefinition(object):
 		vin_list = self._add_double_vin(vin_list)
 
 		return self._generate_intrusion_tuples(vin_list)
+
+
+	def get_turtle_intelligence(self, intruded, legal_choices):
+		""" Return a list of possible intelligence options based on the specified intrusion level. """
+
+		choices = legal_choices
+
+		if intruded and self._intrude_turtle:
+			choices = self._turtle_intelligence_choices
+
+		return random.choice(choices)
 
 
 	def _add_double_vin(self, vin_list):

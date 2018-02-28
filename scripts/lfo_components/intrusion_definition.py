@@ -15,6 +15,7 @@ class IntrusionDefinition(object):
 	_duplicate_vins = False
 
 	_levels = ["easy", "med", "hard"]
+
 	_easy_intelligence = ["stay", "dont-move"]
 	_turtle_intelligence_choices = {
 		0 : _easy_intelligence,
@@ -59,7 +60,7 @@ class IntrusionDefinition(object):
 		choices = legal_choices
 
 		if intruded and self._intrude_turtle:
-			choices = self._turtle_intelligence_choices
+			choices = self._turtle_intelligence_choices[self._intrusion_level]
 
 		return random.choice(choices)
 

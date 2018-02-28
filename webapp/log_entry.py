@@ -2,6 +2,7 @@
 """ Log entry """
 
 import json
+import time
 import uuid
 
 # pylint: disable-msg=R0903; (Too few public methods (1/2))
@@ -46,8 +47,7 @@ class LogEntry(object):
 		self.data[self.log_message_field] = log_message
 		self.data[self.gps_position_field] = gps_position
 
-		self.data[self.time_unix_field] = int(time_unix)
-
+		self.data[self.time_unix_field] = self._verify_time_or_generate_if_none(time_unix)
 		self.data[self.log_id_field] = self._verify_uuid_or_generate_if_none(log_id)
 
 
@@ -61,7 +61,10 @@ class LogEntry(object):
 		self._set_if_not_none(self.level_field, level)
 		self._set_if_not_none(self.log_message_field, log_message)
 		self._set_if_not_none(self.gps_position_field, gps_position)
-		self._set_if_not_none(self.time_unix_field, int(time_unix))
+
+		# The verification would generate values for None - so it's only triggered if a value was given.
+		if time_unix is not None:
+			self._set_if_not_none(self.time_unix_field, self._verify_time_or_generate_if_none(time_unix))
 
 		if log_id is not None:
 			self._set_if_not_none(self.log_id_field, self._verify_uuid_or_generate_if_none(log_id))

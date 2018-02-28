@@ -207,20 +207,18 @@ class LaunchFileOrchestrator(object):
 			"s" if len(vin_list) > 1 else "",
 			" in manual mode" if self._manual_turtle_mode else ""))
 
-		# [Intrusions] Add double-VIN error to file if requested by user
-		if self._duplicate_vins:
-			vin_list = self._add_double_vin(vin_list, rand_gen)
+		# [Intrusions]
+		# Generate tuples denoting if each respective vin was intruded.
+		# Introduce double-vin error if requested
+		vin_tuples = self._intrusion_definition.create_vin_tuples(vin_list)
 
-		# [Intrusions] Generate a boolean for each VIN denoting if it was intruded
-		intrusions = self._generate_intrusions_flags(vin_list, rand_gen)
-
-		for i in range(0, len(vin_list)):
-			root_element.append(self._create_unit(vin_list[i], rand_gen, intrusions[i]))
+		for vin, intruded_bool in vin_tuples:
+			root_element.append(self._create_unit(vin, rand_gen, intruded=intruded_bool))
 
 		# Add header comment at top of file
 		header_comment = self._create_padded_comment(
 			"Launch file with {} namespaces {}".format(
-				len(vin_list),
+				len(vin_tuples),
 				"(manual mode)" if self._manual_turtle_mode else ""))
 		root_element.insert(0, header_comment)
 

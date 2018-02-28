@@ -27,7 +27,6 @@ import rospy
 import generators as GENS
 
 from distribution_generator import DistributionGenerator as DG
-# pylint: disable-msg=E0401; (Unable to import - ROS handles this)
 from turtlesim_expl.msg import GenValue
 
 

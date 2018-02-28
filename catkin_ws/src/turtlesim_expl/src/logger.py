@@ -10,7 +10,7 @@ import requests
 import rospy
 
 from turtlesim.msg import Pose, Color
-from std_msgs.msg import Float32
+from turtlesim_expl.msg import GenValue
 
 
 URL = "http://localhost:5000"
@@ -24,13 +24,13 @@ class Logger(object):
 	""" Logger class """
 
 	_vin_field = "vin"
-
 	_data = {
 		_vin_field: ""
 	}
 
-	_last_broadcast = {}
+	_label = False
 
+	_last_broadcast = {}
 	_last_conn_err = 0
 
 	_rand_gen = None
@@ -42,10 +42,12 @@ class Logger(object):
 
 		parser.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
 		parser.add_argument("--gen-topics", metavar="TOPIC", nargs="*", default=[], dest="gen_topics")
+		parser.add_argument("--label", action="store_true", help="Label the data with intrusion type")
 
 		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
 		self._data[self._vin_field] = args.namespace
+		self._label = args.label
 
 		self._last_broadcast[self.log_colour.__name__] = 0
 		self._last_broadcast[self.log_pose.__name__] = 0
@@ -56,17 +58,19 @@ class Logger(object):
 
 		# Subscribe to topics
 		for topic in args.gen_topics:
-			rospy.Subscriber(topic, Float32, self.log_generated_data, topic)
+			rospy.Subscriber(topic, GenValue, self.log_generated_data, topic)
 
 		rospy.Subscriber(COLOUR_PATH, Color, self.rate_limit, self.log_colour)
 		rospy.Subscriber(POSE_PATH, Pose, self.rate_limit, self.log_pose)
 
 
-	def log_generated_data(self, data, generator_name):
-		""" Logging generated data value """
+	def log_generated_data(self, gen_value, generator_name):
+		""" Log generated data value. """
 
 		request = self._data
-		request["generated"] = data.data
+		request["generated"] = gen_value.value
+		if self._label:
+			request["intrusion"] = gen_value.intrusion
 
 		self.send_request("data/" + generator_name, request)
 

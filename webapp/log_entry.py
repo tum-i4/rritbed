@@ -70,8 +70,7 @@ class LogEntry(object):
 	@staticmethod
 	def create_base_entry(vin=None, time_unix=None):
 		""" Create an invalid base log entry for step-by-step creation. """
-		invalid = "INVALID"
-		entry = LogEntry(vin, invalid, invalid, invalid, time_unix)
+		entry = LogEntry(vin=vin, app_id="INVALID", time_unix=time_unix)
 		return entry
 
 

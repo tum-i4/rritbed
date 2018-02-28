@@ -120,14 +120,14 @@ class StateDao(object):
 		if not StateDao._connected:
 			raise ValueError("DAO not connected.")
 
-		StateDao.disconnect()
+		StateDao._flush_log()
 
 		status_msg = "Log file: "
 		status_msg += StateDao._rename_log_file()
-		status_msg += "\n State files: "
+		status_msg += "\nState files: "
 		status_msg += StateDao._delete_state_files()
 
-		StateDao.connect()
+		StateDao._clear_internal_state()
 
 		return status_msg
 
@@ -363,6 +363,19 @@ class StateDao(object):
 		""" Create a log file name of the format 'log/log_until_2017-12-20_18:08:25'. """
 		time_str = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
 		return StateDao._log_file_path + "_until_" + time_str
+
+
+
+	### Helper methods ###
+
+
+	@staticmethod
+	def _clear_internal_state():
+		""" Reset all internal fields. """
+
+		StateDao._curr_min_time = None
+		StateDao._client_times = {}
+		StateDao._new_log_entries = []
 
 
 

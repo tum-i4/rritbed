@@ -250,11 +250,10 @@ class LaunchFileOrchestrator(object):
 		group_element.append(self._create_padded_comment("Turtle group"))
 
 		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
-		intell_choice = rand_gen.choice(["return"])
 
-		# [Intrusions] Intruded turtle
-		if intruded and self._intrude_turtle:
-			intell_choice = rand_gen.choice(["stay", "dont-move"])
+		# [Intrusions] Intruded turtle: Get intruded intelligence if specified.
+		intell_choice = self._intrusion_definition.get_turtle_intelligence(
+			intruded=intruded, legal_choices=["return"])
 
 		control_node_args = "--seed {}{}".format(
 			seed,

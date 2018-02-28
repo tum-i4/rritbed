@@ -90,8 +90,24 @@ class LogEntry(object):
 			self.data[field_key] = value
 
 
-	# pylint: disable-msg=R0201; (Method could be a function)
-	def _verify_uuid_or_generate_if_none(self, given_uuid):
+	@staticmethod
+	def _verify_time_or_generate_if_none(given_time):
+		""" Check the given time or return the current time if not set. """
+
+		if given_time is None:
+			return time.time()
+
+		return LogEntry._verify_time(given_time)
+
+
+	@staticmethod
+	def _verify_time(given_time):
+		""" Convert the given time to int. """
+		return int(given_time)
+
+
+	@staticmethod
+	def _verify_uuid_or_generate_if_none(given_uuid):
 		""" Check to see if the id is set, otherwise generates a new UUID. """
 
 		if given_uuid is None:

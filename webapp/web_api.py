@@ -188,19 +188,6 @@ def log_colour():
 	_append_to_log(colour_log_entry)
 
 
-@post("/log/get-vins/<num:int>")
-def log_num(num):
-	""" Log endpoint with number input """
-
-	numbered_log_entry = _create_base_log_entry(request.params.vin)
-
-	numbered_log_entry.complete(
-		app_id="GETVINS",
-		log_message="Resp {}".format(num))
-
-	_append_to_log(numbered_log_entry)
-
-
 
 ### DANGER zone
 

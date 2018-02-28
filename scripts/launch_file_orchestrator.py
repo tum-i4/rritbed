@@ -199,7 +199,8 @@ class LaunchFileOrchestrator(object):
 			" in manual mode" if self._manual_turtle_mode else ""))
 
 		# [Intrusions] Add double-VIN error to file if requested by user
-		vin_list = self._add_double_vin(vin_list, rand_gen)
+		if self._duplicate_vins:
+			vin_list = self._add_double_vin(vin_list, rand_gen)
 
 		# [Intrusions] Generate a boolean for each VIN denoting if it was intruded
 		intrusions = self._generate_intrusions_flags(vin_list, rand_gen)
@@ -241,7 +242,6 @@ class LaunchFileOrchestrator(object):
 
 		group_element.append(self._create_padded_comment("Turtle group"))
 
-		# TODO: Add more intelligence options
 		seed = "{:f}".format(rand_gen.uniform(0, MAXINT))
 		intell_choice = rand_gen.choice(["return"])
 

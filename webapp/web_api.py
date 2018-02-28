@@ -221,6 +221,8 @@ def cut_log():
 def reset():
 	""" Rename the log and clear the state. """
 
+	print("Server is resetting...")
+
 	status_msg = ""
 	try:
 		status_msg = StateDao.reset()

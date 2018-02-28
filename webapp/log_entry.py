@@ -91,12 +91,23 @@ class LogEntry(object):
 
 
 	# pylint: disable-msg=R0201; (Method could be a function)
-	def _verify_uuid_or_generate_if_none(self, given_id):
+	def _verify_uuid_or_generate_if_none(self, given_uuid):
 		""" Check to see if the id is set, otherwise generates a new UUID. """
-		if given_id is None:
+
+		if given_uuid is None:
 			return uuid.uuid4().__str__()
 
-		return uuid.UUID(given_id)
+		return LogEntry._verify_uuid(given_uuid)
+
+
+	@staticmethod
+	def _verify_uuid(given_uuid):
+		""" Convert the given object to a UUID object if it's not yet one. """
+
+		if isinstance(given_uuid, uuid.UUID):
+			return given_uuid
+
+		return uuid.UUID(given_uuid)
 
 
 	def get_log_string(self):

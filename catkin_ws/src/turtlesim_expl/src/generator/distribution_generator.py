@@ -7,6 +7,7 @@ from argument_constraint import ArgumentConstraint
 class DistributionGenerator(object):
 	""" Container class for distribution parameters """
 
+	NORMAL = "normal"
 	ONLY_ZEROES = "zeroes"
 	HUGE_ERROR = "huge-error"
 
@@ -50,7 +51,7 @@ class DistributionGenerator(object):
 
 
 	def activate_intrusion(self, intrusion_mode):
-		""" Activate an intrusion mode specified """
+		""" Activate the specified intrusion mode. """
 
 		try:
 			self.generate = self._intrusion_generators[intrusion_mode]
@@ -60,7 +61,7 @@ class DistributionGenerator(object):
 
 	# pylint: disable-msg=E0202; (Attribute hides this method - intentional)
 	def generate(self, values=None):
-		""" Generate a new value based on the distribution method """
+		""" Generate a new (value, intrusion_str) tuple based on the distribution method. """
 		pass
 
 
@@ -79,12 +80,17 @@ class DistributionGenerator(object):
 			if not self.args_constraints[i].fits(values[i]):
 				raise Exception("Given value {} does not fit the argument constraint".format(values[i]))
 
+		value = 0
+
 		if args_count is 1:
-			return self._method(values[0])
+			value = self._method(values[0])
 		elif args_count is 2:
-			return self._method(values[0], values[1])
+			value = self._method(values[0], values[1])
 		else:
 			raise NotImplementedError("IMPLEMENTATION MISSING")
+
+		return (value, DistributionGenerator.NORMAL)
+
 
 
 	### Intrusions ###
@@ -92,31 +98,34 @@ class DistributionGenerator(object):
 
 	# pylint: disable-msg=W0613; (Unused argument - is necessary)
 	def _generate_intrusion_zeroes(self, values=None):
-		""" Hide the generator behind a only-zero-generator """
-		return 0
+		""" Return zero. """
+		return (0, DistributionGenerator.ONLY_ZEROES)
 
 
 	def _generate_intrusion_huge_error(self, values=None):
-		""" Subtract every second generated number by (itself * 100) """
+		""" Subtract every second generated number by (itself * 100). """
 
-		next_num = self._generate_impl(values)
+		next_value = self._generate_impl(values)
+		next_str = DistributionGenerator.NORMAL
 
 		if self._h_e_last_was_normal:
-			next_num -= (next_num * 100)
+			next_value = next_value - (next_value * 100)
+			next_str = DistributionGenerator.HUGE_ERROR
 
 		self._h_e_last_was_normal = not self._h_e_last_was_normal
 
-		return next_num
+		return (next_value, next_str)
+
 
 
 	### Getter ###
 
 
 	def get_args_count(self):
-		""" Get the required number of arguments """
+		""" Get the required number of arguments. """
 		return len(self.args_constraints)
 
 
 	def get_default_values(self):
-		""" Get the default arguments """
+		""" Get the default arguments. """
 		return [x.default_value for x in self.args_constraints]

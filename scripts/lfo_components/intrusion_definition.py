@@ -45,10 +45,10 @@ class IntrusionDefinition(object):
 		self._duplicate_vins = duplicate_vins
 
 
-	@property
-	def intrusion_levels(self):
+	@staticmethod
+	def get_intrusion_levels():
 		""" Get all possible intrusion level strings. """
-		return self._levels
+		return IntrusionDefinition._levels
 
 
 	def create_vin_tuples(self, vin_list):

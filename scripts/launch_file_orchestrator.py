@@ -64,7 +64,7 @@ class LaunchFileOrchestrator(object):
 		# Additional intrusion options
 		requires_intrusions_text = "[requires --intrusions]"
 		optionals_group.add_argument("--intrusion-level", "-l",
-			dest="intrusion_level", choices=IntrusionDefinition.intrusion_levels,
+			dest="intrusion_level", choices=IntrusionDefinition.get_intrusion_levels(),
 			help="Specify the intrusion level (difficulty). " + requires_intrusions_text)
 		optionals_group.add_argument("--dont-intrude-turtle", "-t", action="store_false",
 			dest="intrude_turtle",

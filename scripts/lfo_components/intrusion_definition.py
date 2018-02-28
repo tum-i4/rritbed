@@ -23,6 +23,14 @@ class IntrusionDefinition(object):
 		2 : _easy_intelligence
 	}
 
+	# Check DistributionGenerator if these are correct
+	_blunt_intrusions = ["zeroes", "huge-error"]
+	_generator_intrusion_choices = {
+		0 : _blunt_intrusions,
+		1 : _blunt_intrusions,
+		2 : _blunt_intrusions
+	}
+
 
 	def __init__(self, intrusion_percentage, intrusion_level,
 		intrude_turtle=True, intrude_generators=True, duplicate_vins=False):
@@ -63,6 +71,20 @@ class IntrusionDefinition(object):
 			choices = self._turtle_intelligence_choices[self._intrusion_level]
 
 		return random.choice(choices)
+
+
+	def create_generator_tuples(self, intruded, selected_generators):
+		""" Create tuples (selected_generator, intrusion_mode) for each generator in the list. """
+
+		if not intruded or not self._intrude_generators:
+			return [(generator, None) for generator in selected_generators]
+
+		generator_tuples = []
+		choices = self._generator_intrusion_choices[self._intrusion_level]
+
+		# If the client is intruded, currently all of their generators will be broken
+		for generator in selected_generators:
+			generator_tuples.append((generator, random.choice(choices)))
 
 
 	def _add_double_vin(self, vin_list):

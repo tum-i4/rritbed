@@ -33,6 +33,17 @@ class LogEntry(object):
 	}
 
 
+	@staticmethod
+	def create_base_entry(vin=None, time_unix=None):
+		""" Create an invalid base log entry for step-by-step creation. """
+		entry = LogEntry(vin=vin, app_id="INVALID", time_unix=time_unix)
+		return entry
+
+
+
+	### Class interface ###
+
+
 	def __init__(self, vin, app_id,
 		level=LEVEL_DEFAULT, log_message="", gps_position="",
 		time_unix=None, log_id=None):
@@ -45,8 +56,7 @@ class LogEntry(object):
 
 		self.set_any(vin=vin, app_id=app_id,
 			level=level, log_message=log_message, gps_position=gps_position,
-			time_unix=time_unix,
-			log_id=log_id)
+			time_unix=time_unix, log_id=log_id)
 
 
 	def set_any(self, vin=None, app_id=None,
@@ -63,13 +73,6 @@ class LogEntry(object):
 		self._set_if_not_none(self.log_id_field, log_id, verifier=self._verify_uuid)
 
 
-	@staticmethod
-	def create_base_entry(vin=None, time_unix=None):
-		""" Create an invalid base log entry for step-by-step creation. """
-		entry = LogEntry(vin=vin, app_id="INVALID", time_unix=time_unix)
-		return entry
-
-
 	def complete(self, app_id, vin=None, time_unix=None,
 		level=None, log_message=None, gps_position=None,
 		log_id=None):
@@ -78,6 +81,15 @@ class LogEntry(object):
 			vin=vin, app_id=app_id, time_unix=time_unix,
 			level=level, log_message=log_message, gps_position=gps_position,
 			log_id=log_id)
+
+
+	def get_log_string(self):
+		""" Create a log string from this item's log data, sorted by key. """
+		return json.dumps(self.data, sort_keys=True)
+
+
+
+	### Helper ###
 
 
 	def _set_if_not_none(self, field_key, value, verifier=None):
@@ -95,6 +107,10 @@ class LogEntry(object):
 		self.data[field_key] = value
 
 
+
+	### Generators ###
+
+
 	@staticmethod
 	def _get_current_time_if_none(given_time):
 		""" Return the given time or the current time if it's None. """
@@ -102,15 +118,19 @@ class LogEntry(object):
 
 
 	@staticmethod
-	def _verify_time(given_time):
-		""" Convert the given time to int. """
-		return int(given_time)
-
-
-	@staticmethod
 	def _generate_uuid_str_if_none(given_uuid):
 		""" Return the given UUID or generate one if it's None. """
 		return given_uuid or uuid.uuid4().__str__()
+
+
+
+	### Verifiers ###
+
+
+	@staticmethod
+	def _verify_time(given_time):
+		""" Convert the given time to int. """
+		return int(given_time)
 
 
 	@staticmethod
@@ -126,8 +146,3 @@ class LogEntry(object):
 			return given_uuid.__str__()
 
 		raise ValueError("Given object is neither a string nor a UUID object.")
-
-
-	def get_log_string(self):
-		""" Create a log string from this item's log data, sorted by key. """
-		return json.dumps(self.data, sort_keys=True)

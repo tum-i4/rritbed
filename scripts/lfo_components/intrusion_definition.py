@@ -156,9 +156,9 @@ class IntrusionDefinition(object):
 	def _get_level_id(self, intrusion_level_string):
 		""" Convert the given level string to a level id. """
 
-		assert(len(self.intrusion_levels) == 3)
+		assert(len(self.get_intrusion_levels()) == 3)
 
-		if intrusion_level_string not in self.intrusion_levels:
+		if intrusion_level_string not in self.get_intrusion_levels():
 			raise ValueError("Invalid intrusion level string")
 
-		return self.intrusion_levels.index(intrusion_level_string)
+		return self.get_intrusion_levels().index(intrusion_level_string)

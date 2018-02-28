@@ -20,7 +20,7 @@ class IntrusionDefinition(object):
 
 		object.__init__(self)
 
-		self._intrusion_percentage = int(intrusion_percentage)
+		self._intrusion_percentage = self._verify_percentage(intrusion_percentage)
 		self._intrusion_level = self._get_level_id(intrusion_level)
 		self._intrude_turtle = intrude_turtle
 		self._intrude_generators = intrude_generators
@@ -31,6 +31,16 @@ class IntrusionDefinition(object):
 	def intrusion_levels(self):
 		""" Get all possible intrusion level strings. """
 		return self._levels
+
+
+	def _verify_percentage(self, given_percentage):
+		""" Verify the given percentage value and return it. """
+
+		given_percentage = int(given_percentage)
+		if given_percentage > 100 or given_percentage < 0:
+			raise ValueError("Invalid percentage value (expecting [1,100])")
+
+		return given_percentage
 
 
 	def _get_level_id(self, intrusion_level_string):

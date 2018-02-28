@@ -105,7 +105,7 @@ class Logger(object):
 
 
 	def log_pose(self, log_data):
-		""" Pose logging """
+		""" Pose logging - currently can't be labelled for intrusions. """
 
 		# 1) Country code request - 50 %
 		cco = "country code"
@@ -126,7 +126,7 @@ class Logger(object):
 		elif choice == poi:
 			self.request_random_poi(request)
 		elif choice == tsp:
-			self.request_random_tsp_routing(request, log_data.x, log_data.y)
+			self.request_random_tsp_routing(request)
 		else:
 			raise NotImplementedError("Choice not implemented")
 
@@ -151,12 +151,12 @@ class Logger(object):
 		self.send_request("poi", request, path="get")
 
 
-	def request_random_tsp_routing(self, request, crd_x, crd_y):
+	def request_random_tsp_routing(self, request):
 		""" Send request as TSP request with random goal """
 
 		# 1 % chance we request a routing to exactly our own position
-		targ_x_choices = [crd_x] + [self._rand_gen.randrange(0, 500) for _ in range(0, 99)]
-		targ_y_choices = [crd_y] + [self._rand_gen.randrange(0, 500) for _ in range(0, 99)]
+		targ_x_choices = [request["x"]] + [self._rand_gen.randrange(0, 500) for _ in range(0, 99)]
+		targ_y_choices = [request["y"]] + [self._rand_gen.randrange(0, 500) for _ in range(0, 99)]
 
 		# Target coordinates
 		targ_x = self._rand_gen.choice(targ_x_choices)

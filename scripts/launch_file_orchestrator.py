@@ -63,8 +63,9 @@ class LaunchFileOrchestrator(object):
 			help="Percentage of intrusions to be included in the launch file")
 		# Additional intrusion options
 		requires_intrusions_text = "[requires --intrusions]"
-		optionals_group.add_argument("--intrusion-level", "-l",
-			dest="intrusion_level", choices=IntrusionDefinition.get_intrusion_levels(),
+		intrusion_levels = IntrusionDefinition.get_intrusion_levels()
+		optionals_group.add_argument("--intrusion-level", "-l", dest="intrusion_level",
+			default=intrusion_levels[0], choices=intrusion_levels,
 			help="Specify the intrusion level (difficulty). " + requires_intrusions_text)
 		optionals_group.add_argument("--dont-intrude-turtle", "-t", action="store_false",
 			dest="intrude_turtle",

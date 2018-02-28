@@ -42,7 +42,9 @@ class IntrusionDefinition(object):
 		Introduce double-vin if requested.
 		"""
 
-		raise NotImplementedError()
+		vin_list = self._add_double_vin(vin_list)
+
+		return self._generate_intrusion_tuples(vin_list)
 
 
 	def _add_double_vin(self, vin_list):
@@ -76,7 +78,7 @@ class IntrusionDefinition(object):
 		return vin_list
 
 
-	def _generate_intrusion_tuples(self, vin_list, rand_gen):
+	def _generate_intrusion_tuples(self, vin_list):
 		"""
 		Fills a list of tuples with vins from the given list and boolean flags
 		according to the intrusion percentage saved in self.
@@ -93,7 +95,7 @@ class IntrusionDefinition(object):
 			[True for _ in range(0, intruded_share)]
 			+ [False for _ in range(0, total_count - intruded_share)])
 
-		intrusions = rand_gen.sample(intrusion_choices, len(vin_list))
+		intrusions = random.sample(intrusion_choices, len(vin_list))
 
 		assert (len(intrusion_choices) == total_count)
 		assert (len(intrusions) == len(vin_list))

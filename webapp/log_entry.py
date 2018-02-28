@@ -40,14 +40,10 @@ class LogEntry(object):
 
 		object.__init__(self)
 
-		self.data[self.vin_field] = vin
-		self.data[self.app_id_field] = app_id
-		self.data[self.level_field] = level
-		self.data[self.log_message_field] = log_message
-		self.data[self.gps_position_field] = gps_position
-
-		self.data[self.time_unix_field] = self._verify_time_or_generate_if_none(time_unix)
-		self.data[self.log_id_field] = self._verify_uuid_or_generate_if_none(log_id)
+		self.set_any(vin=vin, app_id=app_id,
+			level=level, log_message=log_message, gps_position=gps_position,
+			time_unix=self._get_current_time_if_none(time_unix),
+			log_id=self._generate_uuid_str_if_none(log_id))
 
 
 	def set_any(self, vin=None, app_id=None,

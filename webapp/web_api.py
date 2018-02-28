@@ -229,6 +229,8 @@ def reset():
 	except ValueError as error:
 		status_msg = error.message
 
+	print(status_msg)
+
 	return BaseResponse(body=status_msg, status=200)
 
 

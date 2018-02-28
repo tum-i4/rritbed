@@ -302,7 +302,7 @@ class StateDao(object):
 			StateDao._delete_file_if_existing(
 				client_file_path)
 
-		return "Clear was successful"
+		return "Cleared successfully"
 
 
 	@staticmethod

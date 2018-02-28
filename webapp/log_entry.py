@@ -33,10 +33,9 @@ class LogEntry(object):
 	}
 
 
-	# pylint: disable-msg=R0913; (Too many arguments)
-	def __init__(self, vin, app_id, time_unix,
+	def __init__(self, vin, app_id,
 		level=LEVEL_DEFAULT, log_message="", gps_position="",
-		log_id=None):
+		time_unix=None, log_id=None):
 		""" Ctor """
 
 		object.__init__(self)

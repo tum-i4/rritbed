@@ -134,7 +134,7 @@ class Logger(object):
 	def request_country_code(self, request):
 		""" Send request as country code request """
 
-		self.send_request("country-code", request, "get")
+		self.send_request("country-code", request, path="get")
 
 
 	def request_random_poi(self, request):
@@ -148,7 +148,7 @@ class Logger(object):
 		# Add random POI type
 		request["type"] = self._rand_gen.choice([rta, gst])
 
-		self.send_request("poi", request, "get")
+		self.send_request("poi", request, path="get")
 
 
 	def request_random_tsp_routing(self, request, crd_x, crd_y):
@@ -166,7 +166,7 @@ class Logger(object):
 		request["targ_x"] = targ_x
 		request["targ_y"] = targ_y
 
-		self.send_request("tsp", request, "get")
+		self.send_request("tsp", request, path="get")
 
 
 	def send_request(self, log_method, data, path="log"):

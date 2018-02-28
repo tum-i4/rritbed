@@ -317,6 +317,9 @@ class StateDao(object):
 
 		number_of_entries = len(StateDao._new_log_entries)
 
+		if number_of_entries == 0:
+			return
+
 		# Remove new entries from list and save them to disk
 		with open(StateDao._log_file_path, "a") as log_file:
 			for _ in range(0, number_of_entries):

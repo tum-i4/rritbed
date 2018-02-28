@@ -94,7 +94,13 @@ class LogEntry(object):
 
 	def get_log_string(self):
 		""" Create a log string from this item's log data, sorted by key. """
-		return json.dumps(self.data, sort_keys=True)
+
+		result = json.dumps(self.data, sort_keys=True)
+
+		if self.intrusion is not None:
+			result += ",{}".format(self.intrusion)
+
+		return result
 
 
 

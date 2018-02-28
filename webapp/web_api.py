@@ -4,9 +4,6 @@
 # pylint: disable-msg=E1101
 
 import argparse
-import io
-import json
-import os.path
 import random
 import time
 from bottle import post, run, request, BaseResponse
@@ -16,6 +13,9 @@ from state_dao import StateDao
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
 from functionality.tsp_routing_mapper import TspRoutingMapper
+
+
+DAO = None
 
 
 ### API endpoints ###
@@ -207,12 +207,12 @@ def log_num(num):
 def cut_log():
 	""" Cut the log off at the common minimum time of all clients. """
 
-	minimum_time = StateDao.get_current_min_time()
+	minimum_time = DAO.get_current_min_time()
 
 	print("Minimum time is {}. Now processing - this might take some time...".format(
 		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
 
-	message = StateDao.cut_log()
+	message = DAO.cut_log()
 
 	return BaseResponse(body=message, status=200)
 
@@ -225,7 +225,7 @@ def reset():
 
 	status_msg = ""
 	try:
-		status_msg = StateDao.reset()
+		status_msg = DAO.reset()
 	except ValueError as error:
 		status_msg = error.message
 
@@ -256,15 +256,15 @@ def _create_base_log_entry(vin):
 def _create_client_time(identifier):
 	""" Creates a time for the client. Randomly increments time with 5 % chance. """
 
-	client_time = StateDao.get_client_time(identifier)
+	client_time = DAO.get_client_time(identifier)
 	time_now = time.time()
 
 	if client_time is None:
-		StateDao.set_client_time(identifier, time_now)
+		DAO.set_client_time(identifier, time_now)
 		return time_now
 
 	time_choice = random.choice([client_time] * 19 + [client_time + random.randint(3600, 57600)])
-	StateDao.set_client_time(identifier, time_choice)
+	DAO.set_client_time(identifier, time_choice)
 
 	return time_choice
 
@@ -276,7 +276,7 @@ def _create_client_time(identifier):
 def _append_to_log(new_log_entry):
 	""" Appends the given string plus a newline to the log file """
 
-	StateDao.append_to_log(new_log_entry)
+	DAO.append_to_log(new_log_entry)
 	return
 
 
@@ -293,8 +293,6 @@ ARGS = PARSER.parse_args()
 if ARGS.quiet:
 	print("Starting server in quiet mode")
 
-StateDao.connect(ARGS.quiet)
-
-run(host="localhost", port=5000, quiet=ARGS.quiet)
-
-StateDao.disconnect(ARGS.quiet)
+with StateDao(ARGS.quiet) as dao:
+	DAO = dao
+	run(host="localhost", port=5000, quiet=ARGS.quiet)

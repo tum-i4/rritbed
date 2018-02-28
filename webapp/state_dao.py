@@ -323,5 +323,5 @@ class StateDao(object):
 
 
 if __name__ == "__main__":
-	StateDao.connect()
-	StateDao.disconnect()
+	with StateDao() as DAO:
+		print("yep")

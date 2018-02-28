@@ -33,6 +33,15 @@ class IntrusionDefinition(object):
 		return self._levels
 
 
+	def create_vin_tuples(self, vin_list):
+		"""
+		Create tuples (vin, intruded_bool) for each vin in the list.\n
+		Introduce double-vin if requested.
+		"""
+
+		raise NotImplementedError()
+
+
 	def _verify_percentage(self, given_percentage):
 		""" Verify the given percentage value and return it. """
 

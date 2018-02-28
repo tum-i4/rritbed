@@ -331,11 +331,12 @@ class LaunchFileOrchestrator(object):
 				generator_definitions[gen_name],
 				intrusion_mode=intrusion_mode))
 
-		assert(len(selected_generators) == len(selected_generator_keys))
+		assert(len(selected_generator_tuples) == len(selected_generator_keys))
 
 		# Logging node
 		group_element.append(self._create_padded_comment("Logging"))
-		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" args="A1231414" />
+		# <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py"
+		#   args="A1231414 --gen-topics uniform_1" />
 		logger_args = "{} --gen-topics".format(vin)
 		for gen_key in selected_generator_keys:
 			logger_args += " {}".format(gen_key)

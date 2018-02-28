@@ -63,12 +63,21 @@ class IntrusionDefinition(object):
 	def get_turtle_intelligence(self, intruded, legal_choices):
 		""" Return a list of possible intelligence options based on the specified intrusion level. """
 
-		choices = legal_choices
+		if not intruded or not self._intrude_turtle:
+			return random.choice(legal_choices)
 
-		if intruded and self._intrude_turtle:
-			choices = self._turtle_intelligence_choices[self._intrusion_level]
+		intrusion_choices = self._turtle_intelligence_choices[self._intrusion_level]
 
-		return random.choice(choices)
+		# Easy and medium: Always intrude turtle
+		if self._intrusion_level in [0, 1]:
+			pass
+		# Hard: Intrude only in 50 % of cases
+		elif self._intrusion_level == 2:
+			intrusion_choices = [random.choice(legal_choices), random.choice(intrusion_choices)]
+		else:
+			raise NotImplementedError("Missing implementation for this intrusion level")
+
+		return random.choice(intrusion_choices)
 
 
 	def create_generator_tuples(self, intruded, selected_generators):

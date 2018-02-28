@@ -114,23 +114,24 @@ class LogEntry(object):
 
 
 	@staticmethod
-	def _verify_uuid_or_generate_if_none(given_uuid):
-		""" Check to see if the id is set, otherwise generates a new UUID. """
-
-		if given_uuid is None:
-			return uuid.uuid4().__str__()
-
-		return LogEntry._verify_uuid(given_uuid)
+	def _generate_uuid_str_if_none(given_uuid):
+		""" Return the given UUID or generate one if it's None. """
+		return given_uuid or uuid.uuid4().__str__()
 
 
 	@staticmethod
 	def _verify_uuid(given_uuid):
-		""" Convert the given object to a UUID object if it's not yet one. """
+		""" Convert the given object to a UUID string if it's not yet one. """
 
-		if isinstance(given_uuid, uuid.UUID):
+		if isinstance(given_uuid, str):
+			# Verify the given string is well-formed
+			uuid.UUID(given_uuid)
 			return given_uuid
 
-		return uuid.UUID(given_uuid)
+		if isinstance(given_uuid, uuid.UUID):
+			return given_uuid.__str__()
+
+		raise ValueError("Given object is neither a string nor a UUID object.")
 
 
 	def get_log_string(self):

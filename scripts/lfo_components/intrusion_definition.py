@@ -75,7 +75,7 @@ class IntrusionDefinition(object):
 		elif self._intrusion_level == 2:
 			intrusion_choices = [random.choice(legal_choices), random.choice(intrusion_choices)]
 		else:
-			raise NotImplementedError("Missing implementation for this intrusion level")
+			raise NotImplementedError("get_turtle_intelligence(): Missing intrusion level")
 
 		return random.choice(intrusion_choices)
 
@@ -83,15 +83,35 @@ class IntrusionDefinition(object):
 	def create_generator_tuples(self, intruded, selected_generators):
 		""" Create tuples (selected_generator, intrusion_mode) for each generator in the list. """
 
+		generator_tuples = [(generator, None) for generator in selected_generators]
+
 		if not intruded or not self._intrude_generators:
-			return [(generator, None) for generator in selected_generators]
+			return generator_tuples
 
-		generator_tuples = []
 		choices = self._generator_intrusion_choices[self._intrusion_level]
+		all_indices = list(range(0, len(generator_tuples)))
+		number_of_intruded_generators = 0
 
-		# If the client is intruded, currently all of their generators will be broken
-		for generator in selected_generators:
-			generator_tuples.append((generator, random.choice(choices)))
+		# Easy: Intrude all generators
+		if self._intrusion_level == 0:
+			number_of_intruded_generators = len(all_indices)
+		# Medium: Intrude about 50 % of generators, at least one
+		elif self._intrusion_level == 1:
+			# Rounding up to always have >= 1
+			number_of_intruded_generators = int(math.ceil((len(all_indices) / 2.0)))
+		# Hard: Intrude about 30 % of generators, can be none
+		elif self._intrusion_level == 2:
+			number_of_intruded_generators = int(math.floor((len(all_indices) / 3.0)))
+		else:
+			raise NotImplementedError("create_generator_tuples(): Missing intrusion level")
+
+		# Sample random items to be intruded into
+		intruded_indices = random.sample(all_indices, number_of_intruded_generators)
+
+		# Select random intrusions for the selected intruded generators
+		for index in intruded_indices:
+			generator = generator_tuples[index][0]
+			generator_tuples[index] = (generator, random.choice(choices))
 
 		return generator_tuples
 

@@ -13,7 +13,8 @@ import json
 from sys import maxint as MAXINT
 from lxml import etree as ET
 
-from vin_generator import VinGenerator
+from lfo_components.vin_generator import VinGenerator
+from lfo_components.intrusion_definition import IntrusionDefinition
 
 
 class LaunchFileOrchestrator(object):

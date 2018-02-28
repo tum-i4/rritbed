@@ -13,7 +13,8 @@ from log_entry import LogEntry
 class StateDao(object):
 	""" Static DAO class for handling the STATE objects """
 
-	_connected = False
+	_quiet = False
+
 	_state_path = "state"
 	_state_file_name = "state"
 	_state_file_path = os.path.join(_state_path, _state_file_name)
@@ -28,14 +29,19 @@ class StateDao(object):
 	_unique_log_file_names = []
 
 
-	@staticmethod
-	def connect(quiet=False):
-		""" Load STATE from file. """
 
-		if StateDao._connected:
-			raise UserWarning("This method should only be called once!")
+	### Object methods ###
 
-		StateDao._connected = True
+
+	def __init__(self, quiet=False):
+		""" Ctor """
+
+		object.__init__(self)
+		self._quiet = quiet
+
+
+	def __enter__(self):
+		""" Initialise this DAO. """
 
 		# Make sure the required directories exist
 		for directory_path in [StateDao._state_path, StateDao._log_path]:
@@ -55,23 +61,21 @@ class StateDao(object):
 			# State not initialised and files exist - load from file
 			StateDao._load_state_from_file(file_name)
 
-		if not quiet:
+		if not self._quiet:
 			print("Loaded state from {} files from disk.".format(len(files)))
 
 
-	@staticmethod
-	def disconnect(quiet=False):
-		""" Write STATE to file. """
-
-		if not StateDao._connected:
-			raise UserWarning("This method should only be called when connected.")
-
-		StateDao._connected = False
+	def __exit__(self, exc_type, exc_value, traceback):
+		""" Deinitialising this DAO. """
 
 		StateDao._write_all_to_files()
 
-		if not quiet:
+		if not self._quiet:
 			print("Successfully saved state to disk.")
+
+
+
+	### Interface methods ###
 
 
 	@staticmethod

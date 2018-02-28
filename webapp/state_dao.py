@@ -61,6 +61,8 @@ class StateDao(object):
 		if not self._quiet:
 			print("Loaded state from {} files from disk.".format(len(files)))
 
+		return self
+
 
 	def __exit__(self, exc_type, exc_value, traceback):
 		""" Deinitialising this DAO. """

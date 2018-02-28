@@ -32,7 +32,7 @@ class LogEntry(object):
 		time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
 	}
 
-	intrusion = None
+	intrusion = ""
 
 
 	@staticmethod
@@ -63,6 +63,17 @@ class LogEntry(object):
 			intrusion=intrusion)
 
 
+	def complete(self, app_id, vin=None, time_unix=None,
+		level=None, log_message=None, gps_position=None,
+		log_id=None,
+		intrusion=None):
+		""" Complete this entry from an invalid base entry to a full log entry. """
+		self.set_any(vin=vin, app_id=app_id,
+			level=level, log_message=log_message, gps_position=gps_position,
+			time_unix=time_unix, log_id=log_id,
+			intrusion=intrusion)
+
+
 	def set_any(self, vin=None, app_id=None,
 		level=None, log_message=None, gps_position=None,
 		time_unix=None, log_id=None,
@@ -81,23 +92,12 @@ class LogEntry(object):
 			self.intrusion = intrusion
 
 
-	def complete(self, app_id, vin=None, time_unix=None,
-		level=None, log_message=None, gps_position=None,
-		log_id=None,
-		intrusion=None):
-		""" Complete this entry from an invalid base entry to a full log entry. """
-		self.set_any(vin=vin, app_id=app_id,
-			level=level, log_message=log_message, gps_position=gps_position,
-			time_unix=time_unix, log_id=log_id,
-			intrusion=intrusion)
-
-
 	def get_log_string(self):
 		""" Create a log string from this item's log data, sorted by key. """
 
 		result = json.dumps(self.data, sort_keys=True)
 
-		if self.intrusion is not None:
+		if self.intrusion is not None and self.intrusion != "":
 			result += ",{}".format(self.intrusion)
 
 		return result

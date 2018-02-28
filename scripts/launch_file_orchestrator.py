@@ -415,29 +415,6 @@ class LaunchFileOrchestrator(object):
 		return ET.Comment(" {} ".format(text.strip()))
 
 
-	def _generate_intrusions_flags(self, vin_list, rand_gen):
-		""" Fills a list of the length of the given list with booleans
-		according to the intrusion percentage saved in self """
-
-		if self._intrusion_percentage == 0:
-			return [False for _ in vin_list]
-
-		# Sample from a ten times bigger list to increase precision
-		total_count = len(vin_list) * 10
-		intruded_share = int(total_count * (float(self._intrusion_percentage) / 100.0))
-
-		intrusion_choices = (
-			[True for _ in range(0, intruded_share)]
-			+ [False for _ in range(0, total_count - intruded_share)])
-
-		intrusions = rand_gen.sample(intrusion_choices, len(vin_list))
-
-		assert (len(intrusion_choices) == total_count)
-		assert (len(intrusions) == len(vin_list))
-
-		return intrusions
-
-
 	def _load_identifiers_from_file(self):
 		""" Load the identifiers from the file path set in the class """
 

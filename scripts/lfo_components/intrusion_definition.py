@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Contains the IntrusionDefinition class """
 
+import math
 import random
 
 
@@ -73,6 +74,31 @@ class IntrusionDefinition(object):
 			vin_list[second_index] = vin_list[first_index]
 
 		return vin_list
+
+
+	def _generate_intrusion_tuples(self, vin_list, rand_gen):
+		"""
+		Fills a list of tuples with vins from the given list and boolean flags
+		according to the intrusion percentage saved in self.
+		"""
+
+		if self._intrusion_percentage == 0:
+			return [(vin, False) for vin in vin_list]
+
+		# Sample from a ten times bigger list to increase precision
+		total_count = len(vin_list) * 10
+		intruded_share = int(total_count * (float(self._intrusion_percentage) / 100.0))
+
+		intrusion_choices = (
+			[True for _ in range(0, intruded_share)]
+			+ [False for _ in range(0, total_count - intruded_share)])
+
+		intrusions = rand_gen.sample(intrusion_choices, len(vin_list))
+
+		assert (len(intrusion_choices) == total_count)
+		assert (len(intrusions) == len(vin_list))
+
+		return [(vin_list[i], intrusions[i]) for i in range(0, len(vin_list))]
 
 
 	def _verify_percentage(self, given_percentage):

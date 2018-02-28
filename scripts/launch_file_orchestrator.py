@@ -135,7 +135,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _save_args_to_class(self, args):
-		""" Saves args to class to allow direct access """
+		""" Save args to class to allow direct access. """
 
 		# Helper function to allow for shorthand syntax
 		def _return_valid_else_raise(value):
@@ -167,7 +167,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _create(self):
-		""" Create the launch file based on the set parameters """
+		""" Create the launch file based on the set parameters. """
 
 		rand_gen = random.Random()
 		root_element = ET.Element("launch")
@@ -234,7 +234,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _create_unit(self, vin, rand_gen, intruded=False):
-		""" Creates a 'unit' (a 'car') consisting of logging, turtle and data generation """
+		""" Create a 'unit' (a 'car') consisting of logging, turtle and data generation. """
 
 		group_element = self._create_group([], vin)
 
@@ -348,7 +348,7 @@ class LaunchFileOrchestrator(object):
 
 	# pylint: disable-msg=R0201,R0913; (Method could be a function, too many arguments)
 	def _create_node_element(self, n_name, n_type, n_pkg, n_ns=None, n_args=None):
-		""" Creates an ElementTree element "node" with fixed order attributes """
+		""" Create an ElementTree element "node" with fixed order attributes. """
 
 		node_element = ET.Element("node")
 
@@ -367,7 +367,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _create_generator_node_element(self, gen_id, gen_name, gen_def, intrusion_mode=None):
-		""" Creates a generator node element """
+		""" Create a generator node element. """
 
 		args = "--id {}".format(gen_id)
 
@@ -385,7 +385,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _create_group(self, elements, n_ns=None):
-		""" Creates a group with the given element and optionally the given namespace """
+		""" Create a group with the given element and optionally the given namespace. """
 
 		group_element = ET.Element("group")
 
@@ -399,7 +399,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _create_turtle_group(self, control_node):
-		""" Creates a group of ns "turtle" with a turtle and the given control node """
+		""" Create a group of ns "turtle" with a turtle and the given control node. """
 
 		turtle_node = self._create_node_element(
 			n_name="py_turtlesim", n_type="py_turtlesim.py", n_pkg="py_turtlesim")
@@ -407,7 +407,10 @@ class LaunchFileOrchestrator(object):
 
 
 	def _create_padded_comment(self, text):
-		""" Creates a comment padded front and back with a space for legibility """
+		"""
+		Create a comment padded front and back with a space for legibility.\n
+		Ensures legal launch file format.
+		"""
 
 		if "--" in text:
 			text.replace("--", "__")
@@ -416,7 +419,7 @@ class LaunchFileOrchestrator(object):
 
 
 	def _load_identifiers_from_file(self):
-		""" Load the identifiers from the file path set in the class """
+		""" Load the identifiers from the file path set in the class. """
 
 		if not os.path.lexists(self._identifier_file_path):
 			raise Exception("Can't find identifier file at {}".format(self._identifier_file_path))

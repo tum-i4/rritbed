@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ Contains the IntrusionDefinition class """
 
+import random
+
 
 class IntrusionDefinition(object):
 	""" Container for an intrusion definition (corresponding to one launch file). """
@@ -40,6 +42,37 @@ class IntrusionDefinition(object):
 		"""
 
 		raise NotImplementedError()
+
+
+	def _add_double_vin(self, vin_list):
+		"""
+		If double-vins were requested and the intrusion percentage is set to > 0,
+		duplicate roughly that many VINs in the list.
+		"""
+
+		if not self._duplicate_vins or self._intrusion_percentage == 0:
+			return vin_list
+
+		number_of_vins = len(vin_list)
+		number_of_duplicates = number_of_vins * 0.5 * (float(self._intrusion_percentage) / 100)
+
+		if self._intrusion_percentage < 50:
+			number_of_duplicates = math.ceil(number_of_duplicates)
+		else:
+			number_of_duplicates = math.floor(number_of_duplicates)
+
+		number_of_duplicates = int(number_of_duplicates)
+
+		# Select random indices
+		duplicates_indices = random.sample(range(0, number_of_vins), number_of_duplicates * 2)
+
+		# Take two pairs of indices and copy the VIN from one to the other
+		for i in range(0, len(duplicates_indices) - 1, 2):
+			first_index = duplicates_indices[i]
+			second_index = duplicates_indices[i + 1]
+			vin_list[second_index] = vin_list[first_index]
+
+		return vin_list
 
 
 	def _verify_percentage(self, given_percentage):

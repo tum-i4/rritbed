@@ -86,20 +86,25 @@ class LogEntry(object):
 			log_id=log_id)
 
 
-	def _set_if_not_none(self, field_key, value):
-		""" Set the field with the given key to the value specified if that is not None. """
-		if value is not None:
-			self.data[field_key] = value
+	def _set_if_not_none(self, field_key, value, verifier=None):
+		"""
+		Set the field with the given key to the value specified if that is not None.\n
+		verifier: Optional verification method.
+		"""
+
+		if value is None:
+			return
+
+		if verifier is not None:
+			value = verifier(value)
+
+		self.data[field_key] = value
 
 
 	@staticmethod
-	def _verify_time_or_generate_if_none(given_time):
-		""" Check the given time or return the current time if not set. """
-
-		if given_time is None:
-			return time.time()
-
-		return LogEntry._verify_time(given_time)
+	def _get_current_time_if_none(given_time):
+		""" Return the given time or the current time if it's None. """
+		return given_time or time.time()
 
 
 	@staticmethod

@@ -36,17 +36,18 @@ def log():
 @post("/log/data/<generator>")
 def log_data(generator):
 	""" Log endpoint for data generator """
-	_log_num(generator, request.params.generated)
+	_log_num(generator)
 
 
-def _log_num(name, num):
-	""" Log the given number under the given method name """
+def _log_num(name):
+	""" Log the given number under the given method name. """
 
 	number_log_entry = _create_base_log_entry(request.params.vin)
 
 	number_log_entry.complete(
 		app_id=name.upper(),
-		log_message=num
+		log_message=request.params.generated,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(number_log_entry)

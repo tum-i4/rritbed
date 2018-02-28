@@ -277,7 +277,9 @@ def _append_to_log(new_log_entry):
 
 
 
-### Starting the server
+######################################
+### MAIN FLOW: Starting the server ###
+######################################
 
 
 PARSER = argparse.ArgumentParser()

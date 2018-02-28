@@ -181,7 +181,8 @@ def log_colour():
 
 	colour_log_entry.complete(
 		app_id="COLOUR",
-		log_message=request.params.colour
+		log_message=request.params.colour,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(colour_log_entry)

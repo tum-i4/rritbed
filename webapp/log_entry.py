@@ -32,6 +32,8 @@ class LogEntry(object):
 		time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
 	}
 
+	intrusion = None
+
 
 	@staticmethod
 	def create_base_entry(vin=None, time_unix=None):
@@ -46,7 +48,8 @@ class LogEntry(object):
 
 	def __init__(self, vin, app_id,
 		level=LEVEL_DEFAULT, log_message="", gps_position="",
-		time_unix=None, log_id=None):
+		time_unix=None, log_id=None,
+		intrusion=None):
 		""" Ctor """
 
 		object.__init__(self)
@@ -56,12 +59,14 @@ class LogEntry(object):
 
 		self.set_any(vin=vin, app_id=app_id,
 			level=level, log_message=log_message, gps_position=gps_position,
-			time_unix=time_unix, log_id=log_id)
+			time_unix=time_unix, log_id=log_id,
+			intrusion=intrusion)
 
 
 	def set_any(self, vin=None, app_id=None,
 		level=None, log_message=None, gps_position=None,
-		time_unix=None, log_id=None):
+		time_unix=None, log_id=None,
+		intrusion=None):
 		""" Setter for all fields at once """
 
 		self._set_if_not_none(self.vin_field, vin)
@@ -72,15 +77,19 @@ class LogEntry(object):
 		self._set_if_not_none(self.time_unix_field, time_unix, verifier=self._verify_time)
 		self._set_if_not_none(self.log_id_field, log_id, verifier=self._verify_uuid)
 
+		if intrusion is not None:
+			self.intrusion = intrusion
+
 
 	def complete(self, app_id, vin=None, time_unix=None,
 		level=None, log_message=None, gps_position=None,
-		log_id=None):
+		log_id=None,
+		intrusion=None):
 		""" Complete this entry from an invalid base entry to a full log entry. """
-		self.set_any(
-			vin=vin, app_id=app_id, time_unix=time_unix,
+		self.set_any(vin=vin, app_id=app_id,
 			level=level, log_message=log_message, gps_position=gps_position,
-			log_id=log_id)
+			time_unix=time_unix, log_id=log_id,
+			intrusion=intrusion)
 
 
 	def get_log_string(self):

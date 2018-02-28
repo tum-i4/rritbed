@@ -85,6 +85,12 @@ class LaunchFileOrchestrator(object):
 		# Save arguments in separate variables for simpler access
 		self._save_args_to_class(args)
 
+		print("Intrusions: {}".format(
+			"{} % intrusions with level <{}>".format(args.intrusion_percentage, args.intrusion_level)
+			if args.intrusion_percentage > 0
+			else "none"
+		))
+
 		self._create()
 		exit()
 

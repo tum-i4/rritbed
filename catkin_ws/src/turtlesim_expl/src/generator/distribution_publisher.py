@@ -25,9 +25,10 @@ import sys
 import rospy
 
 import generators as GENS
-from std_msgs.msg import Float32
 
 from distribution_generator import DistributionGenerator as DG
+# pylint: disable-msg=E0401; (Unable to import - ROS handles this)
+from turtlesim_expl.msg import GenValue
 
 
 class DistributionPublisher(object):
@@ -96,7 +97,7 @@ class DistributionPublisher(object):
 
 		rospy.init_node(args.id, anonymous=True)
 		rospy.loginfo(return_message)
-		self._publisher = rospy.Publisher(publish_topic, Float32, queue_size=queue_size)
+		self._publisher = rospy.Publisher(publish_topic, GenValue, queue_size=queue_size)
 
 
 	def _setup_reader(self, file_path, repeat_file):
@@ -152,24 +153,24 @@ class DistributionPublisher(object):
 
 		# Default values for file-based publishing
 		rate_in_hz = 10
-		create_num = self._read
+		create_tuple = self._read
 
 		# Update for generation
 		if not self._file_based:
 			rate_in_hz = self._generator.rate_in_hz
-			create_num = self._generate
+			create_tuple = self._generate
 
 		rate_limiter = rospy.Rate(rate_in_hz)
 
 		# While loop to assure that Ctrl-C can exit the app
 		while not rospy.is_shutdown():
-			next_num = create_num()
+			next_tuple = create_tuple()
 
-			if next_num is None:
+			if next_tuple is None:
 				break
 
-			rospy.loginfo("Value: %s", next_num)
-			self._publisher.publish(next_num)
+			rospy.loginfo("Value: %s (%s)", next_tuple[0], next_tuple[1])
+			self._publisher.publish(GenValue(value=next_tuple[0], intrusion=next_tuple[1]))
 			rate_limiter.sleep()
 
 
@@ -178,6 +179,9 @@ class DistributionPublisher(object):
 		Read next line from file
 		Returns: Either repeats based on self._repeat_file or None if EOF is reached
 		"""
+
+		# TODO: Only allow files with value, intrusion_str lines
+		raise NotImplementedError()
 
 		if self._current_line >= len(self._file_contents):
 			if self._repeat_file:

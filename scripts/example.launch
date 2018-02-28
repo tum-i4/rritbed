@@ -16,7 +16,7 @@
     args="gaussian" />
 
   <!-- Logging -->
-  <node ns="log" name="logger" pkg="turtlesim_expl" type="logger.py" />
+  <node name="logger" pkg="turtlesim_expl" type="logger.py" />
 
   <!-- Rosbag recording with prefix as given -->
   <node pkg="rosbag" type="record" name="rosbag_recorder"

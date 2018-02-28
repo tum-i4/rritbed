@@ -52,14 +52,12 @@ class IntrusionDefinition(object):
 
 
 	def create_vin_tuples(self, vin_list):
-		"""
-		Create tuples (vin, intruded_bool) for each vin in the list.\n
-		Introduce double-vin if requested.
-		"""
+		""" Create tuples (vin, intruded_bool) for each vin in the list.\n
+		Introduce double-vin if requested. """
 
 		vin_list = self._add_double_vin(vin_list)
-
-		return self._generate_intrusion_tuples(vin_list)
+		vin_tuples = self._generate_intrusion_tuples(vin_list)
+		return vin_tuples
 
 
 	def get_turtle_intelligence(self, intruded, legal_choices):

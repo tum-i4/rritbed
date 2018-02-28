@@ -117,12 +117,8 @@ class StateDao(object):
 	def reset():
 		"""
 		Reset the STATE by deleting the underlying files.\n
-		Only possible when connected.\n
 		returns: Status message denoting success of underlying operations.
 		"""
-
-		if not StateDao._connected:
-			raise ValueError("DAO not connected.")
 
 		StateDao._flush_log()
 
@@ -137,23 +133,9 @@ class StateDao(object):
 
 
 	@staticmethod
-	def create_unique_log_file_path():
-		"""
-		Create a unique time-based log file name for log file backups.\n
-		Uniqueness is guaranteed for an active session even if no file is created.
-		"""
-		return StateDao._create_unique_log_file_path()
-
-
-
-
-	### Interface methods that are replaced with implementations when connecting DAO. ###
-
-
-	@staticmethod
 	def get_current_min_time():
 		""" Getter for the STATE. Reads from disk and updates internal state. """
-		StateDao._dao_not_connected_error()
+		return StateDao._curr_min_time
 
 
 	# pylint: disable-msg=W0613; (Unused argument)
@@ -163,51 +145,6 @@ class StateDao(object):
 		Get current time for the specified client. Reads from disk and updates internal state.\n
 		returns: Unix time or None for not initialised clients.
 		"""
-		StateDao._dao_not_connected_error()
-
-
-	# pylint: disable-msg=W0613; (Unused argument)
-	@staticmethod
-	def set_client_time(identifier, new_time):
-		""" Setter for the STATE. Updates the internal state and saves to disk. """
-		StateDao._dao_not_connected_error()
-
-
-	# pylint: disable-msg=W0613; (Unused argument)
-	@staticmethod
-	def append_to_log(log_entry):
-		""" Append the given LogEntry object to the log. """
-		StateDao._dao_not_connected_error()
-
-
-
-	### Implementations ###
-
-
-	@staticmethod
-	def _dao_not_connected_error():
-		raise ValueError("DAO not connected")
-
-
-	@staticmethod
-	def _replace_interfaces_with_impl():
-		""" Switch implementations of interface methods. """
-
-		StateDao.get_current_min_time = StateDao._get_current_min_time_impl
-		StateDao.get_client_time = StateDao._get_client_time_impl
-		StateDao.set_client_time = StateDao._set_client_time_impl
-		StateDao.append_to_log = StateDao._append_to_log_impl
-
-
-	@staticmethod
-	def _get_current_min_time_impl():
-		""" Implementation of get_current_min_time() """
-		return StateDao._curr_min_time
-
-
-	@staticmethod
-	def _get_client_time_impl(identifier):
-		""" Implementation of get_client_time() """
 
 		try:
 			return StateDao._client_times[identifier]
@@ -216,9 +153,10 @@ class StateDao(object):
 			return None
 
 
+	# pylint: disable-msg=W0613; (Unused argument)
 	@staticmethod
-	def _set_client_time_impl(identifier, new_time):
-		""" Implementation of set_client_time() """
+	def set_client_time(identifier, new_time):
+		""" Setter for the STATE. Updates the internal state and saves to disk. """
 
 		StateDao._client_times[identifier] = new_time
 
@@ -228,10 +166,20 @@ class StateDao(object):
 			StateDao._curr_min_time = min(StateDao._client_times.values())
 
 
+	# pylint: disable-msg=W0613; (Unused argument)
 	@staticmethod
-	def _append_to_log_impl(log_entry):
-		""" Implementation of append_to_log() """
+	def append_to_log(log_entry):
+		""" Append the given LogEntry object to the log. """
 		StateDao._new_log_entries.append(log_entry)
+
+
+	@staticmethod
+	def create_unique_log_file_path():
+		"""
+		Create a unique time-based log file name for log file backups.\n
+		Uniqueness is guaranteed for an active session even if no file is created.
+		"""
+		return StateDao._create_unique_log_file_path()
 
 
 

@@ -48,7 +48,7 @@ class RandomMoveStrategy(MoveStrategy):
 		_illegal_since_field: None
 	}
 
-	_illegal_colour = Color()
+	_illegal_colour = Color(r=255, g=0, b=0)
 
 	_speedup = False
 
@@ -57,11 +57,6 @@ class RandomMoveStrategy(MoveStrategy):
 		""" Ctor """
 
 		MoveStrategy.__init__(self)
-
-		# Set illegal colour parameters
-		self._illegal_colour.r = 255
-		self._illegal_colour.g = 0
-		self._illegal_colour.b = 0
 
 		# Remove remapping arguments and program name
 		filtered_argv = rospy.myargv(sys.argv)[1:]

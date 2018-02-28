@@ -309,20 +309,14 @@ class LaunchFileOrchestrator(object):
 		# Each generator gets a unique key used in the logger to identify it
 		selected_generator_keys = []
 
-		for gen_name in selected_generators:
+		# [Intrusions] Intruded generator: Generate tuples denoting intrusion mode of each generator.
+		selected_generator_tuples = self._intrusion_definition.create_generator_tuples(
+			intruded, selected_generators)
+
+		for gen_name, intrusion_mode in selected_generator_tuples:
 			selected_generator_frequency[gen_name] += 1
 			gen_key = "{}_{}".format(gen_name, selected_generator_frequency[gen_name])
 			selected_generator_keys.append(gen_key)
-
-			intrusion_mode = None
-
-			# [Intrusions] Intruded generator
-			# If the client is intruded, currently all of their generators will be broken
-			if intruded and self._intrude_generators:
-				# Check DistributionGenerator if these are correct
-				blunt_choices = ["zeroes", "huge-error"]
-				subtle_choices = [] # currently none implemented
-				intrusion_mode = random.choice(blunt_choices + subtle_choices)
 
 			group_element.append(self._create_generator_node_element(
 				gen_key,

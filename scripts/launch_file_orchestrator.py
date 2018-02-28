@@ -25,9 +25,10 @@ class LaunchFileOrchestrator(object):
 	_file_path = ""
 	_dump_mode = False
 
-	_manual_turtle_mode = False
+	_manual_turtle_mode = None
 	_identifier_file_path = None
 	_namespace_count = None
+	_label_intrusions = None
 
 	_intrusion_definition = None
 
@@ -56,6 +57,8 @@ class LaunchFileOrchestrator(object):
 			"namespaces to the number of individual identifiers in file!"))
 		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
 			metavar="NS_COUNT", default=1, help="Number of namespaces to create")
+		optionals_group.add_argument("--label", "-b", action="store_true", dest="label_intrusions",
+			help="Advise logger to label intrusions (used for training data).")
 
 		# Intrusions
 		optionals_group.add_argument("--intrusions", "-p", type=int, dest="intrusion_percentage",
@@ -150,12 +153,13 @@ class LaunchFileOrchestrator(object):
 				raise NotImplementedError("Expected argument but didn't receive it")
 			return value
 
-		# Must not be None
+		# Launch file properties
 		self._dump_mode = _return_valid_else_raise(args.dump_mode)
 		if not args.dump_mode:
 			self._file_path = _return_valid_else_raise(args.file_path)
 		self._manual_turtle_mode = _return_valid_else_raise(args.manual_turtle_mode)
 		self._namespace_count = _return_valid_else_raise(args.namespace_count)
+		self._label_intrusions = _return_valid_else_raise(args.label_intrusions)
 
 		# Intrusions
 		intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
@@ -340,6 +344,9 @@ class LaunchFileOrchestrator(object):
 		logger_args = "{} --gen-topics".format(vin)
 		for gen_key in selected_generator_keys:
 			logger_args += " {}".format(gen_key)
+		
+		if self._label_intrusions:
+			logger_args += " --label"
 
 		group_element.append(
 			self._create_node_element("logger", "logger.py", "turtlesim_expl", n_args=logger_args))

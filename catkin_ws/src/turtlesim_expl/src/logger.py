@@ -54,7 +54,7 @@ class Logger(object):
 
 		self._rand_gen = random.Random()
 
-		rospy.init_node('logger', anonymous=True)
+		rospy.init_node("logger", anonymous=True)
 
 		# Subscribe to topics
 		for topic in args.gen_topics:

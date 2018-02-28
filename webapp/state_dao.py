@@ -48,9 +48,6 @@ class StateDao(object):
 			if not os.path.lexists(directory_path):
 				os.mkdir(directory_path)
 
-		# Replace interfaces with implementations
-		StateDao._replace_interfaces_with_impl()
-
 		# List all files in state directory
 		files = []
 		for (_, _, filenames) in os.walk(StateDao._state_path):
@@ -78,14 +75,13 @@ class StateDao(object):
 	### Interface methods ###
 
 
-	@staticmethod
-	def cut_log():
+	def cut_log(self):
 		""" Save a copy of the log that is cut at the current minimum time. """
 
 		if not os.path.lexists(StateDao._log_file_path):
 			return "Log is empty"
 
-		new_file_path = StateDao.create_unique_log_file_path()
+		new_file_path = self.create_unique_log_file_path()
 
 		StateDao._flush_log()
 
@@ -100,7 +96,7 @@ class StateDao(object):
 		current_index = len(log_lines) - 1
 		while True:
 			entry = json.loads(log_lines[current_index])
-			if entry[LogEntry.time_unix_field] <= StateDao.get_current_min_time():
+			if entry[LogEntry.time_unix_field] <= self.get_current_min_time():
 				break
 			log_lines.pop()
 			current_index -= 1
@@ -113,8 +109,7 @@ class StateDao(object):
 		return message
 
 
-	@staticmethod
-	def reset():
+	def reset(self):
 		"""
 		Reset the STATE by deleting the underlying files.\n
 		returns: Status message denoting success of underlying operations.
@@ -132,15 +127,12 @@ class StateDao(object):
 		return status_msg
 
 
-	@staticmethod
-	def get_current_min_time():
+	def get_current_min_time(self):
 		""" Getter for the STATE. Reads from disk and updates internal state. """
 		return StateDao._curr_min_time
 
 
-	# pylint: disable-msg=W0613; (Unused argument)
-	@staticmethod
-	def get_client_time(identifier):
+	def get_client_time(self, identifier):
 		"""
 		Get current time for the specified client. Reads from disk and updates internal state.\n
 		returns: Unix time or None for not initialised clients.
@@ -149,13 +141,11 @@ class StateDao(object):
 		try:
 			return StateDao._client_times[identifier]
 		except KeyError:
-			StateDao.set_client_time(identifier, None)
+			self.set_client_time(identifier, None)
 			return None
 
 
-	# pylint: disable-msg=W0613; (Unused argument)
-	@staticmethod
-	def set_client_time(identifier, new_time):
+	def set_client_time(self, identifier, new_time):
 		""" Setter for the STATE. Updates the internal state and saves to disk. """
 
 		StateDao._client_times[identifier] = new_time
@@ -167,14 +157,12 @@ class StateDao(object):
 
 
 	# pylint: disable-msg=W0613; (Unused argument)
-	@staticmethod
-	def append_to_log(log_entry):
+	def append_to_log(self, log_entry):
 		""" Append the given LogEntry object to the log. """
 		StateDao._new_log_entries.append(log_entry)
 
 
-	@staticmethod
-	def create_unique_log_file_path():
+	def create_unique_log_file_path(self):
 		"""
 		Create a unique time-based log file name for log file backups.\n
 		Uniqueness is guaranteed for an active session even if no file is created.

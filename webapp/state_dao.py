@@ -66,6 +66,8 @@ class StateDao(object):
 		if not StateDao._connected:
 			raise UserWarning("This method should only be called when connected.")
 
+		StateDao._connected = False
+
 		StateDao._write_all_to_files()
 
 		if not quiet:

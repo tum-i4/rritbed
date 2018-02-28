@@ -98,6 +98,8 @@ class Logger(object):
 
 		request = self._data
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
+		if self._label:
+			request["intrusion"] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
 
 		self.send_request("colour", request)
 

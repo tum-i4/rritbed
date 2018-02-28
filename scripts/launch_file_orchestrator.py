@@ -31,11 +31,6 @@ class LaunchFileOrchestrator(object):
 
 	_intrusion_definition = None
 
-	_intrusion_percentage = 0
-	_intrude_turtle = True
-	_intrude_generators = True
-	_duplicate_vins = False
-
 	def __init__(self):
 		""" Ctor """
 

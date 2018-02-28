@@ -71,7 +71,7 @@ class IntrusionDefinition(object):
 		# Easy and medium: Always intrude turtle
 		if self._intrusion_level in [0, 1]:
 			pass
-		# Hard: Intrude only in 50 % of cases
+		# Hard: Intrude only in 50 % of cases: Pre-select one intrusion and one legal choice
 		elif self._intrusion_level == 2:
 			intrusion_choices = [random.choice(legal_choices), random.choice(intrusion_choices)]
 		else:

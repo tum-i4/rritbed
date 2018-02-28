@@ -1,2 +1,2 @@
-uint8 value
+float32 value
 string intrusion

@@ -29,6 +29,8 @@ class LaunchFileOrchestrator(object):
 	_identifier_file_path = None
 	_namespace_count = None
 
+	_intrusion_definition = None
+
 	_intrusion_percentage = 0
 	_intrude_turtle = True
 	_intrude_generators = True
@@ -66,6 +68,9 @@ class LaunchFileOrchestrator(object):
 			help="Percentage of intrusions to be included in the launch file")
 		# Additional intrusion options
 		requires_intrusions_text = "[requires --intrusions]"
+		optionals_group.add_argument("--intrusion-level", "-l",
+			dest="intrusion_level", choices=IntrusionDefinition.intrusion_levels,
+			help="Specify the intrusion level (difficulty). " + requires_intrusions_text)
 		optionals_group.add_argument("--dont-intrude-turtle", "-t", action="store_false",
 			dest="intrude_turtle",
 			help="Set this flag to disallow turtle intrusions " + requires_intrusions_text)
@@ -149,10 +154,18 @@ class LaunchFileOrchestrator(object):
 			self._file_path = _return_valid_else_raise(args.file_path)
 		self._manual_turtle_mode = _return_valid_else_raise(args.manual_turtle_mode)
 		self._namespace_count = _return_valid_else_raise(args.namespace_count)
-		self._intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
-		self._intrude_turtle = _return_valid_else_raise(args.intrude_turtle)
-		self._intrude_generators = _return_valid_else_raise(args.intrude_generators)
-		self._duplicate_vins = _return_valid_else_raise(args.duplicate_vins)
+
+		# Intrusions
+		intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
+		intrusion_level = _return_valid_else_raise(args.intrusion_level)
+		intrude_turtle = _return_valid_else_raise(args.intrude_turtle)
+		intrude_generators = _return_valid_else_raise(args.intrude_generators)
+		duplicate_vins = _return_valid_else_raise(args.duplicate_vins)
+
+		self._intrusion_definition = IntrusionDefinition(
+			intrusion_percentage=intrusion_percentage, intrusion_level=intrusion_level,
+			intrude_turtle=intrude_turtle, intrude_generators=intrude_generators,
+			duplicate_vins=duplicate_vins)
 
 		# May be None
 		self._identifier_file_path = args.identifier_file_path

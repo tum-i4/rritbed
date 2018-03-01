@@ -131,20 +131,6 @@ class Logger(object):
 		self.send_request(endpoint, request, path="get")
 
 
-	def request_random_poi(self, request):
-		""" Send request as POI request of random type """
-
-		# 1) Restaurant - 50 %
-		rta = "restaurant"
-		# 2) Gas station - 50 %
-		gst = "gas station"
-
-		# Add random POI type
-		request["type"] = self._rand_gen.choice([rta, gst])
-
-		self.send_request("poi", request, path="get")
-
-
 	def request_random_tsp_routing(self, request):
 		""" Send request as TSP request with random goal """
 

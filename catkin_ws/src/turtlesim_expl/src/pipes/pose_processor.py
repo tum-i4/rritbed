@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """ Module for the PoseProcessor class """
 
+import random
+
+
 class PoseProcessor(object):
 	""" Process poses and convert them to request objects. """
 
@@ -37,7 +40,11 @@ class PoseProcessor(object):
 
 
 	def process_poi(self, request):
-		pass
+		""" Return given request with a random POI type added to it. """
+
+		# Restaurant - 50 %, gas station - 50 %
+		request["type"] = random.choice(["restaurant", "gas station"])
+		return request
 
 
 	def process_tsp(self, request):

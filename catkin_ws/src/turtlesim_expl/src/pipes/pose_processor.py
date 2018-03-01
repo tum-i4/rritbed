@@ -54,7 +54,25 @@ class PoseProcessor(object):
 
 
 	def process_tsp(self, request):
-		pass
+		""" Return the given request with random x and y coordinates added to it. """
+
+		targ_x_str = "targ_x"
+		targ_y_str = "targ_y"
+		self._ensure_keys_not_present(request, targ_x_str, targ_y_str)
+
+		# 1 % chance we request a routing to exactly our own position
+		targ_x_choices = [request[self._x_str]] + [random.randrange(0, 500) for _ in range(0, 99)]
+		targ_y_choices = [request[self._y_str]] + [random.randrange(0, 500) for _ in range(0, 99)]
+
+		# Target coordinates
+		targ_x = random.choice(targ_x_choices)
+		targ_y = random.choice(targ_y_choices)
+
+		# Add target coordinates
+		request[targ_x_str] = targ_x
+		request[targ_y_str] = targ_y
+
+		return request
 
 
 	@staticmethod

@@ -27,6 +27,7 @@ class Logger(object):
 	""" Logger class """
 
 	_vin_field = "vin"
+	_intrusion_field = "intrusion"
 	_data = {
 		_vin_field: ""
 	}
@@ -73,7 +74,7 @@ class Logger(object):
 		request = self.copy_base_request()
 		request["generated"] = gen_value.value
 		if self._label:
-			request["intrusion"] = gen_value.intrusion
+			request[self._intrusion_field] = gen_value.intrusion
 
 		self.send_request("data/" + generator_name, request)
 
@@ -102,7 +103,7 @@ class Logger(object):
 		request = self.copy_base_request()
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 		if self._label:
-			request["intrusion"] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
+			request[self._intrusion_field] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
 
 		self.send_request("colour", request)
 
@@ -137,7 +138,7 @@ class Logger(object):
 		if self._label:
 			# Provoke KeyError to ensure existence of "intrusion" key
 			# pylint: disable-msg=W0104; (Statement has no effect - does raise)
-			request["intrusion"]
+			request[self._intrusion_field]
 
 		try:
 			requests.post(URL + "/" + path + "/" + log_method, request)

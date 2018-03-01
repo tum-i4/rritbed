@@ -13,9 +13,9 @@ class PosePipe(object):
 	POI_STR = "poi"
 	TSP_STR = "tsp"
 	_possible_processors = {
-		CC_STR : None,
-		POI_STR : None,
-		TSP_STR : None
+		CC_STR : PoseProcessor(CC_STR, PoseProcessor.process_cc),
+		POI_STR : PoseProcessor(POI_STR, PoseProcessor.process_poi),
+		TSP_STR : PoseProcessor(TSP_STR, PoseProcessor.process_tsp)
 	}
 
 	_selected_processor = None
@@ -49,10 +49,7 @@ class PosePipe(object):
 			choices.append([PosePipe._possible_processors[name]] * percentage)
 
 		choice = random.choice(choices)
-
-		processor = None
-
-		raise NotImplementedError()
+		processor = PosePipe._possible_processors[choice]
 
 		return PosePipe(processor)
 

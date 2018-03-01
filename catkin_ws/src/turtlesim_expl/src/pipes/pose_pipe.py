@@ -44,10 +44,14 @@ class PosePipe(object):
 		object.__init__(self)
 
 		assert(isinstance(processor, PoseProcessor))
-
 		self._selected_processor = processor
 
 
 	def get_processor_name(self):
 		""" Get this pipe's processor name. """
 		return self._selected_processor.name
+
+
+	def process(self, request):
+		""" Process the given request. """
+		return self._selected_processor.process(request)

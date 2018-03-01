@@ -3,15 +3,12 @@
 
 import random
 
-from pose_processor import PoseProcessor
+from pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 
 
 class PosePipe(object):
 	""" Subscribe to a pose topic and process it with the specified PoseProcessor. """
 
-	CC_STR = "cc"
-	POI_STR = "poi"
-	TSP_STR = "tsp"
 	_possible_processors = {
 		CC_STR : PoseProcessor(CC_STR, PoseProcessor.process_cc),
 		POI_STR : PoseProcessor(POI_STR, PoseProcessor.process_poi),

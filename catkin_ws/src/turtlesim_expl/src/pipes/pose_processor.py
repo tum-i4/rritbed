@@ -3,6 +3,10 @@
 
 import random
 
+CC_STR = "cc"
+POI_STR = "poi"
+TSP_STR = "tsp"
+
 
 class PoseProcessor(object):
 	""" Process poses and convert them to request objects. """

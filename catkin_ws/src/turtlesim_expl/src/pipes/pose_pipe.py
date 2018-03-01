@@ -35,7 +35,26 @@ class PosePipe(object):
 		Combined must total 100.
 		"""
 
+		assert(len(kwargs) == len(PosePipe._possible_processors))
+		percentages = [int(x) for x in kwargs.values()]
+		assert(sum(percentages) == 100)
+		# Ensure each key is present in the dict
+		for key in kwargs:
+			# pylint: disable-msg=W0104; (Statement has no effect)
+			PosePipe._possible_processors[key]
+
+		choices = []
+
+		for name, percentage in kwargs.items():
+			choices.append([PosePipe._possible_processors[name]] * percentage)
+
+		choice = random.choice(choices)
+
+		processor = None
+
 		raise NotImplementedError()
+
+		return PosePipe(processor)
 
 
 	def __init__(self, processor):

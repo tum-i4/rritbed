@@ -56,17 +56,9 @@ GENERATORS = {
 
 
 def get_generator_names():
-	"""
-	Return a list of all currently available generators
-	(used as keys for the generator definition dictionary)
-	"""
-
-	gen_names = []
-
-	for key in GENERATORS:
-		gen_names.append(key)
-
-	return gen_names
+	"""	Return a list of names of all currently available generators
+	(used as keys for the generator definition dictionary).	"""
+	return GENERATORS.keys()
 
 
 def _generator_mode(file_path):

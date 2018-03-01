@@ -9,12 +9,15 @@ class PoseProcessor(object):
 
 	name = ""
 
+	_x_str = "x"
+	_y_str = "y"
+
 
 	@staticmethod
 	def add_to_request(request, crd_x, crd_y):
 		""" Add the given coordinates to the given request and return it. """
-		request["x"] = crd_x
-		request["y"] = crd_y
+		request[PoseProcessor._x_str] = crd_x
+		request[PoseProcessor._y_str] = crd_y
 		return request
 
 

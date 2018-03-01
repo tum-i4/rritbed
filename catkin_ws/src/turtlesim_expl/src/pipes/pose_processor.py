@@ -6,6 +6,15 @@ class PoseProcessor(object):
 
 	name = ""
 
+
+	@staticmethod
+	def add_to_request(request, crd_x, crd_y):
+		""" Add the given coordinates to the given request and return it. """
+		request["x"] = crd_x
+		request["y"] = crd_y
+		return request
+
+
 	def __init__(self, name, process):
 		""" Ctor """
 

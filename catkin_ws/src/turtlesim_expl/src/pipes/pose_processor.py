@@ -49,3 +49,18 @@ class PoseProcessor(object):
 
 	def process_tsp(self, request):
 		pass
+
+
+	@staticmethod
+	def _ensure_keys_not_present(request, key, *args):
+		""" Check the given request object for one or more keys. """
+
+		for key in (key,) + args:
+			present = True
+			try:
+				request[key]
+			except KeyError:
+				present = False
+
+			if present:
+				raise KeyError("Key {} already present in given request".format(key))

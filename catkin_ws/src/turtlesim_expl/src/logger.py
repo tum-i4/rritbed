@@ -13,7 +13,7 @@ from turtlesim.msg import Pose, Color
 from turtlesim_expl.msg import GenValue
 
 from pipes.pose_pipe import PosePipe
-from pipes.pose_processor import PoseProcessor
+from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 
 
 URL = "http://localhost:5000"
@@ -83,7 +83,7 @@ class Logger(object):
 
 		time_now = time.time()
 
-		# Add a degree of randomness to when exactly the logging will occur
+		# Add a degree of randomness to when exactly the logging will begin
 		if self._last_broadcast[method.__name__] == 0:
 			self._last_broadcast[method.__name__] = time_now + self._rand_gen.randrange(1, 3)
 
@@ -119,11 +119,11 @@ class Logger(object):
 
 		processor_name = pose_pipe.get_processor_name()
 		endpoint = ""
-		if processor_name == PosePipe.CC_STR:
+		if processor_name == CC_STR:
 			endpoint = "country-code"
-		elif processor_name == PosePipe.POI_STR:
+		elif processor_name == POI_STR:
 			endpoint = "poi"
-		elif processor_name == PosePipe.TSP_STR:
+		elif processor_name == TSP_STR:
 			endpoint = "tsp"
 		else:
 			raise NotImplementedError("Choice not implemented")

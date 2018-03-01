@@ -40,10 +40,13 @@ class PoseProcessor(object):
 
 
 	def process_poi(self, request):
-		""" Return given request with a random POI type added to it. """
+		""" Return the given request with a random POI type added to it. """
+
+		type_str = "type"
+		self._ensure_keys_not_present(request, type_str)
 
 		# Restaurant - 50 %, gas station - 50 %
-		request["type"] = random.choice(["restaurant", "gas station"])
+		request[type_str] = random.choice(["restaurant", "gas station"])
 		return request
 
 

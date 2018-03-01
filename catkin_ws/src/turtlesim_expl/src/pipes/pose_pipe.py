@@ -33,6 +33,14 @@ class PosePipe(object):
 		raise NotImplementedError()
 
 
+	def __init__(self, processor):
+		""" Ctor """
+
+		object.__init__(self)
+
+		self._selected_processor = processor
+
+
 	def get_processor_name(self):
 		""" Get this pipe's processor name. """
 		return self._selected_processor.name

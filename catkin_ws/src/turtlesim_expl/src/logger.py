@@ -12,6 +12,9 @@ import rospy
 from turtlesim.msg import Pose, Color
 from turtlesim_expl.msg import GenValue
 
+from pipes.pose_pipe import PosePipe
+from pipes.pose_processor import PoseProcessor
+
 
 URL = "http://localhost:5000"
 
@@ -107,28 +110,25 @@ class Logger(object):
 	def log_pose(self, log_data):
 		""" Pose logging - currently can't be labelled for intrusions. """
 
-		# 1) Country code request - 50 %
-		cco = "country code"
-		# 2) POI search - 25 %
-		poi = "poi"
-		# 3) TSPRouting - 25 %
-		tsp = "tsp"
-
-		# Randomly choose which request to make
-		choice = self._rand_gen.choice([cco, cco, poi, tsp])
+		# Country code request - 50 %, POI search / TSP routing - 25 %
+		pose_pipe = PosePipe.create(cc=50, poi=25, tsp=25)
 
 		request = self._data
-		request["x"] = log_data.x
-		request["y"] = log_data.y
+		request = PoseProcessor.add_to_request(request, log_data.x, log_data.y)
+		request = pose_pipe.process(request)
 
-		if choice == cco:
-			self.request_country_code(request)
-		elif choice == poi:
-			self.request_random_poi(request)
-		elif choice == tsp:
-			self.request_random_tsp_routing(request)
+		processor_name = pose_pipe.get_processor_name()
+		endpoint = ""
+		if processor_name == PosePipe.CC_STR:
+			endpoint = "country-code"
+		elif processor_name == PosePipe.POI_STR:
+			endpoint = "poi"
+		elif processor_name == PosePipe.TSP_STR:
+			endpoint = "tsp"
 		else:
 			raise NotImplementedError("Choice not implemented")
+
+		self.send_request(endpoint, request, path="get")
 
 
 	def request_country_code(self, request):

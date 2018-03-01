@@ -131,10 +131,16 @@ class Logger(object):
 		self.send_request(endpoint, request, path="get")
 
 
-	def send_request(self, log_method, data, path="log"):
+	def send_request(self, log_method, request, path="log"):
 		""" Send request to specified logging endpoint with given data. """
+
+		if self._label:
+			# Provoke KeyError to ensure existence of "intrusion" key
+			# pylint: disable-msg=W0104; (Statement has no effect - does raise)
+			request["intrusion"]
+
 		try:
-			requests.post(URL + "/" + path + "/" + log_method, data)
+			requests.post(URL + "/" + path + "/" + log_method, request)
 		except requests.ConnectionError:
 			time_now = time.time()
 			# Only print an error every second

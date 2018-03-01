@@ -344,7 +344,7 @@ class LaunchFileOrchestrator(object):
 		logger_args = "{} --gen-topics".format(vin)
 		for gen_key in selected_generator_keys:
 			logger_args += " {}".format(gen_key)
-		
+
 		if self._label_intrusions:
 			logger_args += " --label"
 

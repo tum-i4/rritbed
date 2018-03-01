@@ -39,7 +39,7 @@ class Logger(object):
 	_rand_gen = None
 
 	def init(self):
-		""" Initialise logger """
+		""" Ctor """
 
 		parser = argparse.ArgumentParser(prog="logger")
 
@@ -70,7 +70,7 @@ class Logger(object):
 	def log_generated_data(self, gen_value, generator_name):
 		""" Log generated data value. """
 
-		request = self._data
+		request = self.copy_base_request()
 		request["generated"] = gen_value.value
 		if self._label:
 			request["intrusion"] = gen_value.intrusion
@@ -99,7 +99,7 @@ class Logger(object):
 	def log_colour(self, log_data):
 		""" Colour logging """
 
-		request = self._data
+		request = self.copy_base_request()
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 		if self._label:
 			request["intrusion"] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
@@ -113,7 +113,7 @@ class Logger(object):
 		# Country code request - 50 %, POI search / TSP routing - 25 %
 		pose_pipe = PosePipe.create(cc=50, poi=25, tsp=25)
 
-		request = self._data
+		request = self.copy_base_request()
 		request = PoseProcessor.add_to_request(request, log_data.x, log_data.y)
 		request = pose_pipe.process(request)
 
@@ -132,7 +132,7 @@ class Logger(object):
 
 
 	def send_request(self, log_method, data, path="log"):
-		""" Send request to specified logging endpoint with given data """
+		""" Send request to specified logging endpoint with given data. """
 		try:
 			requests.post(URL + "/" + path + "/" + log_method, data)
 		except requests.ConnectionError:
@@ -141,6 +141,11 @@ class Logger(object):
 			if time_now > self._last_conn_err + 1:
 				rospy.logerr("Can't connect to logging API")
 				self._last_conn_err = time_now
+
+
+	def copy_base_request(self):
+		""" Make a value-copy of the base request. """
+		return dict(self._data)
 
 
 

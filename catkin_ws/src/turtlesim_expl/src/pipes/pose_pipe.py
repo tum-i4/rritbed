@@ -10,9 +10,9 @@ class PosePipe(object):
 	""" Subscribe to a pose topic and process it with the specified PoseProcessor. """
 
 	_possible_processors = {
-		CC_STR : PoseProcessor(CC_STR, PoseProcessor.process_cc),
-		POI_STR : PoseProcessor(POI_STR, PoseProcessor.process_poi),
-		TSP_STR : PoseProcessor(TSP_STR, PoseProcessor.process_tsp)
+		CC_STR : PoseProcessor(CC_STR),
+		POI_STR : PoseProcessor(POI_STR),
+		TSP_STR : PoseProcessor(TSP_STR)
 	}
 
 	_selected_processor = None

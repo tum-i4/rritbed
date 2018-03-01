@@ -129,6 +129,9 @@ class Logger(object):
 		else:
 			raise NotImplementedError("Choice not implemented")
 
+		if self._label:
+			request[self._intrusion_field] = "MISSING LABELS ERROR"
+
 		self.send_request(endpoint, request, path="get")
 
 

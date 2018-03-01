@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """ Module for the PosePipe class """
 
+import random
+
+from pose_processor import PoseProcessor
+
+
 class PosePipe(object):
 	""" Subscribe to a pose topic and process it with the specified PoseProcessor. """
 
@@ -37,6 +42,8 @@ class PosePipe(object):
 		""" Ctor """
 
 		object.__init__(self)
+
+		assert(isinstance(processor, PoseProcessor))
 
 		self._selected_processor = processor
 

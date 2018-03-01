@@ -4,14 +4,14 @@
 class PoseProcessor(object):
 	""" Process poses and convert them to request objects. """
 
-	_name = ""
+	name = ""
 
 	def __init__(self, name, process):
 		""" Ctor """
 
 		object.__init__(self)
 
-		self._name = name
+		self.name = name
 		self.process = process
 
 

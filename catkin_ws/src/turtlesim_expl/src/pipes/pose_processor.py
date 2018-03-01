@@ -32,7 +32,7 @@ class PoseProcessor(object):
 
 
 	def process_cc(self, request):
-		self.send_request("country-code", request, path="get")
+		pass
 
 
 	def process_poi(self, request):

@@ -71,3 +71,11 @@ class PosePipe(object):
 	def process(self, request):
 		""" Process the given request. """
 		return self._selected_processor.process(request)
+
+
+
+if __name__ == "__main__":
+	PP = PosePipe.create(cc=50, poi=25, tsp=25)
+	print("Possible processors: %s", PP.get_possible_processors())
+	print("Processor name: %s", PP.get_processor_name())
+	print("Process x5, y10: %s", PP.process(PoseProcessor.add_to_request({}, 5, 10)))

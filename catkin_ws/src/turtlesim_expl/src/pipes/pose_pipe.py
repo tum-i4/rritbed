@@ -46,7 +46,7 @@ class PosePipe(object):
 		choices = []
 
 		for name, percentage in kwargs.items():
-			choices.append([PosePipe._possible_processors[name]] * percentage)
+			choices += [name] * percentage
 
 		choice = random.choice(choices)
 		processor = PosePipe._possible_processors[choice]

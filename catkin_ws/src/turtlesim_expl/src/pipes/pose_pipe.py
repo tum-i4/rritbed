@@ -9,7 +9,7 @@ from pose_processor import PoseProcessor
 class PosePipe(object):
 	""" Subscribe to a pose topic and process it with the specified PoseProcessor. """
 
-	CC_STR = "country code"
+	CC_STR = "cc"
 	POI_STR = "poi"
 	TSP_STR = "tsp"
 	_possible_processors = {
@@ -28,7 +28,7 @@ class PosePipe(object):
 
 
 	@staticmethod
-	def create(*args):
+	def create(**kwargs):
 		"""
 		Create a PosePipe with a randomly chosen PoseProcessor.
 		args: For each possible processor a percentage denoting how likely it will be chosen.\

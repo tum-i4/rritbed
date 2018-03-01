@@ -9,13 +9,13 @@ from pose_processor import PoseProcessor
 class PosePipe(object):
 	""" Subscribe to a pose topic and process it with the specified PoseProcessor. """
 
-	_cc_str = "country code"
-	_poi_str = "poi"
-	_tsp_str = "tsp"
+	CC_STR = "country code"
+	POI_STR = "poi"
+	TSP_STR = "tsp"
 	_possible_processors = {
-		_cc_str : None,
-		_poi_str : None,
-		_tsp_str : None
+		CC_STR : None,
+		POI_STR : None,
+		TSP_STR : None
 	}
 
 	_selected_processor = None

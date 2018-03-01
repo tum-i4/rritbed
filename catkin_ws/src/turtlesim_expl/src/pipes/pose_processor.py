@@ -25,13 +25,20 @@ class PoseProcessor(object):
 		return request
 
 
-	def __init__(self, name, process):
+	def __init__(self, name):
 		""" Ctor """
 
 		object.__init__(self)
 
 		self.name = name
-		self.process = process
+		if name == CC_STR:
+			self.process = self.process_cc
+		elif name == POI_STR:
+			self.process = self.process_poi
+		elif name == TSP_STR:
+			self.process = self.process_tsp
+		else:
+			raise ValueError("Invalid process name")
 
 
 	# This method is replaced by implementation

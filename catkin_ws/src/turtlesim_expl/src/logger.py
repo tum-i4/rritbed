@@ -131,12 +131,6 @@ class Logger(object):
 		self.send_request(endpoint, request, path="get")
 
 
-	def request_country_code(self, request):
-		""" Send request as country code request """
-
-		self.send_request("country-code", request, path="get")
-
-
 	def request_random_poi(self, request):
 		""" Send request as POI request of random type """
 

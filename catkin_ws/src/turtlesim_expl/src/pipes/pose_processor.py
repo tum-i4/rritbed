@@ -32,7 +32,8 @@ class PoseProcessor(object):
 
 
 	def process_cc(self, request):
-		pass
+		""" Return the given request unchanged. """
+		return request
 
 
 	def process_poi(self, request):

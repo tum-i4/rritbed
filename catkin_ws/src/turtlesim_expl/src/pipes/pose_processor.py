@@ -14,3 +14,8 @@ class PoseProcessor(object):
 
 		self._name = name
 		self._processor = processor
+
+
+	def process(self, crd_x, crd_y, request):
+		""" Process the given coordinates and enrich the request with result. """
+		pass

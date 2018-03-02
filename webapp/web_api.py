@@ -69,7 +69,8 @@ def get_country_code():
 	cc_request_log_entry.complete(
 		app_id=app_id,
 		log_message="Req",
-		gps_position=position
+		gps_position=position,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(cc_request_log_entry)
@@ -82,7 +83,8 @@ def get_country_code():
 	cc_response_log_entry.complete(
 		app_id=app_id,
 		log_message="Resp [{}]".format(country_code),
-		gps_position=position
+		gps_position=position,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(cc_response_log_entry)
@@ -105,7 +107,8 @@ def get_poi():
 	poi_request_log_entry.complete(
 		app_id=app_id,
 		log_message="Req {}".format(poi_type),
-		gps_position=position
+		gps_position=position,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(poi_request_log_entry)
@@ -125,7 +128,8 @@ def get_poi():
 		app_id=app_id,
 		log_message=log_message,
 		gps_position=position,
-		level=level
+		level=level,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(poi_response_log_entry)
@@ -150,7 +154,8 @@ def get_tsp_routing():
 		app_id=app_id,
 		log_message="Req [x: {}, y: {}]".format(
 			targ_x, targ_y),
-		gps_position=position
+		gps_position=position,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(tsp_request_log_entry)
@@ -167,7 +172,8 @@ def get_tsp_routing():
 		app_id=app_id,
 		log_message="Resp [{}] for [x: {}, y: {}]".format(
 			tsp_message, targ_x, targ_y),
-		gps_position=position
+		gps_position=position,
+		intrusion=request.params.intrusion
 	)
 
 	_append_to_log(tsp_response_log_entry)

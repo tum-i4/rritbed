@@ -119,13 +119,13 @@ class PoseProcessor(object):
 		targ_y_str = "targ_y"
 		self._ensure_keys_not_present(request, targ_x_str, targ_y_str)
 
-		# 1 % chance we request a routing to exactly our own position
-		targ_x_choices = [request[self._x_str]] + [random.randrange(0, 500) for _ in range(0, 99)]
-		targ_y_choices = [request[self._y_str]] + [random.randrange(0, 500) for _ in range(0, 99)]
+		targ_x_y = (random.randint(0, 499), random.randint(0, 499))
+		# [Intrusion] Request a routing to exactly our own position
+		intruded_x_y = (request[self._x_str], request[self._y_str])
 
-		# Target coordinates
-		targ_x = random.choice(targ_x_choices)
-		targ_y = random.choice(targ_y_choices)
+		choice = self._choose_with_likelihood(targ_x_y, intruded_x_y)
+		targ_x = choice[0]
+		targ_y = choice[1]
 
 		# Add target coordinates
 		request[targ_x_str] = targ_x

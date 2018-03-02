@@ -66,9 +66,9 @@ class PosePipe(object):
 		return self._selected_processor.name
 
 
-	def process(self, request):
+	def process(self, request, label):
 		""" Process the given request. """
-		return self._selected_processor.process(request)
+		return self._selected_processor.process(request, label=label)
 
 
 

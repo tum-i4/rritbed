@@ -133,7 +133,10 @@ class TurtleFrame(object):
 	def _draw_red(self, intrusion):
 		""" Draw a red area in the center based on the intrusion level. """
 
-		if intrusion is not None and intrusion not in self.possible_intrusion_levels:
+		if intrusion is None:
+			return
+
+		if intrusion not in self.possible_intrusion_levels:
 			raise ValueError("Given value [{}] for argument \"intrusion\" is invalid".format(intrusion))
 
 		from_point = Point(0, 0)

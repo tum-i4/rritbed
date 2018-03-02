@@ -140,8 +140,11 @@ class PoseProcessor(object):
 		return request
 
 
-	def _choose_with_likelihood(self, normal, intruded):
+	def _is_intruded_with_likelihood(self):
 		""" Choose from the two given objects with a likelihood corresponding to the intrusion level. """
+
+		normal = False
+		intruded = True
 
 		if self._intrusion is None:
 			return normal

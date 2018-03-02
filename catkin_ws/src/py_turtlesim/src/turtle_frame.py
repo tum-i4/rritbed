@@ -112,6 +112,7 @@ class TurtleFrame(object):
 		assert(isinstance(from_point, Point))
 		assert(isinstance(to_point, Point))
 
+		# We make sure that from < to as range can only go from small to big.
 		from_x = min(from_point.x, to_point.x)
 		to_x = max(from_point.x, to_point.x)
 		from_y = min(from_point.y, to_point.y)

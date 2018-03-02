@@ -278,8 +278,11 @@ class LaunchFileOrchestrator(object):
 				"teleop", "turtle_teleop_key", "turtlesim")
 			control_node.attrib["output"] = "screen"
 
+		# [Intrusions] Intruded turtle: Get turtle args
+		turtle_args = self._intrusion_definition.get_turtle_args(intruded=intruded)
+
 		group_element.append(
-			self._create_turtle_group(control_node))
+			self._create_turtle_group(control_node, turtle_args))
 
 		if self._manual_turtle_mode:
 			return group_element
@@ -406,11 +409,11 @@ class LaunchFileOrchestrator(object):
 		return group_element
 
 
-	def _create_turtle_group(self, control_node):
+	def _create_turtle_group(self, control_node, turtle_args):
 		""" Create a group of ns "turtle" with a turtle and the given control node. """
 
 		turtle_node = self._create_node_element(
-			n_name="py_turtlesim", n_type="py_turtlesim.py", n_pkg="py_turtlesim")
+			n_name="py_turtlesim", n_type="py_turtlesim.py", n_pkg="py_turtlesim", n_args=turtle_args)
 		return self._create_group([turtle_node, control_node], n_ns="turtle")
 
 

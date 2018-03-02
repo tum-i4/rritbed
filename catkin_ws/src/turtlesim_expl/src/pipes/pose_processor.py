@@ -77,7 +77,15 @@ class PoseProcessor(object):
 		# [Intrusion] Jump to random spot that is at least 10 pixels off
 		new_request = self._intrude_cc_request(request)
 		# Method chooses likelihood for different intrusion levels
-		return self._choose_with_likelihood(request, new_request)
+		intrude = self._is_intruded_with_likelihood()
+
+		if intrude:
+			request = new_request
+
+		if label:
+			self._label_request(request, intruded=intrude, intrusion_label="jump")
+
+		return request
 
 
 	def _intrude_cc_request(self, request):

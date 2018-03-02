@@ -85,7 +85,7 @@ class StateDao(object):
 
 		new_file_path = self.create_unique_log_file_path()
 
-		self._flush_log()
+		self.flush_log()
 
 		shutil.copyfile(self._log_file_path, new_file_path)
 
@@ -117,7 +117,7 @@ class StateDao(object):
 		returns: Status message denoting success of underlying operations.
 		"""
 
-		self._flush_log()
+		self.flush_log()
 
 		status_msg = "Log file: "
 		status_msg += self._rename_log_file()
@@ -127,6 +127,21 @@ class StateDao(object):
 		self._clear_internal_state()
 
 		return status_msg
+
+
+	def flush_log(self):
+		""" Force a write of all new log entries to disk. """
+
+		number_of_entries = len(self._new_log_entries)
+
+		if number_of_entries == 0:
+			return
+
+		# Remove new entries from list and save them to disk
+		with open(self._log_file_path, "a") as log_file:
+			for _ in range(0, number_of_entries):
+				new_log_entry = self._new_log_entries.pop(0)
+				log_file.write(new_log_entry.get_log_string() + "\n")
 
 
 	def get_current_min_time(self):
@@ -204,7 +219,7 @@ class StateDao(object):
 				client_file.write(json.dumps(value))
 
 		# Append new log entries
-		self._flush_log()
+		self.flush_log()
 
 
 	def _rename_log_file(self):
@@ -246,21 +261,6 @@ class StateDao(object):
 	def _delete_file_if_existing(file_path):
 		if os.path.lexists(file_path):
 			os.remove(file_path)
-
-
-	def _flush_log(self):
-		""" Force a write of all new log entries to disk. """
-
-		number_of_entries = len(self._new_log_entries)
-
-		if number_of_entries == 0:
-			return
-
-		# Remove new entries from list and save them to disk
-		with open(self._log_file_path, "a") as log_file:
-			for _ in range(0, number_of_entries):
-				new_log_entry = self._new_log_entries.pop(0)
-				log_file.write(new_log_entry.get_log_string() + "\n")
 
 
 	### File paths ###

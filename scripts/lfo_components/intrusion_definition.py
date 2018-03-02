@@ -84,7 +84,7 @@ class IntrusionDefinition(object):
 		""" Return args for the py_turtlesim based on the specified intrusion level. """
 
 		if not intruded or not self._intrude_turtle:
-			return ""
+			return None
 
 		return "--intrusion " + self._levels[self._intrusion_level]
 

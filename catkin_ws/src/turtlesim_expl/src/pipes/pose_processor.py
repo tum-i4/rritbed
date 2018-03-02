@@ -145,9 +145,16 @@ class PoseProcessor(object):
 		# [Intrusion] Request a routing to exactly our own position
 		intruded_x_y = (request[self._x_str], request[self._y_str])
 
-		choice = self._choose_with_likelihood(targ_x_y, intruded_x_y)
-		targ_x = choice[0]
-		targ_y = choice[1]
+		intrude = self._is_intruded_with_likelihood()
+
+		if intrude:
+			targ_x_y = intruded_x_y
+
+		if label:
+			self._label_request(request, intruded=intrude, intrusion_label="routetoself")
+
+		targ_x = targ_x_y[0]
+		targ_y = targ_x_y[1]
 
 		# Add target coordinates
 		request[targ_x_str] = targ_x

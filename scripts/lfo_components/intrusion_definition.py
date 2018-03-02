@@ -80,6 +80,15 @@ class IntrusionDefinition(object):
 		return random.choice(intrusion_choices)
 
 
+	def get_turtle_args(self, intruded):
+		""" Return args for the py_turtlesim based on the specified intrusion level. """
+
+		if not intruded or not self._intrude_turtle:
+			return ""
+
+		return "--intrusion " + self._levels[self._intrusion_level]
+
+
 	def create_generator_tuples(self, intruded, selected_generators):
 		""" Create tuples (selected_generator, intrusion_mode) for each generator in the list. """
 

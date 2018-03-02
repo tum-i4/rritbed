@@ -161,6 +161,18 @@ class PoseProcessor(object):
 			raise NotImplementedError("Not implemented for intrusion value: {}".format(self._intrusion))
 
 
+	def _label_request(self, request, intruded=False, intrusion_label=None):
+		""" Label request in self._intrusion_field with the required label. """
+
+		if intruded and intrusion_label is None:
+			raise ValueError("If intruded, an intrusion label must be given")
+
+		if not intruded:
+			request[self._intrusion_field] = self._not_intruded_label
+		else:
+			request[self._intrusion_field] = intrusion_label
+
+
 	@staticmethod
 	def _ensure_keys_not_present(request, key, *args):
 		""" Check the given request object for one or more keys. """

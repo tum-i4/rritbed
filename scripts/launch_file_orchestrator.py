@@ -351,6 +351,9 @@ class LaunchFileOrchestrator(object):
 		if self._label_intrusions:
 			logger_args += " --label"
 
+		# [Intrusions] Add necessary logger args for specified intrusion level
+		logger_args += self._intrusion_definition.get_logger_arg(intruded)
+
 		group_element.append(
 			self._create_node_element("logger", "logger.py", "turtlesim_expl", n_args=logger_args))
 

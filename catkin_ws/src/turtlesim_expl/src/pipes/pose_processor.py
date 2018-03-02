@@ -67,6 +67,28 @@ class PoseProcessor(object):
 		return request
 
 
+	def _intrude_cc_request(self, request):
+		""" Modify the x and y coordinates by at least 10 for a new request.\n
+		Does not change the original request object. """
+
+		new_request = dict(request)
+		old_x = int(request[self._x_str])
+		old_y = int(request[self._y_str])
+		new_x = old_x
+		new_y = old_y
+
+		while abs(new_x - old_x) < 10:
+			new_x = random.randint(0, 499)
+
+		while abs(new_y - old_y) < 10:
+			new_y = random.randint(0, 499)
+
+		new_request[self._x_str] = new_x
+		new_request[self._y_str] = new_y
+
+		return new_request
+
+
 	def process_poi(self, request):
 		""" Return the given request with a random POI type added to it. """
 

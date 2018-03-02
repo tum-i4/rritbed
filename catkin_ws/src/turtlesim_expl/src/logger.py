@@ -122,7 +122,7 @@ class Logger(object):
 
 		request = self.copy_base_request()
 		request = PoseProcessor.add_to_request(request, log_data.x, log_data.y)
-		request = pose_pipe.process(request)
+		request = pose_pipe.process(request, label=self._label)
 
 		processor_name = pose_pipe.get_processor_name()
 		endpoint = ""

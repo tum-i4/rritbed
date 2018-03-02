@@ -116,7 +116,9 @@ class Logger(object):
 		""" Pose logging - currently can't be labelled for intrusions. """
 
 		# Country code request - 50 %, POI search / TSP routing - 25 %
-		pose_pipe = PosePipe.create(intrusion=self._intrusion, cc=50, poi=25, tsp=25)
+		pose_pipe = PosePipe.create(
+			intrusion=self._intrusion, intrusion_field=self._intrusion_field,
+			cc=50, poi=25, tsp=25)
 
 		request = self.copy_base_request()
 		request = PoseProcessor.add_to_request(request, log_data.x, log_data.y)

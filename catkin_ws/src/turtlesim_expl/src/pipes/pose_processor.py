@@ -13,10 +13,12 @@ class PoseProcessor(object):
 	""" Process poses and convert them to request objects. """
 
 	possible_intrusion_levels = ["easy", "med", "hard"]
+	_not_intruded_label = "normal"
 
 	name = ""
 
 	_intrusion = None
+	_intrusion_field = None
 
 	_x_str = "x"
 	_y_str = "y"
@@ -46,13 +48,17 @@ class PoseProcessor(object):
 			raise ValueError("Invalid process name")
 
 
-	def set_intrusion(self, intrusion=None):
+	def set_intrusion(self, intrusion=None, intrusion_field=None):
 		""" Activate the given intrusion level for this PoseProcessor. """
 
-		if intrusion is not None and intrusion not in self.possible_intrusion_levels:
-			raise ValueError("Invalid value for intrusion: {}".format(intrusion))
+		if intrusion is not None:
+			if intrusion not in self.possible_intrusion_levels:
+				raise ValueError("Invalid value for intrusion: {}".format(intrusion))
+			if intrusion_field is None:
+				raise ValueError("If intrusion is set, an intrusion field is required")
 
 		self._intrusion = intrusion
+		self._intrusion_field = intrusion_field
 
 
 	# This method is replaced by implementation

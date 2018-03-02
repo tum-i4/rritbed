@@ -21,18 +21,6 @@ DAO = None
 ### API endpoints ###
 
 
-@post("/log")
-def log():
-	""" Default log endpoint with no arguments """
-
-	basic_log_entry = _create_base_log_entry(request.params.vin)
-
-	basic_log_entry.complete(app_id="STATUS")
-
-	_append_to_log(basic_log_entry)
-	return
-
-
 @post("/log/data/<generator>")
 def log_data(generator):
 	""" Log endpoint for data generator """

@@ -122,6 +122,24 @@ class PoseProcessor(object):
 		return request
 
 
+	def _choose_with_likelihood(self, normal, intruded):
+		""" Choose from the two given objects with a likelihood corresponding to the intrusion level. """
+
+		if self._intrusion is None:
+			return normal
+		# Easy: 50 % likelihood
+		elif self._intrusion == self.possible_intrusion_levels[0]:
+			return random.choice([normal, intruded])
+		# Medium: 30 % likelihood for intruded
+		elif self._intrusion == self.possible_intrusion_levels[1]:
+			return random.choice([normal] * 70 + [intruded] * 30)
+		# Hard: 20 % likelihood for intruded == 1/5
+		elif self._intrusion == self.possible_intrusion_levels[2]:
+			return random.choice([normal] * 4 + [intruded] * 1)
+		else:
+			raise NotImplementedError("Not implemented for intrusion value: {}".format(self._intrusion))
+
+
 	@staticmethod
 	def _ensure_keys_not_present(request, key, *args):
 		""" Check the given request object for one or more keys. """

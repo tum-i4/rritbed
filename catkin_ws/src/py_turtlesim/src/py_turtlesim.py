@@ -27,6 +27,9 @@ class Turtlesim(object):
 	def execute(self, draw_gui=False, intrusion=None):
 		""" Run the simulation. """
 
+		rospy.loginfo("Starting turtleframe with draw_gui=[%s] and intrusion=[%s]",
+			str(draw_gui), str(intrusion))
+
 		# pylint: disable-msg=W0612; (Unused variable - need to hold reference)
 		frame = TurtleFrame(draw_gui, intrusion)
 

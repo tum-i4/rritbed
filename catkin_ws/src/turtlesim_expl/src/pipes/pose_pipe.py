@@ -3,7 +3,7 @@
 
 import random
 
-from pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
+from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 
 
 class PosePipe(object):
@@ -25,10 +25,10 @@ class PosePipe(object):
 
 
 	@staticmethod
-	def create(**kwargs):
+	def create(intrusion, **kwargs):
 		"""
 		Create a PosePipe with a randomly chosen PoseProcessor.
-		args: For each possible processor a percentage denoting how likely it will be chosen.\
+		kwargs: For each possible processor a percentage denoting how likely it will be chosen.\
 		Combined must total 100.
 		"""
 
@@ -47,6 +47,7 @@ class PosePipe(object):
 
 		choice = random.choice(choices)
 		processor = PosePipe._possible_processors[choice]
+		processor.set_intrusion(intrusion)
 
 		return PosePipe(processor)
 

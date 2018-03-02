@@ -117,11 +117,19 @@ class PoseProcessor(object):
 		self._ensure_keys_not_present(request, type_str)
 
 		# Restaurant - 50 %, gas station - 50 %
-		legal_choice = random.choice(["restaurant", "gas station"])
+		choice = random.choice(["restaurant", "gas station"])
 		# [Intrusion] Illegal type
 		intruded_choice = random.choice(["private home", "nsa hq"])
 
-		request[type_str] = self._choose_with_likelihood(legal_choice, intruded_choice)
+		intrude = self._is_intruded_with_likelihood()
+
+		if intrude:
+			choice = intruded_choice
+
+		request[type_str] = choice
+
+		if label:
+			self._label_request(request, intruded=intrude, intrusion_label="illegaltype")
 
 		return request
 

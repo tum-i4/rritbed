@@ -47,16 +47,17 @@ class TurtleFrame(object):
 	_gui_output = None
 
 
-	def __init__(self, draw_gui=False):
+	def __init__(self, draw_gui=False, intrusion=None):
 		""" Ctor """
 
 		object.__init__(self)
+
+		self._has_gui = draw_gui
 
 		# Initialise background (500 x 500)
 		self._background = [[
 			Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B) for _ in range(0, 500)
 			] for _ in range(0, 500)]
-		self._has_gui = draw_gui
 
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)
@@ -81,7 +82,7 @@ class TurtleFrame(object):
 		# Bottom right: Pastel blue
 		self._draw_area(Rgb.pastel_blue(), Point(250, 0), Point(499, 249))
 		# Intrusion zone (middle): Red
-		self._draw_area(Rgb.red(), Point(245, 245), Point(254, 254))
+		self._draw_red(intrusion)
 
 		# Initialise GUI (if requested)
 		self._redraw()
@@ -125,6 +126,10 @@ class TurtleFrame(object):
 		for x in range(from_x, to_x + 1):
 			for y in range(from_y, to_y + 1):
 				self._background[x][y] = colour
+
+
+	def _draw_red(self, intrusion):
+		pass
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):

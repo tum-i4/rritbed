@@ -105,16 +105,16 @@ class DistributionGenerator(object):
 	def _generate_intrusion_huge_error(self, values=None):
 		""" Subtract every second generated number by (itself * 100). """
 
-		next_value = self._generate_impl(values)
-		next_str = DistributionGenerator.NORMAL
+		next_tuple = self._generate_impl(values)
 
 		if self._h_e_last_was_normal:
-			next_value = next_value - (next_value * 100)
+			next_value = next_tuple[0] - (next_tuple[0] * 100)
 			next_str = DistributionGenerator.HUGE_ERROR
+			next_tuple = (next_value, next_str)
 
 		self._h_e_last_was_normal = not self._h_e_last_was_normal
 
-		return (next_value, next_str)
+		return next_tuple
 
 
 

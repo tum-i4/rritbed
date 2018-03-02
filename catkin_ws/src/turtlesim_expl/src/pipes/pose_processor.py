@@ -16,6 +16,8 @@ class PoseProcessor(object):
 
 	name = ""
 
+	_intrusion = None
+
 	_x_str = "x"
 	_y_str = "y"
 
@@ -42,6 +44,15 @@ class PoseProcessor(object):
 			self.process = self.process_tsp
 		else:
 			raise ValueError("Invalid process name")
+
+
+	def set_intrusion(self, intrusion=None):
+		""" Activate the given intrusion level for this PoseProcessor. """
+
+		if intrusion is not None and intrusion not in self.possible_intrusion_levels:
+			raise ValueError("Invalid value for intrusion: {}".format(intrusion))
+
+		self._intrusion = intrusion
 
 
 	# This method is replaced by implementation

@@ -131,7 +131,32 @@ class TurtleFrame(object):
 
 
 	def _draw_red(self, intrusion):
-		pass
+		""" Draw a red area in the center based on the intrusion level. """
+
+		if intrusion is not None and intrusion not in self.possible_intrusion_levels:
+			raise ValueError("Given value [{}] for argument \"intrusion\" is invalid".format(intrusion))
+
+		from_point = Point(0, 0)
+		to_point = Point(0, 0)
+
+		assert(len(self.possible_intrusion_levels) == 3)
+
+		# Easy: 40 % red / 316 * 316
+		if intrusion == self.possible_intrusion_levels[0]:
+			from_point = Point(92, 92)
+			to_point = Point(407, 407)
+		# Medium: 20 % red / 224 * 224
+		elif intrusion == self.possible_intrusion_levels[1]:
+			from_point = Point(138, 138)
+			to_point = Point(361, 361)
+		# Hard: 5 % red / 112 * 112
+		elif intrusion == self.possible_intrusion_levels[2]:
+			from_point = Point(194, 194)
+			to_point = Point(305, 305)
+		else:
+			raise NotImplementedError("draw_red: Intrusion level not implemented")
+
+		self._draw_area(Rgb.red(), from_point, to_point)
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):

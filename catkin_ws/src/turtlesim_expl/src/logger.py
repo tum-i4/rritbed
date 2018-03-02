@@ -12,6 +12,7 @@ import rospy
 from turtlesim.msg import Pose, Color
 from turtlesim_expl.msg import GenValue
 
+# pylint: disable-msg=C0411; (Standard import should be above - I don't consider it "standard")
 from pipes.pose_pipe import PosePipe
 from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 
@@ -33,6 +34,7 @@ class Logger(object):
 	}
 
 	_label = False
+	_intrusion = None
 
 	_last_broadcast = {}
 	_last_conn_err = 0
@@ -47,11 +49,13 @@ class Logger(object):
 		parser.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
 		parser.add_argument("--gen-topics", metavar="TOPIC", nargs="*", default=[], dest="gen_topics")
 		parser.add_argument("--label", action="store_true", help="Label the data with intrusion type")
+		parser.add_argument("--intrusion", "-i", choices=PoseProcessor.possible_intrusion_levels)
 
 		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
 		self._data[self._vin_field] = args.namespace
 		self._label = args.label
+		self._intrusion = args.intrusion
 
 		self._last_broadcast[self.log_colour.__name__] = 0
 		self._last_broadcast[self.log_pose.__name__] = 0

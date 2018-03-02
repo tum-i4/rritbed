@@ -35,6 +35,8 @@ DEFAULT_BG_B = 0xff
 class TurtleFrame(object):
 	""" The frame for all turtles """
 
+	possible_intrusion_levels = ["easy", "med", "hard"]
+
 	_background = [[]]
 	_turtles = {}
 

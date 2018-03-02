@@ -25,7 +25,7 @@ class PosePipe(object):
 
 
 	@staticmethod
-	def create(intrusion, **kwargs):
+	def create(intrusion, intrusion_field, **kwargs):
 		"""
 		Create a PosePipe with a randomly chosen PoseProcessor.
 		kwargs: For each possible processor a percentage denoting how likely it will be chosen.\
@@ -47,7 +47,7 @@ class PosePipe(object):
 
 		choice = random.choice(choices)
 		processor = PosePipe._possible_processors[choice]
-		processor.set_intrusion(intrusion)
+		processor.set_intrusion(intrusion, intrusion_field)
 
 		return PosePipe(processor)
 

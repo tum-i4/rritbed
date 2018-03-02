@@ -63,12 +63,12 @@ class PoseProcessor(object):
 
 	# This method is replaced by implementation
 	# pylint: disable-msg=R0201,W0613,E0202; (Could be function, unused arguments, method is hidden)
-	def process(self, request):
+	def process(self, request, label):
 		""" Process the given coordinates and enrich the request with result. """
 		raise ValueError("This is not supposed to be called.")
 
 
-	def process_cc(self, request):
+	def process_cc(self, request, label):
 		""" Return the given request unchanged. """
 
 		if self._intrusion is None:
@@ -102,7 +102,7 @@ class PoseProcessor(object):
 		return new_request
 
 
-	def process_poi(self, request):
+	def process_poi(self, request, label):
 		""" Return the given request with a random POI type added to it. """
 
 		type_str = "type"
@@ -118,7 +118,7 @@ class PoseProcessor(object):
 		return request
 
 
-	def process_tsp(self, request):
+	def process_tsp(self, request, label):
 		""" Return the given request with random x and y coordinates added to it. """
 
 		targ_x_str = "targ_x"

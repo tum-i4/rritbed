@@ -125,6 +125,15 @@ class IntrusionDefinition(object):
 		return generator_tuples
 
 
+	def get_logger_arg(self, intruded):
+		""" Return the fitting arg for the logger based on the specified intrusion level. """
+
+		if not intruded:
+			return ""
+
+		return " --intrusion " + self._levels[self._intrusion_level]
+
+
 	def _add_double_vin(self, vin_list):
 		"""
 		If double-vins were requested and the intrusion percentage is set to > 0,

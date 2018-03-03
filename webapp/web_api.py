@@ -275,7 +275,6 @@ def _append_to_log(new_log_entry):
 	""" Appends the given string plus a newline to the log file """
 
 	DAO.append_to_log(new_log_entry)
-	return
 
 
 

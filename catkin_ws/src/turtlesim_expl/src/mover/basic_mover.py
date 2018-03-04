@@ -14,17 +14,13 @@ _BASE_PATH = "~/ros"
 class BasicMoveStrategy(MoveStrategy):
 	""" Basic move strategy based on movement file """
 
-	_base_path_expanded = ""
-
-	_file_path = ""
-	_current_line = 0
-
-
 	def __init__(self):
 		""" Ctor """
 		MoveStrategy.__init__(self)
 
 		self._base_path_expanded = os.path.expanduser(_BASE_PATH)
+		self._file_path = ""
+		self._current_line = 0
 
 
 	def get_next(self):

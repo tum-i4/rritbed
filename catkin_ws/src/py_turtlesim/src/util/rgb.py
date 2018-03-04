@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 """ Storage class for RGB information """
 
+# pylint: disable-msg=C0103; (Invalid attribute / argument names r, g, b)
+
+
 class Rgb(object):
 	""" RGB class """
 
 	MIN = 0
 	MAX = 255
-
-	# pylint: disable-msg=C0103; (Invalid class attribute name)
-	r = 0
-	g = 0
-	b = 0
 
 	def __init__(self, r=0, g=0, b=0):
 		""" Ctor """

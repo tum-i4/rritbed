@@ -75,12 +75,25 @@ class IntrusionDefinition(object):
 
 
 	def get_turtle_args(self, intruded):
-		""" Return args for the py_turtlesim based on the specified intrusion level. """
+		""" Return args or None for the py_turtlesim based on the specified intrusion level. """
 
-		if not intruded or not self._intrude_turtle:
+		return self._get_arg(condition=(intruded and self._intrude_turtle))
+
+
+	def get_logger_arg(self, intruded):
+		""" Return the intrusion arg or empty string based on the specified intrusion level. """
+
+		arg = self._get_arg(condition=intruded)
+		return (" " + arg) if arg is not None else ""
+
+
+	def _get_arg(self, condition):
+		""" Return the intrusion arg or None based on the given boolean. """
+
+		if condition:
+			return "--intrusion " + IntrusionDefinition._levels[self._intrusion_level]
+		else:
 			return None
-
-		return "--intrusion " + IntrusionDefinition._levels[self._intrusion_level]
 
 
 	def create_generator_tuples(self, intruded, selected_generators):
@@ -117,15 +130,6 @@ class IntrusionDefinition(object):
 			generator_tuples[index] = (generator, random.choice(choices))
 
 		return generator_tuples
-
-
-	def get_logger_arg(self, intruded):
-		""" Return the fitting arg for the logger based on the specified intrusion level. """
-
-		if not intruded:
-			return ""
-
-		return " --intrusion " + IntrusionDefinition._levels[self._intrusion_level]
 
 
 	def _add_double_vin(self, vin_list):

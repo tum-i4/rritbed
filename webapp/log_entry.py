@@ -13,7 +13,6 @@ class LogEntry(object):
 	LEVEL_ERROR = "ERROR"
 	ENV_DEFAULT = "TEST"
 
-
 	vin_field = "vin"
 	app_id_field = "app_id"
 	level_field = "level"
@@ -21,18 +20,6 @@ class LogEntry(object):
 	log_message_field = "log_message"
 	log_id_field = "log_id"
 	time_unix_field = "time_unix"
-
-	data = {
-		vin_field : "",             # Identifier of the car calling the microservice
-		app_id_field : "",          # Name of the microservice using this
-		level_field : "",           # INFO, DEBUG, ...
-		gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
-		log_message_field : "",
-		log_id_field : "",          # UUID of this log entry
-		time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
-	}
-
-	intrusion = ""
 
 
 	@staticmethod
@@ -53,6 +40,18 @@ class LogEntry(object):
 		""" Ctor """
 
 		object.__init__(self)
+
+		self.data = {
+			self.vin_field : "",             # Identifier of the car calling the microservice
+			self.app_id_field : "",          # Name of the microservice using this
+			self.level_field : "",           # INFO, DEBUG, ...
+			self.gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
+			self.log_message_field : "",
+			self.log_id_field : "",          # UUID of this log entry
+			self.time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
+		}
+
+		self.intrusion = ""
 
 		time_unix = self._get_current_time_if_none(time_unix)
 		log_id = self._generate_uuid_str_if_none(log_id)

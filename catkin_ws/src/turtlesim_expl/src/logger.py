@@ -29,19 +29,8 @@ class Logger(object):
 
 	_vin_field = "vin"
 	_intrusion_field = "intrusion"
-	_data = {
-		_vin_field: ""
-	}
 
-	_label = False
-	_intrusion = None
-
-	_last_broadcast = {}
-	_last_conn_err = 0
-
-	_rand_gen = None
-
-	def init(self):
+	def __init__(self):
 		""" Ctor """
 
 		parser = argparse.ArgumentParser(prog="logger")
@@ -53,12 +42,18 @@ class Logger(object):
 
 		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
-		self._data[self._vin_field] = args.namespace
+		self._data = {
+			self._vin_field : args.namespace
+		}
+
 		self._label = args.label
 		self._intrusion = args.intrusion
 
-		self._last_broadcast[self.log_colour.__name__] = 0
-		self._last_broadcast[self.log_pose.__name__] = 0
+		self._last_broadcast = {
+			self.log_colour.__name__ : 0,
+			self.log_pose.__name__ : 0
+		}
+		self._last_conn_err = 0
 
 		self._rand_gen = random.Random()
 
@@ -167,7 +162,7 @@ class Logger(object):
 
 if __name__ == "__main__":
 	LOGGER = Logger()
-	LOGGER.init()
+	LOGGER.__init__()
 
 	# spin() keeps python from exiting until this node is stopped
 	rospy.spin()

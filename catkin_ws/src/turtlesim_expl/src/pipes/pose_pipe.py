@@ -3,7 +3,7 @@
 
 import random
 
-from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
+from pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 
 
 class PosePipe(object):
@@ -35,15 +35,14 @@ class PosePipe(object):
 		assert(sum(percentages) == 100)
 		# Ensure each key is present in the dict
 		for key in kwargs:
-			# pylint: disable-msg=W0104; (Statement has no effect)
-			PosePipe._POSSIBLE_PROCESSORS[key]
+			if key not in PosePipe._POSSIBLE_PROCESSORS.keys():
+				raise KeyError("Given key [{}] not found".format(key))
 
 		choices = []
-
 		for name, percentage in kwargs.items():
 			choices += [name] * percentage
-
 		choice = random.choice(choices)
+
 		processor = PosePipe._POSSIBLE_PROCESSORS[choice]
 		processor.set_intrusion(intrusion, intrusion_field)
 

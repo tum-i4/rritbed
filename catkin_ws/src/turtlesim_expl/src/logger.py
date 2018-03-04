@@ -160,7 +160,6 @@ if __name__ == "__main__":
 	ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
 
 	LOGGER = Logger(ARGS)
-	LOGGER.__init__()
 
 	# spin() keeps python from exiting until this node is stopped
 	rospy.spin()

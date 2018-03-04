@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ DistributionGenerator class """
 
-from src.generator.argument_constraint import ArgumentConstraint
+from argument_constraint import ArgumentConstraint
 
 
 class DistributionGenerator(object):

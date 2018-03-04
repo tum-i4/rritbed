@@ -24,11 +24,13 @@ import os
 import sys
 import rospy
 
-import src.generator.generators as GENS
+import generators as GENS
 
-from src.globals.paths import BASE_PATH
-from src.generator.distribution_generator import DistributionGenerator as DG
+from distribution_generator import DistributionGenerator as DG
 from turtlesim_expl.msg import GenValue
+
+
+BASE_PATH = os.path.expanduser("~/ros")
 
 
 class DistributionPublisher(object):

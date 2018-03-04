@@ -4,10 +4,12 @@
 import os
 import rospy
 
-import src.mover.move_helper as move_helper
-from src.mover.move_strategy import MoveStrategy
-from src.mover.turtle_control import TurtleControl
-from src.globals.paths import BASE_PATH
+import move_helper
+from move_strategy import MoveStrategy
+from turtle_control import TurtleControl
+
+
+BASE_PATH = os.path.expanduser("~/ros")
 
 
 class BasicMoveStrategy(MoveStrategy):

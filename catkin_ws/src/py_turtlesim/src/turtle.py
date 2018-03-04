@@ -28,16 +28,6 @@ DEFAULT_PEN_B = 0xff
 class Turtle(object):
 	""" The turtle class """
 
-	pos = Point()
-	_pos_f = PointF()
-
-	_pose_pub = None
-	_colour_pub = None
-
-	_last_command_time = rospy.Time.from_sec(0)
-	_x_vel = 0.0
-	_y_vel = 0.0
-
 	def __init__(self, name, point):
 		""" Ctor """
 
@@ -50,6 +40,10 @@ class Turtle(object):
 		rospy.Subscriber(name + "/cmd_vel", Twist, self._velocity_callback)
 		self._pose_pub = rospy.Publisher(name + "/pose", Pose, queue_size=10)
 		self._colour_pub = rospy.Publisher(name + "/color_sensor", Color, queue_size=10)
+
+		self._last_command_time = rospy.Time.from_sec(0)
+		self._x_vel = 0.0
+		self._y_vel = 0.0
 
 
 	def _velocity_callback(self, data):

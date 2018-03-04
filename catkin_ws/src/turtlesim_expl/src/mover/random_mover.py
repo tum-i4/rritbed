@@ -30,8 +30,6 @@ class RandomMoveStrategy(MoveStrategy):
 	_POSE_PATH = "turtle1/pose"
 	_COLOUR_PATH = "turtle1/color_sensor"
 
-	_rand_gen = random.Random()
-
 	_last_pose_field = "last_pose"
 	_last_colour_field = "last_colour"
 	_data_field = "data"
@@ -40,21 +38,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 	_update_rate_in_sec = 0.01
 
-	_turtle_state = {
-		_last_pose_field: {
-			_data_field: None,
-			_last_update_field: 0
-		},
-		_last_colour_field: {
-			_data_field: None,
-			_last_update_field: 0
-		},
-		_illegal_since_field: None
-	}
-
 	_illegal_colour = Color(r=255, g=0, b=0)
-
-	_speedup = False
 
 
 	def __init__(self, args):
@@ -62,13 +46,28 @@ class RandomMoveStrategy(MoveStrategy):
 
 		MoveStrategy.__init__(self)
 
+		self._rand_gen = random.Random()
+
+		self._turtle_state = {
+			self._last_pose_field: {
+				self._data_field: None,
+				self._last_update_field: 0
+			},
+			self._last_colour_field: {
+				self._data_field: None,
+				self._last_update_field: 0
+			},
+			self._illegal_since_field: None
+		}
+
+		self._speedup = args.speedup
+
 		if args.seed is not None:
 			rospy.loginfo("Using seed %s", args.seed)
 			self._rand_gen.seed(args.seed)
 		else:
 			rospy.loginfo("No seed specified")
 
-		self._speedup = args.speedup
 		if self._speedup:
 			rospy.loginfo("Speedup activated")
 

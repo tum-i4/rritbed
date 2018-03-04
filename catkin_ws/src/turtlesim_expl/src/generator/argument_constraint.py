@@ -7,10 +7,6 @@ from sys import maxint as MAXINT
 class ArgumentConstraint(object):
 	""" Define constraints for an argument (min, max) """
 
-	default_value = 0.0
-	min_value = 0.0
-	max_value = 0.0
-
 	def __init__(self, default_value, min_value=-MAXINT-1, max_value=MAXINT):
 		""" Ctor """
 

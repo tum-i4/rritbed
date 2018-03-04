@@ -7,6 +7,7 @@ from geometry_msgs.msg import Twist
 import move_helper
 from move_strategy import MoveStrategy
 
+
 class TurtleControl(object):
 	""" Direct interface class for moving a turtle """
 

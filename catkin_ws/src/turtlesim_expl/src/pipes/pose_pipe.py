@@ -15,8 +15,6 @@ class PosePipe(object):
 		TSP_STR : PoseProcessor(TSP_STR)
 	}
 
-	_selected_processor = None
-
 
 	@staticmethod
 	def get_possible_processors():

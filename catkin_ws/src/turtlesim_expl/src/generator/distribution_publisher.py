@@ -47,36 +47,10 @@ class DistributionPublisher(object):
 	_generator_arguments = []
 
 
-	def __init__(self):
+	def __init__(self, args):
 		""" Ctor """
 
 		object.__init__(self)
-
-		generator_choices = GENS.get_generator_names()
-
-		parser = argparse.ArgumentParser(prog="dist_pub")
-		parser.add_argument("--id", "-i", required=True, help="ID to publish to")
-		intrusion_choices = [DG.ONLY_ZEROES, DG.HUGE_ERROR]
-		parser.add_argument("--intrusion-mode", "-e", choices=intrusion_choices, dest="intrusion_mode",
-			help="One of the possible intrusion modes: {}".format(intrusion_choices))
-
-		sub_parsers = parser.add_subparsers(title="modes", dest="mode")
-
-		# Live gen mode
-		parser_gen = sub_parsers.add_parser("gen", help="Generate data live from a distribution")
-		parser_gen.add_argument("generator", choices=generator_choices,
-			help="The generator name")
-		parser_gen.add_argument("params", type=float, nargs="*", help="Optional parameters")
-
-		# File pub mode
-		parser_file = sub_parsers.add_parser("file", help="Publish data from a file")
-		parser_file.add_argument("pub_file_path", metavar="/FILE/PATH", help="The file to publish from")
-		parser_file.add_argument("--repeat", "-r", action="store_true", dest="repeat_file")
-
-		# Remove remapping arguments and delete program name from arguments
-		filtered_argv = rospy.myargv(sys.argv)[1:]
-
-		args = parser.parse_args(filtered_argv)
 
 		return_message = ""
 		queue_size = 10
@@ -201,7 +175,30 @@ class DistributionPublisher(object):
 
 if __name__ == "__main__":
 	try:
-		PUB = DistributionPublisher()
+		PARSER = argparse.ArgumentParser(prog="dist_pub")
+
+		PARSER.add_argument("--id", "-i", required=True, help="ID to publish to")
+		INTRUSION_CHOICES = [DG.ONLY_ZEROES, DG.HUGE_ERROR]
+		PARSER.add_argument("--intrusion-mode", "-e", choices=INTRUSION_CHOICES, dest="intrusion_mode",
+			help="One of the possible intrusion modes: {}".format(INTRUSION_CHOICES))
+
+		SUB_PARSERS = PARSER.add_subparsers(title="modes", dest="mode")
+
+		# Live gen mode
+		PARSER_GEN = SUB_PARSERS.add_parser("gen", help="Generate data live from a distribution")
+		PARSER_GEN.add_argument("generator", choices=GENS.get_generator_names(),
+			help="The generator name")
+		PARSER_GEN.add_argument("params", type=float, nargs="*", help="Optional parameters")
+
+		# File pub mode
+		PARSER_FILE = SUB_PARSERS.add_parser("file", help="Publish data from a file")
+		PARSER_FILE.add_argument("pub_file_path", metavar="/FILE/PATH", help="The file to publish from")
+		PARSER_FILE.add_argument("--repeat", "-r", action="store_true", dest="repeat_file")
+
+		# Pass filtered args to parser (remove remapping arguments and delete program name)
+		ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
+
+		PUB = DistributionPublisher(ARGS)
 		PUB.run()
 	except rospy.ROSInterruptException:
 		pass

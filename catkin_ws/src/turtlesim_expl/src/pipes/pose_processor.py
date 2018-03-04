@@ -12,17 +12,18 @@ TSP_STR = "tsp"
 class PoseProcessor(object):
 	""" Process poses and convert them to request objects. """
 
-	possible_intrusion_levels = ["easy", "med", "hard"]
-	_not_intruded_label = "normal"
-	_x_str = "x"
-	_y_str = "y"
+	POSSIBLE_INTRUSION_LEVELS = ["easy", "med", "hard"]
+
+	_NOT_INTRUDED_LABEL = "normal"
+	_X_STR = "x"
+	_Y_STR = "y"
 
 
 	@staticmethod
 	def add_to_request(request, crd_x, crd_y):
 		""" Add the given coordinates to the given request and return it. """
-		request[PoseProcessor._x_str] = int(crd_x)
-		request[PoseProcessor._y_str] = int(crd_y)
+		request[PoseProcessor._X_STR] = int(crd_x)
+		request[PoseProcessor._Y_STR] = int(crd_y)
 		return request
 
 
@@ -48,7 +49,7 @@ class PoseProcessor(object):
 		""" Activate the given intrusion level for this PoseProcessor. """
 
 		if intrusion is not None:
-			if intrusion not in self.possible_intrusion_levels:
+			if intrusion not in self.POSSIBLE_INTRUSION_LEVELS:
 				raise ValueError("Invalid value for intrusion: {}".format(intrusion))
 			if intrusion_field is None:
 				raise ValueError("If intrusion is set, an intrusion field is required")
@@ -89,8 +90,8 @@ class PoseProcessor(object):
 		Does not change the original request object. """
 
 		new_request = dict(request)
-		old_x = int(request[self._x_str])
-		old_y = int(request[self._y_str])
+		old_x = int(request[self._X_STR])
+		old_y = int(request[self._Y_STR])
 		new_x = old_x
 		new_y = old_y
 
@@ -100,8 +101,8 @@ class PoseProcessor(object):
 		while abs(new_y - old_y) < 10:
 			new_y = random.randint(0, 499)
 
-		new_request[self._x_str] = new_x
-		new_request[self._y_str] = new_y
+		new_request[self._X_STR] = new_x
+		new_request[self._Y_STR] = new_y
 
 		return new_request
 
@@ -139,7 +140,7 @@ class PoseProcessor(object):
 
 		targ_x_y = (random.randint(0, 499), random.randint(0, 499))
 		# [Intrusion] Request a routing to exactly our own position
-		intruded_x_y = (request[self._x_str], request[self._y_str])
+		intruded_x_y = (request[self._X_STR], request[self._Y_STR])
 
 		intrude = self._is_intruded_with_likelihood()
 
@@ -168,13 +169,13 @@ class PoseProcessor(object):
 		if self._intrusion is None:
 			return normal
 		# Easy: 50 % likelihood
-		elif self._intrusion == self.possible_intrusion_levels[0]:
+		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[0]:
 			return random.choice([normal, intruded])
 		# Medium: 30 % likelihood for intruded
-		elif self._intrusion == self.possible_intrusion_levels[1]:
+		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[1]:
 			return random.choice([normal] * 70 + [intruded] * 30)
 		# Hard: 20 % likelihood for intruded == 1/5
-		elif self._intrusion == self.possible_intrusion_levels[2]:
+		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[2]:
 			return random.choice([normal] * 4 + [intruded] * 1)
 		else:
 			raise NotImplementedError("Not implemented for intrusion value: {}".format(self._intrusion))
@@ -184,7 +185,7 @@ class PoseProcessor(object):
 		""" Label request in self._intrusion_field with the required label. """
 
 		if not intruded:
-			request[self._intrusion_field] = self._not_intruded_label
+			request[self._intrusion_field] = self._NOT_INTRUDED_LABEL
 		else:
 			request[self._intrusion_field] = intrusion_label
 

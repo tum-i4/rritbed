@@ -19,6 +19,8 @@ Possible arguments:
 file <file name> [-r]  : Repeat after reaching EOF
 """
 
+# pylint: disable-msg=R0903; (Too few public methods)
+
 import argparse
 import os
 import sys

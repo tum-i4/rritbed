@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ DAO for the STATE """
 
+# pylint: disable-msg=R0902; (Too many instance attributes)
+
 import datetime
 import json
 import os
@@ -223,10 +225,10 @@ class StateDao(object):
 
 		if not os.path.lexists(self._log_file_path):
 			return "File doesn't exist"
-		else:
-			new_file_name = self._create_unique_log_file_path()
-			os.rename(self._log_file_path, new_file_name)
-			return "File was renamed successfully"
+
+		new_file_name = self._create_unique_log_file_path()
+		os.rename(self._log_file_path, new_file_name)
+		return "File was renamed successfully"
 
 
 	def _delete_state_files(self):

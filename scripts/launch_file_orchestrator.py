@@ -4,8 +4,9 @@ Launch file orchestrator
 For usage see --help output.
 """
 
+# pylint: disable-msg=R0903; (Too few public methods)
+
 import argparse
-import math
 import os
 import random
 

@@ -7,6 +7,8 @@ Possible arguments:
 [seed]  : use given value (must be valid float or int) as seed
 """
 
+# pylint: disable-msg=R0903; (Too few public methods)
+
 import argparse
 import random
 import sys
@@ -182,6 +184,7 @@ class RandomMoveStrategy(MoveStrategy):
 		return move_helper.get_zero_twist()
 
 
+	# pylint: disable-msg=R0201; (Method could be a function)
 	def _dont_move_impl(self):
 		""" Alternative to get_next that never moves. """
 		return move_helper.get_zero_twist()
@@ -193,6 +196,7 @@ class RandomMoveStrategy(MoveStrategy):
 		return self._rand_gen.randint(start, stop)
 
 
+
 	# Event handlers
 
 
@@ -202,6 +206,7 @@ class RandomMoveStrategy(MoveStrategy):
 
 	def _save_colour(self, colour):
 		self._set_last_colour(colour)
+
 
 
 	# Getters & setters
@@ -227,11 +232,13 @@ class RandomMoveStrategy(MoveStrategy):
 		assert(issubclass(data.__class__, data_class))
 
 		time_now = time.time()
-		if time_now < RandomMoveStrategy._UPDATE_RATE_IN_SEC + self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD]:
+		if (time_now < RandomMoveStrategy._UPDATE_RATE_IN_SEC
+			+ self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD]):
 			return
 
 		self._turtle_state[field][RandomMoveStrategy._DATA_FIELD] = data
 		self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD] = time_now
+
 
 
 if __name__ == "__main__":

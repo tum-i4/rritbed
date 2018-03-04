@@ -1,11 +1,13 @@
 #!/usr/env/python
 """ Log entry """
 
+# pylint: disable-msg=R0903,R0913; (Too few public methods, too many arguments)
+
 import json
 import time
 import uuid
 
-# pylint: disable-msg=R0903; (Too few public methods (1/2))
+
 class LogEntry(object):
 	""" Container class for log data """
 

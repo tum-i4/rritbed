@@ -26,6 +26,7 @@ class IntrusionDefinition(object):
 	}
 
 
+	# pylint: disable-msg=R0913; (Too many arguments)
 	def __init__(self, intrusion_percentage, intrusion_level,
 		intrude_turtle=True, intrude_generators=True, duplicate_vins=False):
 		""" Ctor """
@@ -90,10 +91,10 @@ class IntrusionDefinition(object):
 	def _get_arg(self, condition):
 		""" Return the intrusion arg or None based on the given boolean. """
 
-		if condition:
-			return "--intrusion " + IntrusionDefinition._levels[self._intrusion_level]
-		else:
+		if not condition:
 			return None
+
+		return "--intrusion " + IntrusionDefinition._levels[self._intrusion_level]
 
 
 	def create_generator_tuples(self, intruded, selected_generators):
@@ -188,7 +189,8 @@ class IntrusionDefinition(object):
 		return [(vin_list[i], intrusions[i]) for i in range(0, len(vin_list))]
 
 
-	def _verify_percentage(self, given_percentage):
+	@staticmethod
+	def _verify_percentage(given_percentage):
 		""" Verify the given percentage value and return it. """
 
 		given_percentage = int(given_percentage)
@@ -198,7 +200,8 @@ class IntrusionDefinition(object):
 		return given_percentage
 
 
-	def _get_level_id(self, intrusion_level_string):
+	@staticmethod
+	def _get_level_id(intrusion_level_string):
 		""" Convert the given level string to a level id. """
 
 		levels = IntrusionDefinition._levels

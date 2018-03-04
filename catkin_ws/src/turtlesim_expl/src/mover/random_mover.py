@@ -30,15 +30,15 @@ class RandomMoveStrategy(MoveStrategy):
 	_POSE_PATH = "turtle1/pose"
 	_COLOUR_PATH = "turtle1/color_sensor"
 
-	_last_pose_field = "last_pose"
-	_last_colour_field = "last_colour"
-	_data_field = "data"
-	_last_update_field = "last_update"
-	_illegal_since_field = "illegal_since"
+	_LAST_POSE_FIELD = "last_pose"
+	_LAST_COLOUR_FIELD = "last_colour"
+	_DATA_FIELD = "data"
+	_LAST_UPDATE_FIELD = "last_update"
+	_ILLEGAL_SINCE_FIELD = "illegal_since"
 
-	_update_rate_in_sec = 0.01
+	_UPDATE_RATE_IN_SEC = 0.01
 
-	_illegal_colour = Color(r=255, g=0, b=0)
+	_ILLEGAL_COLOUR = Color(r=255, g=0, b=0)
 
 
 	def __init__(self, args):
@@ -49,15 +49,15 @@ class RandomMoveStrategy(MoveStrategy):
 		self._rand_gen = random.Random()
 
 		self._turtle_state = {
-			self._last_pose_field: {
-				self._data_field: None,
-				self._last_update_field: 0
+			RandomMoveStrategy._LAST_POSE_FIELD: {
+				RandomMoveStrategy._DATA_FIELD: None,
+				RandomMoveStrategy._LAST_UPDATE_FIELD: 0
 			},
-			self._last_colour_field: {
-				self._data_field: None,
-				self._last_update_field: 0
+			RandomMoveStrategy._LAST_COLOUR_FIELD: {
+				RandomMoveStrategy._DATA_FIELD: None,
+				RandomMoveStrategy._LAST_UPDATE_FIELD: 0
 			},
-			self._illegal_since_field: None
+			RandomMoveStrategy._ILLEGAL_SINCE_FIELD: None
 		}
 
 		self._speedup = args.speedup
@@ -82,8 +82,8 @@ class RandomMoveStrategy(MoveStrategy):
 			}
 			# All intelligence modes need the last pose and colour
 			rospy.loginfo("Intelligence mode \"%s\" specified", args.intelligence)
-			rospy.Subscriber(self._POSE_PATH, Pose, self._save_pose)
-			rospy.Subscriber(self._COLOUR_PATH, Color, self._save_colour)
+			rospy.Subscriber(RandomMoveStrategy._POSE_PATH, Pose, self._save_pose)
+			rospy.Subscriber(RandomMoveStrategy._COLOUR_PATH, Color, self._save_colour)
 			# Select implementation based on specified intelligence
 			self.get_next = impl_choices[args.intelligence]
 		elif args.intelligence == RandomMoveStrategy.DONT_MOVE_CHOICE:
@@ -140,15 +140,15 @@ class RandomMoveStrategy(MoveStrategy):
 		Turn robot around when hitting illegal colour. """
 
 		# No need to react - generate normal next step
-		if self._get_last_colour() != self._illegal_colour:
-			self._turtle_state[self._illegal_since_field] = None
+		if self._get_last_colour() != RandomMoveStrategy._ILLEGAL_COLOUR:
+			self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] = None
 			return self._get_next_impl()
 
 		# We hit an illegal area
 
 		# Initialise "illegal since" field
-		if self._turtle_state[self._illegal_since_field] is None:
-			self._turtle_state[self._illegal_since_field] = time.time()
+		if self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] is None:
+			self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] = time.time()
 
 		# Make sure we didn't spawn in the illegal area
 		if (self._get_last_pose().linear_velocity == 0
@@ -161,8 +161,8 @@ class RandomMoveStrategy(MoveStrategy):
 		reversed_pose_twist = move_helper.reverse_pose(pose)
 
 		# Make sure we escalate speed the longer we are in the illegal zone
-		if self._turtle_state[self._illegal_since_field] is not None:
-			time_since_illegal = self._turtle_state[self._illegal_since_field]
+		if self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] is not None:
+			time_since_illegal = self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD]
 			if reversed_pose_twist.linear.x < 0:
 				reversed_pose_twist.linear.x -= time_since_illegal
 			else:
@@ -176,7 +176,7 @@ class RandomMoveStrategy(MoveStrategy):
 		Stop moving as soon as the illegal colour is hit. """
 
 		# Normal steps
-		if self._get_last_colour() != self._illegal_colour:
+		if self._get_last_colour() != RandomMoveStrategy._ILLEGAL_COLOUR:
 			return self._get_next_impl()
 
 		return move_helper.get_zero_twist()
@@ -208,30 +208,30 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _get_last_pose(self):
-		return self._turtle_state[self._last_pose_field][self._data_field]
+		return self._turtle_state[RandomMoveStrategy._LAST_POSE_FIELD][RandomMoveStrategy._DATA_FIELD]
 
 
 	def _set_last_pose(self, pose):
-		self._set_field(self._last_pose_field, pose, Pose)
+		self._set_field(RandomMoveStrategy._LAST_POSE_FIELD, pose, Pose)
 
 
 	def _get_last_colour(self):
-		return self._turtle_state[self._last_colour_field][self._data_field]
+		return self._turtle_state[RandomMoveStrategy._LAST_COLOUR_FIELD][RandomMoveStrategy._DATA_FIELD]
 
 
 	def _set_last_colour(self, colour):
-		self._set_field(self._last_colour_field, colour, Color)
+		self._set_field(RandomMoveStrategy._LAST_COLOUR_FIELD, colour, Color)
 
 
 	def _set_field(self, field, data, data_class):
 		assert(issubclass(data.__class__, data_class))
 
 		time_now = time.time()
-		if time_now < self._update_rate_in_sec + self._turtle_state[field][self._last_update_field]:
+		if time_now < RandomMoveStrategy._UPDATE_RATE_IN_SEC + self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD]:
 			return
 
-		self._turtle_state[field][self._data_field] = data
-		self._turtle_state[field][self._last_update_field] = time_now
+		self._turtle_state[field][RandomMoveStrategy._DATA_FIELD] = data
+		self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD] = time_now
 
 
 if __name__ == "__main__":

@@ -21,20 +21,20 @@ import move_helper
 class NumbersToVelocity(object):
 	""" Number input to turtle velocity output pipe """
 
-	_input_topic = ""
-	_topic_type = None
-	_output_namespace = ""
-	_turtle_name = "turtle1"
-
-	_velocity_publisher = None
-
-	_just_chose_speed = True
-	_turtle_walks = True
-
 	def __init__(self):
 		""" Ctor """
 
 		object.__init__(self)
+
+		self._input_topic = ""
+		self._topic_type = None
+		self._output_namespace = ""
+		self._turtle_name = "turtle1"
+
+		self._velocity_publisher = None
+
+		self._just_chose_speed = True
+		self._turtle_walks = True
 
 		# Remove remapping arguments and program name
 		args = rospy.myargv(sys.argv)[1:]

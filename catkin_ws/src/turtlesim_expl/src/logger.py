@@ -30,6 +30,7 @@ class Logger(object):
 	_vin_field = "vin"
 	_intrusion_field = "intrusion"
 
+
 	def __init__(self):
 		""" Ctor """
 
@@ -43,7 +44,7 @@ class Logger(object):
 		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
 		self._data = {
-			self._vin_field : args.namespace
+			Logger._vin_field : args.namespace
 		}
 
 		self._label = args.label
@@ -73,7 +74,7 @@ class Logger(object):
 		request = self.copy_base_request()
 		request["generated"] = gen_value.value
 		if self._label:
-			request[self._intrusion_field] = gen_value.intrusion
+			request[Logger._intrusion_field] = gen_value.intrusion
 
 		self.send_request("data/" + generator_name, request)
 
@@ -102,7 +103,7 @@ class Logger(object):
 		request = self.copy_base_request()
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 		if self._label:
-			request[self._intrusion_field] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
+			request[Logger._intrusion_field] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
 
 		self.send_request("colour", request)
 
@@ -112,7 +113,7 @@ class Logger(object):
 
 		# Country code request - 50 %, POI search / TSP routing - 25 %
 		pose_pipe = PosePipe.create(
-			intrusion=self._intrusion, intrusion_field=self._intrusion_field,
+			intrusion=self._intrusion, intrusion_field=Logger._intrusion_field,
 			cc=50, poi=25, tsp=25)
 
 		request = self.copy_base_request()
@@ -142,7 +143,7 @@ class Logger(object):
 		if self._label:
 			# Provoke KeyError to ensure existence of "intrusion" key
 			# pylint: disable-msg=W0104; (Statement has no effect - does raise)
-			request[self._intrusion_field]
+			request[Logger._intrusion_field]
 
 		try:
 			requests.post(URL + "/" + path + "/" + log_method, request)

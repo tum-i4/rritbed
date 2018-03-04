@@ -75,7 +75,7 @@ class BasicMoveStrategy(MoveStrategy):
 
 if __name__ == "__main__":
 	try:
-		T_CONTROL = TurtleControl(BasicMoveStrategy, 2)
+		T_CONTROL = TurtleControl(BasicMoveStrategy, {}, 2)
 		rospy.loginfo("Starting file-based mover")
 		T_CONTROL.run()
 	except rospy.ROSInterruptException:

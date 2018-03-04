@@ -28,8 +28,8 @@ class DistributionGenerator(object):
 		self._method = method
 
 		self._intrusion_generators = {
-			self.ONLY_ZEROES: self._generate_intrusion_zeroes,
-			self.HUGE_ERROR: self._generate_intrusion_huge_error
+			DistributionGenerator.ONLY_ZEROES: self._generate_intrusion_zeroes,
+			DistributionGenerator.HUGE_ERROR: self._generate_intrusion_huge_error
 		}
 
 		# Huge error

@@ -11,33 +11,26 @@ from log_entry import LogEntry
 
 
 class StateDao(object):
-	""" Static DAO class for handling the STATE objects """
-
-	_quiet = False
-
-	_state_path = "state"
-	_state_file_name = "state"
-	_state_file_path = os.path.join(_state_path, _state_file_name)
-	_log_path = "log"
-	_log_file_name = "log"
-	_log_file_path = os.path.join(_log_path, _log_file_name)
-
-	_curr_min_time = None
-	_client_times = {}
-	_new_log_entries = [] # LogEntry objects
-
-	_unique_log_file_names = []
-
-
-
-	### Object methods ###
-
+	""" DAO class for handling the STATE objects """
 
 	def __init__(self, quiet=False):
 		""" Ctor """
 
 		object.__init__(self)
 		self._quiet = quiet
+
+		self._state_path = "state"
+		self._state_file_name = "state"
+		self._state_file_path = os.path.join(self._state_path, self._state_file_name)
+		self._log_path = "log"
+		self._log_file_name = "log"
+		self._log_file_path = os.path.join(self._log_path, self._log_file_name)
+
+		self._curr_min_time = None
+		self._client_times = {}
+		self._new_log_entries = [] # LogEntry objects
+
+		self._unique_log_file_names = []
 
 
 	def __enter__(self):

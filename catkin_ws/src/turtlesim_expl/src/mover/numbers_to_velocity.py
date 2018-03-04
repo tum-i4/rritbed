@@ -59,6 +59,26 @@ class NumbersToVelocity(object):
 			self._turtle_name = args[3]
 
 
+	def _get_topic_type_from_str(self, topic_type_str):
+		""" Set the topic type based on the given string. """
+
+		if topic_type_str == "float":
+			return Float32
+		elif topic_type_str == "int":
+			return Int32
+		else:
+			raise ValueError("Invalid topic type given: {}\nExpected: float or int".format(topic_type_str))
+
+
+	def _format_output_namespace(self, output_namespace):
+		""" Format the given output namespace. """
+
+		if not output_namespace.endswith(os.sep):
+			return output_namespace + os.sep
+		else:
+			return output_namespace
+
+
 	def activate(self):
 		""" Initialise the node, activate the topics and spin """
 

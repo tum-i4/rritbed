@@ -15,8 +15,12 @@ BASE_PATH = os.path.expanduser("~/ros")
 class BasicMoveStrategy(MoveStrategy):
 	""" Basic move strategy based on movement file """
 
-	def __init__(self):
+	def __init__(self, args):
 		""" Ctor """
+
+		if args:
+			raise ValueError("Args given - can't process")
+
 		MoveStrategy.__init__(self)
 
 		self._file_path = ""

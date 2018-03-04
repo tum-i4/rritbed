@@ -16,7 +16,7 @@ class TurtleControl(object):
 	move_strategy = MoveStrategy()
 
 
-	def __init__(self, move_strategy, rate_in_hz=2, turtle_path="turtle1"):
+	def __init__(self, move_strategy, move_strategy_args, rate_in_hz=2, turtle_path="turtle1"):
 		""" Ctor """
 
 		object.__init__(self)
@@ -25,7 +25,7 @@ class TurtleControl(object):
 
 		assert(issubclass(move_strategy, MoveStrategy))
 
-		self.move_strategy = move_strategy()
+		self.move_strategy = move_strategy(move_strategy_args)
 		self.rate_limiter = rospy.Rate(rate_in_hz)
 		self.turtle_path = turtle_path
 

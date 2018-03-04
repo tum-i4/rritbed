@@ -23,6 +23,10 @@ from turtlesim.msg import Color, Pose
 class RandomMoveStrategy(MoveStrategy):
 	""" Random move strategy based on random.random """
 
+	RETURN_CHOICE = "return"
+	STAY_CHOICE = "stay"
+	DONT_MOVE_CHOICE = "dont-move"
+
 	_POSE_PATH = "turtle1/pose"
 	_COLOUR_PATH = "turtle1/color_sensor"
 
@@ -53,35 +57,10 @@ class RandomMoveStrategy(MoveStrategy):
 	_speedup = False
 
 
-	def __init__(self):
+	def __init__(self, args):
 		""" Ctor """
 
 		MoveStrategy.__init__(self)
-
-		# Remove remapping arguments and program name
-		filtered_argv = rospy.myargv(sys.argv)[1:]
-
-		parser = argparse.ArgumentParser(
-			prog="random_mover", description="Randomly move a turtlesim around")
-
-		group = parser.add_mutually_exclusive_group()
-		group.add_argument("--seed", "-s", metavar="seed", type=float,
-							help="Specify seed for the random generator")
-		group.add_argument("-pi", action="store_const", dest="seed", const=3.1415926535897,
-							help="Use pi as seed")
-		group.add_argument("-pi1000", action="store_const", dest="seed", const=31415926535897.0,
-							help="Use pi*10B as seed")
-
-		return_choice = "return"
-		stay_choice = "stay"
-		dont_move_choice = "dont-move"
-		parser.add_argument("--intelligence", "-i", metavar="intelligence_mode",
-							choices=[return_choice, stay_choice, dont_move_choice],
-							help="Specify intelligence mode")
-
-		parser.add_argument("--speedup", "-f", action="store_true", help="Increase speed")
-
-		args = parser.parse_args(filtered_argv)
 
 		if args.seed is not None:
 			rospy.loginfo("Using seed %s", args.seed)
@@ -97,18 +76,18 @@ class RandomMoveStrategy(MoveStrategy):
 		if args.intelligence is None:
 			rospy.loginfo("No intelligence mode specified")
 			self.get_next = self._get_next_impl
-		elif args.intelligence in [return_choice, stay_choice]:
+		elif args.intelligence in [RandomMoveStrategy.RETURN_CHOICE, RandomMoveStrategy.STAY_CHOICE]:
 			impl_choices = {
-				return_choice: self._turn_around_impl,
-				stay_choice: self._stay_impl
+				RandomMoveStrategy.RETURN_CHOICE: self._turn_around_impl,
+				RandomMoveStrategy.STAY_CHOICE: self._stay_impl
 			}
 			# All intelligence modes need the last pose and colour
-			rospy.loginfo("Intelligence mode \"%s\" specified", return_choice)
+			rospy.loginfo("Intelligence mode \"%s\" specified", args.intelligence)
 			rospy.Subscriber(self._POSE_PATH, Pose, self._save_pose)
 			rospy.Subscriber(self._COLOUR_PATH, Color, self._save_colour)
 			# Select implementation based on specified intelligence
 			self.get_next = impl_choices[args.intelligence]
-		elif args.intelligence == dont_move_choice:
+		elif args.intelligence == RandomMoveStrategy.DONT_MOVE_CHOICE:
 			rospy.loginfo("\"Don't move\" mode specified")
 			self.get_next = self._dont_move_impl
 		else:
@@ -258,7 +237,31 @@ class RandomMoveStrategy(MoveStrategy):
 
 if __name__ == "__main__":
 	try:
-		T_CONTROL = TurtleControl(RandomMoveStrategy, 2)
+		PARSER = argparse.ArgumentParser(
+			prog="random_mover", description="Randomly move a turtlesim around")
+
+		GROUP = PARSER.add_mutually_exclusive_group()
+		GROUP.add_argument("--seed", "-s", metavar="seed", type=float,
+							help="Specify seed for the random generator")
+		GROUP.add_argument("-pi", action="store_const", dest="seed", const=3.1415926535897,
+							help="Use pi as seed")
+		GROUP.add_argument("-pi1000", action="store_const", dest="seed", const=31415926535897.0,
+							help="Use pi*10B as seed")
+
+		INTELLIGENCE_CHOICES = [
+			RandomMoveStrategy.RETURN_CHOICE,
+			RandomMoveStrategy.STAY_CHOICE,
+			RandomMoveStrategy.DONT_MOVE_CHOICE
+		]
+		PARSER.add_argument("--intelligence", "-i", metavar="intelligence_mode",
+							choices=INTELLIGENCE_CHOICES, help="Specify intelligence mode")
+
+		PARSER.add_argument("--speedup", "-f", action="store_true", help="Increase speed")
+
+		# Pass filtered args to parser (remove remapping arguments and delete program name)
+		ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
+
+		T_CONTROL = TurtleControl(RandomMoveStrategy, ARGS, 2)
 		rospy.loginfo("Starting random walker")
 		T_CONTROL.run()
 	except rospy.ROSInterruptException:

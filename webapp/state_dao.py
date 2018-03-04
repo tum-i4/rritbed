@@ -93,7 +93,7 @@ class StateDao(object):
 		current_index = len(log_lines) - 1
 		while True:
 			entry = json.loads(log_lines[current_index])
-			if entry[LogEntry.time_unix_field] <= self.get_current_min_time():
+			if entry[LogEntry.TIME_UNIX_FIELD] <= self.get_current_min_time():
 				break
 			log_lines.pop()
 			current_index -= 1

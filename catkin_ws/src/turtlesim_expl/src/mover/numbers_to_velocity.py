@@ -9,6 +9,7 @@ output namespace: Namespace in which the turtle is registered
 turtle name:      (optionally) The name of the turtle (default: "turtle1")
 """
 
+import argparse
 import os
 import sys
 import rospy
@@ -21,42 +22,20 @@ import move_helper
 class NumbersToVelocity(object):
 	""" Number input to turtle velocity output pipe """
 
-	def __init__(self):
+	def __init__(self, args):
 		""" Ctor """
 
 		object.__init__(self)
 
-		self._input_topic = ""
-		self._topic_type = None
-		self._output_namespace = ""
-		self._turtle_name = "turtle1"
+		self._input_topic = args.input_topic
+		self._topic_type = self._get_topic_type_from_str(args.topic_type)
+		self._output_namespace = self._format_output_namespace(args.output_namespace)
+		self._turtle_name = args.turtle_name
 
 		self._velocity_publisher = None
 
 		self._just_chose_speed = True
 		self._turtle_walks = True
-
-		# Remove remapping arguments and program name
-		args = rospy.myargv(sys.argv)[1:]
-
-		if len(args) < 3 or len(args) > 4:
-			raise Exception("Invalid number of arguments given: {}".format(len(args)))
-
-		self._input_topic = args[0]
-
-		if args[1] == "float":
-			self._topic_type = Float32
-		elif args[1] == "int":
-			self._topic_type = Int32
-		else:
-			raise Exception("Invalid topic type given: {}\nExpected: float or int".format(args[1]))
-
-		self._output_namespace = args[2]
-		if not self._output_namespace.endswith(os.sep):
-			self._output_namespace += os.sep
-
-		if len(args) == 4:
-			self._turtle_name = args[3]
 
 
 	def _get_topic_type_from_str(self, topic_type_str):
@@ -122,7 +101,20 @@ class NumbersToVelocity(object):
 
 if __name__ == "__main__":
 	try:
-		PIPE = NumbersToVelocity()
+		PARSER = argparse.ArgumentParser(prog="num2vel")
+
+		# </input/topic> <topic type> </output/namespace/> [turtle name]
+
+		PARSER.add_argument("input_topic", help="Complete rostopic path, e.g. /input/topic")
+		PARSER.add_argument("topic_type", choices=["float", "int"])
+		PARSER.add_argument("output_namespace", help="Namespace in which the turtle is registered")
+		# nargs="?" == optional
+		PARSER.add_argument("turtle_name", nargs="?", default="turtle1")
+
+		# Pass filtered args to parser (remove remapping arguments and delete program name)
+		ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
+
+		PIPE = NumbersToVelocity(ARGS)
 		PIPE.activate()
 	except rospy.ROSInterruptException:
 		pass

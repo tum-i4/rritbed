@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 """ Storage class for a point with two floating point numbers """
 
-from util.point import Point
+# pylint: disable-msg=C0103; (Invalid attribute / argument names x, y)
+
+
+from point import Point
 
 
 class PointF(Point):
 	""" PointF class """
-
-	# pylint: disable-msg=C0103; (Invalid class attribute name)
-	x = 0.0
-	y = 0.0
 
 	def __init__(self, x=0, y=0):
 		""" Ctor """

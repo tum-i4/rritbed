@@ -4,7 +4,7 @@
 import random
 import unittest
 
-from vin_generator import VinGenerator
+from lfo_components.vin_generator import VinGenerator
 
 
 class Tests(unittest.TestCase):

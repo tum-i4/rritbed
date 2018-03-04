@@ -30,17 +30,8 @@ class Logger(object):
 	_INTRUSION_FIELD = "intrusion"
 
 
-	def __init__(self):
+	def __init__(self, args):
 		""" Ctor """
-
-		parser = argparse.ArgumentParser(prog="logger")
-
-		parser.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
-		parser.add_argument("--gen-topics", metavar="TOPIC", nargs="*", default=[], dest="gen_topics")
-		parser.add_argument("--label", action="store_true", help="Label the data with intrusion type")
-		parser.add_argument("--intrusion", "-i", choices=PoseProcessor.POSSIBLE_INTRUSION_LEVELS)
-
-		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
 		self._data = {
 			Logger._VIN_FIELD : args.namespace
@@ -79,7 +70,7 @@ class Logger(object):
 
 
 	def rate_limit(self, log_data, method, rate_in_sec=1):
-		""" Rate limiting for publishing messages """
+		""" Rate limit the given method by rate_in_sec. """
 
 		time_now = time.time()
 
@@ -108,7 +99,7 @@ class Logger(object):
 
 
 	def log_pose(self, log_data):
-		""" Pose logging - currently can't be labelled for intrusions. """
+		""" Pose logging """
 
 		# Country code request - 50 %, POI search / TSP routing - 25 %
 		pose_pipe = PosePipe.create(
@@ -158,7 +149,17 @@ class Logger(object):
 
 
 if __name__ == "__main__":
-	LOGGER = Logger()
+	PARSER = argparse.ArgumentParser(prog="logger")
+
+	PARSER.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
+	PARSER.add_argument("--gen-topics", metavar="TOPIC", nargs="*", default=[], dest="gen_topics")
+	PARSER.add_argument("--label", action="store_true", help="Label the data with intrusion type")
+	PARSER.add_argument("--intrusion", "-i", choices=PoseProcessor.POSSIBLE_INTRUSION_LEVELS)
+
+	# Pass filtered args to parser (remove remapping arguments and delete program name)
+	ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
+
+	LOGGER = Logger(ARGS)
 	LOGGER.__init__()
 
 	# spin() keeps python from exiting until this node is stopped

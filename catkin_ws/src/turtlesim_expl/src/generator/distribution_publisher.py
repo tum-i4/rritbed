@@ -35,22 +35,18 @@ class DistributionPublisher(object):
 
 	_base_path = os.path.expanduser("~/ros")
 
-	_publisher = None
-
-	_file_based = False
-
-	_file_contents = []
-	_current_line = 0
-	_repeat_file = False
-
-	_generator = None
-	_generator_arguments = []
-
 
 	def __init__(self, args):
 		""" Ctor """
 
 		object.__init__(self)
+
+		self._file_based = False
+		self._file_contents = []
+		self._current_line = 0
+		self._repeat_file = False
+		self._generator = None
+		self._generator_arguments = []
 
 		return_message = ""
 		queue_size = 10

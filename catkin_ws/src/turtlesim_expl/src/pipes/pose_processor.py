@@ -14,12 +14,6 @@ class PoseProcessor(object):
 
 	possible_intrusion_levels = ["easy", "med", "hard"]
 	_not_intruded_label = "normal"
-
-	name = ""
-
-	_intrusion = None
-	_intrusion_field = None
-
 	_x_str = "x"
 	_y_str = "y"
 
@@ -38,14 +32,16 @@ class PoseProcessor(object):
 		object.__init__(self)
 
 		self.name = name
-		if name == CC_STR:
-			self.process = self.process_cc
-		elif name == POI_STR:
-			self.process = self.process_poi
-		elif name == TSP_STR:
-			self.process = self.process_tsp
-		else:
-			raise ValueError("Invalid process name")
+		processor_choices = {
+			CC_STR : self.process_cc,
+			POI_STR : self.process_poi,
+			TSP_STR : self.process_tsp
+		}
+		# Raises for invalid names
+		self.process = processor_choices[name]
+
+		self._intrusion = None
+		self._intrusion_field = None
 
 
 	def set_intrusion(self, intrusion=None, intrusion_field=None):

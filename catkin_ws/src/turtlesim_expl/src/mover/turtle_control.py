@@ -10,12 +10,6 @@ from move_strategy import MoveStrategy
 class TurtleControl(object):
 	""" Direct interface class for moving a turtle """
 
-	turtle_path = ""
-	velocity_publisher = None
-	rate_limiter = None
-	move_strategy = MoveStrategy()
-
-
 	def __init__(self, move_strategy, move_strategy_args, rate_in_hz=2, turtle_path="turtle1"):
 		""" Ctor """
 
@@ -25,11 +19,9 @@ class TurtleControl(object):
 
 		assert(issubclass(move_strategy, MoveStrategy))
 
-		self.move_strategy = move_strategy(move_strategy_args)
-		self.rate_limiter = rospy.Rate(rate_in_hz)
 		self.turtle_path = turtle_path
-
-		# Start and link our movement node
+		self.rate_limiter = rospy.Rate(rate_in_hz)
+		self.move_strategy = move_strategy(move_strategy_args)
 		self.velocity_publisher = rospy.Publisher(turtle_path + "/cmd_vel", Twist, queue_size=10)
 
 

@@ -22,15 +22,16 @@ class LaunchFileOrchestrator(object):
 
 	_GEN_DEFS_FILE_PATH = "~/ros/gens"
 
-	_file_path = ""
-	_dump_mode = False
+	### Instance variables
+	# self._file_path = ""
+	# self._dump_mode = False
 
-	_manual_turtle_mode = None
-	_identifier_file_path = None
-	_namespace_count = None
-	_label_intrusions = None
+	# self._manual_turtle_mode = None
+	# self._identifier_file_path = None
+	# self._namespace_count = None
+	# self._intrusion_definition = None
+	# self._label_intrusions = None
 
-	_intrusion_definition = None
 
 	def __init__(self):
 		""" Ctor """

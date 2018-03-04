@@ -7,7 +7,7 @@ import unittest
 from sys import maxint as MAXINT
 from parameterized import parameterized
 
-from argument_constraint import ArgumentConstraint
+from src.generator.argument_constraint import ArgumentConstraint
 
 
 class Tests(unittest.TestCase):

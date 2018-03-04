@@ -387,7 +387,7 @@ class LaunchFileOrchestrator(object):
 		args = "--id {}".format(gen_id)
 
 		if intrusion_mode is not None:
-			args += " --intrusion " + intrusion_mode
+			args += " --intrusion-mode " + intrusion_mode
 
 		args += " gen {}".format(gen_name)
 

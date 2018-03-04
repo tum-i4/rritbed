@@ -8,12 +8,6 @@ import random
 class IntrusionDefinition(object):
 	""" Container for an intrusion definition (corresponding to one launch file). """
 
-	_intrusion_percentage = 0
-	_intrusion_level = 0
-	_intrude_turtle = True
-	_intrude_generators = True
-	_duplicate_vins = False
-
 	_levels = ["easy", "med", "hard"]
 
 	_easy_intelligence = ["stay", "dont-move"]

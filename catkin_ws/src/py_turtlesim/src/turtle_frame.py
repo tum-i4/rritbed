@@ -37,17 +37,6 @@ class TurtleFrame(object):
 
 	possible_intrusion_levels = ["easy", "med", "hard"]
 
-	_background = [[]]
-	_turtles = {}
-
-	_id_counter = 0
-	_update_interval = None
-
-	_has_gui = False
-	_gui_size = 0
-	_frame_count = 0
-	_gui_output = None
-
 
 	def __init__(self, draw_gui=False, intrusion=None):
 		""" Ctor """
@@ -55,11 +44,19 @@ class TurtleFrame(object):
 		object.__init__(self)
 
 		self._has_gui = draw_gui
+		self._gui_size = 0
+		self._frame_count = 0
+		self._gui_output = None
 
 		# Initialise background (500 x 500)
-		self._background = [[
-			Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B) for _ in range(0, 500)
-			] for _ in range(0, 500)]
+		self._background = [
+			[Rgb(DEFAULT_BG_R, DEFAULT_BG_G, DEFAULT_BG_B) for _ in range(0, 500)]
+			for _ in range(0, 500)
+		]
+		self._turtles = {}
+
+		self._id_counter = 0
+		self._update_interval = None
 
 		rospy.set_param("background_r", DEFAULT_BG_R)
 		rospy.set_param("background_g", DEFAULT_BG_G)

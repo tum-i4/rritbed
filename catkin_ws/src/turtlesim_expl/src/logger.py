@@ -17,18 +17,17 @@ from pipes.pose_pipe import PosePipe
 from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 
 
-URL = "http://localhost:5000"
-
-TURTLE_PATH = "turtle/turtle1/"
-COLOUR_PATH = TURTLE_PATH + "color_sensor"
-POSE_PATH = TURTLE_PATH + "pose"
-
-
 class Logger(object):
 	""" Logger class """
 
-	_vin_field = "vin"
-	_intrusion_field = "intrusion"
+	URL = "http://localhost:5000"
+
+	TURTLE_PATH = "turtle/turtle1/"
+	COLOUR_PATH = TURTLE_PATH + "color_sensor"
+	POSE_PATH = TURTLE_PATH + "pose"
+
+	_VIN_FIELD = "vin"
+	_INTRUSION_FIELD = "intrusion"
 
 
 	def __init__(self):
@@ -39,12 +38,12 @@ class Logger(object):
 		parser.add_argument("namespace", metavar="NS", help="The namespace this logger is seated in")
 		parser.add_argument("--gen-topics", metavar="TOPIC", nargs="*", default=[], dest="gen_topics")
 		parser.add_argument("--label", action="store_true", help="Label the data with intrusion type")
-		parser.add_argument("--intrusion", "-i", choices=PoseProcessor.possible_intrusion_levels)
+		parser.add_argument("--intrusion", "-i", choices=PoseProcessor.POSSIBLE_INTRUSION_LEVELS)
 
 		args = parser.parse_args(rospy.myargv(sys.argv)[1:])
 
 		self._data = {
-			Logger._vin_field : args.namespace
+			Logger._VIN_FIELD : args.namespace
 		}
 
 		self._label = args.label
@@ -64,8 +63,8 @@ class Logger(object):
 		for topic in args.gen_topics:
 			rospy.Subscriber(topic, GenValue, self.log_generated_data, topic)
 
-		rospy.Subscriber(COLOUR_PATH, Color, self.rate_limit, self.log_colour)
-		rospy.Subscriber(POSE_PATH, Pose, self.rate_limit, self.log_pose)
+		rospy.Subscriber(Logger.COLOUR_PATH, Color, self.rate_limit, self.log_colour)
+		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit, self.log_pose)
 
 
 	def log_generated_data(self, gen_value, generator_name):
@@ -74,7 +73,7 @@ class Logger(object):
 		request = self.copy_base_request()
 		request["generated"] = gen_value.value
 		if self._label:
-			request[Logger._intrusion_field] = gen_value.intrusion
+			request[Logger._INTRUSION_FIELD] = gen_value.intrusion
 
 		self.send_request("data/" + generator_name, request)
 
@@ -103,7 +102,7 @@ class Logger(object):
 		request = self.copy_base_request()
 		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
 		if self._label:
-			request[Logger._intrusion_field] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
+			request[Logger._INTRUSION_FIELD] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
 
 		self.send_request("colour", request)
 
@@ -113,7 +112,7 @@ class Logger(object):
 
 		# Country code request - 50 %, POI search / TSP routing - 25 %
 		pose_pipe = PosePipe.create(
-			intrusion=self._intrusion, intrusion_field=Logger._intrusion_field,
+			intrusion=self._intrusion, intrusion_field=Logger._INTRUSION_FIELD,
 			cc=50, poi=25, tsp=25)
 
 		request = self.copy_base_request()
@@ -143,10 +142,10 @@ class Logger(object):
 		if self._label:
 			# Provoke KeyError to ensure existence of "intrusion" key
 			# pylint: disable-msg=W0104; (Statement has no effect - does raise)
-			request[Logger._intrusion_field]
+			request[Logger._INTRUSION_FIELD]
 
 		try:
-			requests.post(URL + "/" + path + "/" + log_method, request)
+			requests.post(Logger.URL + "/" + path + "/" + log_method, request)
 		except requests.ConnectionError:
 			time_now = time.time()
 			# Only print an error every second

@@ -15,7 +15,7 @@ import rospy
 from std_msgs.msg import Float32, Int32
 from geometry_msgs.msg import Twist
 
-import move_helper
+import src.mover.move_helper as move_helper
 
 
 class NumbersToVelocity(object):

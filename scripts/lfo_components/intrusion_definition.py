@@ -8,21 +8,21 @@ import random
 class IntrusionDefinition(object):
 	""" Container for an intrusion definition (corresponding to one launch file). """
 
-	_levels = ["easy", "med", "hard"]
+	_LEVELS = ["easy", "med", "hard"]
 
-	_easy_intelligence = ["stay", "dont-move"]
-	_turtle_intelligence_choices = {
-		0 : _easy_intelligence,
-		1 : _easy_intelligence,
-		2 : _easy_intelligence
+	_EASY_INTELLIGENCE = ["stay", "dont-move"]
+	_TURTLE_INTELLIGENCE_CHOICES = {
+		0 : _EASY_INTELLIGENCE,
+		1 : _EASY_INTELLIGENCE,
+		2 : _EASY_INTELLIGENCE
 	}
 
 	# Check DistributionGenerator if these are correct
-	_blunt_intrusions = ["zeroes", "huge-error"]
-	_generator_intrusion_choices = {
-		0 : _blunt_intrusions,
-		1 : _blunt_intrusions,
-		2 : _blunt_intrusions
+	_BLUNT_INTRUSIONS = ["zeroes", "huge-error"]
+	_GENERATOR_INTRUSION_CHOICES = {
+		0 : _BLUNT_INTRUSIONS,
+		1 : _BLUNT_INTRUSIONS,
+		2 : _BLUNT_INTRUSIONS
 	}
 
 
@@ -43,7 +43,7 @@ class IntrusionDefinition(object):
 	@staticmethod
 	def get_intrusion_levels():
 		""" Get all possible intrusion level strings. """
-		return IntrusionDefinition._levels
+		return IntrusionDefinition._LEVELS
 
 
 	def create_vin_tuples(self, vin_list):
@@ -61,7 +61,7 @@ class IntrusionDefinition(object):
 		if not intruded or not self._intrude_turtle:
 			return random.choice(legal_choices)
 
-		intrusion_choices = IntrusionDefinition._turtle_intelligence_choices[self._intrusion_level]
+		intrusion_choices = IntrusionDefinition._TURTLE_INTELLIGENCE_CHOICES[self._intrusion_level]
 
 		# Easy and medium: Always intrude turtle
 		if self._intrusion_level in [0, 1]:
@@ -94,7 +94,7 @@ class IntrusionDefinition(object):
 		if not condition:
 			return None
 
-		return "--intrusion " + IntrusionDefinition._levels[self._intrusion_level]
+		return "--intrusion " + IntrusionDefinition._LEVELS[self._intrusion_level]
 
 
 	def create_generator_tuples(self, intruded, selected_generators):
@@ -105,7 +105,7 @@ class IntrusionDefinition(object):
 		if not intruded or not self._intrude_generators:
 			return generator_tuples
 
-		choices = IntrusionDefinition._generator_intrusion_choices[self._intrusion_level]
+		choices = IntrusionDefinition._GENERATOR_INTRUSION_CHOICES[self._intrusion_level]
 		all_indices = list(range(0, len(generator_tuples)))
 		number_of_intruded_generators = 0
 
@@ -204,7 +204,7 @@ class IntrusionDefinition(object):
 	def _get_level_id(intrusion_level_string):
 		""" Convert the given level string to a level id. """
 
-		levels = IntrusionDefinition._levels
+		levels = IntrusionDefinition._LEVELS
 		assert(len(levels) == 3)
 
 		if intrusion_level_string not in levels:

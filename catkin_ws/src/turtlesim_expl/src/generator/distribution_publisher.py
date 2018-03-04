@@ -24,17 +24,15 @@ import os
 import sys
 import rospy
 
-import generators as GENS
+import src.generator.generators as GENS
 
-from distribution_generator import DistributionGenerator as DG
+from src.globals.paths import BASE_PATH
+from src.generator.distribution_generator import DistributionGenerator as DG
 from turtlesim_expl.msg import GenValue
 
 
 class DistributionPublisher(object):
 	""" Data generation class based on distribution """
-
-	_BASE_PATH = os.path.expanduser("~/ros")
-
 
 	def __init__(self, args):
 		""" Ctor """
@@ -76,7 +74,7 @@ class DistributionPublisher(object):
 
 		# Either a full path was given (contains sep), otherwise the name is appended to the default path
 		if os.sep not in file_path:
-			file_path = os.path.join(DistributionPublisher._BASE_PATH, "data", file_path)
+			file_path = os.path.join(BASE_PATH, "data", file_path)
 
 		if not os.path.isfile(file_path):
 			raise Exception("No file found at {}".format(file_path))

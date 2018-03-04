@@ -9,7 +9,7 @@ from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
 class PosePipe(object):
 	""" Subscribe to a pose topic and process it with the specified PoseProcessor. """
 
-	_possible_processors = {
+	_POSSIBLE_PROCESSORS = {
 		CC_STR : PoseProcessor(CC_STR),
 		POI_STR : PoseProcessor(POI_STR),
 		TSP_STR : PoseProcessor(TSP_STR)
@@ -19,7 +19,7 @@ class PosePipe(object):
 	@staticmethod
 	def get_possible_processors():
 		""" Get a list of possible processor names. """
-		return PosePipe._possible_processors.keys()
+		return PosePipe._POSSIBLE_PROCESSORS.keys()
 
 
 	@staticmethod
@@ -30,13 +30,13 @@ class PosePipe(object):
 		Combined must total 100.
 		"""
 
-		assert(len(kwargs) == len(PosePipe._possible_processors))
+		assert(len(kwargs) == len(PosePipe._POSSIBLE_PROCESSORS))
 		percentages = [int(x) for x in kwargs.values()]
 		assert(sum(percentages) == 100)
 		# Ensure each key is present in the dict
 		for key in kwargs:
 			# pylint: disable-msg=W0104; (Statement has no effect)
-			PosePipe._possible_processors[key]
+			PosePipe._POSSIBLE_PROCESSORS[key]
 
 		choices = []
 
@@ -44,7 +44,7 @@ class PosePipe(object):
 			choices += [name] * percentage
 
 		choice = random.choice(choices)
-		processor = PosePipe._possible_processors[choice]
+		processor = PosePipe._POSSIBLE_PROCESSORS[choice]
 		processor.set_intrusion(intrusion, intrusion_field)
 
 		return PosePipe(processor)

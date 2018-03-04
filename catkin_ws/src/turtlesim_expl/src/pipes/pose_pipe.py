@@ -71,7 +71,8 @@ class PosePipe(object):
 
 
 if __name__ == "__main__":
-	PP = PosePipe.create(intrusion=None, cc=50, poi=25, tsp=25)
+	PP = PosePipe.create(intrusion=None, intrusion_field="INVALID", cc=50, poi=25, tsp=25)
 	print("Possible processors: {}".format(PP.get_possible_processors()))
 	print("Processor name: {}".format(PP.get_processor_name()))
-	print("Process [x: 5] [y: 10]: {}".format(PP.process(PoseProcessor.add_to_request({}, 5, 10))))
+	print("Process [x: 5] [y: 10]: {}".format(
+		PP.process(PoseProcessor.add_to_request({}, 5, 10), label=True)))

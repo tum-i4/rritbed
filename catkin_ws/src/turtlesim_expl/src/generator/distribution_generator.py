@@ -11,21 +11,6 @@ class DistributionGenerator(object):
 	ONLY_ZEROES = "zeroes"
 	HUGE_ERROR = "huge-error"
 
-	name = ""
-	args_constraints = []
-	rate_in_hz = 0
-	queue_size = 0
-
-	_method = None
-
-	_intrusion_generators = {
-		ONLY_ZEROES: None,
-		HUGE_ERROR: None
-	}
-
-	# Huge error
-	_h_e_last_was_normal = True
-
 
 	def __init__(
 		self, method, name, args_constraints=None, rate_in_hz=10, queue_size=10):
@@ -33,21 +18,22 @@ class DistributionGenerator(object):
 
 		object.__init__(self)
 
-		self._intrusion_generators[self.ONLY_ZEROES] = self._generate_intrusion_zeroes
-		self._intrusion_generators[self.HUGE_ERROR] = self._generate_intrusion_huge_error
+		self.name = name
+		# Default argument count: 2, default values: 0.0 and 1.0
+		self.args_constraints = args_constraints or [ArgumentConstraint(0.0), ArgumentConstraint(1.0)]
+		self.rate_in_hz = rate_in_hz
+		self.queue_size = queue_size
 
 		self.generate = self._generate_impl
 		self._method = method
-		self.name = name
 
-		# Default argument count: 2, default values: 0.0 and 1.0
-		if args_constraints is None:
-			args_constraints = [ArgumentConstraint(0.0), ArgumentConstraint(1.0)]
+		self._intrusion_generators = {
+			self.ONLY_ZEROES: self._generate_intrusion_zeroes,
+			self.HUGE_ERROR: self._generate_intrusion_huge_error
+		}
 
-		self.args_constraints = args_constraints
-
-		self.rate_in_hz = rate_in_hz
-		self.queue_size = queue_size
+		# Huge error
+		self._h_e_last_was_normal = True
 
 
 	def activate_intrusion(self, intrusion_mode):

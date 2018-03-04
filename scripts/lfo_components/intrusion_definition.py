@@ -60,7 +60,7 @@ class IntrusionDefinition(object):
 		if not intruded or not self._intrude_turtle:
 			return random.choice(legal_choices)
 
-		intrusion_choices = self._turtle_intelligence_choices[self._intrusion_level]
+		intrusion_choices = IntrusionDefinition._turtle_intelligence_choices[self._intrusion_level]
 
 		# Easy and medium: Always intrude turtle
 		if self._intrusion_level in [0, 1]:
@@ -80,7 +80,7 @@ class IntrusionDefinition(object):
 		if not intruded or not self._intrude_turtle:
 			return None
 
-		return "--intrusion " + self._levels[self._intrusion_level]
+		return "--intrusion " + IntrusionDefinition._levels[self._intrusion_level]
 
 
 	def create_generator_tuples(self, intruded, selected_generators):
@@ -91,7 +91,7 @@ class IntrusionDefinition(object):
 		if not intruded or not self._intrude_generators:
 			return generator_tuples
 
-		choices = self._generator_intrusion_choices[self._intrusion_level]
+		choices = IntrusionDefinition._generator_intrusion_choices[self._intrusion_level]
 		all_indices = list(range(0, len(generator_tuples)))
 		number_of_intruded_generators = 0
 
@@ -125,7 +125,7 @@ class IntrusionDefinition(object):
 		if not intruded:
 			return ""
 
-		return " --intrusion " + self._levels[self._intrusion_level]
+		return " --intrusion " + IntrusionDefinition._levels[self._intrusion_level]
 
 
 	def _add_double_vin(self, vin_list):
@@ -197,9 +197,10 @@ class IntrusionDefinition(object):
 	def _get_level_id(self, intrusion_level_string):
 		""" Convert the given level string to a level id. """
 
-		assert(len(self.get_intrusion_levels()) == 3)
+		levels = IntrusionDefinition._levels
+		assert(len(levels) == 3)
 
-		if intrusion_level_string not in self.get_intrusion_levels():
+		if intrusion_level_string not in levels:
 			raise ValueError("Invalid intrusion level string")
 
-		return self.get_intrusion_levels().index(intrusion_level_string)
+		return levels.index(intrusion_level_string)

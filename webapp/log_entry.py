@@ -15,20 +15,19 @@ class LogEntry(object):
 	LEVEL_ERROR = "ERROR"
 	ENV_DEFAULT = "TEST"
 
-	vin_field = "vin"
-	app_id_field = "app_id"
-	level_field = "level"
-	gps_position_field = "gps_position"
-	log_message_field = "log_message"
-	log_id_field = "log_id"
-	time_unix_field = "time_unix"
+	VIN_FIELD = "vin"
+	APP_ID_FIELD = "app_id"
+	LEVEL_FIELD = "level"
+	GPS_POSITION_FIELD = "gps_position"
+	LOG_MESSAGE_FIELD = "log_message"
+	LOG_ID_FIELD = "log_id"
+	TIME_UNIX_FIELD = "time_unix"
 
 
 	@staticmethod
 	def create_base_entry(vin=None, time_unix=None):
 		""" Create an invalid base log entry for step-by-step creation. """
-		entry = LogEntry(vin=vin, app_id="INVALID", time_unix=time_unix)
-		return entry
+		return LogEntry(vin=vin, app_id="INVALID", time_unix=time_unix)
 
 
 
@@ -44,13 +43,13 @@ class LogEntry(object):
 		object.__init__(self)
 
 		self.data = {
-			self.vin_field : "",             # Identifier of the car calling the microservice
-			self.app_id_field : "",          # Name of the microservice using this
-			self.level_field : "",           # INFO, DEBUG, ...
-			self.gps_position_field : "",    # GPS position of car - "12.12312312,42.32321"
-			self.log_message_field : "",
-			self.log_id_field : "",          # UUID of this log entry
-			self.time_unix_field : 0         # !Caution! At COMPANY not the same time as time_utc
+			LogEntry.VIN_FIELD : "",             # Identifier of the car calling the microservice
+			LogEntry.APP_ID_FIELD : "",          # Name of the microservice using this
+			LogEntry.LEVEL_FIELD : "",           # INFO, DEBUG, ...
+			LogEntry.GPS_POSITION_FIELD : "",    # GPS position of car - "12.12312312,42.32321"
+			LogEntry.LOG_MESSAGE_FIELD : "",
+			LogEntry.LOG_ID_FIELD : "",          # UUID of this log entry
+			LogEntry.TIME_UNIX_FIELD : 0         # !Caution! At COMPANY not the same time as time_utc
 		}
 
 		self.intrusion = ""
@@ -81,13 +80,13 @@ class LogEntry(object):
 		intrusion=None):
 		""" Setter for all fields at once """
 
-		self._set_if_not_none(self.vin_field, vin)
-		self._set_if_not_none(self.app_id_field, app_id)
-		self._set_if_not_none(self.level_field, level)
-		self._set_if_not_none(self.log_message_field, log_message)
-		self._set_if_not_none(self.gps_position_field, gps_position)
-		self._set_if_not_none(self.time_unix_field, time_unix, verifier=self._verify_time)
-		self._set_if_not_none(self.log_id_field, log_id, verifier=self._verify_uuid)
+		self._set_if_not_none(LogEntry.VIN_FIELD, vin)
+		self._set_if_not_none(LogEntry.APP_ID_FIELD, app_id)
+		self._set_if_not_none(LogEntry.LEVEL_FIELD, level)
+		self._set_if_not_none(LogEntry.LOG_MESSAGE_FIELD, log_message)
+		self._set_if_not_none(LogEntry.GPS_POSITION_FIELD, gps_position)
+		self._set_if_not_none(LogEntry.TIME_UNIX_FIELD, time_unix, verifier=self._verify_time)
+		self._set_if_not_none(LogEntry.LOG_ID_FIELD, log_id, verifier=self._verify_uuid)
 
 		if intrusion is not None:
 			self.intrusion = intrusion

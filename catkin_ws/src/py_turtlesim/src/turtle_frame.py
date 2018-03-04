@@ -35,7 +35,7 @@ DEFAULT_BG_B = 0xff
 class TurtleFrame(object):
 	""" The frame for all turtles """
 
-	possible_intrusion_levels = ["easy", "med", "hard"]
+	POSSIBLE_INTRUSION_LEVELS = ["easy", "med", "hard"]
 
 
 	def __init__(self, draw_gui=False, intrusion=None):
@@ -133,24 +133,24 @@ class TurtleFrame(object):
 		if intrusion is None:
 			return
 
-		if intrusion not in self.possible_intrusion_levels:
+		if intrusion not in self.POSSIBLE_INTRUSION_LEVELS:
 			raise ValueError("Given value [{}] for argument \"intrusion\" is invalid".format(intrusion))
 
 		from_point = Point(0, 0)
 		to_point = Point(0, 0)
 
-		assert(len(self.possible_intrusion_levels) == 3)
+		assert(len(self.POSSIBLE_INTRUSION_LEVELS) == 3)
 
 		# Easy: 40 % red / 316 * 316
-		if intrusion == self.possible_intrusion_levels[0]:
+		if intrusion == self.POSSIBLE_INTRUSION_LEVELS[0]:
 			from_point = Point(92, 92)
 			to_point = Point(407, 407)
 		# Medium: 20 % red / 224 * 224
-		elif intrusion == self.possible_intrusion_levels[1]:
+		elif intrusion == self.POSSIBLE_INTRUSION_LEVELS[1]:
 			from_point = Point(138, 138)
 			to_point = Point(361, 361)
 		# Hard: 5 % red / 112 * 112
-		elif intrusion == self.possible_intrusion_levels[2]:
+		elif intrusion == self.POSSIBLE_INTRUSION_LEVELS[2]:
 			from_point = Point(194, 194)
 			to_point = Point(305, 305)
 		else:

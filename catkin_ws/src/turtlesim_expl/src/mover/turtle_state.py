@@ -18,3 +18,10 @@ class TurtleState(object):
 
 		self.data = data
 		self.last_update = time.time()
+
+
+	def get_time_since(self):
+		""" Get the time that has passed since the last update. """
+
+		time_now = time.time()
+		return time_now - self.last_update

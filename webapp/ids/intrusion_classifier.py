@@ -2,6 +2,7 @@
 """ Classifier """
 
 from ids_classification import IdsResult, Classification
+from log_entry import LogEntry
 
 
 class IntrusionClassifier(object):
@@ -43,7 +44,12 @@ class IntrusionClassifier(object):
 		Classify the given entry based on pre-defined rules.
 		returns: An IdsResult object
 		"""
-		raise NotImplementedError()
+
+		# Level cannot be ERROR
+		if log_entry.data[LogEntry.LEVEL_FIELD] == LogEntry.LEVEL_ERROR:
+			return IdsResult(classification=Classification.intrusion, confidence=100)
+
+		return IdsResult(classification=Classification.normal, confidence=0)
 
 
 	def _classify_learner(self, log_entry):

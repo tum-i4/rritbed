@@ -194,12 +194,12 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _save_pose(self, pose):
-		if self._ready_for_update(pose):
+		if self._ready_for_update(self._last_pose):
 			self._last_pose.update(pose)
 
 
 	def _save_colour(self, colour):
-		if self._ready_for_update(colour):
+		if self._ready_for_update(self._last_colour):
 			self._last_colour.update(colour)
 
 

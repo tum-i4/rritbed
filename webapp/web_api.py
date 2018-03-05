@@ -121,8 +121,9 @@ def get_tsp_routing():
 
 	tsp_log_entry.complete(
 		app_id=app_id,
-		log_message="[{}] for [x: {}, y: {}]".format(
-			tsp_message, targ_x, targ_y),
+		log_message="[{}] for [{},{}]".format(
+			tsp_message, # x,y
+			targ_x, targ_y),
 		gps_position=position,
 		intrusion=request.params.intrusion
 	)

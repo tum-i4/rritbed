@@ -40,7 +40,7 @@ class LiveIds(object):
 		raise NotImplementedError()
 
 
-	def _write_intrusion_to_file(self, log_entry, classification):
+	def _write_intrusion_to_file(self, log_entry, result):
 		""" Print a warning and log the given intrusion in a new file. """
 
 		time_str = time.strftime("%a %b %d %Y - %H:%M:%S", time.localtime())
@@ -51,9 +51,11 @@ class LiveIds(object):
 
 		log_file_path = os.path.join(log_folder, LiveIds._create_unique_log_name())
 		with open(log_file_path, mode="w") as log_file:
-			LiveIds._write_line(log_file, "Intrusion detected | " + time_str)
+			LiveIds._write_line(log_file, "Intrusion detected | {}".format(time_str))
 			LiveIds._write_line(log_file, "")
-			LiveIds._write_line(log_file, "Classification: " + classification.name)
+			LiveIds._write_line(log_file, "Classification: {}".format(result.classification.name))
+			LiveIds._write_line(log_file, "Confidence: {} %".format(result.confidence))
+			LiveIds._write_line(log_file, "")
 			LiveIds._write_line(log_file, "Data received:")
 			LiveIds._write_line(log_file, log_entry.get_log_string())
 

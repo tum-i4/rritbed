@@ -30,7 +30,9 @@ class LiveIds(object):
 		# Assert after most returns are done for improved performance; the above check still works.
 		assert(isinstance(classification, IdsClassification))
 
-		self._print_and_log_intrusion(log_entry, classification)
+		file_path = self._write_intrusion_to_file(log_entry, classification)
+
+		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(log_file_path))
 
 		raise NotImplementedError()
 
@@ -44,7 +46,7 @@ class LiveIds(object):
 		raise NotImplementedError()
 
 
-	def _print_and_log_intrusion(self, log_entry, classification):
+	def _write_intrusion_to_file(self, log_entry, classification):
 		""" Print a warning and log the given intrusion in a new file. """
 
 		time_str = time.strftime("%a %b %d %Y - %H:%M:%S", time.localtime())
@@ -61,7 +63,7 @@ class LiveIds(object):
 			LiveIds._write_line(log_file, "Data received:")
 			LiveIds._write_line(log_file, log_entry.get_log_string())
 
-		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(log_file_path))
+		return log_file_path
 
 
 	@staticmethod

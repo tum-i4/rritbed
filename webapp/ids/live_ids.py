@@ -5,6 +5,7 @@ import os
 import time
 import uuid
 
+from intrusion_classifier import IntrusionClassifier
 from ids_classification import IdsClassification
 
 class LiveIds(object):
@@ -19,11 +20,13 @@ class LiveIds(object):
 
 		object.__init__(self)
 
+		self.classifier = IntrusionClassifier()
+
 
 	def process(self, log_entry):
 		""" Process the given entry. Outputs a warning when the detection was successful. """
 
-		classification = self._classify(log_entry)
+		classification = self.classifier.classify(log_entry)
 		if classification == IdsClassification.normal:
 			return
 
@@ -33,15 +36,6 @@ class LiveIds(object):
 		file_path = self._write_intrusion_to_file(log_entry, classification)
 
 		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
-
-		raise NotImplementedError()
-
-
-	def _classify(self, log_entry):
-		"""
-		Classify the given log entry and return the classification.
-		returns: An IdsClassification object
-		"""
 
 		raise NotImplementedError()
 

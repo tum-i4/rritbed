@@ -40,7 +40,7 @@ def _log_num(name):
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(number_log_entry)
+	_append_and_detect(number_log_entry)
 
 
 @post("/get/country-code")
@@ -64,7 +64,7 @@ def get_country_code():
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(cc_log_entry)
+	_append_and_detect(cc_log_entry)
 
 
 @post("/get/poi")
@@ -97,7 +97,7 @@ def get_poi():
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(poi_log_entry)
+	_append_and_detect(poi_log_entry)
 
 
 @post("/get/tsp")
@@ -128,7 +128,7 @@ def get_tsp_routing():
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(tsp_log_entry)
+	_append_and_detect(tsp_log_entry)
 
 
 @post("/log/colour")
@@ -143,7 +143,7 @@ def log_colour():
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(colour_log_entry)
+	_append_and_detect(colour_log_entry)
 
 
 
@@ -235,8 +235,8 @@ def _create_client_time(identifier):
 ### Writing to log
 
 
-def _append_to_log(new_log_entry):
-	""" Appends the given string plus a newline to the log file """
+def _append_and_detect(new_log_entry):
+	""" Append the given string plus a newline to the log file and detect possible intrusions. """
 
 	DAO.append_to_log(new_log_entry)
 	IDS.process(new_log_entry)

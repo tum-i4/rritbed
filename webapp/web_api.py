@@ -100,9 +100,7 @@ def get_poi():
 
 @post("/get/tsp")
 def get_tsp_routing():
-	""" Map current and goal coordinates to TSP and save request and response to log """
-
-	tsp_request_log_entry = _create_base_log_entry(request.params.vin)
+	""" Map current and goal coordinates to TSP and save to log. """
 
 	crd_x = request.params.x
 	crd_y = request.params.y
@@ -112,39 +110,27 @@ def get_tsp_routing():
 	app_id = "TSPROUTING"
 	position = _get_position_string(crd_x, crd_y)
 
-	# Save request to log
-	tsp_request_log_entry.complete(
-		app_id=app_id,
-		log_message="Req [x: {}, y: {}]".format(
-			targ_x, targ_y),
-		gps_position=position,
-		intrusion=request.params.intrusion
-	)
-
-	_append_to_log(tsp_request_log_entry)
-
 	tsp_message = TspRoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
 
-	tsp_response_log_entry = _create_base_log_entry(request.params.vin)
+	tsp_log_entry = _create_base_log_entry(request.params.vin)
 
 	if tsp_message == TspRoutingMapper.GOAL_REACHED_MSG:
 		tsp_message = "Goal {}/{} reached".format(crd_x, crd_y)
 
-	# Save request to log
-	tsp_response_log_entry.complete(
+	tsp_log_entry.complete(
 		app_id=app_id,
-		log_message="Resp [{}] for [x: {}, y: {}]".format(
+		log_message="[{}] for [x: {}, y: {}]".format(
 			tsp_message, targ_x, targ_y),
 		gps_position=position,
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(tsp_response_log_entry)
+	_append_to_log(tsp_log_entry)
 
 
 @post("/log/colour")
 def log_colour():
-	""" Log endpoint with colour input """
+	""" Log the given colour. """
 
 	colour_log_entry = _create_base_log_entry(request.params.vin)
 

@@ -32,7 +32,7 @@ class LiveIds(object):
 
 		file_path = self._write_intrusion_to_file(log_entry, classification)
 
-		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(log_file_path))
+		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
 
 		raise NotImplementedError()
 

@@ -49,7 +49,7 @@ class LiveIds(object):
 		returns: The relative file path of the log file.
 		"""
 
-		time_str = time.strftime("%a %b %d %Y - %H:%M:%S", time.localtime())
+		time_str = time.strftime("%A %B %d %Y - %H:%M:%S", time.localtime())
 
 		log_folder = LiveIds._get_log_dir()
 		if not os.path.lexists(log_folder):

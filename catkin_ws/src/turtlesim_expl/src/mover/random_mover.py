@@ -15,11 +15,12 @@ import sys
 import time
 
 import rospy
+from turtlesim.msg import Color, Pose
 
 import move_helper
 from move_strategy import MoveStrategy
 from turtle_control import TurtleControl
-from turtlesim.msg import Color, Pose
+from turtle_state import TurtleState
 
 
 class RandomMoveStrategy(MoveStrategy):
@@ -50,17 +51,9 @@ class RandomMoveStrategy(MoveStrategy):
 
 		self._rand_gen = random.Random()
 
-		self._turtle_state = {
-			RandomMoveStrategy._LAST_POSE_FIELD: {
-				RandomMoveStrategy._DATA_FIELD: None,
-				RandomMoveStrategy._LAST_UPDATE_FIELD: 0
-			},
-			RandomMoveStrategy._LAST_COLOUR_FIELD: {
-				RandomMoveStrategy._DATA_FIELD: None,
-				RandomMoveStrategy._LAST_UPDATE_FIELD: 0
-			},
-			RandomMoveStrategy._ILLEGAL_SINCE_FIELD: None
-		}
+		self._last_pose = TurtleState(data=None)
+		self._last_colour = TurtleState(data=None)
+		self._illegal_since = None
 
 		self._speedup = args.speedup
 
@@ -142,29 +135,29 @@ class RandomMoveStrategy(MoveStrategy):
 		Turn robot around when hitting illegal colour. """
 
 		# No need to react - generate normal next step
-		if self._get_last_colour() != RandomMoveStrategy._ILLEGAL_COLOUR:
-			self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] = None
+		if self._last_colour.data != RandomMoveStrategy._ILLEGAL_COLOUR:
+			self._illegal_since = None
 			return self._get_next_impl()
 
 		# We hit an illegal area
 
 		# Initialise "illegal since" field
-		if self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] is None:
-			self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] = time.time()
+		if self._illegal_since is None:
+			self._illegal_since = time.time()
 
 		# Make sure we didn't spawn in the illegal area
-		if (self._get_last_pose().linear_velocity == 0
-			and self._get_last_pose().angular_velocity == 0):
+		if (self._last_pose.data.linear_velocity == 0
+			and self._last_pose.data.angular_velocity == 0):
 			return self._get_next_impl()
 
 		# Generate reverse of current pose
 		rospy.logwarn("Reversing and escalating current pose - illegal area hit")
-		pose = self._get_last_pose()
+		pose = self._last_pose.data
 		reversed_pose_twist = move_helper.reverse_pose(pose)
 
 		# Make sure we escalate speed the longer we are in the illegal zone
-		if self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD] is not None:
-			time_since_illegal = self._turtle_state[RandomMoveStrategy._ILLEGAL_SINCE_FIELD]
+		if self._illegal_since is not None:
+			time_since_illegal = self._illegal_since
 			if reversed_pose_twist.linear.x < 0:
 				reversed_pose_twist.linear.x -= time_since_illegal
 			else:
@@ -178,7 +171,7 @@ class RandomMoveStrategy(MoveStrategy):
 		Stop moving as soon as the illegal colour is hit. """
 
 		# Normal steps
-		if self._get_last_colour() != RandomMoveStrategy._ILLEGAL_COLOUR:
+		if self._last_colour.data != RandomMoveStrategy._ILLEGAL_COLOUR:
 			return self._get_next_impl()
 
 		return move_helper.get_zero_twist()
@@ -201,43 +194,23 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _save_pose(self, pose):
-		self._set_last_pose(pose)
+		self._assert_type_and_time(pose, Pose)
+		self._last_pose.update(pose)
 
 
 	def _save_colour(self, colour):
-		self._set_last_colour(colour)
+		self._assert_type_and_time(colour, Color)
+		self._last_colour.update(colour)
 
 
-
-	# Getters & setters
-
-
-	def _get_last_pose(self):
-		return self._turtle_state[RandomMoveStrategy._LAST_POSE_FIELD][RandomMoveStrategy._DATA_FIELD]
-
-
-	def _set_last_pose(self, pose):
-		self._set_field(RandomMoveStrategy._LAST_POSE_FIELD, pose, Pose)
-
-
-	def _get_last_colour(self):
-		return self._turtle_state[RandomMoveStrategy._LAST_COLOUR_FIELD][RandomMoveStrategy._DATA_FIELD]
-
-
-	def _set_last_colour(self, colour):
-		self._set_field(RandomMoveStrategy._LAST_COLOUR_FIELD, colour, Color)
-
-
-	def _set_field(self, field, data, data_class):
-		assert(issubclass(data.__class__, data_class))
+	def _assert_type_and_time(self, turtle_state, data_class):
+		assert(issubclass(turtle_state.data.__class__, data_class))
 
 		time_now = time.time()
-		if (time_now < RandomMoveStrategy._UPDATE_RATE_IN_SEC
-			+ self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD]):
-			return
+		if (time_now < turtle_state.last_update + RandomMoveStrategy._UPDATE_RATE_IN_SEC):
+			return False
 
-		self._turtle_state[field][RandomMoveStrategy._DATA_FIELD] = data
-		self._turtle_state[field][RandomMoveStrategy._LAST_UPDATE_FIELD] = time_now
+		return True
 
 
 

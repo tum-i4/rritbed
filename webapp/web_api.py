@@ -191,6 +191,7 @@ def reset():
 	except ValueError as error:
 		status_msg = error.message
 
+	status_msg += "\n"
 	status_msg += IDS.reset_log()
 
 	print(status_msg)

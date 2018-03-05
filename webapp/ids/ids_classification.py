@@ -1,12 +1,21 @@
 #!/usr/bin/env python
-""" IdsClassification enum """
-
-from enum import Enum
-
+""" IdsResult class and Classification enum """
 
 # pylint: disable-msg=R0903; (Too few public methods)
-class IdsClassification(Enum):
-	""" IDS classification results """
+
+from enum import Enum
+import attr
+
+
+class Classification(Enum):
+	""" IDS classification enum """
 
 	normal = 0
 	intrusion = 1
+
+
+@attr.s
+class IdsResult(object):
+	""" Classification and confidence value """
+	classification = attr.ib(validator=attr.validators.instance_of(Classification))
+	confidence = attr.ib(validator=attr.validators.in_(range(0, 101)))

@@ -21,6 +21,30 @@ class LiveIds(object):
 	def process(self, log_entry):
 		""" Process the given entry. Outputs a warning when the detection was successful. """
 
+		classification = self._classify(log_entry)
+		if classification == IdsClassification.normal:
+			return
+
+		# Assert after most returns are done for improved performance; the above check still works.
+		assert(isinstance(classification, IdsClassification))
+
+		self._print_and_log_intrusion(log_entry, classification)
+
+		raise NotImplementedError()
+
+
+	def _classify(self, log_entry):
+		"""
+		Classify the given log entry and return the classification.
+		returns: An IdsClassification object
+		"""
+
+		raise NotImplementedError()
+
+
+	def _print_and_log_intrusion(self, log_entry, classification):
+		""" Print a warning and log the given intrusion in a new file. """
+
 		raise NotImplementedError()
 
 

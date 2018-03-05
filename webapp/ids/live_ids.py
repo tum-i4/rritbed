@@ -46,14 +46,21 @@ class LiveIds(object):
 	def _print_and_log_intrusion(self, log_entry, classification):
 		""" Print a warning and log the given intrusion in a new file. """
 
-		time_now = time.time()
+		time_str = time.strftime("%a %b %d %Y - %H:%M:%S", time.localtime())
 
-		log_file_path = LiveIds._get_log_file_path(LiveIds._create_unique_log_name())
+		log_folder = LiveIds._get_log_dir()
+		if not os.path.lexists(log_folder):
+			os.mkdir(log_folder)
+
+		log_file_path = os.path.join(log_folder, LiveIds._create_unique_log_name())
 		with open(log_file_path, mode="w") as log_file:
-			log_file.write("Intrusion detected at ")
-		print("INTRUSION DETECTED. See log file: {}")
+			LiveIds._write_line(log_file, "Intrusion detected | " + time_str)
+			LiveIds._write_line(log_file, "")
+			LiveIds._write_line(log_file, "Classification: " + classification.name)
+			LiveIds._write_line(log_file, "Data received:")
+			LiveIds._write_line(log_file, log_entry.get_log_string())
 
-		raise NotImplementedError()
+		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(log_file_path))
 
 
 	@staticmethod

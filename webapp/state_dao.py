@@ -15,11 +15,11 @@ from log_entry import LogEntry
 class StateDao(object):
 	""" DAO class for handling the STATE objects """
 
-	def __init__(self, quiet=False):
+	def __init__(self, verbose=True):
 		""" Ctor """
 
 		object.__init__(self)
-		self._quiet = quiet
+		self._verbose = verbose
 
 		self._state_path = "state"
 		self._state_file_name = "state"
@@ -53,7 +53,7 @@ class StateDao(object):
 			# State not initialised and files exist - load from file
 			self._load_state_from_file(file_name)
 
-		if not self._quiet:
+		if self._verbose:
 			print("Loaded state from {} files from disk.".format(len(files)))
 
 		return self
@@ -64,7 +64,7 @@ class StateDao(object):
 
 		self._write_all_to_files()
 
-		if not self._quiet:
+		if self._verbose:
 			print("Successfully saved state to disk.")
 
 

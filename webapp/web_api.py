@@ -249,13 +249,13 @@ def _append_to_log(new_log_entry):
 
 
 PARSER = argparse.ArgumentParser()
-PARSER.add_argument("--quiet", "-q", action="store_true")
+PARSER.add_argument("--verbose", "-v", action="store_true")
 ARGS = PARSER.parse_args()
 
-if ARGS.quiet:
+if not ARGS.verbose:
 	print("Starting server in quiet mode")
 
-with StateDao(ARGS.quiet) as dao:
+with StateDao(verbose=ARGS.verbose) as dao:
 	DAO = dao
 	IDS = LiveIds()
-	run(host="localhost", port=5000, quiet=ARGS.quiet)
+	run(host="localhost", port=5000, quiet=(not ARGS.verbose))

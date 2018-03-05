@@ -10,7 +10,8 @@ class LiveIds(object):
 	""" Live intrusion detection """
 
 	LOG_DIR = "log"
-	LOG_FILE_PREFIX = "log"
+	LOG_FILE_PREFIX = "intrusion_"
+	LOG_FILE_SUFFIX = ".log"
 
 	def __init__(self):
 		""" Ctor """
@@ -71,9 +72,22 @@ class LiveIds(object):
 
 
 	@staticmethod
-	def _get_log_file_path(log_file_name):
+	def _get_log_dir():
 		""" Build a path from the given file name and the log folder. """
-		return LiveIds.LOG_DIR + log_file_name
+
+		target_dir = LiveIds.LOG_DIR
+
+		ids_dir = "ids"
+		if os.path.basename(os.getcwd()) != ids_dir:
+			target_dir = os.path.join(ids_dir, target_dir)
+
+		return target_dir
+
+
+	@staticmethod
+	def _write_line(file_handle, text):
+		""" Write to the file and append a newline. """
+		file_handle.write(text + "\n")
 
 
 # pylint: disable-msg=R0903; (Too few public methods)

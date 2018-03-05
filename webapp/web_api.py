@@ -67,9 +67,7 @@ def get_country_code():
 
 @post("/get/poi")
 def get_poi():
-	""" Map coordinates to POI of given type and save request and response to log """
-
-	poi_request_log_entry = _create_base_log_entry(request.params.vin)
+	""" Map coordinates to POI of given type and save to log. """
 
 	crd_x = request.params.x
 	crd_y = request.params.y
@@ -78,28 +76,18 @@ def get_poi():
 	app_id = "POI"
 	position = _get_position_string(crd_x, crd_y)
 
-	# Save request to log
-	poi_request_log_entry.complete(
-		app_id=app_id,
-		log_message="Req {}".format(poi_type),
-		gps_position=position,
-		intrusion=request.params.intrusion
-	)
-
-	_append_to_log(poi_request_log_entry)
-
 	poi_result = PoiMapper.map(poi_type, crd_x, crd_y)
 
-	poi_response_log_entry = _create_base_log_entry(request.params.vin)
-	log_message = "Invalid type {}!".format(poi_type)
-	level = LogEntry.LEVEL_ERROR
+	poi_log_entry = _create_base_log_entry(request.params.vin)
 
-	if poi_result is not None:
-		log_message = "Resp [{}]".format(poi_result)
-		level = LogEntry.LEVEL_DEFAULT
+	log_message = "{}".format(poi_result)
+	level = LogEntry.LEVEL_DEFAULT
 
-	# Save response to log
-	poi_response_log_entry.complete(
+	if poi_result is None:
+		log_message = "Invalid type {}!".format(poi_type)
+		level = LogEntry.LEVEL_ERROR
+
+	poi_log_entry.complete(
 		app_id=app_id,
 		log_message=log_message,
 		gps_position=position,
@@ -107,7 +95,7 @@ def get_poi():
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(poi_response_log_entry)
+	_append_to_log(poi_log_entry)
 
 
 @post("/get/tsp")

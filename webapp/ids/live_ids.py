@@ -95,7 +95,7 @@ class LiveIds(object):
 
 	@staticmethod
 	def _get_log_dir():
-		""" Build a path from the given file name and the log folder. """
+		""" Return the log directory. """
 
 		target_dir = LiveIds.LOG_DIR
 
@@ -104,6 +104,12 @@ class LiveIds(object):
 			target_dir = os.path.join(ids_dir, target_dir)
 
 		return target_dir
+
+
+	@staticmethod
+	def _get_log_path_for(name):
+		""" Build a path from the given file name and the log directory. """
+		return os.path.join(LiveIds._get_log_dir(), name)
 
 
 	@staticmethod

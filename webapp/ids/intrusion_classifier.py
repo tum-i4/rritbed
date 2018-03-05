@@ -21,15 +21,16 @@ class IntrusionClassifier(object):
 		returns: An IdsResult object
 		"""
 
-		# Pass the entry through all systems
-		# FIRST ITERATION: 100 % / 0 %
-		# 1) Rule-based system: If intrusion was detected: return
-		# 2) Learning system: If confidence > 60 %: return
+		# FIRST VERSION: 100 % / 0 %
 
+		# Pass the entry through all systems
+
+		# 1) Rule-based system: If confidence == 100 %: return
 		rule_result = self._classify_rule_based(log_entry)
-		if rule_result.confidence > 70:
+		if rule_result.confidence == 100:
 			return rule_result
 
+		# 2) Learning system: If confidence > 60 %: return
 		learner_result = self._classify_learner(log_entry)
 		if learner_result.confidence > 60:
 			return learner_result

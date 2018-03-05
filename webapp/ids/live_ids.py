@@ -4,7 +4,8 @@
 import os
 import time
 import uuid
-from enum import Enum
+
+from ids_classification import IdsClassification
 
 class LiveIds(object):
 	""" Live intrusion detection """
@@ -95,11 +96,3 @@ class LiveIds(object):
 	def _write_line(file_handle, text):
 		""" Write to the file and append a newline. """
 		file_handle.write(text + "\n")
-
-
-# pylint: disable-msg=R0903; (Too few public methods)
-class IdsClassification(Enum):
-	""" IDS classification results """
-
-	normal = 0
-	intrusion = 1

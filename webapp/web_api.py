@@ -257,5 +257,5 @@ if not ARGS.verbose:
 
 with StateDao(verbose=ARGS.verbose) as dao:
 	DAO = dao
-	IDS = LiveIds()
+	IDS = LiveIds(verbose=ARGS.verbose)
 	run(host="localhost", port=5000, quiet=(not ARGS.verbose))

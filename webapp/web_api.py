@@ -10,12 +10,14 @@ from bottle import post, run, request, BaseResponse
 
 from log_entry import LogEntry
 from state_dao import StateDao
+from ids.live_ids import LiveIds
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
 from functionality.tsp_routing_mapper import TspRoutingMapper
 
 
 DAO = None
+IDS = None
 
 
 ### API endpoints ###
@@ -236,6 +238,7 @@ def _append_to_log(new_log_entry):
 	""" Appends the given string plus a newline to the log file """
 
 	DAO.append_to_log(new_log_entry)
+	IDS.process(new_log_entry)
 
 
 
@@ -253,4 +256,5 @@ if ARGS.quiet:
 
 with StateDao(ARGS.quiet) as dao:
 	DAO = dao
+	IDS = LiveIds()
 	run(host="localhost", port=5000, quiet=ARGS.quiet)

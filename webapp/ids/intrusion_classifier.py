@@ -58,4 +58,7 @@ class IntrusionClassifier(object):
 		Classify the given entry based on a learning system.
 		returns: An IdsResult object
 		"""
+
+		return IdsResult(classification=Classification.normal, confidence=50)
+
 		raise NotImplementedError()

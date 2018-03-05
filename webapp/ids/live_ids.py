@@ -6,7 +6,7 @@ import time
 import uuid
 
 from intrusion_classifier import IntrusionClassifier
-from ids_classification import IdsClassification
+from ids_classification import IdsResult, Classification
 
 class LiveIds(object):
 	""" Live intrusion detection """
@@ -26,18 +26,13 @@ class LiveIds(object):
 	def process(self, log_entry):
 		""" Process the given entry. Outputs a warning when the detection was successful. """
 
-		classification = self.classifier.classify(log_entry)
-		if classification == IdsClassification.normal:
+		result = self.classifier.classify(log_entry)
+		if result.classification == Classification.normal and result.confidence > 0:
 			return
 
-		# Assert after most returns are done for improved performance; the above check still works.
-		assert(isinstance(classification, IdsClassification))
-
-		file_path = self._write_intrusion_to_file(log_entry, classification)
+		file_path = self._write_intrusion_to_file(log_entry, result)
 
 		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
-
-		raise NotImplementedError()
 
 
 	def _write_intrusion_to_file(self, log_entry, result):

@@ -87,7 +87,7 @@ class LiveIds(object):
 		""" Generic name creator method ensuring uniqueness. """
 
 		name = name_creator()
-		while os.path.lexists(os.path.join(LiveIds._get_log_dir(), name)):
+		while os.path.lexists(LiveIds._get_log_path_for(name)):
 			name = name_creator()
 
 		return name

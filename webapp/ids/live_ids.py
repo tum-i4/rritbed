@@ -69,10 +69,10 @@ class LiveIds(object):
 
 		# pylint: disable-msg=C0111; (Missing method docstring)
 		def build_log_name():
-			return LiveIds.LOG_FILE_PREFIX + uuid.uuid4().__str__
+			return LiveIds.LOG_FILE_PREFIX + uuid.uuid4().__str__() + LiveIds.LOG_FILE_SUFFIX
 
 		name = build_log_name()
-		while os.path.lexists(LiveIds._get_log_file_path(name)):
+		while os.path.lexists(os.path.join(LiveIds._get_log_dir(), name)):
 			name = build_log_name()
 
 		return name

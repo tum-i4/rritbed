@@ -39,8 +39,34 @@ class LiveIds(object):
 
 	def reset_log(self):
 		""" Move the found intrusion logs to a new sub directory. """
-		raise NotImplementedError()
-		return "Intrusion logs: Moved to {}"
+
+		message = "Intrusion logs: "
+
+		if not os.path.lexists(LiveIds._get_log_dir()):
+			return message + "Log folder doesn't exist"
+
+		all_files = os.listdir(LiveIds._get_log_dir())
+
+		if not all_files:
+			return message + "Log folder is empty"
+
+		# Create folder
+		folder_name = LiveIds._create_unique_backup_folder_name()
+		folder_path = LiveIds._get_log_path_for(folder_name)
+		os.mkdir(folder_path)
+
+		# Move files
+		file_count = 0
+		for file_name in all_files:
+			file_path = LiveIds._get_log_path_for(file_name)
+			if os.path.isfile(file_path) and file_path.endswith(".log"):
+				file_count += 1
+				os.rename(file_path, os.path.join(folder_path, file_name))
+
+		return message + "Moved {} file{} to {}".format(
+			file_count,
+			"s" if file_count > 1 else "",
+			folder_name)
 
 
 	def _write_intrusion_to_file(self, log_entry, result):

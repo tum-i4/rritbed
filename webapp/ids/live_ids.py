@@ -71,14 +71,17 @@ class LiveIds(object):
 	@staticmethod
 	def _create_unique_log_name():
 		""" Create a unique log name based on a UUID. """
+		return LiveIds._create_unique_name(lambda: (
+			LiveIds.LOG_FILE_PREFIX + uuid.uuid4().__str__() + LiveIds.LOG_FILE_SUFFIX))
 
-		# pylint: disable-msg=C0111; (Missing method docstring)
-		def build_log_name():
-			return LiveIds.LOG_FILE_PREFIX + uuid.uuid4().__str__() + LiveIds.LOG_FILE_SUFFIX
 
-		name = build_log_name()
+	@staticmethod
+	def _create_unique_name(name_creator):
+		""" Generic name creator method ensuring uniqueness. """
+
+		name = name_creator()
 		while os.path.lexists(os.path.join(LiveIds._get_log_dir(), name)):
-			name = build_log_name()
+			name = name_creator()
 
 		return name
 

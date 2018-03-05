@@ -43,9 +43,7 @@ def _log_num(name):
 
 @post("/get/country-code")
 def get_country_code():
-	""" Map coordinates to country code and save request and response to log """
-
-	cc_request_log_entry = _create_base_log_entry(request.params.vin)
+	""" Map coordinates to country code and save to log. """
 
 	crd_x = request.params.x
 	crd_y = request.params.y
@@ -53,29 +51,18 @@ def get_country_code():
 	app_id = "COUNTRYCODE"
 	position = _get_position_string(crd_x, crd_y)
 
-	# Save request to log
-	cc_request_log_entry.complete(
-		app_id=app_id,
-		log_message="Req",
-		gps_position=position,
-		intrusion=request.params.intrusion
-	)
-
-	_append_to_log(cc_request_log_entry)
-
 	country_code = CountryCodeMapper.map(crd_x, crd_y)
 
-	cc_response_log_entry = _create_base_log_entry(request.params.vin)
+	cc_log_entry = _create_base_log_entry(request.params.vin)
 
-	# Save response to log
-	cc_response_log_entry.complete(
+	cc_log_entry.complete(
 		app_id=app_id,
-		log_message="Resp [{}]".format(country_code),
+		log_message=str(country_code),
 		gps_position=position,
 		intrusion=request.params.intrusion
 	)
 
-	_append_to_log(cc_response_log_entry)
+	_append_to_log(cc_log_entry)
 
 
 @post("/get/poi")

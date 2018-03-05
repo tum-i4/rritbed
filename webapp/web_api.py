@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Web API """
 
-# pylint: disable-msg=E1101
+# pylint: disable-msg=E1101; (X has no Y member - of course they do)
 
 import argparse
 import random

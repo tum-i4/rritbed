@@ -194,17 +194,16 @@ class RandomMoveStrategy(MoveStrategy):
 
 
 	def _save_pose(self, pose):
-		if self._ready_for_update(pose, Pose):
+		if self._ready_for_update(pose):
 			self._last_pose.update(pose)
 
 
 	def _save_colour(self, colour):
-		if self._ready_for_update(colour, Color):
+		if self._ready_for_update(colour):
 			self._last_colour.update(colour)
 
 
-	def _ready_for_update(self, turtle_state, data_class):
-		assert(issubclass(turtle_state.data.__class__, data_class))
+	def _ready_for_update(self, turtle_state):
 		return turtle_state.get_time_since() > RandomMoveStrategy._UPDATE_RATE_IN_SEC
 
 

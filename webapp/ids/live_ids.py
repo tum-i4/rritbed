@@ -37,6 +37,12 @@ class LiveIds(object):
 			print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
 
 
+	def reset_log(self):
+		""" Move the found intrusion logs to a new sub directory. """
+		raise NotImplementedError()
+		return "Intrusion logs: Moved to {}"
+
+
 	def _write_intrusion_to_file(self, log_entry, result):
 		"""
 		Write the given IdsResult to a new file.

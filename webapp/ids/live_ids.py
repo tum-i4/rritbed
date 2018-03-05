@@ -15,11 +15,12 @@ class LiveIds(object):
 	LOG_FILE_PREFIX = "intrusion_"
 	LOG_FILE_SUFFIX = ".log"
 
-	def __init__(self):
+	def __init__(self, verbose):
 		""" Ctor """
 
 		object.__init__(self)
 
+		self._verbose = verbose
 		self.classifier = IntrusionClassifier()
 
 
@@ -32,11 +33,15 @@ class LiveIds(object):
 
 		file_path = self._write_intrusion_to_file(log_entry, result)
 
-		print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
+		if self._verbose:
+			print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
 
 
 	def _write_intrusion_to_file(self, log_entry, result):
-		""" Print a warning and log the given intrusion in a new file. """
+		"""
+		Write the given IdsResult to a new file.
+		returns: The relative file path of the log file.
+		"""
 
 		time_str = time.strftime("%a %b %d %Y - %H:%M:%S", time.localtime())
 

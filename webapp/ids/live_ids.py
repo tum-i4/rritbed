@@ -76,6 +76,13 @@ class LiveIds(object):
 
 
 	@staticmethod
+	def _create_unique_backup_folder_name():
+		""" Create a unique name for a backup folder based on the current time. """
+		return LiveIds._create_unique_name(lambda: (
+			"logs_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())))
+
+
+	@staticmethod
 	def _create_unique_name(name_creator):
 		""" Generic name creator method ensuring uniqueness. """
 

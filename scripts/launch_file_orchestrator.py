@@ -154,7 +154,7 @@ class LaunchFileOrchestrator(object):
 		# Helper function to allow for shorthand syntax
 		def _return_valid_else_raise(value):
 			if value is None:
-				raise NotImplementedError("Expected argument but didn't receive it")
+				raise ValueError("Expected argument but didn't receive it")
 			return value
 
 		# Launch file properties

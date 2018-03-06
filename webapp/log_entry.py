@@ -104,6 +104,24 @@ class LogEntry(object):
 
 
 	@staticmethod
+	def from_log_string(log_string):
+		""" Create a LogEntry from the log string produced by get_log_string(). """
+
+		label = None
+
+		if not log_string.endswith("}"):
+			split = log_string.split(",")
+			if len(split) != 2:
+				raise ValueError("Given string has invalid format.")
+			log_string = split[0]
+			label = split[1]
+
+		data_dict = json.loads(log_string)
+		return LogEntry.from_data(data_dict, label)
+
+
+
+	@staticmethod
 	def from_data(data_dict, intrusion=None):
 		""" Create a LogEntry from the given dictionary. """
 

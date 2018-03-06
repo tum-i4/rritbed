@@ -207,3 +207,8 @@ class IntrusionClassifier(object):
 	@staticmethod
 	def _verify_app_id_mapping(mapping):
 		pass
+
+
+	@staticmethod
+	def _verify_level_mapping(mapping):
+		pass

@@ -10,6 +10,12 @@ from log_entry import LogEntry
 class IntrusionClassifier(object):
 	""" Classify intrusions rule- and learning-based """
 
+	_GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
+		"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
+	_COLOURS = ["COLOUR"]
+	_POSES = ["COUNTRYCODE", "POI", "TSPROUTING"]
+	_APP_IDS = _GENERATORS + _COLOURS + _POSES
+
 	# Stateless rules:
 	# - Field != == > < value
 	# - Field - transformed - equality

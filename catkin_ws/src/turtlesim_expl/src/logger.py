@@ -128,9 +128,8 @@ class Logger(object):
 		""" Send request to specified logging endpoint with given data. """
 
 		if self._label:
-			# Provoke KeyError to ensure existence of "intrusion" key
-			# pylint: disable-msg=W0104; (Statement has no effect - does raise)
-			request[Logger._INTRUSION_FIELD]
+			if Logger._INTRUSION_FIELD not in request:
+				raise KeyError("Missing intrusion key necessary for labelling.")
 
 		try:
 			requests.post(Logger.URL + "/" + path + "/" + log_method, request)

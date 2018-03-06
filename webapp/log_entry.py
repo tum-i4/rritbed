@@ -103,6 +103,17 @@ class LogEntry(object):
 		return result
 
 
+	@staticmethod
+	def from_data(data_dict, intrusion=None):
+		""" Create a LogEntry from the given dictionary. """
+
+		# Data is verified in the ctor and setters
+		return LogEntry(vin=data_dict[LogEntry.VIN_FIELD], app_id=data_dict[LogEntry.APP_ID_FIELD],
+			level=data_dict[LogEntry.LEVEL_FIELD], log_message=data_dict[LogEntry.LOG_MESSAGE_FIELD],
+			gps_position=data_dict[LogEntry.GPS_POSITION_FIELD],
+			time_unix=data_dict[LogEntry.TIME_UNIX_FIELD], log_id=data_dict[LogEntry.LOG_ID_FIELD],
+			intrusion=intrusion)
+
 
 	### Helper ###
 

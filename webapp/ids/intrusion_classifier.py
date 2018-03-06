@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Classifier """
 
+import numpy
 from ids_classification import IdsResult, Classification
 from log_entry import LogEntry
 
@@ -80,14 +81,30 @@ class IntrusionClassifier(object):
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64
 		"""
 
-		# Discard vin
-		# Map app_id to int
+		data_dict = log_entry.data
+		# Discard vin, log_id (unnecessary)
+		# Discard app_id (it's used for mapping to a classifier)
+		app_id = data_dict[LogEntry.APP_ID_FIELD]
+		# Keep time_unix as is
+		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		# ?? log_message ??
-		# Map gps_position to two ints
-		# Keep time_unix
-		# Discard log_id
-		pass
+		level_int = IntrusionClassifier._level_to_int(data_dict[LogEntry.LEVEL_FIELD])
+		# Map gps_position to two floats
+		gps_tuple = IntrusionClassifier._gps_position_to_float_tuple(
+			data_dict[LogEntry.GPS_POSITION_FIELD])
+		gps_lat = gps_tuple[0]
+		gps_lon = gps_tuple[1]
+		# Map log_message to list of floats based on app_id
+		log_msg_floats = IntrusionClassifier._log_message_to_float_list(
+			data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
+
+		result = numpy.asarray([time_unix, level_int, gps_lat, gps_lon] + log_msg_floats,
+			numpy.float_,
+			"C")
+
+		IntrusionClassifier._verify_ndarray(result, app_id)
+
+		return result
 
 
 	@staticmethod

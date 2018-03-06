@@ -15,6 +15,10 @@ class PoseProcessor(object):
 	POSSIBLE_INTRUSION_LEVELS = ["easy", "med", "hard"]
 
 	_NOT_INTRUDED_LABEL = "normal"
+	_JUMP_LABEL = "jump"
+	_ILLEGAL_TYPE_LABEL = "illegaltype"
+	_ROUTE_TO_SELF_LABEL = "routetoself"
+
 	_X_STR = "x"
 	_Y_STR = "y"
 
@@ -80,7 +84,7 @@ class PoseProcessor(object):
 			request = new_request
 
 		if label:
-			self._label_request(request, intruded=intrude, intrusion_label="jump")
+			self._label_request(request, intruded=intrude, intrusion_label=PoseProcessor._JUMP_LABEL)
 
 		return request
 
@@ -126,7 +130,7 @@ class PoseProcessor(object):
 		request[type_str] = choice
 
 		if label:
-			self._label_request(request, intruded=intrude, intrusion_label="illegaltype")
+			self._label_request(request, intruded=intrude, intrusion_label=PoseProcessor._ILLEGAL_TYPE_LABEL)
 
 		return request
 
@@ -148,7 +152,8 @@ class PoseProcessor(object):
 			targ_x_y = intruded_x_y
 
 		if label:
-			self._label_request(request, intruded=intrude, intrusion_label="routetoself")
+			self._label_request(request, intruded=intrude,
+				intrusion_label=PoseProcessor._ROUTE_TO_SELF_LABEL)
 
 		targ_x = targ_x_y[0]
 		targ_y = targ_x_y[1]

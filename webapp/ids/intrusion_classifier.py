@@ -67,7 +67,7 @@ class IntrusionClassifier(object):
 
 	def train(self, log_entries):
 		"""
-		Train the classifier with the given labelled entries.
+		Train the app based classifiers with the given labelled entries.
 		"""
 
 		pass
@@ -75,9 +75,11 @@ class IntrusionClassifier(object):
 
 	@staticmethod
 	def _log_entry_to_vector(log_entry):
-		""" Convert the given LogEntry object to a learnable vector. """
+		"""
+		Convert the given LogEntry object to a learnable vector.
+		returns: C-ordered numpy.ndarray (dense) with dtype=float64
+		"""
 
-		# C-ordered numpy.ndarray (dense) with dtype=float64
 		# Discard vin
 		# Map app_id to int
 		# Map level to int
@@ -126,3 +128,8 @@ class IntrusionClassifier(object):
 		}
 
 		return label_int_mapping[label]
+
+
+	@staticmethod
+	def _verify_ndarray(ndarray, app_id):
+		raise NotImplementedError()

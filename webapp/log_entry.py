@@ -25,7 +25,7 @@ class LogEntry(object):
 
 
 	@staticmethod
-	def create_base_entry(vin=None, time_unix=None):
+	def create_base_entry(vin="INVALID", time_unix=None):
 		""" Create an invalid base log entry for step-by-step creation. """
 		return LogEntry(vin=vin, app_id="INVALID", time_unix=time_unix)
 

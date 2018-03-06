@@ -2,6 +2,7 @@
 """ Classifier """
 
 import numpy
+import re
 from ids_classification import IdsResult, Classification
 from log_entry import LogEntry
 
@@ -136,7 +137,16 @@ class IntrusionClassifier(object):
 
 	@staticmethod
 	def _strip_app_id(app_id):
-		raise NotImplementedError()
+		""" Strip the given app_id of its ID. """
+
+		# Match indices in the form of _1
+		match = re.search(r"\_\d+", app_id)
+
+		if not match:
+			return app_id
+
+		# Return app_id without the matched part
+		return app_id[:match.start()]
 
 
 	@staticmethod

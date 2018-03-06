@@ -149,26 +149,26 @@ class LaunchFileOrchestrator(object):
 		""" Save args to class to allow direct access. """
 
 		# Helper function to allow for shorthand syntax
-		def _return_valid_else_raise(value):
+		def _raise_on_none_else_return(value):
 			if value is None:
 				raise ValueError("Expected argument but didn't receive it")
 			return value
 
 		# Launch file properties
-		self._dump_mode = _return_valid_else_raise(args.dump_mode)
+		self._dump_mode = _raise_on_none_else_return(args.dump_mode)
 		if not args.dump_mode:
-			self._file_path = _return_valid_else_raise(args.file_path)
-		self._manual_turtle_mode = _return_valid_else_raise(args.manual_turtle_mode)
-		self._namespace_count = _return_valid_else_raise(args.namespace_count)
-		self._label_intrusions = _return_valid_else_raise(args.label_intrusions)
-		self._default_gen_args = _return_valid_else_raise(args.default_gen_args)
+			self._file_path = _raise_on_none_else_return(args.file_path)
+		self._manual_turtle_mode = _raise_on_none_else_return(args.manual_turtle_mode)
+		self._namespace_count = _raise_on_none_else_return(args.namespace_count)
+		self._label_intrusions = _raise_on_none_else_return(args.label_intrusions)
+		self._default_gen_args = _raise_on_none_else_return(args.default_gen_args)
 
 		# Intrusions
-		intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
-		intrusion_level = _return_valid_else_raise(args.intrusion_level)
-		intrude_turtle = _return_valid_else_raise(args.intrude_turtle)
-		intrude_generators = _return_valid_else_raise(args.intrude_generators)
-		duplicate_vins = _return_valid_else_raise(args.duplicate_vins)
+		intrusion_percentage = _raise_on_none_else_return(args.intrusion_percentage)
+		intrusion_level = _raise_on_none_else_return(args.intrusion_level)
+		intrude_turtle = _raise_on_none_else_return(args.intrude_turtle)
+		intrude_generators = _raise_on_none_else_return(args.intrude_generators)
+		duplicate_vins = _raise_on_none_else_return(args.duplicate_vins)
 
 		self._intrusion_definition = IntrusionDefinition(
 			intrusion_percentage=intrusion_percentage, intrusion_level=intrusion_level,

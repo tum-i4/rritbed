@@ -133,6 +133,14 @@ class LogEntry(object):
 			intrusion=intrusion)
 
 
+	@staticmethod
+	def copy(log_entry):
+		""" Value-copy the given LogEntry object. """
+
+		assert(isinstance(log_entry, LogEntry))
+		return LogEntry.from_data(log_entry.data, log_entry.intrusion)
+
+
 	### Helper ###
 
 

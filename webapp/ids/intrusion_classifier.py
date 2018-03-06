@@ -89,6 +89,16 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
+	def _app_id_to_int(app_id):
+		raise NotImplementedError()
+
+
+	@staticmethod
+	def _level_to_int(label):
+		raise NotImplementedError()
+
+
+	@staticmethod
 	def _label_to_int(label):
 		""" Map the given label to the corresponding integer for its class. """
 

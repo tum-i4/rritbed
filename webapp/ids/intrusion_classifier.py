@@ -74,6 +74,21 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
+	def _log_entry_to_vector(log_entry):
+		""" Convert the given LogEntry object to a learnable vector. """
+
+		# C-ordered numpy.ndarray (dense) with dtype=float64
+		# Discard vin
+		# Map app_id to int
+		# Map level to int
+		# ?? log_message ??
+		# Map gps_position to two ints
+		# Keep time_unix
+		# Discard log_id
+		pass
+
+
+	@staticmethod
 	def _label_to_int(label):
 		""" Map the given label to the corresponding integer for its class. """
 

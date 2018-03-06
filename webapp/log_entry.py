@@ -118,10 +118,10 @@ class LogEntry(object):
 	### Helper ###
 
 
-	def _set_if_not_none(self, field_key, value, verifier=None):
+	def _set_if_not_none(self, field_key, value, verifier=str):
 		"""
 		Set the field with the given key to the value specified if that is not None.\n
-		verifier: Optional verification method.
+		verifier: Optional verification method (default: convert to str)
 		"""
 
 		if value is None:

@@ -160,11 +160,11 @@ class IntrusionClassifier(object):
 
 		label_int_mapping = {
 			"normal"      : 0,
+			# GENERATORS
+			"zeroes"      : 1,
+			"huge-error"  : 2,
 			# COLOUR
-			"red"         : 1,
-			# GENERATOR
-			"zeroes"      : 2,
-			"huge-error"  : 3,
+			"red"         : 3,
 			# POSE
 			"jump"        : 4,
 			"illegaltype" : 5,

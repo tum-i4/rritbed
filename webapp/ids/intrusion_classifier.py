@@ -99,6 +99,16 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
+	def _gps_position_to_float_tuple(gps_position):
+		raise NotImplementedError()
+
+
+	@staticmethod
+	def _log_message_to_float_list(log_message, app_id):
+		raise NotImplementedError()
+
+
+	@staticmethod
 	def _label_to_int(label):
 		""" Map the given label to the corresponding integer for its class. """
 

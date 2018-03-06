@@ -61,6 +61,8 @@ class LaunchFileOrchestrator(object):
 			metavar="NS_COUNT", default=1, help="Number of namespaces to create")
 		optionals_group.add_argument("--label", "-b", action="store_true", dest="label_intrusions",
 			help="Advise logger to label intrusions (used for training data).")
+		optionals_group.add_argument("--default-gen-args", "-a", action="store_true",
+			dest="default_gen_args", help="Force use of the default generator arguments.")
 
 		# Intrusions
 		optionals_group.add_argument("--intrusions", "-p", type=int, dest="intrusion_percentage",
@@ -162,6 +164,7 @@ class LaunchFileOrchestrator(object):
 		self._manual_turtle_mode = _return_valid_else_raise(args.manual_turtle_mode)
 		self._namespace_count = _return_valid_else_raise(args.namespace_count)
 		self._label_intrusions = _return_valid_else_raise(args.label_intrusions)
+		self._default_gen_args = _return_valid_else_raise(args.default_gen_args)
 
 		# Intrusions
 		intrusion_percentage = _return_valid_else_raise(args.intrusion_percentage)
@@ -393,7 +396,9 @@ class LaunchFileOrchestrator(object):
 		args += " gen {}".format(gen_name)
 
 		for arg_def in gen_def:
-			arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
+			arg = float(arg_def["default"])
+			if not self._default_gen_args:
+				arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
 			args += " {:f}".format(arg)
 
 		return self._create_node_element(

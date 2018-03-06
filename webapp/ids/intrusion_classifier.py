@@ -202,3 +202,8 @@ class IntrusionClassifier(object):
 	@staticmethod
 	def _verify_ndarray(ndarray, app_id):
 		raise NotImplementedError()
+
+
+	@staticmethod
+	def _verify_app_id_mapping(mapping):
+		pass

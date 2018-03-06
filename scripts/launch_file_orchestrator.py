@@ -92,11 +92,8 @@ class LaunchFileOrchestrator(object):
 		# Save arguments in separate variables for simpler access
 		self._save_args_to_class(args)
 
-		print("Intrusions: {}".format(
-			"{} % intrusions with level <{}>".format(args.intrusion_percentage, args.intrusion_level)
-			if args.intrusion_percentage > 0
-			else "none"
-		))
+		# Print messages for selected options
+		self._print_selected_options(args)
 
 		self._create()
 		exit()
@@ -180,6 +177,21 @@ class LaunchFileOrchestrator(object):
 
 		# May be None
 		self._identifier_file_path = args.identifier_file_path
+
+
+	def _print_selected_options(self, args):
+		""" Output human-readable infos which options have been selected. """
+
+		print("Intrusions: {}".format(
+			"{} % intrusions with level <{}>".format(args.intrusion_percentage, args.intrusion_level)
+			if args.intrusion_percentage > 0
+			else "none"))
+
+		print("Label: {}".format(
+			"yes" if args.label_intrusions else "no"))
+
+		if args.default_gen_args:
+			print("Forcing default generator arguments")
 
 
 	def _create(self):

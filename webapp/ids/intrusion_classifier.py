@@ -59,6 +59,35 @@ class IntrusionClassifier(object):
 		returns: An IdsResult object
 		"""
 
-		return IdsResult(classification=Classification.normal, confidence=50)
+		# return IdsResult(classification=Classification.normal, confidence=50)
 
+		# TODO
 		raise NotImplementedError()
+
+
+	def train(self, log_entries):
+		"""
+		Train the classifier with the given labelled entries.
+		"""
+
+		pass
+
+
+	@staticmethod
+	def _label_to_int(label):
+		""" Map the given label to the corresponding integer for its class. """
+
+		label_int_mapping = {
+			"normal"      : 0,
+			# COLOUR
+			"red"         : 1,
+			# GENERATOR
+			"zeroes"      : 2,
+			"huge-error"  : 3,
+			# POSE
+			"jump"        : 4,
+			"illegaltype" : 5,
+			"routetoself" : 6
+		}
+
+		return label_int_mapping[label]

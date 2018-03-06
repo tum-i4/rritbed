@@ -3,6 +3,11 @@
 
 # pylint: disable-msg=E1101; (X has no Y member - of course they do)
 
+# Monkey-patch
+from gevent import monkey
+monkey.patch_all()
+
+# pylint: disable-msg=C0411,C0413
 import argparse
 import random
 import time
@@ -250,7 +255,6 @@ def _append_and_detect(new_log_entry):
 ### MAIN FLOW: Starting the server ###
 ######################################
 
-
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("--verbose", "-v", action="store_true")
 ARGS = PARSER.parse_args()
@@ -261,4 +265,5 @@ if not ARGS.verbose:
 with StateDao(verbose=ARGS.verbose) as dao:
 	DAO = dao
 	IDS = LiveIds(verbose=ARGS.verbose)
-	run(host="localhost", port=5000, quiet=(not ARGS.verbose))
+
+	run(server="gevent", host="localhost", port=5000, quiet=(not ARGS.verbose))

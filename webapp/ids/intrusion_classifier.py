@@ -161,7 +161,11 @@ class IntrusionClassifier(object):
 
 	@staticmethod
 	def _gps_position_to_float_tuple(gps_position):
-		raise NotImplementedError()
+		# Format: lat,lon
+		split = gps_position.split(",")
+		if len(split) != 2:
+			raise ValueError("Invalid string")
+		return (float(split[0]), float(split[1]))
 
 
 	@staticmethod

@@ -189,7 +189,7 @@ class LogEntry(object):
 	def _verify_uuid(given_uuid):
 		""" Convert the given object to a UUID string if it's not yet one. """
 
-		if isinstance(given_uuid, str):
+		if isinstance(given_uuid, str) or isinstance(given_uuid, unicode):
 			# Verify the given string is well-formed
 			uuid.UUID(given_uuid)
 			return given_uuid

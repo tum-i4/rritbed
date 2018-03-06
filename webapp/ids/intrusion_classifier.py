@@ -150,8 +150,13 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _level_to_int(label):
-		raise NotImplementedError()
+	def _level_to_int(level):
+		level_int_mapping = {
+			LogEntry.LEVEL_DEFAULT : 0,
+			LogEntry.LEVEL_ERROR   : 1
+		}
+
+		return level_int_mapping[level]
 
 
 	@staticmethod

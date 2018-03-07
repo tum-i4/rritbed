@@ -10,6 +10,12 @@ from log_entry import LogEntry
 class IntrusionClassifier(object):
 	""" Classify intrusions rule- and learning-based """
 
+	def __init__(self):
+		""" Ctor """
+
+		object.__init__(self)
+
+
 	# Stateless rules:
 	# - Field != == > < value
 	# - Field - transformed - equality

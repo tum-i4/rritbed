@@ -15,6 +15,9 @@ class IntrusionClassifier(object):
 
 		object.__init__(self)
 
+		# TODO: Build mappings
+		# TODO: Verify hashes
+
 
 	# Stateless rules:
 	# - Field != == > < value

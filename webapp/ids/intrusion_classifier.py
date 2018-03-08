@@ -126,7 +126,7 @@ class IntrusionClassifier(object):
 	### Convert, map, transform ###
 
 
-	def _log_entry_to_vector(self, log_entry):
+	def _log_entry_to_ndarray(self, log_entry):
 		"""
 		Convert the given LogEntry object to a learnable vector.
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64

@@ -16,6 +16,16 @@ class IntrusionClassifier(object):
 	_POSES = ["COUNTRYCODE", "POI", "TSPROUTING"]
 	_APP_IDS = _GENERATORS + _COLOURS + _POSES
 
+
+	def __init__(self):
+		""" Ctor """
+
+		object.__init__(self)
+
+		# TODO: Build mappings
+		# TODO: Verify hashes
+
+
 	# Stateless rules:
 	# - Field != == > < value
 	# - Field - transformed - equality

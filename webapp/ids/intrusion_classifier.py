@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Classifier """
 
+import md5
 import re
 import numpy
 from ids_classification import IdsResult, Classification

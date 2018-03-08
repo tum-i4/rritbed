@@ -208,7 +208,7 @@ class IntrusionClassifier(object):
 		if app_id == IntrusionClassifier._POSE_CC:
 			assert(len(log_message) == 2)
 			ord_ints = [ord(x) for x in log_message]
-			return IntrusionClassifier._aggregate_ints(ord_ints)
+			return IntrusionClassifier._aggregate_floats(ord_ints)
 
 		if app_id == IntrusionClassifier._POSE_POI:
 			raise NotImplementedError()
@@ -255,14 +255,14 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _aggregate_ints(list_of_ints):
-		""" Aggregate the given ints as int(intintint). """
+	def _aggregate_floats(list_of_floats):
+		""" Aggregate the given [f,f,f] as float(fff). """
 
 		result = ""
-		for i in list_of_ints:
+		for i in list_of_floats:
 			result += str(i)
 
-		return int(result)
+		return float(result)
 
 
 	@staticmethod

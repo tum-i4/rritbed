@@ -157,14 +157,8 @@ class IntrusionClassifier(object):
 		return app_id[:match.start()]
 
 
-	@staticmethod
-	def _level_to_int(level):
-		level_int_mapping = {
-			LogEntry.LEVEL_DEFAULT : 0,
-			LogEntry.LEVEL_ERROR   : 1
-		}
-
-		return level_int_mapping[level]
+	def _level_to_int(self, level):
+		return self._level_int_mapping[level]
 
 
 	@staticmethod

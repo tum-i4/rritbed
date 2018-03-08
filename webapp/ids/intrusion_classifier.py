@@ -123,7 +123,7 @@ class IntrusionClassifier(object):
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		level_int = self._level_to_int(data_dict[LogEntry.LEVEL_FIELD])
+		level_int = self._map_level_to_int(data_dict[LogEntry.LEVEL_FIELD])
 		# Map gps_position to two floats
 		gps_tuple = self._gps_position_to_float_tuple(
 			data_dict[LogEntry.GPS_POSITION_FIELD])
@@ -156,7 +156,7 @@ class IntrusionClassifier(object):
 		return app_id[:match.start()]
 
 
-	def _level_to_int(self, level):
+	def _map_level_to_int(self, level):
 		return self._level_int_mapping[level]
 
 
@@ -172,7 +172,7 @@ class IntrusionClassifier(object):
 		raise NotImplementedError()
 
 
-	def _label_to_int(self, label):
+	def _map_label_to_int(self, label):
 		return self._label_int_mapping[label]
 
 

@@ -174,6 +174,7 @@ class IntrusionClassifier(object):
 
 
 	def _gps_position_to_float_tuple(self, gps_position):
+		""" Convert the given GPS position string to (lat, lon). """
 		# Format: lat,lon
 		split = gps_position.split(",")
 		if len(split) != 2:

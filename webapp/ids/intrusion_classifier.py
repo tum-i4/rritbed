@@ -196,6 +196,10 @@ class IntrusionClassifier(object):
 
 	def _verify_ndarray(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
+
+		assert(isinstance(ndarray, numpy.ndarray))
+		assert(ndarray.dtype == numpy.float_)
+
 		raise NotImplementedError()
 
 

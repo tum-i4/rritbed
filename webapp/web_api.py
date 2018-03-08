@@ -102,11 +102,10 @@ def get_poi():
 
 	poi_log_entry = _create_base_log_entry(request.params.vin)
 
-	log_message = str(poi_result)
+	log_message = "{},{}".format(poi_type, poi_result)
 	level = LogEntry.LEVEL_DEFAULT
 
-	if poi_result is None:
-		log_message = "Invalid type {}!".format(poi_type)
+	if poi_result is "Invalid":
 		level = LogEntry.LEVEL_ERROR
 
 	poi_log_entry.complete(

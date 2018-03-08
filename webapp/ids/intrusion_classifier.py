@@ -140,7 +140,7 @@ class IntrusionClassifier(object):
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		level_int = self._map_level_to_int(data_dict[LogEntry.LEVEL_FIELD])
+		level_int = self._level_int_mapping[LogEntry.LEVEL_FIELD]
 		# Convert gps_position to two floats
 		gps_tuple = self._gps_position_to_float_tuple(
 			data_dict[LogEntry.GPS_POSITION_FIELD])
@@ -243,14 +243,6 @@ class IntrusionClassifier(object):
 			return IntrusionClassifier._aggregate_ints_to_float(coords, pad_zeroes=3)
 
 		raise NotImplementedError("Pose type {} not implemented".format(app_id))
-
-
-	def _map_level_to_int(self, level):
-		return self._level_int_mapping[level]
-
-
-	def _map_label_to_int(self, label):
-		return self._label_int_mapping[label]
 
 
 	def _verify_ndarray(self, ndarray, app_id):

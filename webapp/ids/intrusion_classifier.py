@@ -206,7 +206,8 @@ class IntrusionClassifier(object):
 		assert(app_id in IntrusionClassifier._POSES)
 
 		if app_id == IntrusionClassifier._POSE_CC:
-			raise NotImplementedError()
+			assert(len(log_message) == 2)
+			return [ord(x) for x in log_message]
 
 		if app_id == IntrusionClassifier._POSE_POI:
 			raise NotImplementedError()

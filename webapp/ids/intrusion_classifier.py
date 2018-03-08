@@ -198,9 +198,12 @@ class IntrusionClassifier(object):
 		# Colour sends "{i},{i},{i}"
 		if app_id in IntrusionClassifier._COLOURS:
 			vals = [int(val) for val in log_message.split(",")]
+			assert(len(vals) == 3)
 			for val in vals:
 				assert(val >= 0 and val <= 255)
-			return vals
+
+			# Pad to ensure 12,155,1 is different from 121,55,1
+			return IntrusionClassifier._aggregate_ints(vals, pad_zeroes=3)
 
 		# Poses
 		assert(app_id in IntrusionClassifier._POSES)

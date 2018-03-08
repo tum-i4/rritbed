@@ -153,28 +153,12 @@ class IntrusionClassifier(object):
 		return result
 
 
-	@staticmethod
-	def _strip_app_id(app_id):
-		""" Strip the given app_id of its ID. """
-
-		# Match indices in the form of _1
-		match = re.search(r"\_\d+", app_id)
-
-		if not match:
-			return app_id
-
-		# Return app_id without the matched part
-		return app_id[:match.start()]
-
-
 	def _vin_to_int_list(self, vin):
+		""" Convert the given VIN to [ord(char), int(rest)]. """
+
 		if len(vin) != 7:
 			raise ValueError("Invalid VIN")
 		return [ord(vin[0]), int(vin[1:])]
-
-
-	def _map_level_to_int(self, level):
-		return self._level_int_mapping[level]
 
 
 	def _gps_position_to_float_tuple(self, gps_position):
@@ -189,6 +173,10 @@ class IntrusionClassifier(object):
 		raise NotImplementedError()
 
 
+	def _map_level_to_int(self, level):
+		return self._level_int_mapping[level]
+
+
 	def _map_label_to_int(self, label):
 		return self._label_int_mapping[label]
 
@@ -196,6 +184,20 @@ class IntrusionClassifier(object):
 	def _verify_ndarray(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 		raise NotImplementedError()
+
+
+	@staticmethod
+	def _strip_app_id(app_id):
+		""" Strip the given app_id of its ID. """
+
+		# Match indices in the form of _1
+		match = re.search(r"\_\d+", app_id)
+
+		if not match:
+			return app_id
+
+		# Return app_id without the matched part
+		return app_id[:match.start()]
 
 
 	@staticmethod

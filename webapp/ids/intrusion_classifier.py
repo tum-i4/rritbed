@@ -254,6 +254,17 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
+	def _aggregate_ints(list_of_ints):
+		""" Aggregate the given ints as int(intintint). """
+
+		result = ""
+		for i in list_of_ints:
+			result += str(i)
+
+		return int(result)
+
+
+	@staticmethod
 	def _verify_md5(obj, md5_str):
 		if md5.new(str(obj)).digest() != md5_str:
 			raise ValueError("Invalid object given - did you change or add values?")

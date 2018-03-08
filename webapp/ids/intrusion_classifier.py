@@ -157,8 +157,8 @@ class IntrusionClassifier(object):
 
 		result = numpy.asarray(
 			[time_unix, level_int, gps_lat, gps_lon] + vin_int_list + log_msg_float_list,
-			numpy.float_,
-			"C")
+			dtype=numpy.float_,
+			order="C")
 
 		self._verify_ndarray(result, app_id)
 

@@ -270,6 +270,15 @@ class IntrusionClassifier(object):
 		for colr in IntrusionClassifier._COLOURS:
 			constraints[colr] = lambda x: x >= 1001001 and x <= 256256256
 
+		# For each char: min: 65 ("A"); max: 90 ("Z")
+		constraints[IntrusionClassifier._POSE_CC] = lambda x: x >= 6565 and x <= 9090
+
+		# For both ints: [1,9]
+		constraints[IntrusionClassifier._POSE_POI] = lambda x: x >= 11 and x <= 99
+
+		# Min: 1,1,1,1; max: 500,500,500,500
+		constraints[IntrusionClassifier._POSE_TSP] = lambda x: x >= 1001001001 and x <= 500500500500
+
 		raise NotImplementedError()
 
 

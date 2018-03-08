@@ -6,6 +6,7 @@ import re
 import numpy
 from ids_classification import IdsResult, Classification
 from log_entry import LogEntry
+from functionality.poi_mapper import PoiMapper as PoMa
 
 
 class IntrusionClassifier(object):
@@ -36,6 +37,13 @@ class IntrusionClassifier(object):
 			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
+		self._poi_type_mapping = IntrusionClassifier._enumerate_to_dict(
+			[PoMa.restaurants_field, PoMa.gas_stations_field],
+			verify_hash="0a6d0159ee9e89b34167d7c77c977571")
+
+		self._poi_result_mapping = IntrusionClassifier._enumerate_to_dict(
+			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl],
+			verify_hash="a2b714454328ea9fbfb50064b378c147")
 
 
 	### Classify ###

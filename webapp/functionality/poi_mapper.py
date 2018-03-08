@@ -43,6 +43,6 @@ class PoiMapper(MapperBase):
 		""" Maps the given coordinates to a POI of the given type """
 
 		if poi_type not in PoiMapper.pois:
-			return None
+			return "Invalid"
 
 		return MapperBase._map(PoiMapper.pois[poi_type], crd_x, crd_y)

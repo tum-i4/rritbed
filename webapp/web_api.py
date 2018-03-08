@@ -131,7 +131,6 @@ def get_tsp_routing():
 	app_id = "TSPROUTING"
 	position = _get_position_string(crd_x, crd_y)
 
-	# Returns x,y,t_x,t_y
 	tsp_message = TspRoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
 
 	tsp_log_entry = _create_base_log_entry(request.params.vin)

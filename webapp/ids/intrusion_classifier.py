@@ -115,6 +115,10 @@ class IntrusionClassifier(object):
 		Train the app_id based classifiers with the given labelled entries.
 		"""
 
+		# Log_entry to vector
+		# Intrusion to class_int
+		# Train according to app_id
+
 		pass
 
 

@@ -203,7 +203,7 @@ class IntrusionClassifier(object):
 				assert(val >= 0 and val <= 255)
 
 			# Pad to ensure 12,155,1 is different from 121,55,1
-			return IntrusionClassifier._aggregate_ints(vals, pad_zeroes=3)
+			return IntrusionClassifier._aggregate_ints_to_float(vals, pad_zeroes=3)
 
 		# Poses
 		assert(app_id in IntrusionClassifier._POSES)
@@ -213,7 +213,7 @@ class IntrusionClassifier(object):
 			assert(len(log_message) == 2)
 
 			ord_ints = [ord(x) for x in log_message]
-			return IntrusionClassifier._aggregate_ints(ord_ints)
+			return IntrusionClassifier._aggregate_ints_to_float(ord_ints)
 
 		if app_id == IntrusionClassifier._POSE_POI:
 			raise NotImplementedError()
@@ -260,8 +260,8 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _aggregate_ints(list_of_ints, pad_zeroes=None):
-		""" Aggregate the given ints as int(intintint). """
+	def _aggregate_ints_to_float(list_of_ints, pad_zeroes=None):
+		""" Aggregate the given ints as float(intintint). """
 
 		result = ""
 		for i in list_of_ints:
@@ -273,7 +273,7 @@ class IntrusionClassifier(object):
 
 			result += str_i
 
-		return int(result)
+		return float(result)
 
 
 	@staticmethod

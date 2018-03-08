@@ -176,8 +176,8 @@ class IntrusionClassifier(object):
 		return self._label_int_mapping[label]
 
 
-	@staticmethod
-	def _verify_ndarray(ndarray, app_id):
+	def _verify_ndarray(self, ndarray, app_id):
+		""" Verifies the given ndarray fits the app_id classifier. """
 		raise NotImplementedError()
 
 

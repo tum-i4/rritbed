@@ -151,7 +151,7 @@ class IntrusionClassifier(object):
 		gps_lat = gps_tuple[0]
 		gps_lon = gps_tuple[1]
 		# Map log_message to list of floats based on app_id
-		log_msg_float_list = self._log_message_to_float_list(
+		log_msg_float_list = self._log_message_to_float(
 			data_dict[LogEntry.LOG_MESSAGE_FIELD],
 			IntrusionClassifier._strip_app_id(app_id))
 
@@ -185,7 +185,7 @@ class IntrusionClassifier(object):
 		return (float(split[0]), float(split[1]))
 
 
-	def _log_message_to_float_list(self, log_message, app_id):
+	def _log_message_to_float(self, log_message, app_id):
 		""" Convert the given log message to a float list based on the given app_id. """
 
 		if app_id not in self._app_ids:
@@ -193,7 +193,7 @@ class IntrusionClassifier(object):
 
 		# Generators send "{f}"
 		if app_id in IntrusionClassifier._GENERATORS:
-			return [float(log_message)]
+			return float(log_message)
 
 		# Colour sends "{i},{i},{i}"
 		if app_id in IntrusionClassifier._COLOURS:

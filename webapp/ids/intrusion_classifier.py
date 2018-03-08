@@ -155,7 +155,7 @@ class IntrusionClassifier(object):
 			data_dict[LogEntry.LOG_MESSAGE_FIELD],
 			IntrusionClassifier._strip_app_id(app_id))
 
-		result = numpy.asarray(
+		result = numpy.array(
 			[time_unix, level_int, gps_lat, gps_lon] + vin_int_list + log_msg_float_list,
 			dtype=numpy.float_,
 			order="C")

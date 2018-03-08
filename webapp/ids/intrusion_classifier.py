@@ -291,6 +291,6 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _verify_md5(obj, md5_str):
-		if md5.new(str(obj)).digest() != md5_str:
-			raise ValueError("Invalid object given - did you change or add values?")
+	def _verify_md5(obj, md5_hex_digest):
+		if md5.new(str(obj)).hexdigest() != md5_hex_digest:
+			raise ValueError("Invalid object given. Expected md5 hex: {}".format(md5_hex_digest))

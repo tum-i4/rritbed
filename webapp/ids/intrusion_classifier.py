@@ -279,7 +279,8 @@ class IntrusionClassifier(object):
 		# Min: 1,1,1,1; max: 500,500,500,500
 		constraints[IntrusionClassifier._POSE_TSP] = lambda x: x >= 1001001001 and x <= 500500500500
 
-		raise NotImplementedError()
+		# Check the constraint with the log_message float
+		assert(constraints[app_id](ndarray[4]))
 
 
 

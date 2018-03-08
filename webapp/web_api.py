@@ -132,18 +132,14 @@ def get_tsp_routing():
 	app_id = "TSPROUTING"
 	position = _get_position_string(crd_x, crd_y)
 
+	# Returns x,y,t_x,t_y
 	tsp_message = TspRoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
 
 	tsp_log_entry = _create_base_log_entry(request.params.vin)
 
-	if tsp_message == TspRoutingMapper.GOAL_REACHED_MSG:
-		tsp_message = "Goal {}/{} reached".format(crd_x, crd_y)
-
 	tsp_log_entry.complete(
 		app_id=app_id,
-		log_message="[{}] for [{},{}]".format(
-			tsp_message, # x,y
-			targ_x, targ_y),
+		log_message=tsp_message,
 		gps_position=position,
 		intrusion=request.params.intrusion
 	)

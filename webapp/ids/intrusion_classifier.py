@@ -165,6 +165,14 @@ class IntrusionClassifier(object):
 		return app_id[:match.start()]
 
 
+	def _vin_to_int_list(self, vin):
+		""" Convert the given VIN to an int list. """
+		if len(vin) != 7:
+			raise ValueError("Invalid VIN")
+
+		return [ord(vin[0])] + [int(x) for x in vin[1:]]
+
+
 	def _map_level_to_int(self, level):
 		return self._level_int_mapping[level]
 

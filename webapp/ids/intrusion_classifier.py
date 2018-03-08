@@ -185,21 +185,6 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _verify_app_id_mapping(mapping):
-		IntrusionClassifier._verify_md5(mapping, "l\xb8i\x85\x12\xd2Wj\xbfm\xd6\xb9\x7fvvr")
-
-
-	@staticmethod
-	def _verify_level_mapping(mapping):
-		IntrusionClassifier._verify_md5(mapping, "I\x94/\x02h\xaaf\x8e\x14nS;go\x03\xd0")
-
-
-	@staticmethod
-	def _verify_label_mapping(mapping):
-		IntrusionClassifier._verify_md5(mapping, "i\xa2b\x19+$m\x16\xe8A\x1bm\xb0n#{")
-
-
-	@staticmethod
 	def _verify_md5(obj, md5_str):
 		if md5.new(str(obj)).digest() != md5_str:
 			raise ValueError("Invalid object given - did you change or add values?")

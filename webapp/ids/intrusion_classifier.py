@@ -234,7 +234,7 @@ class IntrusionClassifier(object):
 			# Pad to ensure 1,100,1,110 is different from 11,1,1,1
 			return IntrusionClassifier._aggregate_ints_to_float(coords, pad_zeroes=3)
 
-		raise NotImplementedError()
+		raise NotImplementedError("Pose type {} not implemented".format(app_id))
 
 
 	def _map_level_to_int(self, level):

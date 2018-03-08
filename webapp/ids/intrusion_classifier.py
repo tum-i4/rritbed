@@ -170,19 +170,31 @@ class IntrusionClassifier(object):
 
 		if len(vin) != 7:
 			raise ValueError("Invalid VIN")
+
 		return [ord(vin[0]), int(vin[1:])]
 
 
 	def _gps_position_to_float_tuple(self, gps_position):
 		""" Convert the given GPS position string to (lat, lon). """
+
 		# Format: lat,lon
 		split = gps_position.split(",")
 		if len(split) != 2:
 			raise ValueError("Invalid string")
+
 		return (float(split[0]), float(split[1]))
 
 
 	def _log_message_to_float_list(self, log_message, app_id):
+		""" Convert the given log message to a float list based on the given app_id. """
+
+		if app_id not in self._app_ids:
+			raise ValueError("Invalid value for app_id given: {}".format(app_id))
+
+		# Generators send "{f}"
+		if app_id in IntrusionClassifier._GENERATORS:
+			return [float(log_message)]
+
 		raise NotImplementedError()
 
 

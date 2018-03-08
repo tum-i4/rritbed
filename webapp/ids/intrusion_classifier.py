@@ -105,7 +105,7 @@ class IntrusionClassifier(object):
 
 	def train(self, log_entries):
 		"""
-		Train the app based classifiers with the given labelled entries.
+		Train the app_id based classifiers with the given labelled entries.
 		"""
 
 		pass
@@ -116,6 +116,10 @@ class IntrusionClassifier(object):
 		Convert the given LogEntry object to a learnable vector.
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64
 		"""
+
+		# We have: vin, app_id, level, log_message, gps_position, time_unix, log_id
+		assert(len(log_entry.data) == 7)
+		assert(log_entry.intrusion)
 
 		data_dict = log_entry.data
 		# Discard vin, log_id (unnecessary)
@@ -131,10 +135,10 @@ class IntrusionClassifier(object):
 		gps_lat = gps_tuple[0]
 		gps_lon = gps_tuple[1]
 		# Map log_message to list of floats based on app_id
-		log_msg_floats = self._log_message_to_float_list(
+		log_msg_float_list = self._log_message_to_float_list(
 			data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
-		result = numpy.asarray([time_unix, level_int, gps_lat, gps_lon] + log_msg_floats,
+		result = numpy.asarray([time_unix, level_int, gps_lat, gps_lon] + log_msg_float_list,
 			numpy.float_,
 			"C")
 

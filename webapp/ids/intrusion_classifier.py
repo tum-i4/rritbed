@@ -202,6 +202,9 @@ class IntrusionClassifier(object):
 			for val in vals:
 				assert(val >= 0 and val <= 255)
 
+			# Transform from [0, 255] to [1, 256] to not have zeroes
+			vals = [v + 1 for v in vals]
+
 			# Pad to ensure 12,155,1 is different from 121,55,1
 			return IntrusionClassifier._aggregate_ints_to_float(vals, pad_zeroes=3)
 

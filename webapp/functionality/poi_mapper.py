@@ -40,7 +40,10 @@ class PoiMapper(MapperBase):
 
 	@staticmethod
 	def map(poi_type, crd_x, crd_y):
-		""" Maps the given coordinates to a POI of the given type """
+		"""
+		Map the given coordinates to a POI of the given type.
+		returns: "Invalid" for invalid types.
+		"""
 
 		if poi_type not in PoiMapper.pois:
 			return "Invalid"

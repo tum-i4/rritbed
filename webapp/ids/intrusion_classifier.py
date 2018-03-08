@@ -133,6 +133,13 @@ class IntrusionClassifier(object):
 		return self._label_int_mapping[log_entry.intrusion]
 
 
+	def _log_entry_to_app_id(self, log_entry):
+		""" Extract and sanitize the app_id from the given LogEntry object. """
+
+		app_id = log_entry.data[LogEntry.APP_ID_FIELD]
+		return IntrusionClassifier._strip_app_id(app_id)
+
+
 	def _log_entry_to_ndarray(self, log_entry):
 		"""
 		Convert the given LogEntry object to a learnable vector.

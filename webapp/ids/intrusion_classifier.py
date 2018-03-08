@@ -140,7 +140,7 @@ class IntrusionClassifier(object):
 		return IntrusionClassifier._strip_app_id(app_id)
 
 
-	def _log_entry_to_ndarray(self, log_entry):
+	def _log_entry_to_ndarray(self, log_entry, app_id):
 		"""
 		Convert the given LogEntry object to a learnable vector.
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64
@@ -148,11 +148,9 @@ class IntrusionClassifier(object):
 
 		# We have: vin, app_id, level, log_message, gps_position, time_unix, log_id
 		assert(len(log_entry.data) == 7)
-		assert(log_entry.intrusion)
 
 		data_dict = log_entry.data
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
-		app_id = data_dict[LogEntry.APP_ID_FIELD]
 		# Convert vin to float
 		vin_float = self._vin_to_float(data_dict[LogEntry.VIN_FIELD])
 		# Keep time_unix as is
@@ -165,9 +163,7 @@ class IntrusionClassifier(object):
 		gps_lat = gps_tuple[0]
 		gps_lon = gps_tuple[1]
 		# Convert log_message to float based on app_id
-		log_msg_float = self._log_message_to_float(
-			data_dict[LogEntry.LOG_MESSAGE_FIELD],
-			IntrusionClassifier._strip_app_id(app_id))
+		log_msg_float = self._log_message_to_float(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
 		result = numpy.array(
 			[vin_float, level_int, gps_lat, gps_lon, log_msg_float, time_unix],

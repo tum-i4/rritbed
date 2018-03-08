@@ -26,15 +26,15 @@ class IntrusionClassifier(object):
 		object.__init__(self)
 
 		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
-		IntrusionClassifier._verify_md5(self._app_ids, "\xca\xca\xfaa\xf6\x1bd\\'\x99T\x95*\xc6\xba\x8f")
+		IntrusionClassifier._verify_md5(self._app_ids, "053dd3811aaf07587fa12ab3489333f1")
 
 		self._level_int_mapping = IntrusionClassifier._enumerate_to_dict(
 			[LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR],
-			verify_hash="I\x94/\x02h\xaaf\x8e\x14nS;go\x03\xd0")
+			verify_hash="49942f0268aa668e146e533b676f03d0")
 
 		self._label_int_mapping = IntrusionClassifier._enumerate_to_dict(
 			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
-			verify_hash="i\xa2b\x19+$m\x16\xe8A\x1bm\xb0n#{")
+			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
 

@@ -202,6 +202,18 @@ class IntrusionClassifier(object):
 				assert(val >= 0 and val <= 255)
 			return vals
 
+		# Poses
+		assert(app_id in IntrusionClassifier._POSES)
+
+		if app_id == IntrusionClassifier._POSE_CC:
+			raise NotImplementedError()
+
+		if app_id == IntrusionClassifier._POSE_POI:
+			raise NotImplementedError()
+
+		if app_id == IntrusionClassifier._POSE_TSP:
+			raise NotImplementedError()
+
 		raise NotImplementedError()
 
 

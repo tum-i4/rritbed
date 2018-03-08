@@ -255,12 +255,18 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _aggregate_ints(list_of_ints):
+	def _aggregate_ints(list_of_ints, pad_zeroes=None):
 		""" Aggregate the given ints as int(intintint). """
 
 		result = ""
 		for i in list_of_ints:
-			result += str(i)
+			str_i = str(i)
+
+			if pad_zeroes:
+				assert(len(str_i) <= pad_zeroes)
+				str_i = str_i.zfill(pad_zeroes)
+
+			result += str_i
 
 		return int(result)
 

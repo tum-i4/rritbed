@@ -266,6 +266,10 @@ class IntrusionClassifier(object):
 		for gen in IntrusionClassifier._GENERATORS:
 			constraints[gen] = lambda x: True
 
+		# Min: 1,1,1; max: 256,256,256
+		for colr in IntrusionClassifier._COLOURS:
+			constraints[colr] = lambda x: x >= 1001001 and x <= 256256256
+
 		raise NotImplementedError()
 
 

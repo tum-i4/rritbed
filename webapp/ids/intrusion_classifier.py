@@ -175,24 +175,8 @@ class IntrusionClassifier(object):
 		raise NotImplementedError()
 
 
-	@staticmethod
-	def _label_to_int(label):
-		""" Map the given label to the corresponding integer for its class. """
-
-		label_int_mapping = {
-			"normal"      : 0,
-			# GENERATORS
-			"zeroes"      : 1,
-			"huge-error"  : 2,
-			# COLOUR
-			"red"         : 3,
-			# POSE
-			"jump"        : 4,
-			"illegaltype" : 5,
-			"routetoself" : 6
-		}
-
-		return label_int_mapping[label]
+	def _label_to_int(self, label):
+		return self._label_int_mapping[label]
 
 
 	@staticmethod

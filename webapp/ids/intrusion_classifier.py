@@ -125,9 +125,10 @@ class IntrusionClassifier(object):
 		assert(log_entry.intrusion)
 
 		data_dict = log_entry.data
-		# Discard vin, log_id (unnecessary)
-		# Discard app_id (it's used for mapping to a classifier)
+		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
 		app_id = data_dict[LogEntry.APP_ID_FIELD]
+		# Map vin to int_list
+		vin_int_list = self._vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
@@ -142,7 +143,8 @@ class IntrusionClassifier(object):
 			data_dict[LogEntry.LOG_MESSAGE_FIELD],
 			IntrusionClassifier._strip_app_id(app_id))
 
-		result = numpy.asarray([time_unix, level_int, gps_lat, gps_lon] + log_msg_float_list,
+		result = numpy.asarray(
+			[time_unix, level_int, gps_lat, gps_lon] + vin_int_list + log_msg_float_list,
 			numpy.float_,
 			"C")
 

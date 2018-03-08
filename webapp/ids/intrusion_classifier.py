@@ -136,7 +136,8 @@ class IntrusionClassifier(object):
 		gps_lon = gps_tuple[1]
 		# Map log_message to list of floats based on app_id
 		log_msg_float_list = self._log_message_to_float_list(
-			data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
+			data_dict[LogEntry.LOG_MESSAGE_FIELD],
+			IntrusionClassifier._strip_app_id(app_id))
 
 		result = numpy.asarray([time_unix, level_int, gps_lat, gps_lon] + log_msg_float_list,
 			numpy.float_,

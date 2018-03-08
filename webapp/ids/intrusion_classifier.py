@@ -195,6 +195,13 @@ class IntrusionClassifier(object):
 		if app_id in IntrusionClassifier._GENERATORS:
 			return [float(log_message)]
 
+		# Colour sends "{i},{i},{i}"
+		if app_id in IntrusionClassifier._COLOURS:
+			vals = [int(val) for val in log_message.split(",")]
+			for val in vals:
+				assert(val >= 0 and val <= 255)
+			return vals
+
 		raise NotImplementedError()
 
 

@@ -14,7 +14,10 @@ class IntrusionClassifier(object):
 	_GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
 		"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
 	_COLOURS = ["COLOUR"]
-	_POSES = ["COUNTRYCODE", "POI", "TSPROUTING"]
+	_POSE_CC = "COUNTRYCODE"
+	_POSE_POI = "POI"
+	_POSE_TSP = "TSPROUTING"
+	_POSES = [_POSE_CC, _POSE_POI, _POSE_TSP]
 
 
 	def __init__(self):

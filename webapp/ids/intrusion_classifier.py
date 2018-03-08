@@ -144,33 +144,6 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _app_id_to_int(app_id):
-		app_id_int_mapping = {
-			# GENERATORS
-			"GAUSSIAN"    :  0,
-			"GUMBEL"      :  1,
-			"LAPLACE"     :  2,
-			"LOGISTIC"    :  3,
-			"PARETO"      :  4,
-			"RAYLEIGH"    :  5,
-			"UNIFORM"     :  6,
-			"VONMISES"    :  7,
-			"WALD"        :  8,
-			"WEIBULL"     :  9,
-			"ZIPF"        : 10,
-			# COLOUR
-			"COLOUR"      : 11,
-			# POSE
-			"COUNTRYCODE" : 12,
-			"POI"         : 13,
-			"TSPROUTING"  : 14
-		}
-
-		app_id = IntrusionClassifier._strip_app_id(app_id)
-		return app_id_int_mapping[app_id]
-
-
-	@staticmethod
 	def _strip_app_id(app_id):
 		""" Strip the given app_id of its ID. """
 

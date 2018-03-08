@@ -28,25 +28,13 @@ class IntrusionClassifier(object):
 		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
 		IntrusionClassifier._verify_md5(self._app_ids, "\xca\xca\xfaa\xf6\x1bd\\'\x99T\x95*\xc6\xba\x8f")
 
-		self._level_int_mapping = {
-			LogEntry.LEVEL_DEFAULT : 0,
-			LogEntry.LEVEL_ERROR   : 1
-		}
-		IntrusionClassifier._verify_md5(self._level_int_mapping, "I\x94/\x02h\xaaf\x8e\x14nS;go\x03\xd0")
+		self._level_int_mapping = IntrusionClassifier._enumerate_to_dict(
+			[LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR],
+			verify_hash="I\x94/\x02h\xaaf\x8e\x14nS;go\x03\xd0")
 
-		self._label_int_mapping = {
-			"normal"      : 0,
-			# GENERATORS
-			"zeroes"      : 1,
-			"huge-error"  : 2,
-			# COLOUR
-			"red"         : 3,
-			# POSE
-			"jump"        : 4,
-			"illegaltype" : 5,
-			"routetoself" : 6
-		}
-		IntrusionClassifier._verify_md5(self._label_int_mapping, "i\xa2b\x19+$m\x16\xe8A\x1bm\xb0n#{")
+		self._label_int_mapping = IntrusionClassifier._enumerate_to_dict(
+			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
+			verify_hash="i\xa2b\x19+$m\x16\xe8A\x1bm\xb0n#{")
 
 
 

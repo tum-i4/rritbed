@@ -110,8 +110,7 @@ class IntrusionClassifier(object):
 		pass
 
 
-	@staticmethod
-	def _log_entry_to_vector(log_entry):
+	def _log_entry_to_vector(self, log_entry):
 		"""
 		Convert the given LogEntry object to a learnable vector.
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64
@@ -124,14 +123,14 @@ class IntrusionClassifier(object):
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		level_int = IntrusionClassifier._level_to_int(data_dict[LogEntry.LEVEL_FIELD])
+		level_int = self._level_to_int(data_dict[LogEntry.LEVEL_FIELD])
 		# Map gps_position to two floats
-		gps_tuple = IntrusionClassifier._gps_position_to_float_tuple(
+		gps_tuple = self._gps_position_to_float_tuple(
 			data_dict[LogEntry.GPS_POSITION_FIELD])
 		gps_lat = gps_tuple[0]
 		gps_lon = gps_tuple[1]
 		# Map log_message to list of floats based on app_id
-		log_msg_floats = IntrusionClassifier._log_message_to_float_list(
+		log_msg_floats = self._log_message_to_float_list(
 			data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
 		result = numpy.asarray([time_unix, level_int, gps_lat, gps_lon] + log_msg_floats,
@@ -161,8 +160,7 @@ class IntrusionClassifier(object):
 		return self._level_int_mapping[level]
 
 
-	@staticmethod
-	def _gps_position_to_float_tuple(gps_position):
+	def _gps_position_to_float_tuple(self, gps_position):
 		# Format: lat,lon
 		split = gps_position.split(",")
 		if len(split) != 2:
@@ -170,8 +168,7 @@ class IntrusionClassifier(object):
 		return (float(split[0]), float(split[1]))
 
 
-	@staticmethod
-	def _log_message_to_float_list(log_message, app_id):
+	def _log_message_to_float_list(self, log_message, app_id):
 		raise NotImplementedError()
 
 

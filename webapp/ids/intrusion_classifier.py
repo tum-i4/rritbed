@@ -214,8 +214,20 @@ class IntrusionClassifier(object):
 			ord_ints = [ord(x) for x in log_message]
 			return IntrusionClassifier._aggregate_ints_to_float(ord_ints)
 
+		# POI pair "type,result"
 		if app_id == IntrusionClassifier._POSE_POI:
-			raise NotImplementedError()
+			pair = log_message.split(",")
+			assert(len(pair) == 2)
+
+			# Transform from [0,] to [1,] to not have zeroes
+			type_int = 1 + self._poi_type_mapping[pair[0]]
+			result_int = 1 + self._poi_result_mapping[pair[1]]
+
+			# Make sure we only have single digits as expected
+			for val in [type_int, result_int]:
+				assert(val >= 1 and val <= 9)
+
+			return IntrusionClassifier._aggregate_ints_to_float([type_int, result_int])
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == IntrusionClassifier._POSE_TSP:

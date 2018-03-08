@@ -48,6 +48,21 @@ def _log_num(name):
 	_append_and_detect(number_log_entry)
 
 
+@post("/log/colour")
+def log_colour():
+	""" Log the given colour. """
+
+	colour_log_entry = _create_base_log_entry(request.params.vin)
+
+	colour_log_entry.complete(
+		app_id="COLOUR",
+		log_message=request.params.colour,
+		intrusion=request.params.intrusion
+	)
+
+	_append_and_detect(colour_log_entry)
+
+
 @post("/get/country-code")
 def get_country_code():
 	""" Map coordinates to country code and save to log. """
@@ -134,21 +149,6 @@ def get_tsp_routing():
 	)
 
 	_append_and_detect(tsp_log_entry)
-
-
-@post("/log/colour")
-def log_colour():
-	""" Log the given colour. """
-
-	colour_log_entry = _create_base_log_entry(request.params.vin)
-
-	colour_log_entry.complete(
-		app_id="COLOUR",
-		log_message=request.params.colour,
-		intrusion=request.params.intrusion
-	)
-
-	_append_and_detect(colour_log_entry)
 
 
 

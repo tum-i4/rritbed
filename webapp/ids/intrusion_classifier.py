@@ -139,24 +139,24 @@ class IntrusionClassifier(object):
 		data_dict = log_entry.data
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
 		app_id = data_dict[LogEntry.APP_ID_FIELD]
-		# Map vin to int_list
-		vin_int_list = self._vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
+		# Convert vin to float
+		vin_float = self._vin_to_float(data_dict[LogEntry.VIN_FIELD])
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
 		level_int = self._map_level_to_int(data_dict[LogEntry.LEVEL_FIELD])
-		# Map gps_position to two floats
+		# Convert gps_position to two floats
 		gps_tuple = self._gps_position_to_float_tuple(
 			data_dict[LogEntry.GPS_POSITION_FIELD])
 		gps_lat = gps_tuple[0]
 		gps_lon = gps_tuple[1]
-		# Map log_message to list of floats based on app_id
+		# Convert log_message to float based on app_id
 		log_msg_float = self._log_message_to_float(
 			data_dict[LogEntry.LOG_MESSAGE_FIELD],
 			IntrusionClassifier._strip_app_id(app_id))
 
 		result = numpy.array(
-			[time_unix, level_int, gps_lat, gps_lon, log_msg_float] + vin_int_list,
+			[vin_float, level_int, gps_lat, gps_lon, log_msg_float, time_unix],
 			dtype=numpy.float_,
 			order="C")
 
@@ -165,13 +165,13 @@ class IntrusionClassifier(object):
 		return result
 
 
-	def _vin_to_int_list(self, vin):
-		""" Convert the given VIN to [ord(char), int(rest)]. """
+	def _vin_to_float(self, vin):
+		""" Convert the given VIN to float(aggregate([ord(char), int(rest)])). """
 
 		if len(vin) != 7:
 			raise ValueError("Invalid VIN")
 
-		return [ord(vin[0]), int(vin[1:])]
+		return IntrusionClassifier._aggregate_ints_to_float([ord(vin[0]), int(vin[1:])])
 
 
 	def _gps_position_to_float_tuple(self, gps_position):

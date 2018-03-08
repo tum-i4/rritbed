@@ -208,8 +208,10 @@ class IntrusionClassifier(object):
 		# Poses
 		assert(app_id in IntrusionClassifier._POSES)
 
+		# Country code string like "DE" or "CH"
 		if app_id == IntrusionClassifier._POSE_CC:
 			assert(len(log_message) == 2)
+
 			ord_ints = [ord(x) for x in log_message]
 			return IntrusionClassifier._aggregate_ints(ord_ints)
 

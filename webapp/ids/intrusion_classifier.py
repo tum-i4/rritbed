@@ -14,7 +14,6 @@ class IntrusionClassifier(object):
 		"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
 	_COLOURS = ["COLOUR"]
 	_POSES = ["COUNTRYCODE", "POI", "TSPROUTING"]
-	_APP_IDS = _GENERATORS + _COLOURS + _POSES
 
 
 	def __init__(self):
@@ -22,8 +21,28 @@ class IntrusionClassifier(object):
 
 		object.__init__(self)
 
-		# TODO: Build mappings
-		# TODO: Verify hashes
+		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
+		IntrusionClassifier._verify_md5(self._app_ids, "\xca\xca\xfaa\xf6\x1bd\\'\x99T\x95*\xc6\xba\x8f")
+
+		self._level_int_mapping = {
+			LogEntry.LEVEL_DEFAULT : 0,
+			LogEntry.LEVEL_ERROR   : 1
+		}
+		IntrusionClassifier._verify_md5(self._level_int_mapping, "I\x94/\x02h\xaaf\x8e\x14nS;go\x03\xd0")
+
+		self._label_int_mapping = {
+			"normal"      : 0,
+			# GENERATORS
+			"zeroes"      : 1,
+			"huge-error"  : 2,
+			# COLOUR
+			"red"         : 3,
+			# POSE
+			"jump"        : 4,
+			"illegaltype" : 5,
+			"routetoself" : 6
+		}
+		IntrusionClassifier._verify_md5(self._label_int_mapping, "i\xa2b\x19+$m\x16\xe8A\x1bm\xb0n#{")
 
 
 	# Stateless rules:

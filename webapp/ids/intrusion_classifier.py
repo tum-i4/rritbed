@@ -138,7 +138,7 @@ class IntrusionClassifier(object):
 			numpy.float_,
 			"C")
 
-		IntrusionClassifier._verify_ndarray(result, app_id)
+		self._verify_ndarray(result, app_id)
 
 		return result
 

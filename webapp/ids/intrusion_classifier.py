@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """ Classifier """
 
-import numpy
 import re
+import numpy
 from ids_classification import IdsResult, Classification
 from log_entry import LogEntry
 

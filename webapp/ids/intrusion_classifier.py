@@ -126,6 +126,13 @@ class IntrusionClassifier(object):
 	### Convert, map, transform ###
 
 
+	def _log_entry_to_class(self, log_entry):
+		""" Map the given LogEntry object to a class to predict. """
+
+		assert(log_entry.intrusion)
+		return self._label_int_mapping[log_entry.intrusion]
+
+
 	def _log_entry_to_ndarray(self, log_entry):
 		"""
 		Convert the given LogEntry object to a learnable vector.

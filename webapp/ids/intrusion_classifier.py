@@ -27,7 +27,7 @@ class IntrusionClassifier(object):
 		object.__init__(self)
 
 		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
-		IntrusionClassifier._verify_md5(self._app_ids, "053dd3811aaf07587fa12ab3489333f1")
+		IntrusionClassifier._verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
 
 		self._level_int_mapping = IntrusionClassifier._enumerate_to_dict(
 			[LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR],

@@ -259,6 +259,19 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
+	def _enumerate_to_dict(sequence, verify_hash):
+		""" Enumerate the given sequence and save the items in a dict as item : index pairs. """
+
+		mapping = {}
+		for index, item in enumerate(sequence):
+			mapping[item] = index
+
+		IntrusionClassifier._verify_md5(mapping, verify_hash)
+
+		return mapping
+
+
+	@staticmethod
 	def _strip_app_id(app_id):
 		""" Strip the given app_id of its ID. """
 

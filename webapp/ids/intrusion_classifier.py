@@ -258,6 +258,13 @@ class IntrusionClassifier(object):
 
 		assert(isinstance(ndarray, numpy.ndarray))
 		assert(ndarray.dtype == numpy.float_)
+		assert(len(ndarray) == 6)
+
+		constraints = {}
+
+		# No constraint
+		for gen in IntrusionClassifier._GENERATORS:
+			constraints[gen] = lambda x: True
 
 		raise NotImplementedError()
 

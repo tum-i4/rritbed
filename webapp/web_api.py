@@ -102,7 +102,7 @@ def get_poi():
 
 	poi_log_entry = _create_base_log_entry(request.params.vin)
 
-	log_message = "{}".format(poi_result)
+	log_message = str(poi_result)
 	level = LogEntry.LEVEL_DEFAULT
 
 	if poi_result is None:

@@ -49,6 +49,10 @@ class IntrusionClassifier(object):
 		IntrusionClassifier._verify_md5(self._label_int_mapping, "i\xa2b\x19+$m\x16\xe8A\x1bm\xb0n#{")
 
 
+
+	### Classify ###
+
+
 	# Stateless rules:
 	# - Field != == > < value
 	# - Field - transformed - equality
@@ -106,12 +110,20 @@ class IntrusionClassifier(object):
 		raise NotImplementedError()
 
 
+
+	### Train ###
+
+
 	def train(self, log_entries):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		"""
 
 		pass
+
+
+
+	### Convert, map, transform ###
 
 
 	def _log_entry_to_vector(self, log_entry):
@@ -184,6 +196,10 @@ class IntrusionClassifier(object):
 	def _verify_ndarray(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 		raise NotImplementedError()
+
+
+
+	### Util ###
 
 
 	@staticmethod

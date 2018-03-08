@@ -221,8 +221,18 @@ class IntrusionClassifier(object):
 		if app_id == IntrusionClassifier._POSE_POI:
 			raise NotImplementedError()
 
+		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == IntrusionClassifier._POSE_TSP:
-			raise NotImplementedError()
+			coords = [int(coord) for coord in log_message.split(",")]
+			assert(len(coords) == 4)
+			for coord in coords:
+				assert(coord > 0 and coord <= 500)
+
+			# Transfrom from [0, 499] to [1, 500] to not have zeroes
+			coords = [c + 1 for c in coords]
+
+			# Pad to ensure 1,100,1,110 is different from 11,1,1,1
+			return IntrusionClassifier._aggregate_ints_to_float(coords, pad_zeroes=3)
 
 		raise NotImplementedError()
 

@@ -9,9 +9,9 @@ import uuid
 class LogDir(object):
 	""" Log directory and path handling in the IDS. """
 
-	LOG_DIR = "log"
-	LOG_FILE_PREFIX = "intrusion_"
-	LOG_FILE_SUFFIX = ".log"
+	_LOG_DIR = "log"
+	_LOG_FILE_PREFIX = "intrusion_"
+	_LOG_FILE_SUFFIX = ".log"
 
 
 	@staticmethod
@@ -32,7 +32,7 @@ class LogDir(object):
 	def create_unique_log_name():
 		""" Create a unique log name based on a UUID. """
 		return _create_unique_name(lambda: (
-			LogDir.LOG_FILE_PREFIX + uuid.uuid4().__str__() + LogDir.LOG_FILE_SUFFIX))
+			LogDir._LOG_FILE_PREFIX + uuid.uuid4().__str__() + LogDir._LOG_FILE_SUFFIX))
 
 
 	@staticmethod
@@ -45,7 +45,7 @@ class LogDir(object):
 	@staticmethod
 	def get_log_dir():
 		""" Return the log directory. """
-		return _get_cwd(_for=LogDir.LOG_DIR)
+		return _get_cwd(_for=LogDir._LOG_DIR)
 
 
 	@staticmethod
@@ -57,14 +57,13 @@ class LogDir(object):
 class ModelDir(object):
 	""" Model directory and path handling in the IDS. """
 
-	MODEL_DIR = "models"
+	_MODEL_DIR = "models"
 
 
 	@staticmethod
 	def get_model_dir():
 		""" Return the model directory. """
-		return _get_cwd(_for=ModelDir.MODEL_DIR)
-
+		return _get_cwd(_for=ModelDir._MODEL_DIR)
 
 
 ### Shared private util methods ###

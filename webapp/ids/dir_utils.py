@@ -5,6 +5,8 @@ import os
 import time
 import uuid
 from enum import Enum
+import sklearn.svm as sk_svm
+from sklearn.externals import joblib
 
 
 class Dir(object):
@@ -131,9 +133,19 @@ class ModelDir(object):
 
 
 	@staticmethod
-	def save_model(model, app_id):
+	def save_model(model, app_id, overwrite=False):
 		""" Persist the given model for the given app_id on disk. """
-		raise NotImplementedError()
+
+		if not isinstance(model, sk_svm.LinearSVC):
+			raise ValueError("Models can currently only be of type svm.LinearSVC")
+
+		model_path = ModelDir.get_model_path_for(ModelDir.get_model_name_for(app_id))
+		if os.path.lexists(model_path):
+			if not overwrite:
+				raise ValueError("Model file for the given model exists and overwrite is set to False.")
+			os.remove(model_path)
+
+		joblib.dump(model, model_path)
 
 
 	@staticmethod

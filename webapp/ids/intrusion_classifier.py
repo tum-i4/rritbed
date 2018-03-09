@@ -4,9 +4,13 @@
 import md5
 import re
 import numpy
-from ids_classification import IdsResult, Classification
+import sklearn.svm as sk_svm
+
 from log_entry import LogEntry
 from functionality.poi_mapper import PoiMapper as PoMa
+
+from dir_utils import ModelDir
+from ids_classification import IdsResult, Classification
 
 
 class IntrusionClassifier(object):
@@ -115,9 +119,13 @@ class IntrusionClassifier(object):
 		Train the app_id based classifiers with the given labelled entries.
 		"""
 
+		print("Training with {} LogEntry objects".format(len(log_entries)))
+
 		app_id_datasets = {}
 		for app_id in self._app_ids:
 			app_id_datasets[app_id] = ([], [])
+
+		print("Found {} app ids".format(len(app_id_datasets)))
 
 		for log_entry in log_entries:
 			app_id = self._log_entry_to_app_id(log_entry)
@@ -127,8 +135,26 @@ class IntrusionClassifier(object):
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
 
-		# TODO keep state of classifiers!
-		raise NotImplementedError()
+		for app_id, train_set in app_id_datasets.items():
+			print("Training model for \"{}\"".format(app_id))
+
+			# Load model if it exists already
+			clf = ModelDir.load_model(app_id)
+			if not clf:
+				clf = sk_svm.LinearSVC()
+				print("Creating and training new model...")
+			else:
+				print("Model retrieved from disk. Training...")
+
+			clf.fit(train_set[0], train_set[1])
+
+			print("Saving to disk...")
+
+			ModelDir.save_model(clf, app_id, overwrite=True)
+
+			print("Done!")
+
+		print("\nTraining completed.")
 
 
 

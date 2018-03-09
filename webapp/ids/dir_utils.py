@@ -1,4 +1,8 @@
 #!/usr/bin/env python
 """ Dir utils """
 
-pass
+
+class LogDir(object):
+	""" Log directory and path handling in the IDS. """
+
+	pass

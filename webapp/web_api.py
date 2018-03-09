@@ -11,7 +11,7 @@ monkey.patch_all()
 import argparse
 import random
 import time
-from bottle import post, run, request, BaseResponse
+from bottle import post, get, run, request, BaseResponse
 
 from log_entry import LogEntry
 from state_dao import StateDao
@@ -148,10 +148,12 @@ def get_tsp_routing():
 
 ### UTIL zone
 
-@post("/UTIL/train-classifier")
-def train_classifier():
-	""" Cut the log and hand the copy over to the classifier for training. """
-	raise NotImplementedError()
+@get("/UTIL/log-length")
+def get_log_length():
+	""" Count the number of log entries and return the number. """
+
+	log_line_count = DAO.count_log_lines()
+	return BaseResponse(body="The log currently holds {} items.".format(log_line_count), status=200)
 
 
 @post("/UTIL/flush-log")

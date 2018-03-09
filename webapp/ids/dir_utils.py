@@ -154,6 +154,12 @@ class ModelDir(object):
 		return _get_cwd(_for=ModelDir._MODEL_DIR)
 
 
+	@staticmethod
+	def get_model_path_for(name):
+		""" Build a path from the given file name and the model directory. """
+		return os.path.join(ModelDir.get_model_dir(), name)
+
+
 	# pylint: disable-msg=R0903; (Too few public methods - it's an enum)
 	class Found(Enum):
 		""" How many results where found. """

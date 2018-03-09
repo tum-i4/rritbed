@@ -64,6 +64,10 @@ class IntrusionClassifier(object):
 			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
+		self._int_label_mapping = ids_tools.flip_dict(
+			self._label_int_mapping,
+			"c29a85dae460b57fac78db12e72ae24a")
+
 		self._models = self._load_models()
 
 		IntrusionClassifier._INSTANCE = self

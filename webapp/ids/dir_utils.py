@@ -32,24 +32,7 @@ class LogDir(object):
 	@staticmethod
 	def list_log_files():
 		""" Return a list of relative paths of all current log files. """
-
-		log_dir = LogDir.get_log_dir()
-
-		if not os.path.lexists(log_dir):
-			return []
-
-		all_files = os.listdir(log_dir)
-
-		if not all_files:
-			return []
-
-		log_files = []
-		for file_name in all_files:
-			file_path = LogDir.get_log_path_for(file_name)
-			if os.path.isfile(file_path) and file_path.endswith(LogDir._LOG_FILE_SUFFIX):
-				log_files.append(file_path)
-
-		return log_files
+		return _list_files_by_suffix(LogDir.get_log_dir(), LogDir._LOG_FILE_SUFFIX)
 
 
 	@staticmethod
@@ -125,6 +108,22 @@ class ModelDir(object):
 
 
 _IDS_DIR = "ids"
+
+
+def _list_files_by_suffix(folder, suffix):
+	""" Return a list of relative paths of all files in the folder with the given suffix. """
+
+	all_file_paths = [os.path.join(folder, name) for name in os.listdir(folder)]
+
+	if not all_file_paths:
+		return []
+
+	result = []
+	for file_path in all_file_paths:
+		if os.path.isfile(file_path) and file_path.endswith(suffix):
+			result.append(file_path)
+
+	return result
 
 
 def _get_cwd(_for=None):

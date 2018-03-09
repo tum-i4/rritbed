@@ -69,15 +69,9 @@ class IntrusionClassifier(object):
 		IntrusionClassifier._INSTANCE = self
 
 
+
 	### Classify ###
 
-
-	# Stateless rules:
-	# - Field != == > < value
-	# - Field - transformed - equality
-	# - Two fields in relation
-	# Learning / smart:
-	# - Data points are fed
 
 	def classify(self, log_entry):
 		"""

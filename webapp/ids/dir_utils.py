@@ -105,6 +105,11 @@ class ModelDir(object):
 
 
 	@staticmethod
+	def get_model_name_for(app_id):
+		return "{}{}".format(app_id, ModelDir._MODEL_FILE_SUFFIX)
+
+
+	@staticmethod
 	def get_model_dir():
 		""" Return the model directory. """
 		return _get_cwd(_for=ModelDir._MODEL_DIR)

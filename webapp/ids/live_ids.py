@@ -6,7 +6,7 @@ import time
 
 from intrusion_classifier import IntrusionClassifier
 from ids_classification import Classification
-from dir_utils import LogDir
+from dir_utils import Dir, LogDir
 
 
 class LiveIds(object):
@@ -38,30 +38,21 @@ class LiveIds(object):
 		""" Move the found intrusion logs to a new sub directory. """
 
 		message = "Intrusion logs: "
-		log_dir = LogDir.get_log_dir()
+		log_files = LogDir.list_log_files()
 
-		if not os.path.lexists(log_dir):
-			return message + "Log folder doesn't exist"
-
-		all_files = os.listdir(log_dir)
-
-		if not all_files:
+		if not log_files:
 			return message + "Log folder is empty"
 
 		# Create folder
 		folder_name, folder_path = LogDir.mk_unique_backup_dir()
 
 		# Move files
-		file_count = 0
-		for file_name in all_files:
-			file_path = LogDir.get_log_path_for(file_name)
-			if os.path.isfile(file_path) and file_path.endswith(".log"):
-				file_count += 1
-				os.rename(file_path, os.path.join(folder_path, file_name))
+		for file_path in log_files:
+			Dir.move_file(file_path, folder_path)
 
 		return message + "Moved {} file{} to {}".format(
-			file_count,
-			"s" if file_count > 1 else "",
+			len(log_files),
+			"s" if len(log_files) > 1 else "",
 			folder_name)
 
 

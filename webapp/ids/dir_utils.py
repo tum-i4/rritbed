@@ -27,9 +27,6 @@ class Dir(object):
 	def read_lines(file_path):
 		""" Return all lines in the given file. """
 
-		if not os.path.isfile(file_path):
-			raise ValueError("Invalid file path given!")
-
 		with open(file_path) as file_handle:
 			return file_handle.readlines()
 

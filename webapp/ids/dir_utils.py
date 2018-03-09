@@ -90,6 +90,12 @@ class ModelDir(object):
 
 
 	@staticmethod
+	def has_model(app_id):
+		""" Check the model directory if there exists a model for the given app_id. """
+		return ModelDir.has_models([app_id]) == ModelDir.Found.ALL
+
+
+	@staticmethod
 	def has_models(app_id_list):
 		"""
 		Check the model directory on disk if there are existing models for each given app_id.

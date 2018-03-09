@@ -6,9 +6,6 @@ import time
 import uuid
 
 
-IDS_DIR = "ids"
-
-
 class LogDir(object):
 	""" Log directory and path handling in the IDS. """
 
@@ -43,8 +40,23 @@ class LogDir(object):
 		return os.path.join(LogDir.get_log_dir(), name)
 
 
+class ModelDir(object):
+	""" Model directory and path handling in the IDS. """
+
+	MODEL_DIR = "models"
+
+
+	@staticmethod
+	def get_model_dir():
+		""" Return the model directory. """
+		return _get_cwd(for_=ModelDir.MODEL_DIR)
+
+
 
 ### Shared private util methods ###
+
+
+_IDS_DIR = "ids"
 
 
 def _get_cwd(for_=None):

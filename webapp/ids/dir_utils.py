@@ -131,6 +131,11 @@ class ModelDir(object):
 
 
 	@staticmethod
+	def save_model(app_id, model):
+		raise NotImplementedError()
+
+
+	@staticmethod
 	def get_model_name_for(app_id):
 		""" Return the model name for the given app_id. """
 		return "{}{}".format(app_id, ModelDir._MODEL_FILE_SUFFIX)

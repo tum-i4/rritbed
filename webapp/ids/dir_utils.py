@@ -139,7 +139,7 @@ class ModelDir(object):
 		if not isinstance(model, sk_svm.LinearSVC):
 			raise ValueError("Models can currently only be of type svm.LinearSVC")
 
-		model_path = ModelDir.get_model_path_for(ModelDir.get_model_name_for(app_id))
+		model_path = ModelDir.get_model_path_for_app_id(app_id)
 		if os.path.lexists(model_path):
 			if not overwrite:
 				raise ValueError("Model file for the given model exists and overwrite is set to False.")
@@ -167,9 +167,9 @@ class ModelDir(object):
 
 
 	@staticmethod
-	def get_model_path_for(name):
-		""" Build a path from the given file name and the model directory. """
-		return os.path.join(ModelDir.get_model_dir(), name)
+	def get_model_path_for_app_id(app_id):
+		""" Build a path to the given app_id's model file in the model directory. """
+		return os.path.join(ModelDir.get_model_dir(), ModelDir.get_model_name_for(app_id))
 
 
 	# pylint: disable-msg=R0903; (Too few public methods - it's an enum)

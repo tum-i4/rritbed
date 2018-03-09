@@ -182,7 +182,13 @@ class ModelDir(object):
 	@staticmethod
 	def get_model_path_for_app_id(app_id):
 		""" Build a path to the given app_id's model file in the model directory. """
-		return os.path.join(ModelDir.get_model_dir(), ModelDir.get_model_name_for(app_id))
+		return ModelDir.get_model_path_for_file(ModelDir.get_model_name_for(app_id))
+
+
+	@staticmethod
+	def get_model_path_for_file(file_name):
+		""" Build a path to the given file in the model directory. """
+		return os.path.join(ModelDir.get_model_dir(), file_name)
 
 
 	# pylint: disable-msg=R0903; (Too few public methods - it's an enum)

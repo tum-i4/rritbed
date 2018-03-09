@@ -30,6 +30,29 @@ class LogDir(object):
 
 
 	@staticmethod
+	def list_log_files():
+		""" Return a list of relative paths of all current log files. """
+
+		log_dir = LogDir.get_log_dir()
+
+		if not os.path.lexists(log_dir):
+			return []
+
+		all_files = os.listdir(log_dir)
+
+		if not all_files:
+			return []
+
+		log_files = []
+		for file_name in all_files:
+			file_path = LogDir.get_log_path_for(file_name)
+			if os.path.isfile(file_path) and file_path.endswith(LogDir._LOG_FILE_SUFFIX):
+				log_files.append(file_path)
+
+		return log_files
+
+
+	@staticmethod
 	def mk_unique_backup_dir():
 		"""
 		Mkdir a uniquely named backup folder.

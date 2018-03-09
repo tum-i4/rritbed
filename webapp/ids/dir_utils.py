@@ -86,6 +86,7 @@ class ModelDir(object):
 	""" Model directory and path handling in the IDS. """
 
 	_MODEL_DIR = "models"
+	_MODEL_FILE_SUFFIX = ".model"
 
 
 	@staticmethod
@@ -95,6 +96,12 @@ class ModelDir(object):
 		returns: 0 if no models for the given app_id_list are present, 1 if some and 2 if all are present.
 		"""
 		raise NotImplementedError()
+
+
+	@staticmethod
+	def _list_model_files():
+		""" Return a list of relative paths of all current model files. """
+		return _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._MODEL_FILE_SUFFIX)
 
 
 	@staticmethod

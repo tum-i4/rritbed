@@ -115,11 +115,20 @@ class IntrusionClassifier(object):
 		Train the app_id based classifiers with the given labelled entries.
 		"""
 
-		# Log_entry to vector
-		# Intrusion to class_int
-		# Train according to app_id
+		app_id_datasets = {}
+		for app_id in self._app_ids:
+			app_id_datasets[app_id] = ([], [])
 
-		pass
+		for log_entry in log_entries:
+			app_id = self._log_entry_to_app_id(log_entry)
+			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
+			its_class = self._log_entry_to_class(log_entry)
+
+			app_id_datasets[app_id][0].append(ndarray)
+			app_id_datasets[app_id][1].append(its_class)
+
+		# TODO
+		raise NotImplementedError()
 
 
 

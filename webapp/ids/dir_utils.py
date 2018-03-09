@@ -150,8 +150,21 @@ class ModelDir(object):
 
 	@staticmethod
 	def load_model(app_id):
-		""" Retrieve the model for the given app_id from disk. """
-		raise NotImplementedError()
+		"""
+		Retrieve the model for the given app_id from disk.
+		returns: None if no model is present.
+		"""
+
+		if not ModelDir.has_model(app_id):
+			return None
+
+		model = joblib.load(ModelDir.get_model_path_for_app_id(app_id))
+
+		if not isinstance(model, sk_svm.LinearSVC):
+			raise ValueError("Invalid model class retrieved."
+				+ " Expected: svm.LinearSVC; Got: {}".format(type(model)))
+
+		return model
 
 
 	@staticmethod

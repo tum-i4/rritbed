@@ -45,7 +45,7 @@ class LogDir(object):
 	@staticmethod
 	def get_log_dir():
 		""" Return the log directory. """
-		return _get_cwd(for_=LogDir.LOG_DIR)
+		return _get_cwd(_for=LogDir.LOG_DIR)
 
 
 	@staticmethod
@@ -63,7 +63,7 @@ class ModelDir(object):
 	@staticmethod
 	def get_model_dir():
 		""" Return the model directory. """
-		return _get_cwd(for_=ModelDir.MODEL_DIR)
+		return _get_cwd(_for=ModelDir.MODEL_DIR)
 
 
 
@@ -73,14 +73,14 @@ class ModelDir(object):
 _IDS_DIR = "ids"
 
 
-def _get_cwd(for_=None):
+def _get_cwd(_for=None):
 	"""
 	Return the cwd in respect to where the module was loaded.
-	: param for_ : Optionally the file or folder to be accessed.
+	: param _for : Optionally the file or folder to be accessed.
 	"""
 
 	cwd = "" if os.path.basename(os.getcwd()) == _IDS_DIR else _IDS_DIR
-	return os.path.join(cwd, for_) if for_ else cwd
+	return os.path.join(cwd, _for) if _for else cwd
 
 
 def _create_unique_name(name_creator):

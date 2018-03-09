@@ -195,6 +195,18 @@ class StateDao(object):
 		return self._create_unique_log_file_path()
 
 
+	def count_log_lines(self):
+		""" Count the log lines in the file as well as those kept in-memory. """
+
+		log_line_count = len(self._new_log_entries)
+
+		with open(self._log_file_path, "r") as log_file:
+			lines = log_file.readlines()
+			log_line_count += len(lines)
+
+		return log_line_count
+
+
 
 	### File access ###
 

@@ -72,9 +72,6 @@ class PoseProcessor(object):
 	def process_cc(self, request, label):
 		""" Return the given request unchanged. """
 
-		if self._intrusion is None:
-			return request
-
 		# [Intrusion] Jump to random spot that is at least 10 pixels off
 		new_request = self._intrude_cc_request(request)
 		# Method chooses likelihood for different intrusion levels

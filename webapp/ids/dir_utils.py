@@ -79,7 +79,7 @@ def _get_cwd(for_=None):
 	: param for_ : Optionally the file or folder to be accessed.
 	"""
 
-	cwd = "" if os.path.basename(os.getcwd()) == IDS_DIR else IDS_DIR
+	cwd = "" if os.path.basename(os.getcwd()) == _IDS_DIR else _IDS_DIR
 	return os.path.join(cwd, for_) if for_ else cwd
 
 

@@ -182,16 +182,19 @@ class LaunchFileOrchestrator(object):
 	def _print_selected_options(self, args):
 		""" Output human-readable infos which options have been selected. """
 
-		print("Intrusions: {}".format(
+		self._header_intrusions = "Intrusions: {}".format(
 			"{} % intrusions with level <{}>".format(args.intrusion_percentage, args.intrusion_level)
 			if args.intrusion_percentage > 0
-			else "none"))
+			else "none")
+		print(self._header_intrusions)
 
-		print("Label: {}".format(
-			"yes" if args.label_intrusions else "no"))
+		self._header_label = "Label: {}".format(
+			"yes" if args.label_intrusions else "no")
+		print(self._header_label)
 
-		if args.default_gen_args:
-			print("Forcing default generator arguments")
+		self._header_gen_args = "Generator arguments: {}".format(
+			"random" if not args.default_gen_args else "default")
+		print(self._header_gen_args)
 
 
 	def _create(self):
@@ -243,11 +246,14 @@ class LaunchFileOrchestrator(object):
 		for vin, intruded_bool in vin_tuples:
 			root_element.append(self._create_unit(vin, rand_gen, intruded=intruded_bool))
 
-		# Add header comment at top of file
+		# Add header comments at top of file
 		header_comment = self._create_padded_comment(
-			"Launch file with {} namespaces {}".format(
+			"{} namespaces {}| {} | {} | {}".format(
 				len(vin_tuples),
-				"(manual mode)" if self._manual_turtle_mode else ""))
+				"(manual mode) " if self._manual_turtle_mode else "",
+				self._header_intrusions,
+				self._header_label,
+				self._header_gen_args))
 		root_element.insert(0, header_comment)
 
 		if self._dump_mode:

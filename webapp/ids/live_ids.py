@@ -48,9 +48,7 @@ class LiveIds(object):
 			return message + "Log folder is empty"
 
 		# Create folder
-		folder_name = LogDir.create_unique_backup_folder_name()
-		folder_path = LogDir.get_log_path_for(folder_name)
-		os.mkdir(folder_path)
+		folder_name, folder_path = LogDir.mk_unique_backup_dir()
 
 		# Move files
 		file_count = 0

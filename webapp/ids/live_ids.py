@@ -34,6 +34,11 @@ class LiveIds(object):
 			print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
 
 
+	def train_classifier_from_file(self, log_file_path):
+		""" Train the classifier with log entries saved in the given file. """
+		raise NotImplementedError()
+
+
 	# pylint: disable-msg=R0201; (Method could be a function)
 	def reset_log(self):
 		""" Move the found intrusion logs to a new sub directory. """

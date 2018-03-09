@@ -144,6 +144,11 @@ class IntrusionClassifier(object):
 		raise NotImplementedError()
 
 
+	def _has_models(self, app_id_list):
+		""" Check the model directory on disk if there are existing models for each given app_id. """
+		raise NotImplementedError()
+
+
 
 	### Convert, map, transform ###
 

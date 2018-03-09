@@ -131,7 +131,14 @@ class ModelDir(object):
 
 
 	@staticmethod
-	def save_model(app_id, model):
+	def save_model(model, app_id):
+		""" Persist the given model for the given app_id on disk. """
+		raise NotImplementedError()
+
+
+	@staticmethod
+	def load_model(app_id):
+		""" Retrieve the model for the given app_id from disk. """
 		raise NotImplementedError()
 
 

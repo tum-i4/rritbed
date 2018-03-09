@@ -148,6 +148,11 @@ def get_tsp_routing():
 
 ### UTIL zone
 
+@post("/UTIL/train-classifier")
+def train_classifier():
+	""" Cut the log and hand the copy over to the classifier for training. """
+	raise NotImplementedError()
+
 
 @post("/UTIL/flush-log")
 def flush_log():

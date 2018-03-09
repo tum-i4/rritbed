@@ -110,6 +110,14 @@ class ModelDir(object):
 		return _get_cwd(_for=ModelDir._MODEL_DIR)
 
 
+	# pylint: disable-msg=R0903; (Too few public methods - it's an enum)
+	class Found(Enum):
+		""" How many results where found. """
+		NONE = 0
+		SOME = 1
+		ALL = 2
+
+
 
 ### Shared private util methods ###
 

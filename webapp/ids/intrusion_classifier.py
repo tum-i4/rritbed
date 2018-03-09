@@ -168,7 +168,20 @@ class IntrusionClassifier(object):
 		Try to load existing models from the model directory on disk.
 		raises: If not all models could be found.
 		"""
-		raise NotImplementedError()
+
+		if ModelDir.has_models(self._app_ids) != ModelDir.Found.ALL:
+			raise IOError("Some or all model files are missing.")
+
+		models = {}
+		for app_id in self._app_ids:
+			model = ModelDir.load_model(app_id)
+			if not model:
+				raise IOError("Model for \"{}\" could not be retrieved".format(app_id))
+			models[app_id] = model
+
+		assert(len(models) == len(self._app_ids))
+
+		return models
 
 
 

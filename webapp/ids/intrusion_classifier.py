@@ -165,7 +165,7 @@ class IntrusionClassifier(object):
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		level_int = self._level_int_mapping[LogEntry.LEVEL_FIELD]
+		level_int = self._level_int_mapping[data_dict[LogEntry.LEVEL_FIELD]]
 		# Convert gps_position to two floats
 		gps_tuple = self._gps_position_to_float_tuple(
 			data_dict[LogEntry.GPS_POSITION_FIELD])

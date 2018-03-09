@@ -66,6 +66,16 @@ class ModelDir(object):
 		return _get_cwd(_for=ModelDir._MODEL_DIR)
 
 
+	@staticmethod
+	def has_models(app_id_list):
+		"""
+		Check the model directory on disk if there are existing models for each given app_id.
+		returns: 0 if no models for the given app_id_list are present, 1 if some and 2 if all are present.
+		"""
+		raise NotImplementedError()
+
+
+
 ### Shared private util methods ###
 
 

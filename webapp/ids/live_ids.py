@@ -38,11 +38,12 @@ class LiveIds(object):
 		""" Move the found intrusion logs to a new sub directory. """
 
 		message = "Intrusion logs: "
+		log_dir = LogDir.get_log_dir()
 
-		if not os.path.lexists(LogDir.get_log_dir()):
+		if not os.path.lexists(log_dir):
 			return message + "Log folder doesn't exist"
 
-		all_files = os.listdir(LogDir.get_log_dir())
+		all_files = os.listdir(log_dir)
 
 		if not all_files:
 			return message + "Log folder is empty"

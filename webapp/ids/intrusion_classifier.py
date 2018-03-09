@@ -257,7 +257,7 @@ class IntrusionClassifier(object):
 			coords = [int(coord) for coord in log_message.split(",")]
 			assert(len(coords) == 4)
 			for coord in coords:
-				assert(coord > 0 and coord <= 500)
+				assert(coord >= 0 and coord < 500)
 
 			# Transfrom from [0, 499] to [1, 500] to not have zeroes
 			coords = [c + 1 for c in coords]

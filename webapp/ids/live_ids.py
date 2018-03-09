@@ -67,8 +67,6 @@ class LiveIds(object):
 		time_str = time.strftime("%A %B %d %Y - %H:%M:%S", time.localtime())
 
 		log_folder = LogDir.get_log_dir()
-		if not os.path.lexists(log_folder):
-			os.mkdir(log_folder)
 
 		log_file_path = os.path.join(log_folder, LogDir.create_unique_log_name())
 		with open(log_file_path, mode="w") as log_file:

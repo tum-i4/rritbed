@@ -105,7 +105,7 @@ def get_poi():
 	log_message = "{},{}".format(poi_type, poi_result)
 	level = LogEntry.LEVEL_DEFAULT
 
-	if poi_result is "Invalid":
+	if poi_result == "Invalid":
 		level = LogEntry.LEVEL_ERROR
 
 	poi_log_entry.complete(

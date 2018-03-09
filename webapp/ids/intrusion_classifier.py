@@ -132,6 +132,19 @@ class IntrusionClassifier(object):
 
 
 
+	### Load, check and save model ###
+
+
+	def _load_models(self, app_id_list):
+		"""
+		Try to load existing models from the model directory on disk.
+		returns: None if loading failed or there are no models.\
+		A dict { app_id : model | None } if some or all could be retrieved.
+		"""
+		raise NotImplementedError()
+
+
+
 	### Convert, map, transform ###
 
 

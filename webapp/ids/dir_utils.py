@@ -4,6 +4,21 @@
 import os
 import time
 import uuid
+from enum import Enum
+
+
+class Dir(object):
+	""" Generic directory and path handling. """
+
+	@staticmethod
+	def move_file(file_path, target_folder):
+		""" Move the given file from /current/path/file_name to target_folder/file_name. """
+
+		file_name = os.path.basename(file_path)
+		if not file_name:
+			raise ValueError("File path given misses a file name: {}".format(file_path))
+
+		os.rename(file_path, os.path.join(target_folder, file_name))
 
 
 class LogDir(object):
@@ -52,6 +67,7 @@ class LogDir(object):
 	def get_log_path_for(name):
 		""" Build a path from the given file name and the log directory. """
 		return os.path.join(LogDir.get_log_dir(), name)
+
 
 
 class ModelDir(object):

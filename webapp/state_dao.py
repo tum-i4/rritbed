@@ -72,11 +72,28 @@ class StateDao(object):
 	### Interface methods ###
 
 
+	def cut_log_io(self):
+		""" Call cut_log and return an I/O-friendly message with its result. """
+
+		result = self.cut_log()
+		if not result:
+			return "Log is empty"
+
+		assert(len(result) == 3)
+		lines_removed, log_length, new_file_path = result
+
+		return "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
+			lines_removed, log_length, new_file_path)
+
+
 	def cut_log(self):
-		""" Save a copy of the log that is cut at the current minimum time. """
+		"""
+		Save a copy of the log that is cut at the current minimum time.
+		returns: None if no log file exists, else (lines_removed, log_length, new_file_path).
+		"""
 
 		if not os.path.lexists(self._log_file_path):
-			return "Log is empty"
+			return None
 
 		new_file_path = self.create_unique_log_file_path()
 
@@ -101,9 +118,7 @@ class StateDao(object):
 		with open(new_file_path, "w") as new_log_file:
 			new_log_file.writelines(log_lines)
 
-		message = "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
-			log_length - len(log_lines), log_length, new_file_path)
-		return message
+		return (log_length - len(log_lines), log_length, new_file_path)
 
 
 	def reset(self):

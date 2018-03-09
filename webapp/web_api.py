@@ -173,7 +173,7 @@ def cut_log():
 	print("Minimum time is {}. Now processing - this might take some time...".format(
 		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
 
-	message = DAO.cut_log()
+	message = DAO.cut_log_io()
 
 	return BaseResponse(body=message, status=200)
 

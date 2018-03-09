@@ -21,7 +21,7 @@ class LogDir(object):
 		returns: (folder_name, folder_path)
 		"""
 
-		folder_name = LogDir.create_unique_folder_name()
+		folder_name = LogDir._create_unique_folder_name()
 		folder_path = LogDir.get_log_path_for(folder_name)
 		os.mkdir(folder_path)
 
@@ -36,7 +36,7 @@ class LogDir(object):
 
 
 	@staticmethod
-	def create_unique_folder_name():
+	def _create_unique_folder_name():
 		""" Create a unique name for a backup folder based on the current time. """
 		return _create_unique_name(lambda: (
 			"logs_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())))

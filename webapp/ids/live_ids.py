@@ -34,6 +34,7 @@ class LiveIds(object):
 			print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
 
 
+	# pylint: disable-msg=R0201; (Method could be a function)
 	def reset_log(self):
 		""" Move the found intrusion logs to a new sub directory. """
 
@@ -56,7 +57,8 @@ class LiveIds(object):
 			folder_name)
 
 
-	def _write_intrusion_to_file(self, log_entry, result):
+	@staticmethod
+	def _write_intrusion_to_file(log_entry, result):
 		"""
 		Write the given IdsResult to a new file.
 		returns: The relative file path of the log file.

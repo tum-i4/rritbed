@@ -15,6 +15,19 @@ def enumerate_to_dict(sequence, verify_hash):
 	return mapping
 
 
+def flip_dict(given_dict, verify_hash):
+	""" Flip keys and values in the given dict. Values need to be unique! """
+
+	result = {}
+	for key, value in given_dict.items():
+		if value in result:
+			raise ValueError("Given dict has non-unique values!")
+		result[value] = key
+
+	verify_md5(result, verify_hash)
+	return result
+
+
 def verify_md5(obj, md5_hex_digest):
 	""" Verify that the given object's string representation hashes to the given md5. """
 

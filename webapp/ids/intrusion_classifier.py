@@ -16,6 +16,8 @@ from ids_classification import IdsResult, Classification
 class IntrusionClassifier(object):
 	""" Classify intrusions rule- and learning-based """
 
+	_INSTANCE = None
+
 	_GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
 		"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
 	_COLOURS = ["COLOUR"]
@@ -25,10 +27,23 @@ class IntrusionClassifier(object):
 	_POSES = [_POSE_CC, _POSE_POI, _POSE_TSP]
 
 
+	@staticmethod
+	def get_singleton():
+		""" Get the singleton instance. """
+
+		if IntrusionClassifier._INSTANCE:
+			return IntrusionClassifier._INSTANCE
+
+		return IntrusionClassifier()
+
+
 	def __init__(self):
 		""" Ctor """
 
 		object.__init__(self)
+
+		if IntrusionClassifier._INSTANCE:
+			raise ValueError("Class is already instantiated! Delete instance before creating a new one.")
 
 		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
 		IntrusionClassifier._verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
@@ -50,6 +65,8 @@ class IntrusionClassifier(object):
 			verify_hash="a2b714454328ea9fbfb50064b378c147")
 
 		self._models = self._load_models()
+
+		IntrusionClassifier._INSTANCE = self
 
 
 	### Classify ###

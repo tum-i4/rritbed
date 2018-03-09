@@ -93,9 +93,29 @@ class ModelDir(object):
 	def has_models(app_id_list):
 		"""
 		Check the model directory on disk if there are existing models for each given app_id.
-		returns: 0 if no models for the given app_id_list are present, 1 if some and 2 if all are present.
+		returns: ModelDir.Found object
 		"""
-		raise NotImplementedError()
+
+		model_files = ModelDir._list_model_files()
+		if not model_files:
+			return ModelDir.Found.NONE
+
+		model_names = [os.path.basename(path) for path in model_files]
+
+		# Check if for each app_id a file in the form of app_id.model exists
+		found_some = False # OR  init with FALSE
+		found_all = True   # AND init with TRUE
+		for app_id in app_id_list:
+			found_this = ModelDir.get_model_name_for(app_id) in model_names
+			found_some |= found_this
+			found_all &= found_this
+
+		if found_all:
+			return ModelDir.Found.ALL
+		elif found_some:
+			return ModelDir.Found.SOME
+
+		return ModelDir.Found.NONE
 
 
 	@staticmethod

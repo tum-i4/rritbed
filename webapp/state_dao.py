@@ -79,7 +79,6 @@ class StateDao(object):
 		if not result:
 			return "Log is empty"
 
-		assert(len(result) == 3)
 		lines_removed, log_length, new_file_path = result
 
 		return "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(

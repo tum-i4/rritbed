@@ -127,7 +127,7 @@ class IntrusionClassifier(object):
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
 
-		# TODO
+		# TODO keep state of classifiers!
 		raise NotImplementedError()
 
 

@@ -15,6 +15,20 @@ class LogDir(object):
 
 
 	@staticmethod
+	def mk_unique_backup_dir():
+		"""
+		Mkdir a uniquely named backup folder.
+		returns: (folder_name, folder_path)
+		"""
+
+		folder_name = LogDir.create_unique_folder_name()
+		folder_path = LogDir.get_log_path_for(folder_name)
+		os.mkdir(folder_path)
+
+		return(folder_name, folder_path)
+
+
+	@staticmethod
 	def create_unique_log_name():
 		""" Create a unique log name based on a UUID. """
 		return _create_unique_name(lambda: (

@@ -49,6 +49,8 @@ class IntrusionClassifier(object):
 			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl],
 			verify_hash="a2b714454328ea9fbfb50064b378c147")
 
+		self._models = self._load_models()
+
 
 	### Classify ###
 
@@ -161,11 +163,10 @@ class IntrusionClassifier(object):
 	### Load, check and save model ###
 
 
-	def _load_models(self, app_id_list):
+	def _load_models(self):
 		"""
 		Try to load existing models from the model directory on disk.
-		returns: None if loading failed or there are no models.\
-		A dict { app_id : model | None } if some or all could be retrieved.
+		raises: If not all models could be found.
 		"""
 		raise NotImplementedError()
 

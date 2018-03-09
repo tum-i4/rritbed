@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """ Classifier """
 
-import md5
 import re
 import numpy
 import sklearn.svm as sk_svm
@@ -11,6 +10,7 @@ from functionality.poi_mapper import PoiMapper as PoMa
 
 from dir_utils import ModelDir
 from ids_classification import IdsResult, Classification
+import ids_tools
 
 
 class IntrusionClassifier(object):
@@ -46,23 +46,23 @@ class IntrusionClassifier(object):
 			raise ValueError("Class is already instantiated! Delete instance before creating a new one.")
 
 		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
-		IntrusionClassifier._verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
+		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
 
-		self._level_int_mapping = IntrusionClassifier._enumerate_to_dict(
+		self._level_int_mapping = ids_tools.enumerate_to_dict(
 			[LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR],
 			verify_hash="49942f0268aa668e146e533b676f03d0")
 
-		self._label_int_mapping = IntrusionClassifier._enumerate_to_dict(
-			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
-			verify_hash="69a262192b246d16e8411b6db06e237b")
-
-		self._poi_type_mapping = IntrusionClassifier._enumerate_to_dict(
+		self._poi_type_mapping = ids_tools.enumerate_to_dict(
 			[PoMa.restaurants_field, PoMa.gas_stations_field],
 			verify_hash="0a6d0159ee9e89b34167d7c77c977571")
 
-		self._poi_result_mapping = IntrusionClassifier._enumerate_to_dict(
+		self._poi_result_mapping = ids_tools.enumerate_to_dict(
 			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl],
 			verify_hash="a2b714454328ea9fbfb50064b378c147")
+
+		self._label_int_mapping = ids_tools.enumerate_to_dict(
+			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
+			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 		self._models = self._load_models()
 
@@ -367,19 +367,6 @@ class IntrusionClassifier(object):
 
 
 	@staticmethod
-	def _enumerate_to_dict(sequence, verify_hash):
-		""" Enumerate the given sequence and save the items in a dict as item : index pairs. """
-
-		mapping = {}
-		for index, item in enumerate(sequence):
-			mapping[item] = index
-
-		IntrusionClassifier._verify_md5(mapping, verify_hash)
-
-		return mapping
-
-
-	@staticmethod
 	def _strip_app_id(app_id):
 		""" Strip the given app_id of its ID. """
 
@@ -408,10 +395,3 @@ class IntrusionClassifier(object):
 			result += str_i
 
 		return float(result)
-
-
-	@staticmethod
-	def _verify_md5(obj, md5_hex_digest):
-		obj_hash = md5.new(str(obj)).hexdigest()
-		if obj_hash != md5_hex_digest:
-			raise ValueError("Invalid object given. Received: {}".format(obj_hash))

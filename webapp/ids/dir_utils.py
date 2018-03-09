@@ -82,8 +82,14 @@ class LogDir(object):
 
 	@staticmethod
 	def get_log_dir():
-		""" Return the log directory. """
-		return _get_cwd(_for=LogDir._LOG_DIR)
+		""" Return the log directory. Makes sure the folder exists. """
+
+		log_dir = _get_cwd(_for=LogDir._LOG_DIR)
+
+		if not os.path.lexists(log_dir):
+			os.mkdir(log_dir)
+
+		return log_dir
 
 
 	@staticmethod

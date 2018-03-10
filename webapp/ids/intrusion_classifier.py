@@ -146,10 +146,13 @@ class IntrusionClassifier(object):
 	### Train ###
 
 
-	def train(self, log_entries):
+	def train(self, log_entries, extend_models=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		"""
+
+		if not extend_models and self._has_models() != ModelDir.Found.NONE:
+			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
 		print("Training with {} LogEntry objects".format(len(log_entries)))
 
@@ -159,6 +162,11 @@ class IntrusionClassifier(object):
 
 		print("Found {} app ids".format(len(app_id_datasets)))
 
+		# Ensure that all app_ids exist in the dataset
+		if (len(app_id_datasets) != len(self._app_ids)
+			or any([True for x in self._app_ids if x not in app_id_datasets])):
+			raise ValueError("Couldn't find data for every current app_id!")
+
 		for log_entry in log_entries:
 			app_id = self._log_entry_to_app_id(log_entry)
 			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
@@ -166,6 +174,21 @@ class IntrusionClassifier(object):
 
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
+
+		# Ensure each app_id classifier has samples of all classes to learn from.
+		print("Verifying given data...")
+		for app_id, train_set in app_id_datasets.items():
+			expected_classes = self._get_expected_classes(app_id)
+			received_classes = set(train_set[1])
+			value_error = ValueError(
+				"The given samples for classifier {} don't contain all expected classes.".format(app_id)
+				+ " Expected: {}. Received: {}.".format(expected_classes, list(received_classes)))
+
+			if len(expected_classes) != len(received_classes):
+				raise value_error
+			for exp_class in expected_classes:
+				if exp_class not in received_classes:
+					raise value_error
 
 		for app_id, train_set in app_id_datasets.items():
 			print("Training model for \"{}\"".format(app_id))

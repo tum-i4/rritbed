@@ -190,6 +190,22 @@ class IntrusionClassifier(object):
 		print("\nTraining completed.")
 
 
+	def _get_expected_classes(self, app_id):
+		""" Return a list of expected classes for the given app_id classifier. """
+
+		labels = IntrusionClassifier._LEGAL_LABELS
+		if app_id in IntrusionClassifier._GENERATORS:
+			labels += IntrusionClassifier._INTRUSION_LABELS_GENS
+		elif app_id in IntrusionClassifier._COLOURS:
+			labels += IntrusionClassifier._INTRUSION_LABELS_COLRS
+		elif app_id in IntrusionClassifier._POSES:
+			labels += IntrusionClassifier._INTRUSION_LABELS_POIS
+		else:
+			raise ValueError("Invalid app_id given: {}".format(app_id))
+
+		return [self._label_int_mapping[x] for x in labels]
+
+
 
 	### Load, check and save model ###
 

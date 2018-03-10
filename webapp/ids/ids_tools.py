@@ -33,7 +33,7 @@ def verify_md5(obj, md5_hex_digest):
 
 	obj_hash = get_md5_hex(obj)
 	if obj_hash != md5_hex_digest:
-		raise ValueError("Invalid object given. Received: {}".format(obj_hash))
+		raise ValueError("Invalid object given. Received obj with hash: {}.".format(obj_hash))
 
 
 def get_md5_hex(obj):

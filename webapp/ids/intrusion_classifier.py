@@ -275,16 +275,17 @@ class IntrusionClassifier(object):
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
 		level_int = self._level_int_mapping[data_dict[LogEntry.LEVEL_FIELD]]
-		# Convert gps_position to two floats
-		gps_tuple = self._gps_position_to_float_tuple(
-			data_dict[LogEntry.GPS_POSITION_FIELD])
-		gps_lat = gps_tuple[0]
-		gps_lon = gps_tuple[1]
+		# Convert gps_position to float
+		gps_float = self._gps_position_to_float(data_dict[LogEntry.GPS_POSITION_FIELD], app_id)
 		# Convert log_message to float based on app_id
 		log_msg_float = self._log_message_to_float(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
+		data = [log_msg_float, vin_float, level_int, time_unix]
+		if gps_float is not None:
+			data += [gps_float]
+
 		result = numpy.array(
-			[vin_float, level_int, gps_lat, gps_lon, log_msg_float, time_unix],
+			data,
 			dtype=numpy.float_,
 			order="C")
 
@@ -302,15 +303,18 @@ class IntrusionClassifier(object):
 		return IntrusionClassifier._aggregate_ints_to_float([ord(vin[0]), int(vin[1:])])
 
 
-	def _gps_position_to_float_tuple(self, gps_position):
+	def _gps_position_to_float(self, gps_position, app_id):
 		""" Convert the given GPS position string to (lat, lon). """
+
+		if app_id not in IntrusionClassifier._POSES:
+			return None
 
 		# Format: lat,lon
 		split = gps_position.split(",")
 		if len(split) != 2:
 			raise ValueError("Invalid string")
 
-		return (float(split[0]), float(split[1]))
+		return IntrusionClassifier._aggregate_ints_to_float([int(split[0]), int(split[1])])
 
 
 	def _log_message_to_float(self, log_message, app_id):
@@ -380,9 +384,15 @@ class IntrusionClassifier(object):
 	def _verify_ndarray(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 
-		assert(isinstance(ndarray, numpy.ndarray))
-		assert(ndarray.dtype == numpy.float_)
-		assert(len(ndarray) == 6)
+		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:
+			raise ValueError("Given array is of invalid type.")
+
+		expected_len = 4
+		if app_id in IntrusionClassifier._POSES:
+			expected_len += 1
+		if len(ndarray) != expected_len:
+			raise ValueError("Given ndarray is too short. Expected {} elements. Received: {}"
+				.format(expected_len, ndarray))
 
 		constraints = {}
 
@@ -404,7 +414,7 @@ class IntrusionClassifier(object):
 		constraints[IntrusionClassifier._POSE_TSP] = lambda x: x >= 1001001001 and x <= 500500500500
 
 		# Check the constraint with the log_message float
-		assert(constraints[app_id](ndarray[4]))
+		assert(constraints[app_id](ndarray[0]))
 
 
 

@@ -6,7 +6,6 @@ import numpy
 import sklearn.svm as sk_svm
 
 from log_entry import LogEntry
-from functionality.poi_mapper import PoiMapper as PoMa
 
 import ids_data
 import ids_tools
@@ -38,31 +37,28 @@ class IntrusionClassifier(object):
 		if IntrusionClassifier._INSTANCE:
 			raise ValueError("Class is already instantiated! Retrieve the instance with get_singleton().")
 
-		self._app_ids = (
-			ids_data.GENERATORS + ids_data.COLOURS + ids_data.POSES)
-		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
+		self._app_ids = ids_data.APP_IDS
+		ids_tools.verify_md5(self._app_ids, ids_data.APP_IDS_MD5)
 
-		self._level_int_mapping = ids_tools.enumerate_to_dict(
-			[LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR],
-			verify_hash="49942f0268aa668e146e533b676f03d0")
+		self._level_mapping = ids_tools.enumerate_to_dict(
+			ids_data.LEVELS,
+			verify_hash=ids_data.LEVEL_MAPPING_MD5)
 
 		self._poi_type_mapping = ids_tools.enumerate_to_dict(
-			[PoMa.restaurants_field, PoMa.gas_stations_field]
-			+ ids_data.INTRUDED_POI_TYPES,
-			verify_hash="f2fba0ed17e382e274f53bbcb142565b")
+			ids_data.POI_TYPES,
+			verify_hash=ids_data.POI_TYPE_MAPPING_MD5)
 
 		self._poi_result_mapping = ids_tools.enumerate_to_dict(
-			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl]
-			+ ids_data.INTRUDED_POI_RESULTS,
-			verify_hash="dd1c18c7188a48a686619fef8007fc64")
+			ids_data.POI_RESULTS,
+			verify_hash=ids_data.POI_RESULT_MAPPING_MD5)
 
 		self._label_int_mapping = ids_tools.enumerate_to_dict(
-			ids_data.LEGAL_LABELS + ids_data.INTRUSION_LABELS,
-			verify_hash="69a262192b246d16e8411b6db06e237b")
+			ids_data.LABELS,
+			verify_hash=ids_data.LABEL_INT_MAPPING_MD5)
 
 		self._int_label_mapping = ids_tools.flip_dict(
 			self._label_int_mapping,
-			"c29a85dae460b57fac78db12e72ae24a")
+			verify_hash=ids_data.INT_LABEL_MAPPING_MD5)
 
 		self._load_models()
 
@@ -286,7 +282,7 @@ class IntrusionClassifier(object):
 		# Keep time_unix as is
 		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		level_int = self._level_int_mapping[data_dict[LogEntry.LEVEL_FIELD]]
+		level_int = self._level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
 		# Convert gps_position to float
 		gps_float = self._gps_position_to_float(data_dict[LogEntry.GPS_POSITION_FIELD], app_id)
 		# Convert log_message to float based on app_id

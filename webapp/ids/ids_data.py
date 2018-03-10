@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 """ Shared data among IDS components """
 
-# APP IDS
+from functionality.poi_mapper import PoiMapper as PoMa
+from log_entry import LogEntry
+
+# App IDs
 GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
 	"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
 COLOURS = ["COLOUR"]
@@ -9,14 +12,32 @@ POSE_CC = "COUNTRYCODE"
 POSE_POI = "POI"
 POSE_TSP = "TSPROUTING"
 POSES = [POSE_CC, POSE_POI, POSE_TSP]
+APP_IDS = GENERATORS + COLOURS + POSES
 
-# POIS
+# Levels
+LEVELS = [LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR]
+
+# POI types
+LEGAL_POI_TYPES = [PoMa.restaurants_field, PoMa.gas_stations_field]
 INTRUDED_POI_TYPES = ["private home", "nsa hq"]
+POI_TYPES = LEGAL_POI_TYPES + INTRUDED_POI_TYPES
+# POI results
+LEGAL_POI_RESULTS = [PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl]
 INTRUDED_POI_RESULTS = ["Invalid"]
+POI_RESULTS = LEGAL_POI_RESULTS + INTRUDED_POI_RESULTS
 
-# LABELS
+# Labels
 LEGAL_LABELS = ["normal"]
 INTRUSION_LABELS_GENS = ["zeroes", "huge-error"]
 INTRUSION_LABELS_COLRS = ["red"]
 INTRUSION_LABELS_POIS = ["jump", "illegaltype", "routetoself"]
 INTRUSION_LABELS = INTRUSION_LABELS_GENS + INTRUSION_LABELS_COLRS + INTRUSION_LABELS_POIS
+LABELS = LEGAL_LABELS + INTRUSION_LABELS
+
+# MD5 hex hashes
+APP_IDS_MD5 = "cacafa61f61b645c279954952ac6ba8f"
+LEVEL_MAPPING_MD5 = "49942f0268aa668e146e533b676f03d0"
+POI_TYPE_MAPPING_MD5 = "f2fba0ed17e382e274f53bbcb142565b"
+POI_RESULT_MAPPING_MD5 = "dd1c18c7188a48a686619fef8007fc64"
+LABEL_INT_MAPPING_MD5 = "69a262192b246d16e8411b6db06e237b"
+INT_LABEL_MAPPING_MD5 = "c29a85dae460b57fac78db12e72ae24a"

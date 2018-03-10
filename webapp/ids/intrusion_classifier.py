@@ -8,35 +8,16 @@ import sklearn.svm as sk_svm
 from log_entry import LogEntry
 from functionality.poi_mapper import PoiMapper as PoMa
 
+import ids_data
+import ids_tools
 from dir_utils import ModelDir
 from ids_classification import IdsResult, Classification
-import ids_tools
 
 
 class IntrusionClassifier(object):
 	""" Classify intrusions rule- and learning-based """
 
 	_INSTANCE = None
-
-	# APP IDS
-	_GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
-		"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
-	_COLOURS = ["COLOUR"]
-	_POSE_CC = "COUNTRYCODE"
-	_POSE_POI = "POI"
-	_POSE_TSP = "TSPROUTING"
-	_POSES = [_POSE_CC, _POSE_POI, _POSE_TSP]
-
-	# POIS
-	_INTRUDED_POI_TYPES = ["private home", "nsa hq"]
-	_INTRUDED_POI_RESULTS = ["Invalid"]
-
-	# LABELS
-	_LEGAL_LABELS = ["normal"]
-	_INTRUSION_LABELS_GENS = ["zeroes", "huge-error"]
-	_INTRUSION_LABELS_COLRS = ["red"]
-	_INTRUSION_LABELS_POIS = ["jump", "illegaltype", "routetoself"]
-	_INTRUSION_LABELS = _INTRUSION_LABELS_GENS + _INTRUSION_LABELS_COLRS + _INTRUSION_LABELS_POIS
 
 
 	@staticmethod
@@ -58,7 +39,7 @@ class IntrusionClassifier(object):
 			raise ValueError("Class is already instantiated! Retrieve the instance with get_singleton().")
 
 		self._app_ids = (
-			IntrusionClassifier._GENERATORS + IntrusionClassifier._COLOURS + IntrusionClassifier._POSES)
+			ids_data.GENERATORS + ids_data.COLOURS + ids_data.POSES)
 		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
 
 		self._level_int_mapping = ids_tools.enumerate_to_dict(
@@ -67,16 +48,16 @@ class IntrusionClassifier(object):
 
 		self._poi_type_mapping = ids_tools.enumerate_to_dict(
 			[PoMa.restaurants_field, PoMa.gas_stations_field]
-			+ IntrusionClassifier._INTRUDED_POI_TYPES,
+			+ ids_data.INTRUDED_POI_TYPES,
 			verify_hash="f2fba0ed17e382e274f53bbcb142565b")
 
 		self._poi_result_mapping = ids_tools.enumerate_to_dict(
 			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl]
-			+ IntrusionClassifier._INTRUDED_POI_RESULTS,
+			+ ids_data.INTRUDED_POI_RESULTS,
 			verify_hash="dd1c18c7188a48a686619fef8007fc64")
 
 		self._label_int_mapping = ids_tools.enumerate_to_dict(
-			IntrusionClassifier._LEGAL_LABELS + IntrusionClassifier._INTRUSION_LABELS,
+			ids_data.LEGAL_LABELS + ids_data.INTRUSION_LABELS,
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 		self._int_label_mapping = ids_tools.flip_dict(
@@ -142,7 +123,7 @@ class IntrusionClassifier(object):
 		predicted_class = self._models[app_id].predict([ndarray])
 
 		classification = Classification.normal
-		if self._int_label_mapping[predicted_class] in IntrusionClassifier._INTRUSION_LABELS:
+		if self._int_label_mapping[predicted_class] in ids_data.INTRUSION_LABELS:
 			classification = Classification.intrusion
 
 		return IdsResult(classification=classification, confidence=70)
@@ -222,13 +203,13 @@ class IntrusionClassifier(object):
 	def _get_expected_classes(self, app_id):
 		""" Return a list of expected classes for the given app_id classifier. """
 
-		labels = IntrusionClassifier._LEGAL_LABELS
-		if app_id in IntrusionClassifier._GENERATORS:
-			labels += IntrusionClassifier._INTRUSION_LABELS_GENS
-		elif app_id in IntrusionClassifier._COLOURS:
-			labels += IntrusionClassifier._INTRUSION_LABELS_COLRS
-		elif app_id in IntrusionClassifier._POSES:
-			labels += IntrusionClassifier._INTRUSION_LABELS_POIS
+		labels = ids_data.LEGAL_LABELS
+		if app_id in ids_data.GENERATORS:
+			labels += ids_data.INTRUSION_LABELS_GENS
+		elif app_id in ids_data.COLOURS:
+			labels += ids_data.INTRUSION_LABELS_COLRS
+		elif app_id in ids_data.POSES:
+			labels += ids_data.INTRUSION_LABELS_POIS
 		else:
 			raise ValueError("Invalid app_id given: {}".format(app_id))
 
@@ -335,7 +316,7 @@ class IntrusionClassifier(object):
 	def _gps_position_to_float(self, gps_position, app_id):
 		""" Convert the given GPS position string to (lat, lon). """
 
-		if app_id not in IntrusionClassifier._POSES:
+		if app_id not in ids_data.POSES:
 			return None
 
 		# Format: lat,lon
@@ -353,11 +334,11 @@ class IntrusionClassifier(object):
 			raise ValueError("Invalid value for app_id given: {}".format(app_id))
 
 		# Generators send "{f}"
-		if app_id in IntrusionClassifier._GENERATORS:
+		if app_id in ids_data.GENERATORS:
 			return float(log_message)
 
 		# Colour sends "{i},{i},{i}"
-		if app_id in IntrusionClassifier._COLOURS:
+		if app_id in ids_data.COLOURS:
 			vals = [int(val) for val in log_message.split(",")]
 			assert(len(vals) == 3)
 			for val in vals:
@@ -370,17 +351,17 @@ class IntrusionClassifier(object):
 			return IntrusionClassifier._aggregate_ints_to_float(vals, pad_zeroes=3)
 
 		# Poses
-		assert(app_id in IntrusionClassifier._POSES)
+		assert(app_id in ids_data.POSES)
 
 		# Country code string like "DE" or "CH"
-		if app_id == IntrusionClassifier._POSE_CC:
+		if app_id == ids_data.POSE_CC:
 			assert(len(log_message) == 2)
 
 			ord_ints = [ord(x) for x in log_message]
 			return IntrusionClassifier._aggregate_ints_to_float(ord_ints)
 
 		# POI pair "type,result"
-		if app_id == IntrusionClassifier._POSE_POI:
+		if app_id == ids_data.POSE_POI:
 			pair = log_message.split(",")
 			assert(len(pair) == 2)
 
@@ -395,7 +376,7 @@ class IntrusionClassifier(object):
 			return IntrusionClassifier._aggregate_ints_to_float([type_int, result_int])
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
-		if app_id == IntrusionClassifier._POSE_TSP:
+		if app_id == ids_data.POSE_TSP:
 			coords = [int(coord) for coord in log_message.split(",")]
 			assert(len(coords) == 4)
 			for coord in coords:
@@ -417,7 +398,7 @@ class IntrusionClassifier(object):
 			raise ValueError("Given array is of invalid type.")
 
 		expected_len = 4
-		if app_id in IntrusionClassifier._POSES:
+		if app_id in ids_data.POSES:
 			expected_len += 1
 		if len(ndarray) != expected_len:
 			raise ValueError("Given ndarray is too short. Expected {} elements. Received: {}"
@@ -426,21 +407,21 @@ class IntrusionClassifier(object):
 		constraints = {}
 
 		# No constraint
-		for gen in IntrusionClassifier._GENERATORS:
+		for gen in ids_data.GENERATORS:
 			constraints[gen] = lambda x: True
 
 		# Min: 1,1,1; max: 256,256,256
-		for colr in IntrusionClassifier._COLOURS:
+		for colr in ids_data.COLOURS:
 			constraints[colr] = lambda x: x >= 1001001 and x <= 256256256
 
 		# For each char: min: 65 ("A"); max: 90 ("Z")
-		constraints[IntrusionClassifier._POSE_CC] = lambda x: x >= 6565 and x <= 9090
+		constraints[ids_data.POSE_CC] = lambda x: x >= 6565 and x <= 9090
 
 		# For both ints: [1,9]
-		constraints[IntrusionClassifier._POSE_POI] = lambda x: x >= 11 and x <= 99
+		constraints[ids_data.POSE_POI] = lambda x: x >= 11 and x <= 99
 
 		# Min: 1,1,1,1; max: 500,500,500,500
-		constraints[IntrusionClassifier._POSE_TSP] = lambda x: x >= 1001001001 and x <= 500500500500
+		constraints[ids_data.POSE_TSP] = lambda x: x >= 1001001001 and x <= 500500500500
 
 		# Check the constraint with the log_message float
 		assert(constraints[app_id](ndarray[0]))

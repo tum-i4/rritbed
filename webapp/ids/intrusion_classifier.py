@@ -216,6 +216,14 @@ class IntrusionClassifier(object):
 		self._models = models
 
 
+	def _has_models(self):
+		"""
+		Checks the ModelDir for all current app_ids.
+		returns: A ModelDir.Found enum
+		"""
+		return ModelDir.has_models(self._app_ids)
+
+
 
 	### Convert, map, transform ###
 

@@ -98,8 +98,6 @@ class IntrusionClassifier(object):
 		returns: An IdsResult object
 		"""
 
-		# FIRST VERSION: 100 % / 0 %
-
 		# Pass the entry through all systems
 
 		# 1) Rule-based system: If confidence == 100 %: return
@@ -136,10 +134,18 @@ class IntrusionClassifier(object):
 		returns: An IdsResult object
 		"""
 
-		# return IdsResult(classification=Classification.normal, confidence=50)
+		if self._models is None:
+			raise IOError("Some or all model files are missing.")
 
-		# TODO
-		raise NotImplementedError()
+		app_id = self._log_entry_to_app_id(log_entry)
+		ndarray = self._log_entry_to_ndarray(log_entry, app_id)
+		predicted_class = self._models[app_id].predict([ndarray])
+
+		classification = Classification.normal
+		if self._int_label_mapping[predicted_class] in IntrusionClassifier._INTRUSION_LABELS:
+			classification = Classification.intrusion
+
+		return IdsResult(classification=classification, confidence=70)
 
 
 

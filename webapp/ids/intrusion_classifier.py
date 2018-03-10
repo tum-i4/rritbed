@@ -18,6 +18,7 @@ class IntrusionClassifier(object):
 
 	_INSTANCE = None
 
+	# APP IDS
 	_GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
 		"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
 	_COLOURS = ["COLOUR"]
@@ -25,6 +26,17 @@ class IntrusionClassifier(object):
 	_POSE_POI = "POI"
 	_POSE_TSP = "TSPROUTING"
 	_POSES = [_POSE_CC, _POSE_POI, _POSE_TSP]
+
+	# POIS
+	_INTRUDED_POI_TYPES = ["private home", "nsa hq"]
+	_INTRUDED_POI_RESULTS = ["Invalid"]
+
+	# LABELS
+	_LEGAL_LABELS = ["normal"]
+	_INTRUSION_LABELS_GENS = ["zeroes", "huge-error"]
+	_INTRUSION_LABELS_COLRS = ["red"]
+	_INTRUSION_LABELS_POIS = ["jump", "illegaltype", "routetoself"]
+	_INTRUSION_LABELS = _INTRUSION_LABELS_GENS + _INTRUSION_LABELS_COLRS + _INTRUSION_LABELS_POIS
 
 
 	@staticmethod

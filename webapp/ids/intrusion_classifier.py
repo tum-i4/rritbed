@@ -55,9 +55,10 @@ class IntrusionClassifier(object):
 		object.__init__(self)
 
 		if IntrusionClassifier._INSTANCE:
-			raise ValueError("Class is already instantiated! Delete instance before creating a new one.")
+			raise ValueError("Class is already instantiated! Retrieve the instance with get_singleton().")
 
-		self._app_ids = self._GENERATORS + self._COLOURS + self._POSES
+		self._app_ids = (
+			IntrusionClassifier._GENERATORS + IntrusionClassifier._COLOURS + IntrusionClassifier._POSES)
 		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
 
 		self._level_int_mapping = ids_tools.enumerate_to_dict(
@@ -65,15 +66,17 @@ class IntrusionClassifier(object):
 			verify_hash="49942f0268aa668e146e533b676f03d0")
 
 		self._poi_type_mapping = ids_tools.enumerate_to_dict(
-			[PoMa.restaurants_field, PoMa.gas_stations_field],
-			verify_hash="0a6d0159ee9e89b34167d7c77c977571")
+			[PoMa.restaurants_field, PoMa.gas_stations_field]
+			+ IntrusionClassifier._INTRUDED_POI_TYPES,
+			verify_hash="f2fba0ed17e382e274f53bbcb142565b")
 
 		self._poi_result_mapping = ids_tools.enumerate_to_dict(
-			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl],
-			verify_hash="a2b714454328ea9fbfb50064b378c147")
+			[PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl]
+			+ IntrusionClassifier._INTRUDED_POI_RESULTS,
+			verify_hash="dd1c18c7188a48a686619fef8007fc64")
 
 		self._label_int_mapping = ids_tools.enumerate_to_dict(
-			["normal", "zeroes", "huge-error", "red", "jump", "illegaltype", "routetoself"],
+			IntrusionClassifier._LEGAL_LABELS + IntrusionClassifier._INTRUSION_LABELS,
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 		self._int_label_mapping = ids_tools.flip_dict(

@@ -107,17 +107,26 @@ class LogEntry(object):
 	def from_log_string(log_string):
 		""" Create a LogEntry from the log string produced by get_log_string(). """
 
-		label = None
+		first_part = None
+		second_part = None
 
 		if not log_string.endswith("}"):
-			split = log_string.split(",")
-			if len(split) != 2:
-				raise ValueError("Given string has invalid format.")
-			log_string = split[0]
-			label = split[1]
+			value_error = ValueError("Given string has invalid format: {}".format(log_string))
 
-		data_dict = json.loads(log_string)
-		return LogEntry.from_data(data_dict, label)
+			bracket_idx = log_string.find("}")
+			last_comma_idx = log_string.find(",", bracket_idx)
+			if last_comma_idx != bracket_idx + 1:
+				raise value_error
+
+			# The bracket is kept
+			first_part = log_string[:bracket_idx + 1]
+			# The comma is removed
+			second_part = log_string[last_comma_idx + 1:]
+			if "}" not in first_part or "}" in second_part or "{" in second_part:
+				raise value_error
+
+		data_dict = json.loads(first_part)
+		return LogEntry.from_data(data_dict, second_part)
 
 
 

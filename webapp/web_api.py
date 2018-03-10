@@ -24,6 +24,10 @@ from functionality.tsp_routing_mapper import TspRoutingMapper
 DAO = None
 IDS = None
 
+# Configuration
+DETECT = True
+STORE = True
+
 
 ### API endpoints ###
 
@@ -252,8 +256,10 @@ def _create_client_time(identifier):
 def _append_and_detect(new_log_entry):
 	""" Append the given string plus a newline to the log file and detect possible intrusions. """
 
-	DAO.append_to_log(new_log_entry)
-	IDS.process(new_log_entry)
+	if STORE:
+		DAO.append_to_log(new_log_entry)
+	if DETECT:
+		IDS.process(new_log_entry)
 
 
 
@@ -263,12 +269,25 @@ def _append_and_detect(new_log_entry):
 
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument("--verbose", "-v", action="store_true")
+PARSER.add_argument("--dont-detect", "-d", action="store_false", dest="detect")
+PARSER.add_argument("--dont-store", "-s", action="store_false", dest="store")
 ARGS = PARSER.parse_args()
 
+DETECT = ARGS.detect
+STORE = ARGS.store
+
+YES_NO = lambda x: "yes" if x else "no"
+CFG_MSG = "detect: {} | store: {}".format(YES_NO(ARGS.detect), YES_NO(ARGS.store))
+
 if not ARGS.verbose:
-	print("Starting server in quiet mode")
+	print("Starting server in quiet mode ({})".format(CFG_MSG))
+else:
+	print("Configuration selected: {}".format(CFG_MSG))
 
 with StateDao(verbose=ARGS.verbose) as dao:
+	if ARGS.verbose:
+		print("")
+
 	DAO = dao
 	IDS = LiveIds(verbose=ARGS.verbose)
 

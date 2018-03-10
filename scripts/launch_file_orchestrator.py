@@ -53,13 +53,13 @@ class LaunchFileOrchestrator(object):
 		optionals_group.add_argument("--manual", "-m", action="store_true", dest="manual_turtle_mode",
 			help=("Create launch file with only one manually controlled turtle, a logger node and "
 			"rosbag recording.\nExcludes other options!"))
-		optionals_group.add_argument("--identifiers", "-i", dest="identifier_file_path",
+		optionals_group.add_argument("--identifiers", "-s", dest="identifier_file_path",
 			metavar="/FILE/PATH",
 			help=("Path to file with identifiers to use for namespaces. Limits number of "
 			"namespaces to the number of individual identifiers in file!"))
 		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
 			metavar="NS_COUNT", default=1, help="Number of namespaces to create")
-		optionals_group.add_argument("--label", "-b", action="store_true", dest="label_intrusions",
+		optionals_group.add_argument("--label", "-l", action="store_true", dest="label_intrusions",
 			help="Advise logger to label intrusions (used for training data).")
 		optionals_group.add_argument("--default-gen-args", "-a", action="store_true",
 			dest="default_gen_args", help="Force use of the default generator arguments.")
@@ -71,7 +71,7 @@ class LaunchFileOrchestrator(object):
 		# Additional intrusion options
 		requires_intrusions_text = "[requires --intrusions]"
 		intrusion_levels = IntrusionDefinition.get_intrusion_levels()
-		optionals_group.add_argument("--intrusion-level", "-l", dest="intrusion_level",
+		optionals_group.add_argument("--intrusion-level", "-i", dest="intrusion_level",
 			default=intrusion_levels[0], choices=intrusion_levels,
 			help="Specify the intrusion level (difficulty). " + requires_intrusions_text)
 		optionals_group.add_argument("--dont-intrude-turtle", "-t", action="store_false",

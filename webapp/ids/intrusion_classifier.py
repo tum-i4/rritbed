@@ -83,7 +83,7 @@ class IntrusionClassifier(object):
 			self._label_int_mapping,
 			"c29a85dae460b57fac78db12e72ae24a")
 
-		self._models = self._load_models()
+		self._load_models()
 
 		IntrusionClassifier._INSTANCE = self
 
@@ -186,6 +186,7 @@ class IntrusionClassifier(object):
 
 			print("Done!")
 
+		self._load_models()
 		print("\nTraining completed.")
 
 
@@ -200,7 +201,8 @@ class IntrusionClassifier(object):
 		"""
 
 		if ModelDir.has_models(self._app_ids) != ModelDir.Found.ALL:
-			raise IOError("Some or all model files are missing.")
+			self._models = None
+			return
 
 		models = {}
 		for app_id in self._app_ids:
@@ -211,7 +213,7 @@ class IntrusionClassifier(object):
 
 		assert(len(models) == len(self._app_ids))
 
-		return models
+		self._models = models
 
 
 

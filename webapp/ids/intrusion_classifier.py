@@ -96,7 +96,8 @@ class IntrusionClassifier(object):
 			else learner_result)
 
 
-	def _classify_rule_based(self, log_entry):
+	@staticmethod
+	def _classify_rule_based(log_entry):
 		"""
 		Classify the given entry based on pre-defined rules.
 		returns: An IdsResult object
@@ -261,7 +262,8 @@ class IntrusionClassifier(object):
 		return self._label_int_mapping[log_entry.intrusion]
 
 
-	def _log_entry_to_app_id(self, log_entry):
+	@staticmethod
+	def _log_entry_to_app_id(log_entry):
 		""" Extract and sanitize the app_id from the given LogEntry object. """
 
 		app_id = log_entry.data[LogEntry.APP_ID_FIELD]
@@ -304,7 +306,8 @@ class IntrusionClassifier(object):
 		return result
 
 
-	def _vin_to_float(self, vin):
+	@staticmethod
+	def _vin_to_float(vin):
 		""" Convert the given VIN to float(aggregate([ord(char), int(rest)])). """
 
 		if len(vin) != 7:
@@ -313,7 +316,8 @@ class IntrusionClassifier(object):
 		return IntrusionClassifier._aggregate_ints_to_float([ord(vin[0]), int(vin[1:])])
 
 
-	def _gps_position_to_float(self, gps_position, app_id):
+	@staticmethod
+	def _gps_position_to_float(gps_position, app_id):
 		""" Convert the given GPS position string to (lat, lon). """
 
 		if app_id not in ids_data.POSES:
@@ -391,7 +395,8 @@ class IntrusionClassifier(object):
 		raise NotImplementedError("Pose type {} not implemented".format(app_id))
 
 
-	def _verify_ndarray(self, ndarray, app_id):
+	@staticmethod
+	def _verify_ndarray(ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:

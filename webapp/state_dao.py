@@ -200,6 +200,9 @@ class StateDao(object):
 
 		log_line_count = len(self._new_log_entries)
 
+		if not os.path.lexists(self._log_file_path):
+			return log_line_count
+
 		with open(self._log_file_path, "r") as log_file:
 			lines = log_file.readlines()
 			log_line_count += len(lines)

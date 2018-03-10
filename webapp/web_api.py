@@ -153,7 +153,12 @@ def get_log_length():
 	""" Count the number of log entries and return the number. """
 
 	log_line_count = DAO.count_log_lines()
-	return BaseResponse(body="The log currently holds {} items.".format(log_line_count), status=200)
+
+	message = "The log currently holds {} items.".format(log_line_count)
+	if log_line_count == 0:
+		message = "Log is empty!"
+
+	return BaseResponse(body=message, status=200)
 
 
 @post("/UTIL/flush-log")

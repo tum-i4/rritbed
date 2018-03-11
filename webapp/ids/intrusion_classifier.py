@@ -144,12 +144,12 @@ class IntrusionClassifier(object):
 		for app_id in self._app_ids:
 			app_id_datasets[app_id] = ([], [])
 
-		print("Found {} app ids".format(len(app_id_datasets)))
-
 		# Ensure that all app_ids exist in the dataset
 		if (len(app_id_datasets) != len(self._app_ids)
 			or any([True for x in self._app_ids if x not in app_id_datasets])):
 			raise ValueError("Couldn't find data for every current app_id!")
+
+		print("Found all {} app ids".format(len(app_id_datasets)))
 
 		for log_entry in log_entries:
 			app_id = self._log_entry_to_app_id(log_entry)

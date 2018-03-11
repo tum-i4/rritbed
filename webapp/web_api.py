@@ -188,7 +188,7 @@ def cut_log():
 	minimum_time = DAO.get_current_min_time()
 
 	print("Minimum time is {}. Now processing - this might take some time...".format(
-		time.strftime("%Y-%m-%d, %H:%M", time.gmtime(minimum_time))))
+		time.strftime("%Y-%m-%d, %H:%M", time.localtime(minimum_time))))
 
 	message = DAO.cut_log_io()
 

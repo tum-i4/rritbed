@@ -156,7 +156,7 @@ class StateDao(object):
 
 		print("Flushing {} log entries. Last flush was {}."
 			.format(len(self._new_log_entries),
-				time.strftime("%H:%M:%S", time.gmtime(self._last_flush))))
+				time.strftime("%H:%M:%S", time.localtime(self._last_flush))))
 
 		# Remove new entries from list and save them to disk
 		with open(self._log_file_path, "a") as log_file:
@@ -348,7 +348,7 @@ class StateDao(object):
 
 	def _create_log_file_name_from_time(self, time_unix):
 		""" Create a log file name of the format 'log/log_until_2017-12-20_18:08:25'. """
-		time_str = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime(time_unix))
+		time_str = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime(time_unix))
 		return self._log_file_path + "_until_" + time_str
 
 

@@ -2,6 +2,8 @@
 """ Classifier """
 
 import re
+import time
+
 import numpy
 import sklearn.svm as sk_svm
 
@@ -138,7 +140,8 @@ class IntrusionClassifier(object):
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
-		print("Training with {} LogEntry objects".format(len(log_entries)))
+		print("Starting training with {} LogEntry objects".format(len(log_entries)))
+		start_time = time.time()
 
 		app_id_datasets = {}
 		for app_id in self._app_ids:
@@ -174,8 +177,11 @@ class IntrusionClassifier(object):
 				if exp_class not in received_classes:
 					raise value_error
 
+		app_id_count = 1
+
 		for app_id, train_set in app_id_datasets.items():
-			print("Training model for \"{}\"".format(app_id))
+			print("({}/{}) Training model for \"{}\""
+				.format(app_id_count, len(app_id_datasets), app_id))
 
 			# Load model if it exists already
 			clf = ModelDir.load_model(app_id)
@@ -188,13 +194,15 @@ class IntrusionClassifier(object):
 			clf.fit(train_set[0], train_set[1])
 
 			print("Saving to disk...")
-
 			ModelDir.save_model(clf, app_id, overwrite=True)
-
 			print("Done!")
 
+			app_id_count += 1
+
 		self._load_models()
-		print("\nTraining completed.")
+
+		time_expired = time.time() - start_time
+		print("\nTraining completed in {}.".format(ids_tools.format_time_passed(time_expired)))
 
 
 	def _get_expected_classes(self, app_id):

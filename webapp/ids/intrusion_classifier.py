@@ -37,23 +37,23 @@ class IntrusionClassifier(object):
 		if IntrusionClassifier._INSTANCE:
 			raise ValueError("Class is already instantiated! Retrieve the instance with get_singleton().")
 
-		self._app_ids = ids_data.APP_IDS
+		self._app_ids = ids_data.get_app_ids()
 		ids_tools.verify_md5(self._app_ids, ids_data.APP_IDS_MD5)
 
 		self._level_mapping = ids_tools.enumerate_to_dict(
-			ids_data.LEVELS,
+			ids_data.get_levels(),
 			verify_hash=ids_data.LEVEL_MAPPING_MD5)
 
 		self._poi_type_mapping = ids_tools.enumerate_to_dict(
-			ids_data.POI_TYPES,
+			ids_data.get_poi_types(),
 			verify_hash=ids_data.POI_TYPE_MAPPING_MD5)
 
 		self._poi_result_mapping = ids_tools.enumerate_to_dict(
-			ids_data.POI_RESULTS,
+			ids_data.get_poi_results(),
 			verify_hash=ids_data.POI_RESULT_MAPPING_MD5)
 
 		self._label_int_mapping = ids_tools.enumerate_to_dict(
-			ids_data.LABELS,
+			ids_data.get_labels(),
 			verify_hash=ids_data.LABEL_INT_MAPPING_MD5)
 
 		self._int_label_mapping = ids_tools.flip_dict(
@@ -120,7 +120,7 @@ class IntrusionClassifier(object):
 		predicted_class = self._models[app_id].predict([ndarray])
 
 		classification = Classification.normal
-		if self._int_label_mapping[predicted_class] in ids_data.INTRUSION_LABELS:
+		if self._int_label_mapping[predicted_class] in ids_data.get_intrusion_labels():
 			classification = Classification.intrusion
 
 		return IdsResult(classification=classification, confidence=70)
@@ -200,13 +200,16 @@ class IntrusionClassifier(object):
 	def _get_expected_classes(self, app_id):
 		""" Return a list of expected classes for the given app_id classifier. """
 
-		labels = ids_data.LEGAL_LABELS
-		if app_id in ids_data.GENERATORS:
-			labels += ids_data.INTRUSION_LABELS_GENS
-		elif app_id in ids_data.COLOURS:
-			labels += ids_data.INTRUSION_LABELS_COLRS
-		elif app_id in ids_data.POSES:
-			labels += ids_data.INTRUSION_LABELS_POIS
+		labels = ids_data.get_legal_labels()
+		if app_id in ids_data.get_generators():
+			labels += ids_data.get_intrusion_labels_gens()
+			ids_tools.verify_md5(labels, "3e7c91c61534c25b3eb15d40d0c99a73")
+		elif app_id in ids_data.get_colours():
+			labels += ids_data.get_intrusion_labels_colrs()
+			ids_tools.verify_md5(labels, "e5dce1652563eb67347003bc2f7f3e70")
+		elif app_id in ids_data.get_poses():
+			labels += ids_data.get_intrusion_labels_pois()
+			ids_tools.verify_md5(labels, "343217dcc0436d6e9bb379e9e803c549")
 		else:
 			raise ValueError("Invalid app_id given: {}".format(app_id))
 
@@ -316,7 +319,7 @@ class IntrusionClassifier(object):
 	def _gps_position_to_float(gps_position, app_id):
 		""" Convert the given GPS position string to (lat, lon). """
 
-		if app_id not in ids_data.POSES:
+		if app_id not in ids_data.get_poses():
 			return None
 
 		# Format: lat,lon
@@ -334,11 +337,11 @@ class IntrusionClassifier(object):
 			raise ValueError("Invalid value for app_id given: {}".format(app_id))
 
 		# Generators send "{f}"
-		if app_id in ids_data.GENERATORS:
+		if app_id in ids_data.get_generators():
 			return float(log_message)
 
 		# Colour sends "{i},{i},{i}"
-		if app_id in ids_data.COLOURS:
+		if app_id in ids_data.get_colours():
 			vals = [int(val) for val in log_message.split(",")]
 			assert(len(vals) == 3)
 			for val in vals:
@@ -351,7 +354,7 @@ class IntrusionClassifier(object):
 			return IntrusionClassifier._aggregate_ints_to_float(vals, pad_zeroes=3)
 
 		# Poses
-		assert(app_id in ids_data.POSES)
+		assert(app_id in ids_data.get_poses())
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
@@ -399,7 +402,7 @@ class IntrusionClassifier(object):
 			raise ValueError("Given array is of invalid type.")
 
 		expected_len = 4
-		if app_id in ids_data.POSES:
+		if app_id in ids_data.get_poses():
 			expected_len += 1
 		if len(ndarray) != expected_len:
 			raise ValueError("Given ndarray is too short. Expected {} elements. Received: {}"
@@ -408,11 +411,11 @@ class IntrusionClassifier(object):
 		constraints = {}
 
 		# No constraint
-		for gen in ids_data.GENERATORS:
+		for gen in ids_data.get_generators():
 			constraints[gen] = lambda x: True
 
 		# Min: 1,1,1; max: 256,256,256
-		for colr in ids_data.COLOURS:
+		for colr in ids_data.get_colours():
 			constraints[colr] = lambda x: x >= 1001001 and x <= 256256256
 
 		# For each char: min: 65 ("A"); max: 90 ("Z")

@@ -1,38 +1,58 @@
 #!/usr/bin/env python
 """ Shared data among IDS components """
 
+# pylint: disable-msg=C0111; (Missing method docstring)
+
 from functionality.poi_mapper import PoiMapper as PoMa
 from log_entry import LogEntry
 
 # App IDs
-GENERATORS = ["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
-	"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"]
-COLOURS = ["COLOUR"]
 POSE_CC = "COUNTRYCODE"
 POSE_POI = "POI"
 POSE_TSP = "TSPROUTING"
-POSES = [POSE_CC, POSE_POI, POSE_TSP]
-APP_IDS = GENERATORS + COLOURS + POSES
+def get_generators():
+	return list(["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
+	"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"])
+def get_colours():
+	return list(["COLOUR"])
+def get_poses():
+	return list([POSE_CC, POSE_POI, POSE_TSP])
+def get_app_ids():
+	return list(get_generators() + get_colours() + get_poses())
 
 # Levels
-LEVELS = [LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR]
+def get_levels():
+	return list([LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR])
 
 # POI types
-LEGAL_POI_TYPES = [PoMa.restaurants_field, PoMa.gas_stations_field]
-INTRUDED_POI_TYPES = ["private home", "nsa hq"]
-POI_TYPES = LEGAL_POI_TYPES + INTRUDED_POI_TYPES
+def get_legal_poi_types():
+	return list([PoMa.restaurants_field, PoMa.gas_stations_field])
+def get_intruded_poi_types():
+	return list(["private home", "nsa hq"])
+def get_poi_types():
+	return list(get_legal_poi_types() + get_intruded_poi_types())
 # POI results
-LEGAL_POI_RESULTS = [PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl]
-INTRUDED_POI_RESULTS = ["Invalid"]
-POI_RESULTS = LEGAL_POI_RESULTS + INTRUDED_POI_RESULTS
+def get_legal_poi_results():
+	return list([PoMa.ita, PoMa.ger, PoMa.frc, PoMa.tot, PoMa.shl, PoMa.arl])
+def get_intruded_poi_results():
+	return list(["Invalid"])
+def get_poi_results():
+	return list(get_legal_poi_results() + get_intruded_poi_results())
 
 # Labels
-LEGAL_LABELS = ["normal"]
-INTRUSION_LABELS_GENS = ["zeroes", "huge-error"]
-INTRUSION_LABELS_COLRS = ["red"]
-INTRUSION_LABELS_POIS = ["jump", "illegaltype", "routetoself"]
-INTRUSION_LABELS = INTRUSION_LABELS_GENS + INTRUSION_LABELS_COLRS + INTRUSION_LABELS_POIS
-LABELS = LEGAL_LABELS + INTRUSION_LABELS
+def get_legal_labels():
+	return list(["normal"])
+def get_intrusion_labels_gens():
+	return list(["zeroes", "huge-error"])
+def get_intrusion_labels_colrs():
+	return list(["red"])
+def get_intrusion_labels_pois():
+	return list(["jump", "illegaltype", "routetoself"])
+def get_intrusion_labels():
+	return (
+		list(get_intrusion_labels_gens() + get_intrusion_labels_colrs() + get_intrusion_labels_pois()))
+def get_labels():
+	return list(get_legal_labels() + get_intrusion_labels())
 
 # MD5 hex hashes
 APP_IDS_MD5 = "cacafa61f61b645c279954952ac6ba8f"

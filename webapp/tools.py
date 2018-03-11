@@ -149,6 +149,8 @@ def _analyse(file_path):
 			len(app_ids_per_class[a_class]))
 		)
 
+	# per app id: entries per class
+
 	# TODO: score??
 	# harmonious? all labelled / some / none?
 	# for each app id: are there roughly the same number of entries per class?
@@ -163,21 +165,23 @@ def _get_log_entries_from_file(file_path):
 
 
 if __name__ == "__main__":
+	try:
+		PARSER = argparse.ArgumentParser()
+		SUBPARSERS = PARSER.add_subparsers()
 
-	PARSER = argparse.ArgumentParser()
-	SUBPARSERS = PARSER.add_subparsers()
+		TRAIN_PARSER = SUBPARSERS.add_parser("train", help="Train the classifier")
+		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH",
+			help="File to train the classifier with.")
+		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
+			help="Allow existing models to be extended.")
+		TRAIN_PARSER.set_defaults(function=train_call)
 
-	TRAIN_PARSER = SUBPARSERS.add_parser("train", help="Train the classifier")
-	TRAIN_PARSER.add_argument("train_file_path", metavar="PATH",
-		help="File to train the classifier with.")
-	TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
-		help="Allow existing models to be extended.")
-	TRAIN_PARSER.set_defaults(function=train_call)
+		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
+		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
+		ANAL_PARSER.set_defaults(function=anal_call)
 
-	ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
-	ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
-	ANAL_PARSER.set_defaults(function=anal_call)
+		ARGS = PARSER.parse_args()
 
-	ARGS = PARSER.parse_args()
-
-	ARGS.function(ARGS)
+		ARGS.function(ARGS)
+	except KeyboardInterrupt:
+		pass

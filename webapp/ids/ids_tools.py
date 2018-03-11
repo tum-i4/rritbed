@@ -51,10 +51,17 @@ def get_md5_hex(obj):
 	return md5.new(str(obj)).hexdigest()
 
 
-### String formatting ###
+### LogEntry handling ###
 
 
-def strip_app_id(app_id):
+def log_entry_to_app_id(log_entry):
+	""" Extract and sanitize the app_id from the given LogEntry object. """
+
+	app_id = log_entry.data[LogEntry.APP_ID_FIELD]
+	return _strip_app_id(app_id)
+
+
+def _strip_app_id(app_id):
 	""" Strip the given app_id of its ID. """
 
 	# Match indices in the form of _1
@@ -68,6 +75,9 @@ def strip_app_id(app_id):
 		raise ValueError("Invalid app id given!")
 
 	return app_id
+
+
+### String formatting ###
 
 
 def format_time_passed(time_in_sec):

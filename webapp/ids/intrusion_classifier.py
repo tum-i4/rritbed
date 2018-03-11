@@ -117,7 +117,7 @@ class IntrusionClassifier(object):
 		if self._models is None:
 			raise IOError("Some or all model files are missing.")
 
-		app_id = self._log_entry_to_app_id(log_entry)
+		app_id = ids_tools.log_entry_to_app_id(log_entry)
 		ndarray = self._log_entry_to_ndarray(log_entry, app_id)
 		predicted_class = self._models[app_id].predict([ndarray])
 
@@ -155,7 +155,7 @@ class IntrusionClassifier(object):
 		print("Found all {} app ids".format(len(app_id_datasets)))
 
 		for log_entry in log_entries:
-			app_id = self._log_entry_to_app_id(log_entry)
+			app_id = ids_tools.log_entry_to_app_id(log_entry)
 			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
 			its_class = self._log_entry_to_class(log_entry)
 
@@ -280,14 +280,6 @@ class IntrusionClassifier(object):
 
 		assert(log_entry.intrusion)
 		return self._label_int_mapping[log_entry.intrusion]
-
-
-	@staticmethod
-	def _log_entry_to_app_id(log_entry):
-		""" Extract and sanitize the app_id from the given LogEntry object. """
-
-		app_id = log_entry.data[LogEntry.APP_ID_FIELD]
-		return ids_tools.strip_app_id(app_id)
 
 
 	def _log_entry_to_ndarray(self, log_entry, app_id):

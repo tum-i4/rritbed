@@ -44,6 +44,23 @@ def get_md5_hex(obj):
 	return md5.new(str(obj)).hexdigest()
 
 
+def format_time_passed(time_in_sec):
+	""" Format the given seconds as "5 s", "2 m 10 s" or "1 h 2 m 1 s". """
+
+	mins, secs = divmod(time_in_sec, 60)
+	hours, mins = divmod(mins, 60)
+
+	result = ""
+	if hours > 0:
+		result += "%d h " % hours
+	if mins > 0:
+		result += "%d m " % mins
+	if secs > 0:
+		result += "%d s" % secs
+
+	return result.strip()
+
+
 def generate_log_entries(number):
 	""" Generate <number> LogEntry objects. """
 	import random

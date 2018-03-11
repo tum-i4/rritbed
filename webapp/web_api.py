@@ -170,8 +170,6 @@ def get_log_length():
 def flush_log():
 	""" Force a log flush in the DAO. """
 
-	print("Flushing log")
-
 	DAO.flush_log()
 
 	return BaseResponse(body="Log was successfully flushed.", status=200)

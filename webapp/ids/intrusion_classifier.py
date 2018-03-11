@@ -169,7 +169,10 @@ class IntrusionClassifier(object):
 			received_classes = set(train_set[1])
 			value_error = ValueError(
 				"The given samples for classifier {} don't contain all expected classes.".format(app_id)
-				+ " Expected: {}. Received: {}.".format(expected_classes, list(received_classes)))
+				+ " Expected: {}. Received: {}.".format(
+					[self._int_label_mapping[x] for x in expected_classes],
+					[self._int_label_mapping[x] for x in received_classes])
+			)
 
 			if len(expected_classes) != len(received_classes):
 				raise value_error

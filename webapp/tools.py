@@ -7,11 +7,14 @@ import os
 from log_entry import LogEntry
 from ids.intrusion_classifier import IntrusionClassifier
 from ids.dir_utils import Dir
+import ids.ids_tools as ids_tools
+import ids.ids_data as ids_data
 
 
 def train_call(args):
 	""" Unpack the args and call _train. """
 	_train(args.train_file_path, args.extend_models)
+	exit()
 
 
 def _train(file_path, extend_models=False):
@@ -29,10 +32,8 @@ def _train(file_path, extend_models=False):
 		exit()
 
 	print("Using file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-	lines = Dir.read_lines(file_path)
-	print("File read. Converting to LogEntry objects...")
-	# Remove newline at the end of the line and create LogEntry objects
-	log_entries = [LogEntry.from_log_string(line[:-1]) for line in lines]
+	print("Reading file and converting lines to LogEntry objects...")
+	log_entries = _get_log_entries_from_file(file_path)
 	print("Done.")
 
 	clas = IntrusionClassifier.get_singleton()
@@ -40,7 +41,13 @@ def _train(file_path, extend_models=False):
 		clas.train(log_entries, extend_models=extend_models)
 	except ValueError as val_err:
 		print(val_err.message)
-		exit()
+		return
+
+
+def _get_log_entries_from_file(file_path):
+	lines = Dir.read_lines(file_path)
+	# Remove newline at the end of the line and create LogEntry objects
+	return [LogEntry.from_log_string(line[:-1]) for line in lines]
 
 
 

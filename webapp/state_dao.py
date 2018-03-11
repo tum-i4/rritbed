@@ -15,7 +15,7 @@ from log_entry import LogEntry
 class StateDao(object):
 	""" DAO class for handling the STATE objects """
 
-	def __init__(self, verbose=True):
+	def __init__(self, verbose, flush_frequency=None, max_entries_in_state=None):
 		""" Ctor """
 
 		object.__init__(self)
@@ -33,6 +33,12 @@ class StateDao(object):
 		self._new_log_entries = [] # LogEntry objects
 
 		self._unique_log_file_names = []
+
+		# Auto-flush
+		self._flush_frequency = flush_frequency
+		self._max_entries_in_state = max_entries_in_state
+		self._auto_flush = flush_frequency is not None or max_entries_in_state is not None
+		self._last_flush = time.time()
 
 
 	def __enter__(self):
@@ -141,10 +147,16 @@ class StateDao(object):
 	def flush_log(self):
 		""" Force a write of all new log entries to disk. """
 
+		self._last_flush = time.time()
+
 		number_of_entries = len(self._new_log_entries)
 
 		if number_of_entries == 0:
 			return
+
+		print("Flushing {} log entries. Last flush was {}."
+			.format(len(self._new_log_entries),
+				time.strftime("%H:%M:%S", time.gmtime(self._last_flush))))
 
 		# Remove new entries from list and save them to disk
 		with open(self._log_file_path, "a") as log_file:
@@ -185,6 +197,22 @@ class StateDao(object):
 	def append_to_log(self, log_entry):
 		""" Append the given LogEntry object to the log. """
 		self._new_log_entries.append(log_entry)
+
+		if not self._auto_flush:
+			return
+
+		do_auto_flush = (
+			# max_log was set and is reached
+			(self._max_entries_in_state is not None
+			and len(self._new_log_entries) >= self._max_entries_in_state)
+			or
+			# flush_frequency was set and is reached
+			(self._flush_frequency is not None
+			and self._last_flush + self._flush_frequency <= time.time())
+		)
+
+		if do_auto_flush:
+			self.flush_log()
 
 
 	def create_unique_log_file_path(self):
@@ -338,5 +366,5 @@ class StateDao(object):
 
 
 if __name__ == "__main__":
-	with StateDao() as DAO:
+	with StateDao(True) as DAO:
 		print("yep")

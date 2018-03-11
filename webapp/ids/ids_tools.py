@@ -54,19 +54,20 @@ def generate_log_entries(number):
 	colr_gen = lambda: random.randint(0, 255)
 	tsp_gen = lambda: random.randint(0, 499)
 	log_msg_gens = [
-		(ids_data.GENERATORS, lambda: str(float(random.randint(-3, 2)))),
-		(ids_data.COLOURS, lambda: "{},{},{}".format(colr_gen(), colr_gen(), colr_gen())),
+		(ids_data.get_generators(), lambda: str(float(random.randint(-3, 2)))),
+		(ids_data.get_colours(), lambda: "{},{},{}".format(colr_gen(), colr_gen(), colr_gen())),
 		(ids_data.POSE_CC, lambda: random.choice(["DE", "AT", "CH", "FR"])),
 		(ids_data.POSE_POI,
-			(lambda: random.choice(ids_data.POI_TYPES) + "," + random.choice(ids_data.POI_RESULTS))),
+			(lambda: random.choice(ids_data.get_poi_types()) + ","
+			+ random.choice(ids_data.get_poi_results()))),
 		(ids_data.POSE_TSP,
 			lambda: "{},{},{},{}".format(tsp_gen(), tsp_gen(), tsp_gen(), tsp_gen()))
 	]
 
 	for i in range(0, int(number)):
 		vin = vins[i]
-		app_id = random.choice(ids_data.APP_IDS)
-		level = random.choice(ids_data.LEVELS)
+		app_id = random.choice(ids_data.get_app_ids())
+		level = random.choice(ids_data.get_levels())
 		gps_position = "{},{}".format(tsp_gen(), tsp_gen())
 
 		log_message = None
@@ -76,7 +77,7 @@ def generate_log_entries(number):
 		if not log_message:
 			raise ValueError("You suck!")
 
-		intrusion = random.choice(ids_data.LABELS)
+		intrusion = random.choice(ids_data.get_labels())
 
 		result.append(LogEntry(
 			vin=vin, app_id=app_id, level=level, gps_position=gps_position,

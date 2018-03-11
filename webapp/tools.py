@@ -30,8 +30,10 @@ def _train(file_path, extend_models=False):
 
 	print("Using file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
 	lines = Dir.read_lines(file_path)
+	print("File read. Converting to LogEntry objects...")
 	# Remove newline at the end of the line and create LogEntry objects
 	log_entries = [LogEntry.from_log_string(line[:-1]) for line in lines]
+	print("Done.")
 
 	clas = IntrusionClassifier.get_singleton()
 	try:

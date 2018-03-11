@@ -9,6 +9,7 @@ monkey.patch_all()
 
 # pylint: disable-msg=C0411,C0413
 import argparse
+import datetime
 import random
 import time
 from bottle import post, get, run, request, BaseResponse
@@ -250,7 +251,7 @@ def _create_client_time(identifier):
 
 
 
-### Writing to log
+### Handling log entries
 
 
 def _append_and_detect(new_log_entry):
@@ -271,20 +272,33 @@ PARSER = argparse.ArgumentParser()
 PARSER.add_argument("--verbose", "-v", action="store_true")
 PARSER.add_argument("--dont-detect", "-d", action="store_false", dest="detect")
 PARSER.add_argument("--dont-store", "-s", action="store_false", dest="store")
+PARSER.add_argument("--flush-frequency", "-f", type=int, dest="flush_frequency", metavar="SECONDS")
+PARSER.add_argument("--max-entries-in-state", "-m", type=int,
+	dest="max_entries_in_state", metavar="NUMBER")
 ARGS = PARSER.parse_args()
 
 DETECT = ARGS.detect
 STORE = ARGS.store
 
 YES_NO = lambda x: "yes" if x else "no"
-CFG_MSG = "detect: {} | store: {}".format(YES_NO(ARGS.detect), YES_NO(ARGS.store))
+IT_NOT = lambda x: x if x else "not set"
+FLUSH_FREQ_TXT = ("flush frequency: {}"
+	.format(str(datetime.timedelta(seconds=ARGS.flush_frequency))
+	if ARGS.flush_frequency
+	else "not set"))
+CFG_MSG = ("detect: {} | store: {} | {} | max. entries in state: {}"
+	.format(YES_NO(ARGS.detect), YES_NO(ARGS.store),
+		FLUSH_FREQ_TXT, IT_NOT(ARGS.max_entries_in_state))
+)
 
 if not ARGS.verbose:
 	print("Starting server in quiet mode ({})".format(CFG_MSG))
 else:
 	print("Configuration selected: {}".format(CFG_MSG))
 
-with StateDao(verbose=ARGS.verbose) as dao:
+with StateDao(verbose=ARGS.verbose,
+	flush_frequency=ARGS.flush_frequency,
+	max_entries_in_state=ARGS.max_entries_in_state) as dao:
 	if ARGS.verbose:
 		print("")
 

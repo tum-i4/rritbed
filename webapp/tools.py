@@ -44,6 +44,11 @@ def _train(file_path, extend_models=False):
 		return
 
 
+def anal_call(args):
+	""" Call _analyse. """
+	raise NotImplementedError()
+
+
 def _get_log_entries_from_file(file_path):
 	lines = Dir.read_lines(file_path)
 	# Remove newline at the end of the line and create LogEntry objects
@@ -57,11 +62,15 @@ if __name__ == "__main__":
 	SUBPARSERS = PARSER.add_subparsers()
 
 	TRAIN_PARSER = SUBPARSERS.add_parser("train", help="Train the classifier")
-	TRAIN_PARSER.add_argument("train_file_path", metavar="FILE_PATH",
+	TRAIN_PARSER.add_argument("train_file_path", metavar="PATH",
 		help="File to train the classifier with.")
 	TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
 		help="Allow existing models to be extended.")
 	TRAIN_PARSER.set_defaults(function=train_call)
+
+	ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
+	ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
+	ANAL_PARSER.set_defaults(function=anal_call)
 
 	ARGS = PARSER.parse_args()
 

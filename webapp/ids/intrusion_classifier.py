@@ -212,17 +212,27 @@ class IntrusionClassifier(object):
 		""" Return a list of expected classes for the given app_id classifier. """
 
 		labels = ids_data.get_legal_labels()
+		verify_hash = None
+
 		if app_id in ids_data.get_generators():
 			labels += ids_data.get_intrusion_labels_gens()
-			ids_tools.verify_md5(labels, "3e7c91c61534c25b3eb15d40d0c99a73")
+			verify_hash = "3e7c91c61534c25b3eb15d40d0c99a73"
 		elif app_id in ids_data.get_colours():
 			labels += ids_data.get_intrusion_labels_colrs()
-			ids_tools.verify_md5(labels, "e5dce1652563eb67347003bc2f7f3e70")
-		elif app_id in ids_data.get_poses():
-			labels += ids_data.get_intrusion_labels_pois()
-			ids_tools.verify_md5(labels, "343217dcc0436d6e9bb379e9e803c549")
+			verify_hash = "e5dce1652563eb67347003bc2f7f3e70"
+		elif app_id == ids_data.POSE_CC:
+			labels += ids_data.get_intrusion_labels_pose_cc()
+			verify_hash = "5e550fa679c1e0845320660a3c98bb6f"
+		elif app_id == ids_data.POSE_POI:
+			labels += ids_data.get_intrusion_labels_pose_poi()
+			verify_hash = "9d60b17b201114a17179334aeea66ab5"
+		elif app_id == ids_data.POSE_TSP:
+			labels += ids_data.get_intrusion_labels_pose_tsp()
+			verify_hash = "9027b46c491b3c759215fdba37a93d84"
 		else:
 			raise ValueError("Invalid app_id given: {}".format(app_id))
+
+		ids_tools.verify_md5(labels, verify_hash)
 
 		return [self._label_int_mapping[x] for x in labels]
 

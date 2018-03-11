@@ -287,7 +287,7 @@ class IntrusionClassifier(object):
 		""" Extract and sanitize the app_id from the given LogEntry object. """
 
 		app_id = log_entry.data[LogEntry.APP_ID_FIELD]
-		return IntrusionClassifier._strip_app_id(app_id)
+		return ids_tools.strip_app_id(app_id)
 
 
 	def _log_entry_to_ndarray(self, log_entry, app_id):
@@ -454,20 +454,6 @@ class IntrusionClassifier(object):
 
 
 	### Util ###
-
-
-	@staticmethod
-	def _strip_app_id(app_id):
-		""" Strip the given app_id of its ID. """
-
-		# Match indices in the form of _1
-		match = re.search(r"\_\d+", app_id)
-
-		if not match:
-			return app_id
-
-		# Return app_id without the matched part
-		return app_id[:match.start()]
 
 
 	@staticmethod

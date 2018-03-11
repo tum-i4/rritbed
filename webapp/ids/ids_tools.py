@@ -2,9 +2,13 @@
 """ IDS tools """
 
 import md5
+import re
 
 import ids_data
 from log_entry import LogEntry
+
+
+### Dicts ###
 
 
 def enumerate_to_dict(sequence, verify_hash):
@@ -31,6 +35,9 @@ def flip_dict(given_dict, verify_hash):
 	return result
 
 
+### MD5 ###
+
+
 def verify_md5(obj, md5_hex_digest):
 	""" Verify that the given object's string representation hashes to the given md5. """
 
@@ -42,6 +49,25 @@ def verify_md5(obj, md5_hex_digest):
 def get_md5_hex(obj):
 	""" Create the md5 hex hash of the given object's string representation. """
 	return md5.new(str(obj)).hexdigest()
+
+
+### String formatting ###
+
+
+def strip_app_id(app_id):
+	""" Strip the given app_id of its ID. """
+
+	# Match indices in the form of _1
+	match = re.search(r"\_\d+", app_id)
+
+	# Remove the matched part
+	if match:
+		app_id = app_id[:match.start()]
+
+	if app_id not in ids_data.get_app_ids():
+		raise ValueError("Invalid app id given!")
+
+	return app_id
 
 
 def format_time_passed(time_in_sec):

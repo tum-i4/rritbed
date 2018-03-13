@@ -119,7 +119,7 @@ class IntrusionClassifier(object):
 
 		app_id = ids_tools.log_entry_to_app_id(log_entry)
 		ndarray = self._log_entry_to_ndarray(log_entry, app_id)
-		predicted_class = self._models[app_id].predict([ndarray])
+		predicted_class = self._models[app_id].predict([ndarray])[0]
 
 		classification = Classification.normal
 		if self._int_label_mapping[predicted_class] in ids_data.get_intrusion_labels():

@@ -111,9 +111,6 @@ def _analyse(file_path):
 
 	# App ID table
 
-	max_len = lambda seq: max([len(x) for x in seq])
-	max_str_len = lambda seq: max([len(str(len(x))) for x in seq])
-
 	per_app_id = []
 	per_app_id.append(["App ID", "Elements"] + all_classes)
 	for app_id in all_app_ids:

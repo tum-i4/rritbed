@@ -55,8 +55,10 @@ class Logger(object):
 			rospy.Subscriber(topic, GenValue, self.log_generated_data, topic)
 
 		# Each of the three poses should roughly generate as much data as the colour logger.
-		rospy.Subscriber(Logger.COLOUR_PATH, Color, self.rate_limit, self.log_colour, 0.3)
-		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit, self.log_pose, 0.1)
+		rospy.Subscriber(Logger.COLOUR_PATH, Color, self.rate_limit,
+			{"method" : self.log_colour, "rate" : 0.3})
+		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit,
+			{"method" : self.log_pose, "rate" : 0.1})
 
 
 	def log_generated_data(self, gen_value, generator_name):
@@ -70,8 +72,14 @@ class Logger(object):
 		self.send_request("data/" + generator_name, request)
 
 
-	def rate_limit(self, log_data, method, rate_in_sec=0.1):
+	def rate_limit(self, log_data, callback_definition):
 		""" Rate limit the given method by rate_in_sec. """
+
+		if any(x not in callback_definition for x in ["method", "rate"]):
+			raise ValueError("Invalid callback definition!")
+
+		method = callback_definition["method"]
+		rate_in_sec = callback_definition["rate"]
 
 		time_now = time.time()
 

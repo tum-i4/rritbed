@@ -131,26 +131,12 @@ def _analyse(file_path):
 
 	# Class table
 
-	class_col = max(len(header_class), max_len(all_classes))
-	cls_el_count_col = max(len(header_elements), max_str_len(entries_per_class.values()))
-
-	# Header
-	header_line_classes = "{} | {} | {}".format(
-		header_class.ljust(class_col),
-		header_elements.ljust(cls_el_count_col),
-		"App Ids")
-	print("")
-	print("Per class".center(len(header_line_classes)))
-	print(header_line_classes)
-	print("-" * len(header_line_classes))
+	per_class = []
+	per_class.append(["Class", "Elements", "App Ids"])
 	for a_class in all_classes:
-		print("{} | {} | {}".format(
-			a_class.ljust(class_col),
-			str(len(entries_per_class[a_class])).ljust(cls_el_count_col),
-			len(app_ids_per_class[a_class]))
-		)
+		per_class.append([a_class, len(entries_per_class[a_class]), len(app_ids_per_class[a_class])])
 
-	# per app id: entries per class
+	_print_table(per_class, headline="Per class")
 
 	# TODO: score??
 	# harmonious? all labelled / some / none?

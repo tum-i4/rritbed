@@ -211,23 +211,23 @@ class IntrusionClassifier(object):
 	def _get_expected_classes(self, app_id):
 		""" Return a list of expected classes for the given app_id classifier. """
 
-		labels = ids_data.get_legal_labels()
+		labels = None
 		verify_hash = None
 
 		if app_id in ids_data.get_generators():
-			labels += ids_data.get_intrusion_labels_gens()
+			labels = ids_data.get_labels_gens()
 			verify_hash = "3e7c91c61534c25b3eb15d40d0c99a73"
 		elif app_id in ids_data.get_colours():
-			labels += ids_data.get_intrusion_labels_colrs()
+			labels = ids_data.get_labels_colrs()
 			verify_hash = "e5dce1652563eb67347003bc2f7f3e70"
 		elif app_id == ids_data.POSE_CC:
-			labels += ids_data.get_intrusion_labels_pose_cc()
+			labels = ids_data.get_labels_pose_cc()
 			verify_hash = "5e550fa679c1e0845320660a3c98bb6f"
 		elif app_id == ids_data.POSE_POI:
-			labels += ids_data.get_intrusion_labels_pose_poi()
+			labels = ids_data.get_labels_pose_poi()
 			verify_hash = "9d60b17b201114a17179334aeea66ab5"
 		elif app_id == ids_data.POSE_TSP:
-			labels += ids_data.get_intrusion_labels_pose_tsp()
+			labels = ids_data.get_labels_pose_tsp()
 			verify_hash = "9027b46c491b3c759215fdba37a93d84"
 		else:
 			raise ValueError("Invalid app_id given: {}".format(app_id))

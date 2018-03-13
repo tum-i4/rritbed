@@ -26,15 +26,15 @@ class PosePipe(object):
 	def create(intrusion, intrusion_field, **kwargs):
 		"""
 		Create a PosePipe with a randomly chosen PoseProcessor.
-		kwargs: For each possible processor a percentage denoting how likely it will be chosen.\
-		Combined must total 100.
+		kwargs: For each possible processor a value denoting how likely it will be chosen.\
+		Must be positive integers.
 		"""
 
 		if(len(kwargs) != len(PosePipe._POSSIBLE_PROCESSORS)):
 			raise ValueError("Invalid number of arguments given!")
 
-		if any([not isinstance(x, int) for x in kwargs.values()]):
-			raise ValueError("All arguments must be integers.")
+		if any([not isinstance(x, int) or x < 0 for x in kwargs.values()]):
+			raise ValueError("All arguments must be positive integers.")
 
 		# Ensure each key is present in the dict
 		for key in kwargs:
@@ -42,8 +42,8 @@ class PosePipe(object):
 				raise KeyError("Given key [{}] not found".format(key))
 
 		choices = []
-		for name, percentage in kwargs.items():
-			choices += [name] * percentage
+		for name, likelihood in kwargs.items():
+			choices += [name] * likelihood
 		choice = random.choice(choices)
 
 		processor = PosePipe._POSSIBLE_PROCESSORS[choice]

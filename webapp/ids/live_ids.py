@@ -30,13 +30,11 @@ class LiveIds(object):
 
 		file_path = self._write_intrusion_to_file(log_entry, result)
 
+		message = "INTRUSION DETECTED. Log file saved at: {}".format(file_path)
 		if self._verbose:
-			print("\n!!!\nINTRUSION DETECTED. See log file at: {}\n!!!\n".format(file_path))
+			message = "\n!!!\n" + message + "\n!!!\n"
 
-
-	def train_classifier_from_file(self, log_file_path):
-		""" Train the classifier with log entries saved in the given file. """
-		raise NotImplementedError()
+		print(message)
 
 
 	# pylint: disable-msg=R0201; (Method could be a function)

@@ -163,6 +163,48 @@ def _get_log_entries_from_file(file_path):
 	return [LogEntry.from_log_string(line[:-1]) for line in lines]
 
 
+def _print_table(list_of_lists, headline=None):
+	""" Print the given list of tuple as a table, regarding the first entry the header. """
+
+	if len(list_of_lists) < 2:
+		raise ValueError("Input list needs at least one header and one content line!")
+
+	table_column_count = len(list_of_lists[0])
+	max_width_per_column = [0] * table_column_count
+
+	for one_list in list_of_lists:
+		if len(one_list) != table_column_count:
+			raise ValueError("One or more of the given input lines have different numbers of entries!")
+
+		for i in range(0, len(one_list)):
+			max_width_per_column[i] = max(max_width_per_column[i], len(str(one_list[i])))
+
+	lines_to_print = []
+	col_separator = " | "
+	for one_list in list_of_lists:
+		justed_strings = []
+		for i in range(0, len(one_list)):
+			justed_strings.append((str(one_list[i]).ljust(max_width_per_column[i])))
+		lines_to_print.append(col_separator.join(justed_strings))
+
+	# Each column plus 3 (" | ")
+	table_width = sum(max_width_per_column) + len(col_separator) * (table_column_count - 1)
+
+	# Print #
+
+	print("")
+	if headline:
+		if not isinstance(headline, str):
+			raise ValueError("headline must be string")
+
+		print(headline.center(table_width))
+
+	print(lines_to_print[0])
+	print("-" * table_width)
+	for i in range(1, len(lines_to_print)):
+		print(lines_to_print[i])
+
+
 
 if __name__ == "__main__":
 	try:

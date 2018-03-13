@@ -113,24 +113,21 @@ def _analyse(file_path):
 
 	max_len = lambda seq: max([len(x) for x in seq])
 	max_str_len = lambda seq: max([len(str(len(x))) for x in seq])
-	header_class = "Class"
-	header_elements = "Elements"
 
-	per_app_id_table = []
-	per_app_id_table.append(["App ID", "Elements"])
+	per_app_id = []
+	per_app_id.append(["App ID", "Elements"] + all_classes)
 	for app_id in all_app_ids:
-		per_app_id_table.append([app_id, str(len(entries_per_app_id[app_id]))])
+		line = [app_id, str(len(entries_per_app_id[app_id]))]
 
-	_print_table(per_app_id_table)
+		for a_class in all_classes:
+			class_count_str = ""
+			if a_class in elements_per_class_per_app_id[app_id]:
+				class_count_str = str(elements_per_class_per_app_id[app_id][a_class])
+			line.append(class_count_str)
 
-	# Classes per app ID tables
+		per_app_id.append(line)
 
-	for app_id in all_app_ids:
-		classes = elements_per_class_per_app_id[app_id].keys()
-		counts = elements_per_class_per_app_id[app_id].values()
-		classes_per_app_id_table = [classes]
-		classes_per_app_id_table.append(counts)
-		_print_table(classes_per_app_id_table, headline=app_id, head_sep=False)
+	_print_table(per_app_id, headline="Per app ID")
 
 	# Class table
 

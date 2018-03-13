@@ -98,18 +98,6 @@ def _analyse(file_path):
 		entries_per_class[its_class].append(entry)
 		app_ids_per_class[its_class].add(app_id)
 
-	get_longest_str = lambda seq: max([len(x) for x in seq])
-	get_longest_len_str = lambda seq: max([len(str(len(x))) for x in seq])
-	header_app_ids = "App IDs"
-	header_class = "Class"
-	header_elements = "Elements"
-
-	app_id_col = max(len(header_app_ids), get_longest_str(all_app_ids))
-	app_el_count_col = max(len(header_elements), get_longest_len_str(entries_per_app_id.values()))
-
-	class_col = max(len(header_class), get_longest_str(all_classes))
-	cls_el_count_col = max(len(header_elements), get_longest_len_str(entries_per_class.values()))
-
 	# Output #
 
 	get_pl = lambda s, obj: s if len(obj) > 1 else ""
@@ -121,21 +109,24 @@ def _analyse(file_path):
 		len(found_classes), len(all_classes), get_pl("es", found_classes))
 	)
 
-	# Header
-	header_line_app_ids = "{} | {} | {}".format(
-		header_app_ids.ljust(app_id_col),
-		header_elements.ljust(app_el_count_col),
-		"Classes")
-	print("")
-	print("Per App ID".center(len(header_line_app_ids)))
-	print(header_line_app_ids)
-	print("-" * len(header_line_app_ids))
+	# App ID table
+
+	max_len = lambda seq: max([len(x) for x in seq])
+	max_str_len = lambda seq: max([len(str(len(x))) for x in seq])
+	header_class = "Class"
+	header_elements = "Elements"
+
+	per_app_id_table = []
+	per_app_id_table.append(["App ID", "Elements"])
 	for app_id in all_app_ids:
-		print("{} | {} | {}".format(
-			app_id.ljust(app_id_col),
-			str(len(entries_per_app_id[app_id])).ljust(app_el_count_col),
-			len(classes_per_app_id[app_id]))
-		)
+		per_app_id_table.append([app_id, str(len(entries_per_app_id[app_id]))])
+
+	_print_table(per_app_id_table)
+
+	# Class table
+
+	class_col = max(len(header_class), max_len(all_classes))
+	cls_el_count_col = max(len(header_elements), max_str_len(entries_per_class.values()))
 
 	# Header
 	header_line_classes = "{} | {} | {}".format(

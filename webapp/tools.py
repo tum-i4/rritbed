@@ -130,7 +130,7 @@ def _analyse(file_path):
 		counts = elements_per_class_per_app_id[app_id].values()
 		classes_per_app_id_table = [classes]
 		classes_per_app_id_table.append(counts)
-		_print_table(classes_per_app_id_table, headline=app_id)
+		_print_table(classes_per_app_id_table, headline=app_id, head_sep=False)
 
 	# Class table
 

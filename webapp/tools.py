@@ -123,6 +123,15 @@ def _analyse(file_path):
 
 	_print_table(per_app_id_table)
 
+	# Classes per app ID tables
+
+	for app_id in all_app_ids:
+		classes = elements_per_class_per_app_id[app_id].keys()
+		counts = elements_per_class_per_app_id[app_id].values()
+		classes_per_app_id_table = [classes]
+		classes_per_app_id_table.append(counts)
+		_print_table(classes_per_app_id_table, headline=app_id)
+
 	# Class table
 
 	class_col = max(len(header_class), max_len(all_classes))

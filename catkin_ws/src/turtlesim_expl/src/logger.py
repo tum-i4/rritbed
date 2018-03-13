@@ -101,10 +101,10 @@ class Logger(object):
 	def log_pose(self, log_data):
 		""" Pose logging """
 
-		# Country code request - 50 %, POI search / TSP routing - 25 %
+		# Each request with 1/3 probability
 		pose_pipe = PosePipe.create(
 			intrusion=self._intrusion, intrusion_field=Logger._INTRUSION_FIELD,
-			cc=50, poi=25, tsp=25)
+			cc=1, poi=1, tsp=1)
 
 		request = self.copy_base_request()
 		request = PoseProcessor.add_to_request(request, log_data.x, log_data.y)

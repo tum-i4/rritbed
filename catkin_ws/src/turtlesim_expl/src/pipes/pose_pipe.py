@@ -30,9 +30,12 @@ class PosePipe(object):
 		Combined must total 100.
 		"""
 
-		assert(len(kwargs) == len(PosePipe._POSSIBLE_PROCESSORS))
-		percentages = [int(x) for x in kwargs.values()]
-		assert(sum(percentages) == 100)
+		if(len(kwargs) != len(PosePipe._POSSIBLE_PROCESSORS)):
+			raise ValueError("Invalid number of arguments given!")
+
+		if any([not isinstance(x, int) for x in kwargs.values()]):
+			raise ValueError("All arguments must be integers.")
+
 		# Ensure each key is present in the dict
 		for key in kwargs:
 			if key not in PosePipe._POSSIBLE_PROCESSORS.keys():

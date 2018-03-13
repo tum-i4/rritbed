@@ -69,7 +69,7 @@ class Logger(object):
 		self.send_request("data/" + generator_name, request)
 
 
-	def rate_limit(self, log_data, method, rate_in_sec=1):
+	def rate_limit(self, log_data, method, rate_in_sec=0.1):
 		""" Rate limit the given method by rate_in_sec. """
 
 		time_now = time.time()

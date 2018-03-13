@@ -54,8 +54,9 @@ class Logger(object):
 		for topic in args.gen_topics:
 			rospy.Subscriber(topic, GenValue, self.log_generated_data, topic)
 
-		rospy.Subscriber(Logger.COLOUR_PATH, Color, self.rate_limit, self.log_colour)
-		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit, self.log_pose)
+		# Each of the three poses should roughly generate as much data as the colour logger.
+		rospy.Subscriber(Logger.COLOUR_PATH, Color, self.rate_limit, self.log_colour, 0.3)
+		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit, self.log_pose, 0.1)
 
 
 	def log_generated_data(self, gen_value, generator_name):

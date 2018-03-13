@@ -63,7 +63,7 @@ def _analyse(file_path):
 	found_app_ids = set()
 	all_app_ids = ids_data.get_app_ids()
 	entries_per_app_id = {}
-	classes_per_app_id = {}
+	elements_per_class_per_app_id = {}
 
 	found_classes = set()
 	all_classes = ids_data.get_labels()
@@ -72,7 +72,7 @@ def _analyse(file_path):
 
 	for app_id in all_app_ids:
 		entries_per_app_id[app_id] = []
-		classes_per_app_id[app_id] = set()
+		elements_per_class_per_app_id[app_id] = {}
 
 	for a_class in all_classes:
 		entries_per_class[a_class] = []
@@ -89,7 +89,11 @@ def _analyse(file_path):
 		found_classes.add(its_class)
 
 		entries_per_app_id[app_id].append(entry)
-		classes_per_app_id[app_id].add(its_class)
+
+		if its_class not in elements_per_class_per_app_id[app_id]:
+			elements_per_class_per_app_id[app_id][its_class] = 1
+		else:
+			elements_per_class_per_app_id[app_id][its_class] += 1
 
 		entries_per_class[its_class].append(entry)
 		app_ids_per_class[its_class].add(app_id)

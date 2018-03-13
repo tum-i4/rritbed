@@ -167,7 +167,7 @@ def _get_log_entries_from_file(file_path):
 	return [LogEntry.from_log_string(line[:-1]) for line in lines]
 
 
-def _print_table(list_of_lists, headline=None):
+def _print_table(list_of_lists, headline=None, head_sep=True):
 	""" Print the given list of tuple as a table, regarding the first entry the header. """
 
 	if len(list_of_lists) < 2:
@@ -204,7 +204,10 @@ def _print_table(list_of_lists, headline=None):
 		print(headline.center(table_width))
 
 	print(lines_to_print[0])
-	print("-" * table_width)
+
+	if head_sep:
+		print("-" * table_width)
+
 	for i in range(1, len(lines_to_print)):
 		print(lines_to_print[i])
 

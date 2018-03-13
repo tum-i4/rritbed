@@ -44,17 +44,29 @@ def get_legal_labels():
 	return list(["normal"])
 def get_intrusion_labels_gens():
 	return list(["zeroes", "huge-error"])
+def get_labels_gens():
+	return list(get_legal_labels() + get_intrusion_labels_gens())
 def get_intrusion_labels_colrs():
 	return list(["red"])
+def get_labels_colrs():
+	return list(get_legal_labels() + get_intrusion_labels_colrs())
 def get_intrusion_labels_pose_cc():
 	return list(["jump"])
+def get_labels_pose_cc():
+	return list(get_legal_labels() + get_intrusion_labels_pose_cc())
 def get_intrusion_labels_pose_poi():
 	return list(["illegaltype"])
+def get_labels_pose_poi():
+	return list(get_legal_labels() + get_intrusion_labels_pose_poi())
 def get_intrusion_labels_pose_tsp():
 	return list(["routetoself"])
+def get_labels_pose_tsp():
+	return list(get_legal_labels() + get_intrusion_labels_pose_tsp())
 def get_intrusion_labels_poses():
 	return list(get_intrusion_labels_pose_cc() + get_intrusion_labels_pose_poi()
 		+ get_intrusion_labels_pose_tsp())
+def get_labels_poses():
+	return list(get_legal_labels() + get_intrusion_labels_poses())
 def get_intrusion_labels():
 	return (
 		list(get_intrusion_labels_gens() + get_intrusion_labels_colrs() + get_intrusion_labels_poses()))

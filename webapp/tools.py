@@ -12,7 +12,7 @@ import ids.ids_data as ids_data
 
 
 def train_call(args):
-	""" Unpack the args and call _train. """
+	""" Unpack the args and call _train. Expects 'train_file_path'. """
 	_train(args.train_file_path, args.extend_models)
 	exit()
 

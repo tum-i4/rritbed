@@ -85,7 +85,21 @@ def train_score_call(args):
 
 def _train_and_score(file_path, split, multi_class):
 	""" Split the given file and use the first part for training, the second for scoring. """
-	raise NotImplementedError()
+
+	if split <= 0 or split >= 100:
+		raise ValueError("Invalid split \"{}\" given.".format(split))
+
+	log_entries = _read_file_flow(file_path)
+
+	if len(log_entries) < 10000:
+		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
+
+	train_count = int((split / 100.0) * len(log_entries))
+	training_entries = log_entries[:train_count]
+	scoring_entries = log_entries[train_count:]
+
+	_train_entries(training_entries, multi_class, extend_models=False)
+	_score_entries(scoring_entries, multi_class)
 
 
 def _read_file_flow(file_path):

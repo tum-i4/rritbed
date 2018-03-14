@@ -234,12 +234,12 @@ if __name__ == "__main__":
 		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH", help="The training data")
 		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
 			help="Allow existing models to be extended.")
-		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_false", dest="multi_class")
+		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		TRAIN_PARSER.set_defaults(function=train_call)
 
 		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")
 		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
-		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_false", dest="multi_class")
+		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		SCORE_PARSER.set_defaults(function=score_call)
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")

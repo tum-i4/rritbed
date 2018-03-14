@@ -327,11 +327,26 @@ class IntrusionClassifier(object):
 	### Convert, map, transform ###
 
 
-	def _log_entry_to_class(self, log_entry):
+	def _log_entry_to_class(self, log_entry, multi_class):
 		""" Map the given LogEntry object to a class to predict. """
 
-		assert(log_entry.intrusion)
-		return self._label_int_mapping[log_entry.intrusion]
+		if not log_entry.intrusion:
+			raise ValueError("Given LogEntry does not have a set intrusion to convert.")
+
+		if multi_class:
+			return self._label_int_mapping[log_entry.intrusion]
+
+		legal_labels = ids_data.get_legal_labels()
+		if len(legal_labels) != 1:
+			raise NotImplementedError("Did not expect more than one legal label.")
+		legal_mapping = self._label_int_mapping[legal_labels[0]]
+		if legal_mapping != 0:
+			raise ValueError("Expected a mapping to 0 for the legal label.")
+
+		if log_entry.intrusion in legal_labels:
+			return legal_mapping
+		elif log_entry.intrusion in ids_data.get_intrusion_labels():
+			return 1
 
 
 	def _log_entry_to_ndarray(self, log_entry, app_id):

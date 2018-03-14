@@ -6,7 +6,7 @@ import time
 
 from intrusion_classifier import IntrusionClassifier
 from ids_classification import Classification
-from dir_utils import Dir, LogDir
+from dir_utils import Dir, LogDir, ModelDir
 
 
 class LiveIds(object):
@@ -39,25 +39,17 @@ class LiveIds(object):
 
 	# pylint: disable-msg=R0201; (Method could be a function)
 	def reset_log(self):
-		""" Move the found intrusion logs to a new sub directory. """
+		""" Move the intrusion logs to a new sub directory. """
 
-		message = "Intrusion logs: "
-		log_files = LogDir.list_log_files()
+		message = "Intrusion logs: " + LogDir.reset_dir()
+		return message
 
-		if not log_files:
-			return message + "Log folder is empty"
 
-		# Create folder
-		folder_name, folder_path = LogDir.mk_unique_backup_dir()
+	def reset_models(self):
+		""" Move the models to a new sub directory. """
 
-		# Move files
-		for file_path in log_files:
-			Dir.move_file(file_path, folder_path)
-
-		return message + "Moved {} file{} to {}".format(
-			len(log_files),
-			"s" if len(log_files) > 1 else "",
-			folder_name)
+		message = "IDS models: " + ModelDir.reset_dir()
+		return message
 
 
 	@staticmethod

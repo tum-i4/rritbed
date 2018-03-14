@@ -40,13 +40,22 @@ class LogDir(object):
 
 
 	@staticmethod
-	def list_log_files():
+	def reset_dir():
+		""" Move all model files to a new, unique sub directory and return a status message. """
+
+		file_list = LogDir._list_log_files()
+		folder_name, folder_path = LogDir._mk_unique_backup_dir()
+		return _reset_dir(file_list, folder_name, folder_path)
+
+
+	@staticmethod
+	def _list_log_files():
 		""" Return a list of relative paths of all current log files. """
 		return _list_files_by_suffix(LogDir.get_log_dir(), LogDir._LOG_FILE_SUFFIX)
 
 
 	@staticmethod
-	def mk_unique_backup_dir():
+	def _mk_unique_backup_dir():
 		"""
 		Mkdir a uniquely named backup folder.
 		returns: (folder_name, folder_path)

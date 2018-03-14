@@ -310,9 +310,11 @@ class IntrusionClassifier(object):
 				raise IOError("Model for \"{}\" could not be retrieved".format(app_id))
 			models[app_id] = model
 
-		assert(len(models) == len(self._app_ids))
+		if len(models) != len(self._app_ids):
+			raise IOError("Invalid number of model files received.")
 
 		self._models = models
+		self._type = ModelDir.load_model_type()
 
 
 	def _has_models(self):

@@ -230,6 +230,22 @@ def _list_files_by_suffix(folder, suffix):
 	return result
 
 
+def _reset_dir(file_list, folder_name, folder_path):
+	""" Move the files to the given folder and return a status message. """
+
+	if not file_list:
+		return "Log folder is empty"
+
+	# Move files
+	for file_path in file_list:
+		Dir.move_file(file_path, folder_path)
+
+	return "Moved {} file{} to {}".format(
+		len(file_list),
+		"s" if len(file_list) > 1 else "",
+		folder_name)
+
+
 def _get_cwd(_for=None):
 	"""
 	Return the cwd in respect to where the module was loaded.

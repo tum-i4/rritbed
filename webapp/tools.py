@@ -40,15 +40,19 @@ def _train(file_path, multi_class, extend_models):
 
 
 def _train_entries(log_entries, multi_class, extend_models):
-	""" Train with the given LogEntry objects. """
+	"""
+	Train with the given LogEntry objects.
+	returns: Boolean flag indicating success
+	"""
 
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
 		clas.train(log_entries, multi_class=multi_class, extend_models=extend_models)
+		return True
 	except ValueError as val_err:
 		print(val_err.message)
-		return
+		return False
 
 
 def score_call(args):
@@ -66,15 +70,19 @@ def _score(file_path, multi_class):
 
 
 def _score_entries(log_entries, multi_class):
-	""" Score the given LogEntry objects. """
+	"""
+	Score the given LogEntry objects.
+	returns: Boolean flag indicating success
+	"""
 
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
 		clas.score(log_entries, multi_class=multi_class)
+		return True
 	except ValueError as val_err:
 		print(val_err.message)
-		return
+		return False
 
 
 def train_score_call(args):
@@ -98,8 +106,17 @@ def _train_and_score(file_path, split, multi_class):
 	training_entries = log_entries[:train_count]
 	scoring_entries = log_entries[train_count:]
 
-	_train_entries(training_entries, multi_class, extend_models=False)
-	_score_entries(scoring_entries, multi_class)
+	preconditions_msg = "Please make sure that all preconditions are met and rerun."
+
+	training_succeeded = _train_entries(training_entries, multi_class, extend_models=False)
+	if not training_succeeded:
+		print("Training failed. " + preconditions_msg)
+		return
+
+	scoring_succeeded = _score_entries(scoring_entries, multi_class)
+	if not scoring_succeeded:
+		print("Scoring failed. " + preconditions_msg)
+		return
 
 
 def _read_file_flow(file_path):

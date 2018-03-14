@@ -102,9 +102,7 @@ def _train_and_score(file_path, split, multi_class):
 	if len(log_entries) < 10000:
 		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
 
-	train_count = int((split / 100.0) * len(log_entries))
-	training_entries = log_entries[:train_count]
-	scoring_entries = log_entries[train_count:]
+	training_entries, scoring_entries = _split_entries(split)
 
 	preconditions_msg = "Please make sure that all preconditions are met and rerun."
 
@@ -117,6 +115,11 @@ def _train_and_score(file_path, split, multi_class):
 	if not scoring_succeeded:
 		print("Scoring failed. " + preconditions_msg)
 		return
+
+
+def _split_entries(split):
+	""" Split the given log entries equally by app_id and each app_id's class. """
+	raise NotImplementedError()
 
 
 def _read_file_flow(file_path):

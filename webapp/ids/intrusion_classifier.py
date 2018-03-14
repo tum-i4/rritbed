@@ -132,7 +132,7 @@ class IntrusionClassifier(object):
 	### Train ###
 
 
-	def train(self, log_entries, extend_models=False):
+	def train(self, log_entries, multi_class, extend_models=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		"""
@@ -140,7 +140,12 @@ class IntrusionClassifier(object):
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
-		print("Starting training with {} LogEntry objects".format(len(log_entries)))
+		if extend_models and ((self._type == ModelDir.Type.MULTICLASS) != multi_class):
+			raise ValueError("Extending models was activated but classifier type does not match train type.")
+
+		print("Starting training with {} LogEntry objects ({})".format(
+			len(log_entries),
+			"multi-class" if multi_class else "two-class"))
 		start_time = time.time()
 
 		found_app_ids = set([ids_tools.log_entry_to_app_id(x) for x in log_entries])
@@ -152,7 +157,7 @@ class IntrusionClassifier(object):
 
 		print("Found all {} app ids".format(len(self._app_ids)))
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries)
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class)
 
 		# Ensure each app_id classifier has samples of all classes to learn from.
 		print("Verifying given data...")

@@ -119,7 +119,36 @@ def _train_and_score(file_path, split, multi_class):
 
 def _split_entries(log_entries, split):
 	""" Split the given log entries equally by app_id and each app_id's class. """
-	raise NotImplementedError()
+
+	# { app_id : { class : [entries] } }
+	entries_per_app_id_per_class = {}
+
+	# Sort items into buckets
+	for log_entry in log_entries:
+		app_id = ids_tools.log_entry_to_app_id(log_entry)
+		its_class = log_entry.intrusion
+
+		if app_id not in entries_per_app_id_per_class:
+			entries_per_app_id_per_class[app_id] = {}
+		if its_class not in entries_per_app_id_per_class[app_id]:
+			entries_per_app_id_per_class[app_id][its_class] = []
+
+		entries_per_app_id_per_class[app_id][its_class].append(log_entry)
+
+	result_train = []
+	result_score = []
+
+	# Split each bucket and add to the result
+	for app_id in entries_per_app_id_per_class:
+		for a_class in entries_per_app_id_per_class[app_id]:
+			items = entries_per_app_id_per_class[app_id][a_class]
+
+			its_split = int((split / 100.0) * len(items))
+
+			result_train += items[:its_split]
+			result_score += items[its_split:]
+
+	return result_train, result_score
 
 
 def _read_file_flow(file_path):

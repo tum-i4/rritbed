@@ -240,7 +240,6 @@ class IntrusionClassifier(object):
 
 		print("Starting scoring with {} LogEntry objects.".format(len(log_entries))
 			+ " Keep in mind that multi-class scores can be lower than what you might expect.")
-		start_time = time.time()
 
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries)
 

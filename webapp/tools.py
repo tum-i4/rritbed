@@ -6,7 +6,7 @@ import os
 
 from log_entry import LogEntry
 from ids.intrusion_classifier import IntrusionClassifier
-from ids.dir_utils import Dir, ModelDir
+from ids.dir_utils import Dir
 import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
 
@@ -53,22 +53,16 @@ def score_call(args):
 def _score(file_path):
 	""" Score the prediction of the classifier with the given test file. """
 
-	clas = IntrusionClassifier.get_singleton()
-
-	has_models = clas.has_models()
-	if has_models == ModelDir.Found.NONE:
-		print("The classifier has no trained models! Train first, then score.")
-		return
-	if has_models != ModelDir.Found.ALL:
-		print("Not all models could be found! Trying to score with the existing models.")
-
 	log_entries = _read_file_flow(file_path)
+
+	clas = IntrusionClassifier.get_singleton()
 
 	try:
 		clas.score(log_entries)
 		raise NotImplementedError()
-	except:
-		raise NotImplementedError()
+	except ValueError as val_err:
+		print(val_err.message)
+		return
 
 
 def _read_file_flow(file_path):

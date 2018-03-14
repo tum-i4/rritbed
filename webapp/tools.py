@@ -33,16 +33,22 @@ def _train(file_path, multi_class, extend_models):
 		exit()
 
 	log_entries = _read_file_flow(file_path)
+	_train_entries(log_entries, multi_class, extend_models)
+
+	with open(history_file, 'a') as hist_file:
+		hist_file.write(file_path + "\n")
+
+
+def _train_entries(log_entries, multi_class, extend_models):
+	""" Train with the given LogEntry objects. """
 
 	clas = IntrusionClassifier.get_singleton()
+
 	try:
 		clas.train(log_entries, multi_class=multi_class, extend_models=extend_models)
 	except ValueError as val_err:
 		print(val_err.message)
 		return
-
-	with open(history_file, 'a') as hist_file:
-		hist_file.write(file_path + "\n")
 
 
 def score_call(args):

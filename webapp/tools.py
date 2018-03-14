@@ -62,6 +62,11 @@ def _score(file_path, multi_class):
 	""" Score the prediction of the classifier with the given test file. """
 
 	log_entries = _read_file_flow(file_path)
+	_score_entries(log_entries, multi_class)
+
+
+def _score_entries(log_entries, multi_class):
+	""" Score the given LogEntry objects. """
 
 	clas = IntrusionClassifier.get_singleton()
 

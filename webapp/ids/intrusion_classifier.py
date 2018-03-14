@@ -260,9 +260,15 @@ class IntrusionClassifier(object):
 
 			print("Model scored {}.".format(ids_tools.format_percentage(score)))
 
+			scores.append(score)
 			app_id_count += 1
 
-		raise NotImplementedError()
+		total_score = sum(scores) / len(scores)
+
+		print("")
+		print("Total score: {}".format(ids_tools.format_percentage(total_score)))
+
+		return total_score
 
 
 	def _log_entries_to_app_id_train_data_dict(self, log_entries):

@@ -268,8 +268,6 @@ class IntrusionClassifier(object):
 		print("")
 		print("Total score: {}".format(ids_tools.format_percentage(total_score)))
 
-		return total_score
-
 
 	def _log_entries_to_app_id_train_data_dict(self, log_entries):
 		""" Convert the given log entries to feature vectors and classes per app_id. """

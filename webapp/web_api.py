@@ -199,6 +199,8 @@ def reset():
 
 	print("Server is resetting...")
 
+	reset_models = request.params.models == "reset"
+
 	status_msg = ""
 	try:
 		status_msg = DAO.reset()
@@ -207,6 +209,12 @@ def reset():
 
 	status_msg += "\n"
 	status_msg += IDS.reset_log()
+
+	status_msg += "\n"
+	if reset_models:
+		status_msg += IDS.reset_models()
+	else:
+		status_msg += "\nDid not reset IDS models."
 
 	print(status_msg)
 

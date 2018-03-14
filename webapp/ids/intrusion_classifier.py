@@ -231,6 +231,15 @@ class IntrusionClassifier(object):
 
 	def score(self, log_entries):
 		""" Score the models' prediction for the given log entries. """
+
+		has_models = self._has_models()
+		if has_models == ModelDir.Found.NONE:
+			raise ValueError("The classifier has no trained models! Train first, then score.")
+		if has_models != ModelDir.Found.ALL:
+			raise ValueError("Not all models could be found! Partial scoring is not implemented.")
+
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries)
+
 		raise NotImplementedError()
 
 

@@ -234,7 +234,7 @@ class IntrusionClassifier(object):
 		return [self._label_int_mapping[x] for x in labels]
 
 
-	def score(self, log_entries):
+	def score(self, log_entries, multi_class):
 		""" Score the models' prediction for the given log entries. """
 
 		has_models = self._has_models()
@@ -243,10 +243,16 @@ class IntrusionClassifier(object):
 		if has_models != ModelDir.Found.ALL:
 			raise ValueError("Not all models could be found! Partial scoring is not implemented.")
 
-		print("Starting scoring with {} LogEntry objects.".format(len(log_entries))
-			+ " Keep in mind that multi-class scores can be lower than what you might expect.")
+		if self._type == ModelDir.Type.NONE:
+			raise ValueError("No model type set.")
+		elif (self._type == ModelDir.Type.MULTICLASS) != multi_class:
+			raise ValueError("Trained models are of invalid type.")
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries)
+		print("Starting scoring with {} LogEntry objects ({}).".format(
+			len(log_entries),
+			"multi-class" if multi_class else "two-class"))
+
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class)
 
 		app_id_count = 1
 		scores = []

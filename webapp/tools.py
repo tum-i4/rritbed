@@ -59,7 +59,6 @@ def _score(file_path):
 
 	try:
 		clas.score(log_entries)
-		raise NotImplementedError()
 	except ValueError as val_err:
 		print(val_err.message)
 		return

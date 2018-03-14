@@ -129,7 +129,7 @@ def _analyse(file_path):
 
 		per_app_id.append(line)
 
-	_print_table(per_app_id, headline="Per app ID")
+	_print_table(per_app_id, headline="Elements and classes per app ID")
 
 	# Class table
 
@@ -138,7 +138,7 @@ def _analyse(file_path):
 	for a_class in all_classes:
 		per_class.append([a_class, len(entries_per_class[a_class]), len(app_ids_per_class[a_class])])
 
-	_print_table(per_class, headline="Per class")
+	_print_table(per_class, headline="Elements per class")
 
 	# TODO: score??
 	# harmonious? all labelled / some / none?

@@ -246,6 +246,8 @@ class IntrusionClassifier(object):
 	def _log_entries_to_app_id_train_data_dict(self, log_entries):
 		""" Convert the given log entries to feature vectors and classes per app_id. """
 
+		print("Transforming the log data to trainable vectors...")
+
 		app_id_datasets = {}
 		for app_id in self._app_ids:
 			app_id_datasets[app_id] = ([], [])
@@ -258,6 +260,7 @@ class IntrusionClassifier(object):
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
 
+		print("Done.")
 		return app_id_datasets
 
 

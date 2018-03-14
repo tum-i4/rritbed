@@ -12,12 +12,13 @@ import ids.ids_data as ids_data
 
 
 def train_call(args):
-	""" Unpack the args and call _train. Expects 'train_file_path'. """
-	_train(args.train_file_path, args.extend_models)
+	""" Unpack the args and call _train.
+	Expects 'train_file_path', 'multi_class' and 'extend_models'. """
+	_train(args.train_file_path, args.multi_class, args.extend_models)
 	exit()
 
 
-def _train(file_path, extend_models=False):
+def _train(file_path, multi_class, extend_models):
 	""" Train the classifier with the given file. Optionally allow extension of models. """
 
 	history_file = "intrusion_classifier_history"
@@ -35,7 +36,7 @@ def _train(file_path, extend_models=False):
 
 	clas = IntrusionClassifier.get_singleton()
 	try:
-		clas.train(log_entries, extend_models=extend_models)
+		clas.train(log_entries, multi_class=multi_class, extend_models=extend_models)
 	except ValueError as val_err:
 		print(val_err.message)
 		return
@@ -45,12 +46,13 @@ def _train(file_path, extend_models=False):
 
 
 def score_call(args):
-	""" Unpack the args and call _score. Expects 'test_file_path'. """
-	_score(args.test_file_path)
+	""" Unpack the args and call _score.
+	Expects 'test_file_path' and 'multi_class'. """
+	_score(args.test_file_path, args.multi_class)
 	exit()
 
 
-def _score(file_path):
+def _score(file_path, multi_class):
 	""" Score the prediction of the classifier with the given test file. """
 
 	log_entries = _read_file_flow(file_path)
@@ -58,7 +60,7 @@ def _score(file_path):
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
-		clas.score(log_entries)
+		clas.score(log_entries, multi_class=multi_class)
 	except ValueError as val_err:
 		print(val_err.message)
 		return
@@ -232,10 +234,12 @@ if __name__ == "__main__":
 		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH", help="The training data")
 		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
 			help="Allow existing models to be extended.")
+		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_false", dest="multi_class")
 		TRAIN_PARSER.set_defaults(function=train_call)
 
 		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")
 		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
+		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_false", dest="multi_class")
 		SCORE_PARSER.set_defaults(function=score_call)
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")

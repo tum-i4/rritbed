@@ -97,6 +97,11 @@ def format_time_passed(time_in_sec):
 	return result.strip()
 
 
+def format_percentage(value):
+	""" Formats the given float value in [0, 1] as a percentage string. """
+	return "%d %%" % round(value * 100, 2)
+
+
 def generate_log_entries(number):
 	""" Generate <number> LogEntry objects. """
 	import random

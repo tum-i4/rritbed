@@ -152,13 +152,7 @@ class IntrusionClassifier(object):
 
 		print("Found all {} app ids".format(len(self._app_ids)))
 
-		for log_entry in log_entries:
-			app_id = ids_tools.log_entry_to_app_id(log_entry)
-			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
-			its_class = self._log_entry_to_class(log_entry)
-
-			app_id_datasets[app_id][0].append(ndarray)
-			app_id_datasets[app_id][1].append(its_class)
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries)
 
 		# Ensure each app_id classifier has samples of all classes to learn from.
 		print("Verifying given data...")
@@ -238,6 +232,24 @@ class IntrusionClassifier(object):
 	def score(self, log_entries):
 		""" Score the models' prediction for the given log entries. """
 		raise NotImplementedError()
+
+
+	def _log_entries_to_app_id_train_data_dict(self, log_entries):
+		""" Convert the given log entries to feature vectors and classes per app_id. """
+
+		app_id_datasets = {}
+		for app_id in self._app_ids:
+			app_id_datasets[app_id] = ([], [])
+
+		for log_entry in log_entries:
+			app_id = ids_tools.log_entry_to_app_id(log_entry)
+			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
+			its_class = self._log_entry_to_class(log_entry)
+
+			app_id_datasets[app_id][0].append(ndarray)
+			app_id_datasets[app_id][1].append(its_class)
+
+		return app_id_datasets
 
 
 

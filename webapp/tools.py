@@ -179,43 +179,13 @@ def _analyse(file_path):
 
 	# Analysis #
 
-	found_app_ids = set()
 	all_app_ids = ids_data.get_app_ids()
-	entries_per_app_id = {}
-	elements_per_class_per_app_id = {}
-
-	found_classes = set()
 	all_classes = ids_data.get_labels()
-	entries_per_class = {}
-	app_ids_per_class = {}
 
-	for app_id in all_app_ids:
-		entries_per_app_id[app_id] = []
-		elements_per_class_per_app_id[app_id] = {}
-
-	for a_class in all_classes:
-		entries_per_class[a_class] = []
-		app_ids_per_class[a_class] = set()
-
-	for entry in log_entries:
-		if not entry.intrusion:
-			raise NotImplementedError("Entries without labels can currently not be handled")
-
-		app_id = ids_tools.log_entry_to_app_id(entry)
-		its_class = entry.intrusion
-
-		found_app_ids.add(app_id)
-		found_classes.add(its_class)
-
-		entries_per_app_id[app_id].append(entry)
-
-		if its_class not in elements_per_class_per_app_id[app_id]:
-			elements_per_class_per_app_id[app_id][its_class] = 1
-		else:
-			elements_per_class_per_app_id[app_id][its_class] += 1
-
-		entries_per_class[its_class].append(entry)
-		app_ids_per_class[its_class].add(app_id)
+	(
+		found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
+		found_classes, entries_per_class, app_ids_per_class
+	) = _analyse_entries(log_entries)
 
 	# Output #
 
@@ -258,6 +228,55 @@ def _analyse(file_path):
 	# harmonious? all labelled / some / none?
 	# for each app id: are there roughly the same number of entries per class?
 	return
+
+
+def _analyse_entries(log_entries):
+	"""
+	Analyse the given LogEntry object.
+	returns: A tuple containing (found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
+	found_classes, entries_per_class, app_ids_per_class)
+	"""
+
+	all_app_ids = ids_data.get_app_ids()
+	found_app_ids = set()
+	entries_per_app_id = {}
+	elements_per_class_per_app_id = {}
+
+	all_classes = ids_data.get_labels()
+	found_classes = set()
+	entries_per_class = {}
+	app_ids_per_class = {}
+
+	for app_id in all_app_ids:
+		entries_per_app_id[app_id] = []
+		elements_per_class_per_app_id[app_id] = {}
+
+	for a_class in all_classes:
+		entries_per_class[a_class] = []
+		app_ids_per_class[a_class] = set()
+
+	for entry in log_entries:
+		if not entry.intrusion:
+			raise NotImplementedError("Entries without labels can currently not be handled")
+
+		app_id = ids_tools.log_entry_to_app_id(entry)
+		its_class = entry.intrusion
+
+		found_app_ids.add(app_id)
+		found_classes.add(its_class)
+
+		entries_per_app_id[app_id].append(entry)
+
+		if its_class not in elements_per_class_per_app_id[app_id]:
+			elements_per_class_per_app_id[app_id][its_class] = 1
+		else:
+			elements_per_class_per_app_id[app_id][its_class] += 1
+
+		entries_per_class[its_class].append(entry)
+		app_ids_per_class[its_class].add(app_id)
+
+	return (found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
+		found_classes, entries_per_class, app_ids_per_class)
 
 
 def _get_log_entries_from_file(file_path):

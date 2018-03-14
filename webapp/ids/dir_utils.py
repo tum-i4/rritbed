@@ -233,13 +233,7 @@ class ModelDir(object):
 		if _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._TYPE_FILE_SUFFIX):
 			raise IOError("Type file exists! Make sure you only set the type once.")
 
-		type_file_name = ""
-		if model_type == ModelDir.Type.TWOCLASS:
-			type_file_name = "twoclass"
-		elif model_type == ModelDir.Type.MULTICLASS:
-			type_file_name = "multiclass"
-		else:
-			raise NotImplementedError("ModelDir.Type not implemented")
+		type_file_name = ModelDir._get_type_file_str(model_type)
 
 		open(ModelDir.get_model_path_for_file(type_file_name + ModelDir._TYPE_FILE_SUFFIX), "a"
 			).close()
@@ -256,12 +250,21 @@ class ModelDir(object):
 
 		if not type_files:
 			return ModelDir.Type.NONE
-		elif type_files[0].startswith("twoclass"):
-			return ModelDir.Type.TWOCLASS
-		elif type_files[0].startswith("multiclass"):
-			return ModelDir.Type.MULTICLASS
-		else:
-			raise IOError("Invalid type file name")
+
+		type_file_name = os.path.basename(type_files[0]).split(os.path.extsep)[0]
+		return ModelDir.Type(type_file_name)
+
+
+	@staticmethod
+	def _get_type_file_str(model_type):
+		""" Convert the given model type to the corresponding file name. """
+
+		if not isinstance(model_type, ModelDir.Type):
+			raise ValueError("Invalid type given.")
+		if model_type == ModelDir.Type.NONE:
+			raise ValueError("ModelDir.Type.NONE has no file!")
+
+		return model_type.value + ModelDir._TYPE_FILE_SUFFIX
 
 
 	@staticmethod
@@ -298,9 +301,9 @@ class ModelDir(object):
 
 	class Type(Enum):
 		""" What type the current models have. """
-		NONE = 0
-		TWOCLASS = 1
-		MULTICLASS = 2
+		NONE = ""
+		TWOCLASS = "twoclass"
+		MULTICLASS = "multiclass"
 
 
 

@@ -357,14 +357,19 @@ def _reset_dir(file_list, folder_name, folder_path):
 		folder_name)
 
 
-def _get_cwd(_for=None):
+def _get_cwd(_for=None, mk_if_nonexistent=False):
 	"""
 	Return the cwd in respect to where the module was loaded.
 	: param _for : Optionally the file or folder to be accessed.
 	"""
 
 	cwd = "" if os.path.basename(os.getcwd()) == _IDS_DIR else _IDS_DIR
-	return os.path.join(cwd, _for) if _for else cwd
+	the_dir = os.path.join(cwd, _for) if _for else cwd
+
+	if mk_if_nonexistent and not os.path.lexists(the_dir):
+		os.mkdir(the_dir)
+
+	return the_dir
 
 
 def _create_unique_name(name_creator):

@@ -44,8 +44,13 @@ def _train(file_path, extend_models=False):
 		return
 
 
+def score_call(args):
+	""" Unpack the args and call _score. """
+	raise NotImplementedError()
+
+
 def anal_call(args):
-	""" Call _analyse. """
+	""" Unpack the args and call _analyse. """
 	_analyse(args.file_path)
 	exit()
 
@@ -199,11 +204,14 @@ if __name__ == "__main__":
 		SUBPARSERS = PARSER.add_subparsers()
 
 		TRAIN_PARSER = SUBPARSERS.add_parser("train", help="Train the classifier")
-		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH",
-			help="File to train the classifier with.")
+		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH", help="The training data")
 		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
 			help="Allow existing models to be extended.")
 		TRAIN_PARSER.set_defaults(function=train_call)
+
+		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")
+		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
+		SCORE_PARSER.set_defaults(function=score_call)
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
 		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")

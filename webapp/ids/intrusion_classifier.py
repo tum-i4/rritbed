@@ -143,16 +143,14 @@ class IntrusionClassifier(object):
 		print("Starting training with {} LogEntry objects".format(len(log_entries)))
 		start_time = time.time()
 
-		app_id_datasets = {}
-		for app_id in self._app_ids:
-			app_id_datasets[app_id] = ([], [])
+		found_app_ids = set([ids_tools.log_entry_to_app_id(x) for x in log_entries])
 
 		# Ensure that all app_ids exist in the dataset
-		if (len(app_id_datasets) != len(self._app_ids)
-			or any([True for x in self._app_ids if x not in app_id_datasets])):
+		if (len(found_app_ids) != len(self._app_ids)
+			or any([True for x in self._app_ids if x not in found_app_ids])):
 			raise ValueError("Couldn't find data for every current app_id!")
 
-		print("Found all {} app ids".format(len(app_id_datasets)))
+		print("Found all {} app ids".format(len(self._app_ids)))
 
 		for log_entry in log_entries:
 			app_id = ids_tools.log_entry_to_app_id(log_entry)

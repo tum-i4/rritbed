@@ -135,9 +135,39 @@ class ModelDir(object):
 
 
 	@staticmethod
+	def reset_dir():
+		""" Move all model files to a new, unique sub directory and return a status message. """
+
+		file_list = ModelDir._list_model_files()
+		folder_name, folder_path = ModelDir._mk_unique_backup_dir()
+		return _reset_dir(file_list, folder_name, folder_path)
+
+
+	@staticmethod
 	def _list_model_files():
 		""" Return a list of relative paths of all current model files. """
 		return _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._MODEL_FILE_SUFFIX)
+
+
+	@staticmethod
+	def _mk_unique_backup_dir():
+		"""
+		Mkdir a uniquely named backup folder.
+		returns: (folder_name, folder_path)
+		"""
+
+		folder_name = ModelDir._create_unique_folder_name()
+		folder_path = ModelDir.get_model_path_for_file(folder_name)
+		os.mkdir(folder_path)
+
+		return(folder_name, folder_path)
+
+
+	@staticmethod
+	def _create_unique_folder_name():
+		""" Create a unique name for a model backup folder based on the current time. """
+		return _create_unique_name(lambda: (
+			"model_backup_at_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())))
 
 
 	@staticmethod

@@ -31,10 +31,7 @@ def _train(file_path, extend_models=False):
 			+ " If you think this is a mistake, rename it and run again.")
 		exit()
 
-	print("Using file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-	print("Reading file and converting lines to LogEntry objects...")
-	log_entries = _get_log_entries_from_file(file_path)
-	print("Done.")
+	log_entries = _read_file_flow(file_path)
 
 	clas = IntrusionClassifier.get_singleton()
 	try:
@@ -50,6 +47,16 @@ def _train(file_path, extend_models=False):
 def score_call(args):
 	""" Unpack the args and call _score. """
 	raise NotImplementedError()
+
+
+def _read_file_flow(file_path):
+	""" Read the given file as LogEntry objects. Updates the user about the progress. """
+
+	print("Using file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+	print("Reading file and converting lines to LogEntry objects...")
+	log_entries = _get_log_entries_from_file(file_path)
+	print("Done.")
+	return log_entries
 
 
 def anal_call(args):

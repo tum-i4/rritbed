@@ -282,7 +282,13 @@ class ModelDir(object):
 	@staticmethod
 	def get_model_dir():
 		""" Return the model directory. """
-		return _get_cwd(_for=ModelDir._MODEL_DIR)
+
+		model_dir = _get_cwd(_for=ModelDir._MODEL_DIR)
+
+		if not os.path.lexists(model_dir):
+			os.mkdir(model_dir)
+
+		return model_dir
 
 
 	@staticmethod

@@ -237,6 +237,11 @@ class IntrusionClassifier(object):
 		return [self._label_int_mapping[x] for x in labels]
 
 
+	def score(self, log_entries):
+		""" Score the models' prediction for the given log entries. """
+		raise NotImplementedError()
+
+
 
 	### Load, check and save model ###
 

@@ -85,13 +85,7 @@ class LogDir(object):
 	@staticmethod
 	def get_log_dir():
 		""" Return the log directory. Makes sure the folder exists. """
-
-		log_dir = _get_cwd(_for=LogDir._LOG_DIR)
-
-		if not os.path.lexists(log_dir):
-			os.mkdir(log_dir)
-
-		return log_dir
+		return _get_cwd(_for=LogDir._LOG_DIR, mk_if_nonexistent=True)
 
 
 	@staticmethod
@@ -281,14 +275,8 @@ class ModelDir(object):
 
 	@staticmethod
 	def get_model_dir():
-		""" Return the model directory. """
-
-		model_dir = _get_cwd(_for=ModelDir._MODEL_DIR)
-
-		if not os.path.lexists(model_dir):
-			os.mkdir(model_dir)
-
-		return model_dir
+		""" Return the model directory. Makes sure the folder exists. """
+		return _get_cwd(_for=ModelDir._MODEL_DIR, mk_if_nonexistent=True)
 
 
 	@staticmethod

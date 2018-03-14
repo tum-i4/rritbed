@@ -238,7 +238,29 @@ class IntrusionClassifier(object):
 		if has_models != ModelDir.Found.ALL:
 			raise ValueError("Not all models could be found! Partial scoring is not implemented.")
 
+		print("Starting scoring with {} LogEntry objects.".format(len(log_entries))
+			+ " Keep in mind that multi-class scores can be lower than what you might expect.")
+		start_time = time.time()
+
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries)
+
+		app_id_count = 1
+		scores = []
+
+		for app_id, train_set in app_id_datasets.items():
+			print("({}/{}) Scoring model for \"{}\"..."
+				.format(app_id_count, len(app_id_datasets), app_id))
+
+			# Load model if it exists already
+			clf = ModelDir.load_model(app_id)
+			if not clf:
+				raise ValueError("Model is missing!")
+
+			score = clf.score(train_set[0], train_set[1])
+
+			print("Model scored {}.".format(ids_tools.format_percentage(score)))
+
+			app_id_count += 1
 
 		raise NotImplementedError()
 

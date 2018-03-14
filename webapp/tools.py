@@ -66,6 +66,17 @@ def _score(file_path, multi_class):
 		return
 
 
+def train_score_call(args):
+	""" Unpack the args and call _train_and_score.
+	Expects 'file_path', 'split' and 'multi_class'. """
+	_train_and_score(args.file_path, args.split, args.multi_class)
+
+
+def _train_and_score(file_path, split, multi_class):
+	""" Split the given file and use the first part for training, the second for scoring. """
+	raise NotImplementedError()
+
+
 def _read_file_flow(file_path):
 	""" Read the given file as LogEntry objects. Updates the user about the progress. """
 
@@ -241,6 +252,13 @@ if __name__ == "__main__":
 		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
 		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		SCORE_PARSER.set_defaults(function=score_call)
+
+		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train and score")
+		TRAINSCORE_PARSER.add_argument("file_path", metavar="PATH", help="The data")
+		TRAINSCORE_PARSER.add_argument("--split", "-s", type=int, default=80,
+			help="The percentage of data points to be used for training.")
+		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
+		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
 		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")

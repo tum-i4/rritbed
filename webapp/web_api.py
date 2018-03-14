@@ -214,7 +214,7 @@ def reset():
 	if reset_models:
 		status_msg += IDS.reset_models()
 	else:
-		status_msg += "\nDid not reset IDS models."
+		status_msg += "IDS model reset was not requested."
 
 	print(status_msg)
 

@@ -159,9 +159,15 @@ class ModelDir(object):
 
 		model_files = _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._MODEL_FILE_SUFFIX)
 		if include_type_file:
-			model_files += _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._TYPE_FILE_SUFFIX)
+			model_files += ModelDir._list_type_files()
 
 		return model_files
+
+
+	@staticmethod
+	def _list_type_files():
+		""" Return a list of relative paths of all current type files. """
+		return _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._TYPE_FILE_SUFFIX)
 
 
 	@staticmethod
@@ -230,7 +236,7 @@ class ModelDir(object):
 		if model_type == ModelDir.Type.NONE:
 			raise ValueError("Type NONE can't be saved.")
 
-		if _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._TYPE_FILE_SUFFIX):
+		if ModelDir._list_type_files():
 			raise IOError("Type file exists! Make sure you only set the type once.")
 
 		type_file_name = ModelDir._get_type_file_str(model_type)
@@ -243,7 +249,7 @@ class ModelDir(object):
 	def load_model_type():
 		""" Load the ModelDir.Type and return it. """
 
-		type_files = _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._TYPE_FILE_SUFFIX)
+		type_files = ModelDir._list_type_files()
 
 		if len(type_files) > 1:
 			raise IOError("Invalid number of type files found.")

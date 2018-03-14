@@ -268,7 +268,7 @@ class IntrusionClassifier(object):
 		print("Total score: {}".format(ids_tools.format_percentage(total_score)))
 
 
-	def _log_entries_to_app_id_train_data_dict(self, log_entries):
+	def _log_entries_to_app_id_train_data_dict(self, log_entries, multi_class):
 		""" Convert the given log entries to feature vectors and classes per app_id. """
 
 		print("Transforming the log data to trainable vectors...")
@@ -280,7 +280,7 @@ class IntrusionClassifier(object):
 		for log_entry in log_entries:
 			app_id = ids_tools.log_entry_to_app_id(log_entry)
 			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
-			its_class = self._log_entry_to_class(log_entry)
+			its_class = self._log_entry_to_class(log_entry, multi_class)
 
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)

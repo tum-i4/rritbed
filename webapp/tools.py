@@ -43,6 +43,9 @@ def _train(file_path, extend_models=False):
 		print(val_err.message)
 		return
 
+	with open(history_file, 'a') as hist_file:
+		hist_file.write(file_path + "\n")
+
 
 def score_call(args):
 	""" Unpack the args and call _score. """

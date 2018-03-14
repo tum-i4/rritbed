@@ -102,7 +102,9 @@ def _train_and_score(file_path, split, multi_class):
 	if len(log_entries) < 10000:
 		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
 
+	print("Splitting result according to given split of {}/{}".format(split, 100 - split))
 	training_entries, scoring_entries = _split_log_entries(log_entries, split)
+	print("Done.")
 
 	preconditions_msg = "Please make sure that all preconditions are met and rerun."
 

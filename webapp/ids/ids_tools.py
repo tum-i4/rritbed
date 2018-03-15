@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ IDS tools """
 
+from __future__ import print_function
 import md5
 import re
 
@@ -75,6 +76,27 @@ def _strip_app_id(app_id):
 		raise ValueError("Invalid app id given!")
 
 	return app_id
+
+
+### Printing and output ###
+
+
+class Printer(object):
+	""" Printer that allows squelching output. """
+
+	def __init__(self, squelch=False, instance=None):
+		""" Ctor """
+		object.__init__(self)
+		self.squelch = squelch
+		if instance:
+			self.name = type(instance).__name__
+
+	def prt(self, message, end="\n"):
+		""" Print if not squelching. """
+		if not self.squelch:
+			if self.name:
+				message = "[{}] {}".format(self.name, message)
+			print(message, end=end)
 
 
 ### String formatting ###

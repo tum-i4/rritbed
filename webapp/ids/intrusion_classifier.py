@@ -349,6 +349,12 @@ class IntrusionClassifier(object):
 		return ModelDir.has_models(self._app_ids)
 
 
+	def reset_models(self):
+		""" Reset the models.
+		returns: A status message. """
+		return ModelDir.reset_dir()
+
+
 
 	### Convert, map, transform ###
 

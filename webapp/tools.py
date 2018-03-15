@@ -126,7 +126,7 @@ def _train_and_score(file_path, split, iterations, multi_class):
 			return
 
 		# Reset
-		reset_msg = ModelDir.reset_dir()
+		reset_msg = IntrusionClassifier.get_singleton().reset_models()
 		print(reset_msg)
 
 

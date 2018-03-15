@@ -131,10 +131,12 @@ class IntrusionClassifier(object):
 	### Train ###
 
 
-	def train(self, log_entries, multi_class, extend_models=False):
+	def train(self, log_entries, multi_class, extend_models=False, squelch_output=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		"""
+
+		printer = ids_tools.Printer(squelch=squelch_output, instance=self)
 
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
@@ -142,7 +144,7 @@ class IntrusionClassifier(object):
 		if extend_models and ((self._type == ModelDir.Type.MULTICLASS) != multi_class):
 			raise ValueError("Extending models was activated but classifier type does not match train type.")
 
-		print("Starting training with {} LogEntry objects ({})".format(
+		printer.prt("Starting training with {} LogEntry objects ({})".format(
 			len(log_entries),
 			"multi-class" if multi_class else "two-class"))
 		start_time = time.time()
@@ -154,12 +156,12 @@ class IntrusionClassifier(object):
 			or any([True for x in self._app_ids if x not in found_app_ids])):
 			raise ValueError("Couldn't find data for every current app_id!")
 
-		print("Found all {} app ids".format(len(self._app_ids)))
+		printer.prt("Found all {} app ids".format(len(self._app_ids)))
 
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class)
 
 		# Ensure each app_id classifier has samples of all classes to learn from.
-		print("Verifying given data...")
+		printer.prt("Verifying given data...")
 		for app_id, train_set in app_id_datasets.items():
 			expected_classes = self._get_expected_classes(app_id, multi_class)
 			received_classes = set(train_set[1])
@@ -182,29 +184,29 @@ class IntrusionClassifier(object):
 		app_id_count = 1
 
 		for app_id, train_set in app_id_datasets.items():
-			print("({}/{}) Training model for \"{}\""
+			printer.prt("({}/{}) Training model for \"{}\""
 				.format(app_id_count, len(app_id_datasets), app_id))
 
 			# Load model if it exists already
 			clf = ModelDir.load_model(app_id)
 			if not clf:
 				clf = sk_svm.LinearSVC()
-				print("Creating and training new model...")
+				printer.prt("Creating and training new model...")
 			else:
-				print("Model retrieved from disk. Training...")
+				printer.prt("Model retrieved from disk. Training...")
 
 			clf.fit(train_set[0], train_set[1])
 
-			print("Saving to disk...")
+			printer.prt("Saving to disk...")
 			ModelDir.save_model(clf, app_id, overwrite=True)
-			print("Done!")
+			printer.prt("Done!")
 
 			app_id_count += 1
 
 		self._load_models()
 
 		time_expired = time.time() - start_time
-		print("\nTraining completed in {}.".format(ids_tools.format_time_passed(time_expired)))
+		printer.prt("\nTraining completed in {}.".format(ids_tools.format_time_passed(time_expired)))
 
 
 	def _get_expected_classes(self, app_id, multi_class):

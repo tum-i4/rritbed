@@ -241,8 +241,11 @@ class IntrusionClassifier(object):
 		return [self._label_int_mapping[x] for x in labels]
 
 
-	def score(self, log_entries, multi_class):
-		""" Score the models' prediction for the given log entries. """
+	def score(self, log_entries, multi_class, do_return=False):
+		"""
+		Score the models' prediction for the given log entries.
+		: param do_return : Return a machine-readable { app_id: score } dict.
+		"""
 
 		has_models = self._has_models()
 		if has_models == ModelDir.Found.NONE:
@@ -262,7 +265,7 @@ class IntrusionClassifier(object):
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class)
 
 		app_id_count = 1
-		scores = []
+		scores = {}
 
 		for app_id, train_set in app_id_datasets.items():
 			print("({}/{}) Scoring model for \"{}\"..."
@@ -277,13 +280,16 @@ class IntrusionClassifier(object):
 
 			print("Model scored {}.".format(ids_tools.format_percentage(score)))
 
-			scores.append(score)
+			scores[app_id] = score
 			app_id_count += 1
 
-		total_score = sum(scores) / len(scores)
+		total_score = sum(scores.values()) / len(scores)
 
 		print("")
 		print("Total score: {}".format(ids_tools.format_percentage(total_score)))
+
+		if do_return:
+			return scores
 
 
 	def _log_entries_to_app_id_train_data_dict(self, log_entries, multi_class):

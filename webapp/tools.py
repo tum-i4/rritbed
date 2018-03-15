@@ -4,6 +4,7 @@
 import argparse
 import cPickle
 import os
+import time
 
 from log_entry import LogEntry
 from ids.intrusion_classifier import IntrusionClassifier
@@ -466,6 +467,10 @@ if __name__ == "__main__":
 
 		ARGS = PARSER.parse_args()
 
+		START_TIME = time.time()
+		# Actual functionality
 		ARGS.function(ARGS)
+		TIME_EXPIRED = time.time() - START_TIME
+		print("Finished in {}".format(ids_tools.format_time_passed(TIME_EXPIRED)))
 	except KeyboardInterrupt:
 		pass

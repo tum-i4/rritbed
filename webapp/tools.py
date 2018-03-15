@@ -90,11 +90,11 @@ def _score_entries(log_entries, multi_class):
 
 def train_score_call(args):
 	""" Unpack the args and call _train_and_score.
-	Expects 'file_path', 'split' and 'multi_class'. """
-	_train_and_score(args.file_path, args.split, args.multi_class)
+	Expects 'file_path', 'split' , 'iterations' and 'multi_class'. """
+	_train_and_score(args.file_path, args.split, args.iterations, args.multi_class)
 
 
-def _train_and_score(file_path, split, multi_class):
+def _train_and_score(file_path, split, iterations, multi_class):
 	""" Split the given file and use the first part for training, the second for scoring. """
 
 	if split <= 0 or split >= 100:
@@ -105,19 +105,29 @@ def _train_and_score(file_path, split, multi_class):
 	if len(log_entries) < 10000:
 		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
 
-	training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
+	for i in range(1, iterations + 1):
+		print("Iteration {} of {}.".format(i, iterations))
 
-	preconditions_msg = "Please make sure that all preconditions are met and rerun."
+		# Split
+		training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
 
-	training_succeeded = _train_entries(training_entries, multi_class, extend_models=False)
-	if not training_succeeded:
-		print("Training failed. " + preconditions_msg)
-		return
+		preconditions_msg = "Please make sure that all preconditions are met and rerun."
 
-	scoring_succeeded = _score_entries(scoring_entries, multi_class)
-	if not scoring_succeeded:
-		print("Scoring failed. " + preconditions_msg)
-		return
+		# Train
+		training_succeeded = _train_entries(training_entries, multi_class, extend_models=False)
+		if not training_succeeded:
+			print("Training failed. " + preconditions_msg)
+			return
+
+		# Score
+		scoring_succeeded = _score_entries(scoring_entries, multi_class)
+		if not scoring_succeeded:
+			print("Scoring failed. " + preconditions_msg)
+			return
+
+		# Reset
+		reset_msg = ModelDir.reset_dir()
+		print(reset_msg)
 
 
 def convert_call(args):
@@ -460,10 +470,11 @@ if __name__ == "__main__":
 		SCORE_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		SCORE_PARSER.set_defaults(function=score_call)
 
-		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train and score")
+		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train, score, reset")
 		TRAINSCORE_PARSER.add_argument("file_path", metavar="PATH", help="The data")
 		TRAINSCORE_PARSER.add_argument("--split", "-s", type=int, default=80,
 			help="The percentage of data points to be used for training.")
+		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
 		TRAINSCORE_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 

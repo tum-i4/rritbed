@@ -123,13 +123,18 @@ def _train_and_score(file_path, split, multi_class):
 
 def convert_call(args):
 	""" Unpack the args and call _convert.
-	Expects 'file_path' and 'split'. """
-	_convert(args.file_path, args.split)
+	Expects 'file_path' and 'split' or 'pickle'. """
+	if args.split:
+		_convert_split(args.file_path, args.split)
+	elif args.pickle:
+		_convert_pickle(args.file_path)
+	else:
+		raise NotImplementedError("Arg configuration not implmented")
 	exit()
 
 
-def _convert(file_path, split):
-	""" Convert the given file. Currently supports splitting. """
+def _convert_split(file_path, split):
+	""" Split the given file and pickle the results. """
 
 	if split <= 0 or split >= 100:
 		raise ValueError("Invalid split \"{}\" given.".format(split))
@@ -154,6 +159,11 @@ def _convert(file_path, split):
 
 	print("Split was finished successfully!")
 	return
+
+
+def _convert_pickle(file_path):
+	""" Pickle the given file. """
+	raise NotImplementedError()
 
 
 def anal_call(args):
@@ -437,7 +447,7 @@ if __name__ == "__main__":
 		CONV_PARSER = SUBPARSERS.add_parser("convert", help="Convert log files")
 		CONV_PARSER.add_argument("file_path", metavar="PATH")
 		MODE_GROUP = CONV_PARSER.add_mutually_exclusive_group(required=True)
-		# MODE_GROUP.add_argument("--pickle", "-p", action="store_true")
+		MODE_GROUP.add_argument("--pickle", "-p", action="store_true")
 		MODE_GROUP.add_argument("--split", "-s", type=int)
 		CONV_PARSER.set_defaults(function=convert_call)
 

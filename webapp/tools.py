@@ -353,7 +353,7 @@ def _read_file_flow(file_path):
 def _get_log_entries_from_file(file_path):
 	lines = Dir.read_lines(file_path)
 	# Remove newline at the end of the line and create LogEntry objects
-	return [LogEntry.from_log_string(line[:-1]) for line in lines]
+	return [LogEntry.from_log_string(line) for line in lines]
 
 
 def _get_log_entries_from_pickle(file_path):

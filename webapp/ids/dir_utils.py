@@ -25,10 +25,15 @@ class Dir(object):
 
 	@staticmethod
 	def read_lines(file_path):
-		""" Return all lines in the given file. """
+		""" Return all lines in the given file. Removes the line terminating character. """
 
+		result = []
 		with open(file_path) as file_handle:
-			return file_handle.readlines()
+			for line in file_handle:
+				# Remove the newline character
+				result.append(line[:-1])
+
+		return result
 
 
 class LogDir(object):

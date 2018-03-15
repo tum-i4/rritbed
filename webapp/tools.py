@@ -142,22 +142,15 @@ def _convert(file_path, split):
 
 	training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
 
-	training_file_path = file_path + "_train" + _PICKLE_SUFFIX
-	scoring_file_path = file_path + "_score" + _PICKLE_SUFFIX
+	training_file_path = file_path + "_train"
+	scoring_file_path = file_path + "_score"
 
-	if os.path.lexists(training_file_path) or os.path.lexists(scoring_file_path):
-		print("One of the output files exists already - delete and try again.")
+	try:
+		_pickle_entries_flow(training_entries, training_file_path)
+		_pickle_entries_flow(scoring_entries, scoring_file_path)
+	except IOError as io_err:
+		print(io_err.message)
 		return
-
-	print("Saving training data to {}...".format(training_file_path))
-
-	with open(training_file_path, "w") as train_file:
-		cPickle.dump(training_entries, train_file)
-
-	print("Done. Saving scoring data to {}...".format(scoring_file_path))
-
-	with open(scoring_file_path, "w") as score_file:
-		cPickle.dump(scoring_entries, score_file)
 
 	print("Split was finished successfully!")
 	return
@@ -353,6 +346,22 @@ def _get_log_entries_from_pickle(file_path):
 
 def _has_pickle_suffix(file_path):
 	return file_path.endswith(_PICKLE_SUFFIX)
+
+
+def _pickle_entries_flow(log_entries, file_path):
+	""" Stores the given LogEntry objects in a pickle. Updates the user about the progress. """
+
+	file_path += _PICKLE_SUFFIX
+
+	if os.path.lexists(file_path):
+		raise IOError("File {} exists already - delete and try again.".format(file_path))
+
+	print("Saving {} entries to {}...".format(len(log_entries), file_path))
+
+	with open(file_path, "w") as file_handle:
+		cPickle.dump(log_entries, file_handle)
+
+	print("Done.")
 
 
 def _print_table(list_of_lists, headline=None, head_sep=True):

@@ -480,7 +480,9 @@ if __name__ == "__main__":
 		# Actual functionality
 		ARGS.function(ARGS)
 		TIME_EXPIRED = time.time() - START_TIME
-		print("Finished in {}".format(ids_tools.format_time_passed(TIME_EXPIRED)))
+		print("Finished task '{}' in {}".format(
+			sys.argv[1],
+			ids_tools.format_time_passed(TIME_EXPIRED)))
 		exit()
 	except KeyboardInterrupt:
 		pass

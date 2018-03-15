@@ -20,7 +20,6 @@ def train_call(args):
 	""" Unpack the args and call _train.
 	Expects 'train_file_path', 'multi_class' and 'extend_models'. """
 	_train(args.train_file_path, args.multi_class, args.extend_models)
-	exit()
 
 
 def _train(file_path, multi_class, extend_models):
@@ -35,7 +34,7 @@ def _train(file_path, multi_class, extend_models):
 	if file_path in saved_so_far:
 		print("This file has already been used for training."
 			+ " If you think this is a mistake, rename it and run again.")
-		exit()
+		return
 
 	log_entries = _read_file_flow(file_path)
 	_train_entries(log_entries, multi_class, extend_models)
@@ -64,7 +63,6 @@ def score_call(args):
 	""" Unpack the args and call _score.
 	Expects 'test_file_path' and 'multi_class'. """
 	_score(args.test_file_path, args.multi_class)
-	exit()
 
 
 def _score(file_path, multi_class):
@@ -131,7 +129,6 @@ def convert_call(args):
 		_convert_pickle(args.file_path)
 	else:
 		raise NotImplementedError("Arg configuration not implmented")
-	exit()
 
 
 def _convert_split(file_path, split):
@@ -180,7 +177,6 @@ def anal_call(args):
 	""" Unpack the args and call _analyse.
 	Expects 'file_path'. """
 	_analyse(args.file_path)
-	exit()
 
 
 def _analyse(file_path):
@@ -472,5 +468,6 @@ if __name__ == "__main__":
 		ARGS.function(ARGS)
 		TIME_EXPIRED = time.time() - START_TIME
 		print("Finished in {}".format(ids_tools.format_time_passed(TIME_EXPIRED)))
+		exit()
 	except KeyboardInterrupt:
 		pass

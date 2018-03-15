@@ -172,6 +172,7 @@ def _convert_pickle(file_path):
 	print("Pickling finished successfully!")
 
 
+# pylint: disable-msg=W0613; (Unused argument)
 def reset_call(args):
 	""" Call _reset. Expects nothing. """
 	_reset()

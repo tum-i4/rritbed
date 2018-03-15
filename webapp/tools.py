@@ -165,7 +165,8 @@ def _read_file_flow(file_path):
 
 
 def anal_call(args):
-	""" Unpack the args and call _analyse. """
+	""" Unpack the args and call _analyse.
+	Expects 'file_path'. """
 	_analyse(args.file_path)
 	exit()
 
@@ -280,6 +281,19 @@ def _analyse_entries(log_entries):
 		found_classes, entries_per_class, app_ids_per_class)
 
 
+def convert_call(args):
+	""" Unpack the args and call _convert.
+	Expects 'file_path' and 'split'. """
+	_convert(args.file_path, args.split)
+	exit()
+
+
+def _convert(file_path, split):
+	""" Convert the given file. Currently supports splitting. """
+	raise NotImplementedError()
+
+
+
 def _get_log_entries_from_file(file_path):
 	lines = Dir.read_lines(file_path)
 	# Remove newline at the end of the line and create LogEntry objects
@@ -359,6 +373,13 @@ if __name__ == "__main__":
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
 		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
 		ANAL_PARSER.set_defaults(function=anal_call)
+
+		CONV_PARSER = SUBPARSERS.add_parser("convert", help="Convert log files")
+		CONV_PARSER.add_argument("file_path", metavar="PATH")
+		MODE_GROUP = CONV_PARSER.add_mutually_exclusive_group(required=True)
+		# MODE_GROUP.add_argument("--pickle", "-p", action="store_true")
+		MODE_GROUP.add_argument("--split", "-s", type=int)
+		CONV_PARSER.set_defaults(function=convert_call)
 
 		ARGS = PARSER.parse_args()
 

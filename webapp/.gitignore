@@ -1,5 +1,7 @@
 log
 state
+training_data/*.pickle
+ids/models
 
 # Template at https://www.gitignore.io/api/VisualStudioCode
 

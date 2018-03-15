@@ -122,10 +122,10 @@ def _train_and_score(file_path, split, multi_class):
 def convert_call(args):
 	""" Unpack the args and call _convert.
 	Expects 'file_path' and 'split' or 'pickle'. """
-	if args.split:
-		_convert_split(args.file_path, args.split)
-	elif args.pickle:
+	if args.pickle:
 		_convert_pickle(args.file_path)
+	elif args.split:
+		_convert_split(args.file_path, args.split)
 	else:
 		raise NotImplementedError("Arg configuration not implmented")
 

@@ -158,7 +158,7 @@ class IntrusionClassifier(object):
 
 		printer.prt("Found all {} app ids".format(len(self._app_ids)))
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class)
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class, printer)
 
 		# Ensure each app_id classifier has samples of all classes to learn from.
 		printer.prt("Verifying given data...")
@@ -264,7 +264,7 @@ class IntrusionClassifier(object):
 			len(log_entries),
 			"multi-class" if multi_class else "two-class"))
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class)
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class, printer)
 
 		app_id_count = 1
 		scores = {}
@@ -294,10 +294,10 @@ class IntrusionClassifier(object):
 			return scores
 
 
-	def _log_entries_to_app_id_train_data_dict(self, log_entries, multi_class):
+	def _log_entries_to_app_id_train_data_dict(self, log_entries, multi_class, printer):
 		""" Convert the given log entries to feature vectors and classes per app_id. """
 
-		print("Transforming the log data to trainable vectors...")
+		printer.prt("Transforming the log data to trainable vectors...")
 
 		app_id_datasets = {}
 		for app_id in self._app_ids:
@@ -311,7 +311,7 @@ class IntrusionClassifier(object):
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
 
-		print("Done.")
+		printer.prt("Done.")
 		return app_id_datasets
 
 

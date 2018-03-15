@@ -106,7 +106,7 @@ def _train_and_score(file_path, split, multi_class):
 	if len(log_entries) < 10000:
 		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
 
-	training_entries, scoring_entries = _split_log_entries(log_entries, split)
+	training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
 
 	preconditions_msg = "Please make sure that all preconditions are met and rerun."
 
@@ -121,60 +121,46 @@ def _train_and_score(file_path, split, multi_class):
 		return
 
 
-def _split_log_entries(log_entries, split):
-	""" Split the given log entries equally by app_id and each app_id's class. """
-
-	print("Trying to split the entries according to given split of {}/{}".format(split, 100 - split))
-
-	# { app_id : { class : [entries] } }
-	entries_per_app_id_per_class = {}
-
-	# Sort items into buckets
-	for log_entry in log_entries:
-		app_id = ids_tools.log_entry_to_app_id(log_entry)
-		its_class = log_entry.intrusion
-
-		if app_id not in entries_per_app_id_per_class:
-			entries_per_app_id_per_class[app_id] = {}
-		if its_class not in entries_per_app_id_per_class[app_id]:
-			entries_per_app_id_per_class[app_id][its_class] = []
-
-		entries_per_app_id_per_class[app_id][its_class].append(log_entry)
-
-	result_train = []
-	result_score = []
-
-	# Split each bucket and add to the result
-	for app_id in entries_per_app_id_per_class:
-		for a_class in entries_per_app_id_per_class[app_id]:
-			items = entries_per_app_id_per_class[app_id][a_class]
-
-			its_split = int((split / 100.0) * len(items))
-
-			result_train += items[:its_split]
-			result_score += items[its_split:]
-
-	achieved_split = round((len(result_train) / float(len(log_entries))) * 100, 2)
-	print("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
-	return result_train, result_score
+def convert_call(args):
+	""" Unpack the args and call _convert.
+	Expects 'file_path' and 'split'. """
+	_convert(args.file_path, args.split)
+	exit()
 
 
-def _read_file_flow(file_path):
-	""" Read the given file as LogEntry objects. Updates the user about the progress. """
+def _convert(file_path, split):
+	""" Convert the given file. Currently supports splitting. """
 
-	log_entries = []
+	if split <= 0 or split >= 100:
+		raise ValueError("Invalid split \"{}\" given.".format(split))
 
-	if _has_pickle_suffix(file_path):
-		print("Using pickle file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		print("Reading file and verifying contents...")
-		log_entries = _get_log_entries_from_pickle(file_path)
-	else:
-		print("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		print("Reading file and converting lines to LogEntry objects...")
-		log_entries = _get_log_entries_from_file(file_path)
+	log_entries = _read_file_flow(file_path)
 
-	print("Done.")
-	return log_entries
+	if len(log_entries) < 10000:
+		print("Warning: Only {} entries found. Number might be too small for training or scoring"
+			.format(len(log_entries)))
+
+	training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
+
+	training_file_path = file_path + "_train" + _PICKLE_SUFFIX
+	scoring_file_path = file_path + "_score" + _PICKLE_SUFFIX
+
+	if os.path.lexists(training_file_path) or os.path.lexists(scoring_file_path):
+		print("One of the output files exists already - delete and try again.")
+		return
+
+	print("Saving training data to {}...".format(training_file_path))
+
+	with open(training_file_path, "w") as train_file:
+		cPickle.dump(training_entries, train_file)
+
+	print("Done. Saving scoring data to {}...".format(scoring_file_path))
+
+	with open(scoring_file_path, "w") as score_file:
+		cPickle.dump(scoring_entries, score_file)
+
+	print("Split was finished successfully!")
+	return
 
 
 def anal_call(args):
@@ -294,46 +280,61 @@ def _analyse_entries(log_entries):
 		found_classes, entries_per_class, app_ids_per_class)
 
 
-def convert_call(args):
-	""" Unpack the args and call _convert.
-	Expects 'file_path' and 'split'. """
-	_convert(args.file_path, args.split)
-	exit()
+def _split_log_entries_flow(log_entries, split):
+	""" Split the given log entries equally by app_id and each app_id's class.
+	Updates the user about progress and success. """
+
+	print("Trying to split the entries according to given split of {}/{}".format(split, 100 - split))
+
+	# { app_id : { class : [entries] } }
+	entries_per_app_id_per_class = {}
+
+	# Sort items into buckets
+	for log_entry in log_entries:
+		app_id = ids_tools.log_entry_to_app_id(log_entry)
+		its_class = log_entry.intrusion
+
+		if app_id not in entries_per_app_id_per_class:
+			entries_per_app_id_per_class[app_id] = {}
+		if its_class not in entries_per_app_id_per_class[app_id]:
+			entries_per_app_id_per_class[app_id][its_class] = []
+
+		entries_per_app_id_per_class[app_id][its_class].append(log_entry)
+
+	result_train = []
+	result_score = []
+
+	# Split each bucket and add to the result
+	for app_id in entries_per_app_id_per_class:
+		for a_class in entries_per_app_id_per_class[app_id]:
+			items = entries_per_app_id_per_class[app_id][a_class]
+
+			its_split = int((split / 100.0) * len(items))
+
+			result_train += items[:its_split]
+			result_score += items[its_split:]
+
+	achieved_split = round((len(result_train) / float(len(log_entries))) * 100, 2)
+	print("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
+	return result_train, result_score
 
 
-def _convert(file_path, split):
-	""" Convert the given file. Currently supports splitting. """
+def _read_file_flow(file_path):
+	""" Read the given file as LogEntry objects. Updates the user about the progress. """
 
-	if split <= 0 or split >= 100:
-		raise ValueError("Invalid split \"{}\" given.".format(split))
+	log_entries = []
 
-	log_entries = _read_file_flow(file_path)
+	if _has_pickle_suffix(file_path):
+		print("Using pickle file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+		print("Reading file and verifying contents...")
+		log_entries = _get_log_entries_from_pickle(file_path)
+	else:
+		print("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+		print("Reading file and converting lines to LogEntry objects...")
+		log_entries = _get_log_entries_from_file(file_path)
 
-	if len(log_entries) < 10000:
-		print("Warning: Only {} entries found. Number might be too small for training or scoring"
-			.format(len(log_entries)))
-
-	training_entries, scoring_entries = _split_log_entries(log_entries, split)
-
-	training_file_path = file_path + "_train" + _PICKLE_SUFFIX
-	scoring_file_path = file_path + "_score" + _PICKLE_SUFFIX
-
-	if os.path.lexists(training_file_path) or os.path.lexists(scoring_file_path):
-		print("One of the output files exists already - delete and try again.")
-		return
-
-	print("Saving training data to {}...".format(training_file_path))
-
-	with open(training_file_path, "w") as train_file:
-		cPickle.dump(training_entries, train_file)
-
-	print("Done. Saving scoring data to {}...".format(scoring_file_path))
-
-	with open(scoring_file_path, "w") as score_file:
-		cPickle.dump(scoring_entries, score_file)
-
-	print("Split was finished successfully!")
-	return
+	print("Done.")
+	return log_entries
 
 
 def _get_log_entries_from_file(file_path):

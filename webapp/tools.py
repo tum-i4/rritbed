@@ -102,10 +102,7 @@ def _train_and_score(file_path, split, multi_class):
 	if len(log_entries) < 10000:
 		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
 
-	print("Trying to split the entries according to given split of {}/{}".format(split, 100 - split))
 	training_entries, scoring_entries = _split_log_entries(log_entries, split)
-	achieved_split = round((len(training_entries) / float(len(log_entries))) * 100, 2)
-	print("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
 
 	preconditions_msg = "Please make sure that all preconditions are met and rerun."
 
@@ -122,6 +119,8 @@ def _train_and_score(file_path, split, multi_class):
 
 def _split_log_entries(log_entries, split):
 	""" Split the given log entries equally by app_id and each app_id's class. """
+
+	print("Trying to split the entries according to given split of {}/{}".format(split, 100 - split))
 
 	# { app_id : { class : [entries] } }
 	entries_per_app_id_per_class = {}
@@ -151,6 +150,8 @@ def _split_log_entries(log_entries, split):
 			result_train += items[:its_split]
 			result_score += items[its_split:]
 
+	achieved_split = round((len(result_train) / float(len(log_entries))) * 100, 2)
+	print("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
 	return result_train, result_score
 
 

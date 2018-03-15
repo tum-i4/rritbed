@@ -241,11 +241,13 @@ class IntrusionClassifier(object):
 		return [self._label_int_mapping[x] for x in labels]
 
 
-	def score(self, log_entries, multi_class, do_return=False):
+	def score(self, log_entries, multi_class, do_return=False, squelch_output=False):
 		"""
 		Score the models' prediction for the given log entries.
 		: param do_return : Return a machine-readable { app_id: score } dict.
 		"""
+
+		printer = ids_tools.Printer(squelch=squelch_output, instance=self)
 
 		has_models = self._has_models()
 		if has_models == ModelDir.Found.NONE:
@@ -258,7 +260,7 @@ class IntrusionClassifier(object):
 		elif (self._type == ModelDir.Type.MULTICLASS) != multi_class:
 			raise ValueError("Trained models are of invalid type.")
 
-		print("Starting scoring with {} LogEntry objects ({}).".format(
+		printer.prt("Starting scoring with {} LogEntry objects ({}).".format(
 			len(log_entries),
 			"multi-class" if multi_class else "two-class"))
 
@@ -268,7 +270,7 @@ class IntrusionClassifier(object):
 		scores = {}
 
 		for app_id, train_set in app_id_datasets.items():
-			print("({}/{}) Scoring model for \"{}\"..."
+			printer.prt("({}/{}) Scoring model for \"{}\"..."
 				.format(app_id_count, len(app_id_datasets), app_id))
 
 			# Load model if it exists already
@@ -278,15 +280,15 @@ class IntrusionClassifier(object):
 
 			score = clf.score(train_set[0], train_set[1])
 
-			print("Model scored {}.".format(ids_tools.format_percentage(score)))
+			printer.prt("Model scored {}.".format(ids_tools.format_percentage(score)))
 
 			scores[app_id] = score
 			app_id_count += 1
 
 		total_score = sum(scores.values()) / len(scores)
 
-		print("")
-		print("Total score: {}".format(ids_tools.format_percentage(total_score)))
+		printer.prt("")
+		printer.prt("Total score: {}".format(ids_tools.format_percentage(total_score)))
 
 		if do_return:
 			return scores

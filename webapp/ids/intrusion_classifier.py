@@ -177,6 +177,9 @@ class IntrusionClassifier(object):
 				if exp_class not in received_classes:
 					raise value_error
 
+		model_type = ModelDir.Type.MULTICLASS if multi_class else ModelDir.Type.TWOCLASS
+		ModelDir.set_model_type(model_type)
+
 		app_id_count = 1
 
 		for app_id, train_set in app_id_datasets.items():

@@ -2,6 +2,7 @@
 """ Tools for command-line interaction with the server """
 
 import argparse
+import cPickle
 import os
 
 from log_entry import LogEntry
@@ -9,6 +10,9 @@ from ids.intrusion_classifier import IntrusionClassifier
 from ids.dir_utils import Dir
 import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
+
+
+_PICKLE_SUFFIX = ".pickle"
 
 
 def train_call(args):
@@ -158,9 +162,17 @@ def _split_log_entries(log_entries, split):
 def _read_file_flow(file_path):
 	""" Read the given file as LogEntry objects. Updates the user about the progress. """
 
-	print("Using file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-	print("Reading file and converting lines to LogEntry objects...")
-	log_entries = _get_log_entries_from_file(file_path)
+	log_entries = []
+
+	if _has_pickle_suffix(file_path):
+		print("Using pickle file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+		print("Reading file and verifying contents...")
+		log_entries = _get_log_entries_from_pickle(file_path)
+	else:
+		print("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+		print("Reading file and converting lines to LogEntry objects...")
+		log_entries = _get_log_entries_from_file(file_path)
+
 	print("Done.")
 	return log_entries
 

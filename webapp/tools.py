@@ -301,6 +301,18 @@ def _get_log_entries_from_file(file_path):
 	return [LogEntry.from_log_string(line[:-1]) for line in lines]
 
 
+def _get_log_entries_from_pickle(file_path):
+	with open(file_path, "r") as pickle_file:
+		result = cPickle.load(pickle_file)
+		if not isinstance(result[0], LogEntry):
+			raise ValueError("Given pickle file does not contain log entries.")
+		return result
+
+
+def _has_pickle_suffix(file_path):
+	return file_path.endswith(_PICKLE_SUFFIX)
+
+
 def _print_table(list_of_lists, headline=None, head_sep=True):
 	""" Print the given list of tuple as a table, regarding the first entry the header. """
 

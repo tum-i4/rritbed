@@ -172,6 +172,16 @@ def _convert_pickle(file_path):
 	print("Pickling finished successfully!")
 
 
+def reset_call(args):
+	""" Call _reset. Expects nothing. """
+	_reset()
+
+
+def _reset():
+	""" Move the generated models to a sub-folder and reset the intrusion_classifier_history. """
+	raise NotImplementedError()
+
+
 def anal_call(args):
 	""" Unpack the args and call _analyse.
 	Expects 'file_path'. """
@@ -455,6 +465,9 @@ if __name__ == "__main__":
 		MODE_GROUP.add_argument("--pickle", "-p", action="store_true")
 		MODE_GROUP.add_argument("--split", "-s", type=int)
 		CONV_PARSER.set_defaults(function=convert_call)
+
+		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")
+		RESET_PARSER.set_defaults(function=reset_call)
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
 		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")

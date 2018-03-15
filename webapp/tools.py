@@ -4,11 +4,12 @@
 import argparse
 import cPickle
 import os
+import sys
 import time
 
 from log_entry import LogEntry
 from ids.intrusion_classifier import IntrusionClassifier
-from ids.dir_utils import Dir
+from ids.dir_utils import Dir, ModelDir
 import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
 
@@ -180,7 +181,13 @@ def reset_call(args):
 
 def _reset():
 	""" Move the generated models to a sub-folder and reset the intrusion_classifier_history. """
-	raise NotImplementedError()
+
+	print("Resetting...")
+	if os.path.lexists(_HISTORY_FILE):
+		os.remove(_HISTORY_FILE)
+		print("Removed the training history.")
+	message = ModelDir.reset_dir()
+	print(message)
 
 
 def anal_call(args):

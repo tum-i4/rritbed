@@ -14,6 +14,7 @@ import ids.ids_data as ids_data
 
 
 _PICKLE_SUFFIX = ".pickle"
+_HISTORY_FILE = "intrusion_classifier_history"
 
 
 def train_call(args):
@@ -24,12 +25,10 @@ def train_call(args):
 
 def _train(file_path, multi_class, extend_models):
 	""" Train the classifier with the given file. Optionally allow extension of models. """
-
-	history_file = "intrusion_classifier_history"
 	saved_so_far = []
 
-	if os.path.lexists(history_file):
-		saved_so_far = Dir.read_lines(history_file)
+	if os.path.lexists(_HISTORY_FILE):
+		saved_so_far = Dir.read_lines(_HISTORY_FILE)
 
 	if file_path in saved_so_far:
 		print("This file has already been used for training."
@@ -39,7 +38,7 @@ def _train(file_path, multi_class, extend_models):
 	log_entries = _read_file_flow(file_path)
 	_train_entries(log_entries, multi_class, extend_models)
 
-	with open(history_file, 'a') as hist_file:
+	with open(_HISTORY_FILE, 'a') as hist_file:
 		hist_file.write(file_path + "\n")
 
 

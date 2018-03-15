@@ -425,16 +425,16 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
-		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
-		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
-		ANAL_PARSER.set_defaults(function=anal_call)
-
 		CONV_PARSER = SUBPARSERS.add_parser("convert", help="Convert log files")
 		CONV_PARSER.add_argument("file_path", metavar="PATH")
 		MODE_GROUP = CONV_PARSER.add_mutually_exclusive_group(required=True)
 		# MODE_GROUP.add_argument("--pickle", "-p", action="store_true")
 		MODE_GROUP.add_argument("--split", "-s", type=int)
 		CONV_PARSER.set_defaults(function=convert_call)
+
+		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
+		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
+		ANAL_PARSER.set_defaults(function=anal_call)
 
 		ARGS = PARSER.parse_args()
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """ Classifier """
 
-import re
 import time
 
 import numpy

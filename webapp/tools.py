@@ -163,7 +163,16 @@ def _convert_split(file_path, split):
 
 def _convert_pickle(file_path):
 	""" Pickle the given file. """
-	raise NotImplementedError()
+
+	log_entries = _read_file_flow(file_path)
+
+	try:
+		_pickle_entries_flow(log_entries, file_path)
+	except IOError as io_err:
+		print(io_err.message)
+		return
+
+	print("Pickling finished successfully!")
 
 
 def anal_call(args):

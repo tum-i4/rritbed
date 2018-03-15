@@ -49,8 +49,7 @@ class LogDir(object):
 		""" Move all model files to a new, unique sub directory and return a status message. """
 
 		file_list = LogDir._list_log_files()
-		folder_name, folder_path = LogDir._mk_unique_backup_dir()
-		return _reset_dir(file_list, folder_name, folder_path)
+		return _reset_dir(file_list, LogDir._mk_unique_backup_dir)
 
 
 	@staticmethod
@@ -148,8 +147,7 @@ class ModelDir(object):
 		""" Move all model related files to a new, unique sub directory and return a status message. """
 
 		file_list = ModelDir._list_model_files(include_type_file=True)
-		folder_name, folder_path = ModelDir._mk_unique_backup_dir()
-		return _reset_dir(file_list, folder_name, folder_path)
+		return _reset_dir(file_list, ModelDir._mk_unique_backup_dir)
 
 
 	@staticmethod
@@ -334,17 +332,19 @@ def _list_files_by_suffix(folder, suffix):
 	return result
 
 
-def _reset_dir(file_list, folder_name, folder_path):
+def _reset_dir(file_list, folder_creator):
 	""" Move the files to the given folder and return a status message. """
 
 	if not file_list:
-		return "Log folder is empty"
+		return "Folder is empty."
+
+	folder_name, folder_path = folder_creator()
 
 	# Move files
 	for file_path in file_list:
 		Dir.move_file(file_path, folder_path)
 
-	return "Moved {} file{} to {}".format(
+	return "Moved {} file{} to {}.".format(
 		len(file_list),
 		"s" if len(file_list) > 1 else "",
 		folder_name)

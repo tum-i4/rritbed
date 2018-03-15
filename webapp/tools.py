@@ -190,7 +190,7 @@ def _analyse(file_path):
 
 	# Reading file #
 
-	log_entries = _get_log_entries_from_file(file_path)
+	log_entries = _read_file_flow(file_path)
 
 	# Analysis #
 

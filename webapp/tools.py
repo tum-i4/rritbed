@@ -303,8 +303,37 @@ def convert_call(args):
 
 def _convert(file_path, split):
 	""" Convert the given file. Currently supports splitting. """
-	raise NotImplementedError()
 
+	if split <= 0 or split >= 100:
+		raise ValueError("Invalid split \"{}\" given.".format(split))
+
+	log_entries = _read_file_flow(file_path)
+
+	if len(log_entries) < 10000:
+		print("Warning: Only {} entries found. Number might be too small for training or scoring"
+			.format(len(log_entries)))
+
+	training_entries, scoring_entries = _split_log_entries(log_entries, split)
+
+	training_file_path = file_path + "_train" + _PICKLE_SUFFIX
+	scoring_file_path = file_path + "_score" + _PICKLE_SUFFIX
+
+	if os.path.lexists(training_file_path) or os.path.lexists(scoring_file_path):
+		print("One of the output files exists already - delete and try again.")
+		return
+
+	print("Saving training data to {}...".format(training_file_path))
+
+	with open(training_file_path, "w") as train_file:
+		cPickle.dump(training_entries, train_file)
+
+	print("Done. Saving scoring data to {}...".format(scoring_file_path))
+
+	with open(scoring_file_path, "w") as score_file:
+		cPickle.dump(scoring_entries, score_file)
+
+	print("Split was finished successfully!")
+	return
 
 
 def _get_log_entries_from_file(file_path):

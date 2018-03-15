@@ -162,7 +162,7 @@ class IntrusionClassifier(object):
 		# Ensure each app_id classifier has samples of all classes to learn from.
 		print("Verifying given data...")
 		for app_id, train_set in app_id_datasets.items():
-			expected_classes = self._get_expected_classes(app_id)
+			expected_classes = self._get_expected_classes(app_id, multi_class)
 			received_classes = set(train_set[1])
 			value_error = ValueError(
 				"The given samples for classifier {} don't contain all expected classes.".format(app_id)
@@ -205,11 +205,14 @@ class IntrusionClassifier(object):
 		print("\nTraining completed in {}.".format(ids_tools.format_time_passed(time_expired)))
 
 
-	def _get_expected_classes(self, app_id):
+	def _get_expected_classes(self, app_id, multi_class):
 		""" Return a list of expected classes for the given app_id classifier. """
 
 		labels = None
 		verify_hash = None
+
+		if not multi_class:
+			return [0, 1]
 
 		if app_id in ids_data.get_generators():
 			labels = ids_data.get_labels_gens()

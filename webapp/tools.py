@@ -4,6 +4,7 @@
 import argparse
 import cPickle
 import os
+import statistics as stat
 import sys
 import time
 
@@ -145,21 +146,33 @@ def _train_and_score(file_path, split, iterations, multi_class):
 			scores[app_id].append(scoring_result[app_id])
 
 		# Reset
-		printer.prt("Resetting...", newline=False)
+		printer.prt("Resetting... ", newline=False)
 		IntrusionClassifier.reset_models(purge=True)
 		printer.prt("Done.")
 
-	print("Results:")
-	result_table = [["Classifier", "Average score", "All scores"]]
-	for app_id in scores:
-		row = scores[app_id]
-		result_table.append([
-			app_id,
-			ids_tools.format_percentage(ids_tools.avg(row)),
-			", ".join([ids_tools.format_percentage(x) for x in row])
-		])
+	if not scores or not scores.itervalues().next():
+		printer.prt("No results!")
+		return
 
-	_print_table(result_table)
+	result_table = []
+
+	if len(scores.itervalues().next()) == 1:
+		result_table.append(["Classifier", "Score"])
+		for app_id in scores:
+			result_table.append([app_id, ids_tools.format_percentage(scores[app_id][0])])
+	else:
+		result_table.append(["Classifier", "Avg. score", "Variance", "", "All scores"])
+		for app_id in scores:
+			row = scores[app_id]
+			result_table.append([
+				app_id,
+				ids_tools.format_percentage(ids_tools.avg(row)),
+				round(stat.variance([x * 100 for x in row]), 2),
+				"",
+				", ".join([ids_tools.format_percentage(x) for x in row])
+			])
+
+	_print_table(result_table, headline="Results")
 
 
 def convert_call(args):
@@ -533,6 +546,7 @@ if __name__ == "__main__":
 		# Actual functionality
 		ARGS.function(ARGS)
 		TIME_EXPIRED = time.time() - START_TIME
+		print("")
 		print("Finished task '{}' in {}".format(
 			sys.argv[1],
 			ids_tools.format_time_passed(TIME_EXPIRED)))

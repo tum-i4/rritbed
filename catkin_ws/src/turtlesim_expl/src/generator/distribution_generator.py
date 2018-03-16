@@ -50,6 +50,11 @@ class DistributionGenerator(object):
 			raise NotImplementedError("Intrusion mode not implemented")
 
 
+	def seed(self, seed):
+		""" Seed the contained random generator. """
+		self.np_rand.seed(seed)
+
+
 	# pylint: disable-msg=E0202; (Attribute hides this method - intentional)
 	def generate(self, values=None):
 		""" Generate a new (value, intrusion_str) tuple based on the distribution method. """

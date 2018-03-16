@@ -146,7 +146,7 @@ def _train_and_score(file_path, split, iterations, multi_class):
 
 		# Reset
 		printer.prt("Resetting...", newline=False)
-		IntrusionClassifier.get_singleton().reset_models(purge=True)
+		IntrusionClassifier.reset_models(purge=True)
 		printer.prt("Done.")
 
 	print("Results:")

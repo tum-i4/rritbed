@@ -350,7 +350,8 @@ class IntrusionClassifier(object):
 		return ModelDir.has_models(self._app_ids)
 
 
-	def reset_models(self, purge=False):
+	@staticmethod
+	def reset_models(purge=False):
 		""" Reset the models.
 		returns: A status message. """
 		return ModelDir.reset_dir(purge)

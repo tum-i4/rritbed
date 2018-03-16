@@ -145,7 +145,9 @@ def _train_and_score(file_path, split, iterations, multi_class):
 			scores[app_id].append(scoring_result[app_id])
 
 		# Reset
+		printer.prt("Resetting...", newline=False)
 		IntrusionClassifier.get_singleton().reset_models(purge=True)
+		printer.prt("Done.")
 
 	print("Results:")
 	result_table = [["Classifier", "Average score", "All scores"]]

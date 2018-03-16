@@ -149,16 +149,14 @@ class IntrusionClassifier(object):
 			"multi-class" if multi_class else "two-class"))
 		start_time = time.time()
 
-		found_app_ids = set([ids_tools.log_entry_to_app_id(x) for x in log_entries])
-
-		# Ensure that all app_ids exist in the dataset
-		if (len(found_app_ids) != len(self._app_ids)
-			or any([True for x in self._app_ids if x not in found_app_ids])):
-			raise ValueError("Couldn't find data for every current app_id!")
-
 		printer.prt("Found all {} app ids".format(len(self._app_ids)))
 
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class, printer)
+
+		# Ensure that all app_ids exist in the dataset
+		if (len(app_id_datasets) != len(self._app_ids)
+			or any([True for x in self._app_ids if x not in app_id_datasets])):
+			raise ValueError("Couldn't find data for every current app_id!")
 
 		# Ensure each app_id classifier has samples of all classes to learn from.
 		printer.prt("Verifying given data...")

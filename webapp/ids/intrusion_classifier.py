@@ -206,7 +206,8 @@ class IntrusionClassifier(object):
 		self._load_models()
 
 		time_expired = time.time() - start_time
-		printer.prt("\nTraining completed in {}.".format(ids_tools.format_time_passed(time_expired)))
+		printer.prt("")
+		printer.prt("Training completed in {}.".format(ids_tools.format_time_passed(time_expired)))
 
 
 	def _get_expected_classes(self, app_id, multi_class):

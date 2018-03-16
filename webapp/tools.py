@@ -73,7 +73,7 @@ def _score(file_path, multi_class):
 	_score_entries(log_entries, multi_class)
 
 
-def _score_entries(log_entries, multi_class):
+def _score_entries(log_entries, multi_class, do_return=False, squelch_output=False):
 	"""
 	Score the given LogEntry objects.
 	returns: Boolean flag indicating success
@@ -82,11 +82,12 @@ def _score_entries(log_entries, multi_class):
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
-		clas.score(log_entries, multi_class=multi_class)
-		return True
+		result = clas.score(log_entries, multi_class=multi_class,
+			do_return=do_return, squelch_output=squelch_output)
+		return result if do_return else True
 	except ValueError as val_err:
 		print(val_err.message)
-		return False
+		return None if do_return else False
 
 
 def train_score_call(args):

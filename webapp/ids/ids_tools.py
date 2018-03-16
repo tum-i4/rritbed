@@ -79,6 +79,14 @@ def _strip_app_id(app_id):
 	return app_id
 
 
+### Sequences ###
+
+
+def avg(sequence):
+	""" Calculate the average value of a sequence. """
+	return sum([float(x) for x in sequence]) / float(len(sequence))
+
+
 ### Printing and output ###
 
 

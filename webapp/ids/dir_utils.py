@@ -143,11 +143,11 @@ class ModelDir(object):
 
 
 	@staticmethod
-	def reset_dir():
+	def reset_dir(purge=False):
 		""" Move all model related files to a new, unique sub directory and return a status message. """
 
 		file_list = ModelDir._list_model_files(include_type_file=True)
-		return _reset_dir(file_list, ModelDir._mk_unique_backup_dir)
+		return _reset_dir(file_list, ModelDir._mk_unique_backup_dir, purge)
 
 
 	@staticmethod
@@ -332,11 +332,16 @@ def _list_files_by_suffix(folder, suffix):
 	return result
 
 
-def _reset_dir(file_list, folder_creator):
+def _reset_dir(file_list, folder_creator, purge=False):
 	""" Move the files to the given folder and return a status message. """
 
 	if not file_list:
 		return "Folder is empty."
+
+	if purge:
+		for file_path in file_list:
+			os.remove(file_path)
+		return "Deleted {} files from the directory.".format(len(file_list))
 
 	folder_name, folder_path = folder_creator()
 

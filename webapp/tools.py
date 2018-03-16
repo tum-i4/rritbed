@@ -377,21 +377,23 @@ def _split_log_entries_flow(log_entries, split, squelch_output=False):
 	return result_train, result_score
 
 
-def _read_file_flow(file_path):
+def _read_file_flow(file_path, squelch_output=False):
 	""" Read the given file as LogEntry objects. Updates the user about the progress. """
+
+	printer = ids_tools.Printer(squelch=squelch_output)
 
 	log_entries = []
 
 	if _has_pickle_suffix(file_path):
-		print("Using pickle file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		print("Reading file and verifying contents...")
+		printer.prt("Using pickle file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+		printer.prt("Reading file and verifying contents...")
 		log_entries = _get_log_entries_from_pickle(file_path)
 	else:
-		print("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		print("Reading file and converting lines to LogEntry objects...")
+		printer.prt("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+		printer.prt("Reading file and converting lines to LogEntry objects...")
 		log_entries = _get_log_entries_from_file(file_path)
 
-	print("Done.")
+	printer.prt("Done.")
 	return log_entries
 
 

@@ -136,7 +136,7 @@ class IntrusionClassifier(object):
 		Train the app_id based classifiers with the given labelled entries.
 		"""
 
-		printer = ids_tools.Printer(squelch=squelch_output, instance=self)
+		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
@@ -247,7 +247,7 @@ class IntrusionClassifier(object):
 		: param do_return : Return a machine-readable { app_id: score } dict.
 		"""
 
-		printer = ids_tools.Printer(squelch=squelch_output, instance=self)
+		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
 		has_models = self._has_models()
 		if has_models == ModelDir.Found.NONE:

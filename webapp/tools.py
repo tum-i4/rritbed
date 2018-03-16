@@ -111,25 +111,34 @@ def _train_and_score(file_path, split, iterations, multi_class):
 	for app_id in ids_data.get_app_ids():
 		scores[app_id] = []
 
+	printer = ids_tools.Printer()
+
 	for i in range(1, iterations + 1):
-		print("Iteration {} of {}.".format(i, iterations))
+		printer.prt("Iteration {} of {}.".format(i, iterations))
 
 		# Split
-		training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
+		printer.prt("Splitting... ", newline=False)
+		training_entries, scoring_entries = _split_log_entries_flow(
+			log_entries, split, squelch_output=True)
 
 		preconditions_msg = "Please make sure that all preconditions are met and rerun."
 
 		# Train
-		training_succeeded = _train_entries(training_entries, multi_class, extend_models=False)
+		printer.prt("Training... ", newline=False)
+		training_succeeded = _train_entries(training_entries, multi_class,
+			extend_models=False, squelch_output=True)
 		if not training_succeeded:
-			print("Training failed. " + preconditions_msg)
-			return
+			printer.prt("")
+			printer.prt("Training failed. " + preconditions_msg)
+			continue
 
 		# Score
+		printer.prt("Scoring... ", newline=False)
 		scoring_result = _score_entries(scoring_entries, multi_class,
 			do_return=True, squelch_output=True)
 		if not scoring_result:
-			print("Scoring failed. " + preconditions_msg)
+			printer.prt("")
+			printer.prt("Scoring failed. " + preconditions_msg)
 			# Don't continue; reset needs to happen in order to allow for the next iteration
 
 		for app_id in scoring_result:

@@ -4,6 +4,7 @@
 from __future__ import print_function
 import md5
 import re
+import sys
 
 import ids_data
 from log_entry import LogEntry
@@ -100,6 +101,7 @@ class Printer(object):
 			message = "[{}] {}".format(self.name, message)
 
 		print(message, end="\n" if newline else "")
+		sys.stdout.flush()
 
 
 ### String formatting ###

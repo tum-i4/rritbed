@@ -335,11 +335,14 @@ def _analyse_entries(log_entries):
 		found_classes, entries_per_class, app_ids_per_class)
 
 
-def _split_log_entries_flow(log_entries, split):
+def _split_log_entries_flow(log_entries, split, squelch_output=False):
 	""" Split the given log entries equally by app_id and each app_id's class.
 	Updates the user about progress and success. """
 
-	print("Trying to split the entries according to given split of {}/{}".format(split, 100 - split))
+	printer = ids_tools.Printer(squelch=squelch_output)
+
+	printer.prt("Trying to split the entries according to given split of {}/{}"
+		.format(split, 100 - split))
 
 	# { app_id : { class : [entries] } }
 	entries_per_app_id_per_class = {}
@@ -370,7 +373,7 @@ def _split_log_entries_flow(log_entries, split):
 			result_score += items[its_split:]
 
 	achieved_split = round((len(result_train) / float(len(log_entries))) * 100, 2)
-	print("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
+	printer.prt("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
 	return result_train, result_score
 
 

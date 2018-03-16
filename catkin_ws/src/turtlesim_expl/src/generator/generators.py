@@ -26,31 +26,31 @@ ZIPF_STR = "zipf"
 # pylint: disable-msg=E1101
 GENERATORS = {
 	# Gaussian, Gumbel, Laplace: loc and scale arbitrary
-	GAUSSIAN_STR : DistributionGenerator(np.random.normal, GAUSSIAN_STR),
-	GUMBEL_STR : DistributionGenerator(np.random.gumbel, GUMBEL_STR),
-	LAPLACE_STR : DistributionGenerator(np.random.laplace, LAPLACE_STR),
+	GAUSSIAN_STR : DistributionGenerator("normal", GAUSSIAN_STR),
+	GUMBEL_STR : DistributionGenerator("gumbel", GUMBEL_STR),
+	LAPLACE_STR : DistributionGenerator("laplace", LAPLACE_STR),
 	# Logistic: loc arbitrary, scale > 0
-	LOGISTIC_STR : DistributionGenerator(np.random.logistic, LOGISTIC_STR,
+	LOGISTIC_STR : DistributionGenerator("logistic", LOGISTIC_STR,
 		[AC(0.0), AC(1.0, min_value=0.1)]),
 	# Pareto: a(lpha) > 0
-	PARETO_STR : DistributionGenerator(np.random.pareto, PARETO_STR,
+	PARETO_STR : DistributionGenerator("pareto", PARETO_STR,
 		[AC(1.0, min_value=0.1)]),
 	# Rayleigh: scale > 0
-	RAYLEIGH_STR : DistributionGenerator(np.random.rayleigh, RAYLEIGH_STR,
+	RAYLEIGH_STR : DistributionGenerator("rayleigh", RAYLEIGH_STR,
 		[AC(1.0, min_value=0.1)]),
 	# Uniform: low < high (not a binding constraint)
-	UNIFORM_STR : DistributionGenerator(np.random.uniform, UNIFORM_STR),
+	UNIFORM_STR : DistributionGenerator("uniform", UNIFORM_STR),
 	# Von Mises: mu arbitrary, kappa >= 0
-	VON_MISES_STR : DistributionGenerator(np.random.vonmises, VON_MISES_STR,
+	VON_MISES_STR : DistributionGenerator("vonmises", VON_MISES_STR,
 		[AC(0.0), AC(1.0, min_value=0)]),
 	# Wald: mean > 0, scale > 0
-	WALD_STR : DistributionGenerator(np.random.wald, WALD_STR,
+	WALD_STR : DistributionGenerator("wald", WALD_STR,
 		[AC(1.0, min_value=0.1), AC(1.0, min_value=0.1)]),
 	# Weibull: a > 0
-	WEIBULL_STR : DistributionGenerator(np.random.weibull, WEIBULL_STR,
+	WEIBULL_STR : DistributionGenerator("weibull", WEIBULL_STR,
 		[AC(5.0, min_value=0.1)]),
 	# Zipf: a > 1
-	ZIPF_STR : DistributionGenerator(np.random.zipf, ZIPF_STR,
+	ZIPF_STR : DistributionGenerator("zipf", ZIPF_STR,
 		[AC(2.0, min_value=1.1)])
 }
 

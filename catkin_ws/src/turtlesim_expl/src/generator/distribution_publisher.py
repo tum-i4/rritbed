@@ -58,7 +58,8 @@ class DistributionPublisher(object):
 			return_message = self._setup_reader(args.pub_file_path, args.repeat_file)
 		#    b) Generator based
 		elif args.mode == "gen":
-			return_message = self._setup_generator(args.generator, args.params, args.intrusion_mode)
+			return_message = self._setup_generator(
+				args.generator, args.params, args.intrusion_mode, args.seed)
 			queue_size = self._generator.queue_size
 		else:
 			raise NotImplementedError()
@@ -97,7 +98,7 @@ class DistributionPublisher(object):
 			file_path, " (repeating)" if self._repeat_file else "")
 
 
-	def _setup_generator(self, gen_name, parameters, intrusion_mode):
+	def _setup_generator(self, gen_name, parameters, intrusion_mode, seed=None):
 		""" Setup for data generation """
 
 		try:
@@ -107,6 +108,9 @@ class DistributionPublisher(object):
 
 		if intrusion_mode is not None:
 			generator.activate_intrusion(intrusion_mode)
+
+		if seed is not None:
+			generator.seed(seed)
 
 		self._generator = generator
 
@@ -187,6 +191,7 @@ if __name__ == "__main__":
 		PARSER_GEN.add_argument("generator", choices=GENS.get_generator_names(),
 			help="The generator name")
 		PARSER_GEN.add_argument("params", type=float, nargs="*", help="Optional parameters")
+		PARSER_GEN.add_argument("--seed", "-s", type=int)
 
 		# File pub mode
 		PARSER_FILE = SUB_PARSERS.add_parser("file", help="Publish data from a file")

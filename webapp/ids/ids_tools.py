@@ -84,19 +84,22 @@ def _strip_app_id(app_id):
 class Printer(object):
 	""" Printer that allows squelching output. """
 
-	def __init__(self, squelch=False, instance=None):
+	def __init__(self, squelch=False, name=None):
 		""" Ctor """
 		object.__init__(self)
 		self.squelch = squelch
-		if instance:
-			self.name = type(instance).__name__
+		self.name = name
 
-	def prt(self, message, end="\n"):
+	def prt(self, message, preface=True, newline=True):
 		""" Print if not squelching. """
-		if not self.squelch:
-			if self.name:
-				message = "[{}] {}".format(self.name, message)
-			print(message, end=end)
+
+		if self.squelch:
+			return
+
+		if preface and self.name:
+			message = "[{}] {}".format(self.name, message)
+
+		print(message, end="\n" if newline else "")
 
 
 ### String formatting ###

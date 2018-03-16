@@ -107,6 +107,10 @@ def _train_and_score(file_path, split, iterations, multi_class):
 	if len(log_entries) < 10000:
 		raise IOError("Insufficient number of entries found in the file. Need >= 10,000.")
 
+	scores = {}
+	for app_id in ids_data.get_app_ids():
+		scores[app_id] = []
+
 	for i in range(1, iterations + 1):
 		print("Iteration {} of {}.".format(i, iterations))
 
@@ -122,14 +126,29 @@ def _train_and_score(file_path, split, iterations, multi_class):
 			return
 
 		# Score
-		scoring_succeeded = _score_entries(scoring_entries, multi_class)
-		if not scoring_succeeded:
+		scoring_result = _score_entries(scoring_entries, multi_class,
+			do_return=True, squelch_output=True)
+		if not scoring_result:
 			print("Scoring failed. " + preconditions_msg)
-			return
+			# Don't continue; reset needs to happen in order to allow for the next iteration
+
+		for app_id in scoring_result:
+			scores[app_id].append(scoring_result[app_id])
 
 		# Reset
-		reset_msg = IntrusionClassifier.get_singleton().reset_models()
-		print(reset_msg)
+		IntrusionClassifier.get_singleton().reset_models(purge=True)
+
+	print("Results:")
+	result_table = [["Classifier", "Average score", "All scores"]]
+	for app_id in scores:
+		row = scores[app_id]
+		result_table.append([
+			app_id,
+			ids_tools.format_percentage(ids_tools.avg(row)),
+			", ".join([ids_tools.format_percentage(x) for x in row])
+		])
+
+	_print_table(result_table)
 
 
 def convert_call(args):
@@ -238,7 +257,6 @@ def _analyse(file_path):
 	)
 
 	# App ID table
-
 	per_app_id = []
 	per_app_id.append(["App ID", "Elements"] + all_classes)
 	for app_id in all_app_ids:
@@ -255,7 +273,6 @@ def _analyse(file_path):
 	_print_table(per_app_id, headline="Elements and classes per app ID")
 
 	# Class table
-
 	per_class = []
 	per_class.append(["Class", "Elements", "App Ids"])
 	for a_class in all_classes:

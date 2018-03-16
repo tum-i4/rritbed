@@ -43,7 +43,7 @@ def _train(file_path, multi_class, extend_models):
 		hist_file.write(file_path + "\n")
 
 
-def _train_entries(log_entries, multi_class, extend_models):
+def _train_entries(log_entries, multi_class, extend_models, squelch_output=False):
 	"""
 	Train with the given LogEntry objects.
 	returns: Boolean flag indicating success
@@ -52,7 +52,8 @@ def _train_entries(log_entries, multi_class, extend_models):
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
-		clas.train(log_entries, multi_class=multi_class, extend_models=extend_models)
+		clas.train(log_entries, multi_class=multi_class,
+			extend_models=extend_models, squelch_output=squelch_output)
 		return True
 	except ValueError as val_err:
 		print(val_err.message)

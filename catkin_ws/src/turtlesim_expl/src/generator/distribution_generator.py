@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ DistributionGenerator class """
 
+import numpy
+
 from argument_constraint import ArgumentConstraint
 
 
@@ -13,7 +15,7 @@ class DistributionGenerator(object):
 
 
 	def __init__(
-		self, method, name, args_constraints=None, rate_in_hz=10, queue_size=10):
+		self, method_name, name, args_constraints=None, rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
 		object.__init__(self)
@@ -25,7 +27,10 @@ class DistributionGenerator(object):
 		self.queue_size = queue_size
 
 		self.generate = self._generate_impl
-		self._method = method
+
+		# pylint: disable-msg=E1101; (Module has no '...' member)
+		self.np_rand = numpy.random.RandomState()
+		self._method = getattr(self.np_rand, method_name)
 
 		self._intrusion_generators = {
 			DistributionGenerator.ONLY_ZEROES: self._generate_intrusion_zeroes,

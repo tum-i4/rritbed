@@ -310,12 +310,14 @@ def _analyse(file_path):
 	return
 
 
-def _analyse_entries(log_entries):
+def _analyse_entries(log_entry_generator):
 	"""
-	Analyse the given LogEntry object.
+	Analyse the LogEntry objects from the given generator.
 	returns: A tuple containing (found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
 	found_classes, entries_per_class, app_ids_per_class)
 	"""
+
+	total_entries = 0
 
 	all_app_ids = ids_data.get_app_ids()
 	found_app_ids = set()
@@ -335,9 +337,11 @@ def _analyse_entries(log_entries):
 		entries_per_class[a_class] = []
 		app_ids_per_class[a_class] = set()
 
-	for entry in log_entries:
+	for entry in log_entry_generator:
 		if not entry.intrusion:
 			raise NotImplementedError("Entries without labels can currently not be handled")
+
+		total_entries += 1
 
 		app_id = ids_tools.log_entry_to_app_id(entry)
 		its_class = entry.intrusion
@@ -355,7 +359,7 @@ def _analyse_entries(log_entries):
 		entries_per_class[its_class].append(entry)
 		app_ids_per_class[its_class].add(app_id)
 
-	return (found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
+	return (total_entries, found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
 		found_classes, entries_per_class, app_ids_per_class)
 
 

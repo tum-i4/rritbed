@@ -3,6 +3,7 @@
 
 import os
 
+import logger as LG
 import generator.distribution_publisher as DP
 import mover.basic_mover as BM
 import mover.turtle_control as TC
@@ -14,7 +15,7 @@ def verify():
 	use the correct BASE_PATH. """
 
 	result = []
-	for module in [DP, BM, TC]:
+	for module in [LG, DP, BM, TC]:
 		msg = "{}:".format(os.path.splitext(os.path.basename(module.__file__))[0])
 		if module.BASE_PATH != BASE_PATH:
 			print("{} invalid [{}]".format(msg, module.BASE_PATH))

@@ -2,6 +2,7 @@
 """ Logging node """
 
 import argparse
+import os
 import random
 import sys
 import time
@@ -15,6 +16,10 @@ from turtlesim_expl.msg import GenValue
 # pylint: disable-msg=C0411; (Standard import should be above - I don't consider it "standard")
 from pipes.pose_pipe import PosePipe
 from pipes.pose_processor import PoseProcessor, CC_STR, POI_STR, TSP_STR
+
+
+BASE_PATH = os.path.expanduser("~/ros")
+STOP_FILE_PATH = os.path.join(BASE_PATH, "STOP")
 
 
 class Logger(object):
@@ -59,6 +64,18 @@ class Logger(object):
 			{"method" : self.log_colour, "rate" : 0.3})
 		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit,
 			{"method" : self.log_pose, "rate" : 0.1})
+
+		rospy.loginfo("Logger initialised in NS {}".format(args.namespace))
+		rospy.loginfo("Options (Label | {}), (Intrusion | {})"
+			.format("yes" if args.label else "no", args.intrusion))
+
+		# Block until shut down and check for stop file every ten seconds
+		while not rospy.is_shutdown():
+			if os.path.lexists(STOP_FILE_PATH):
+				rospy.logerr("!!! STOP FILE DETECTED !!! KILLED !!!")
+				break
+
+			rospy.sleep(.1)
 
 
 	def log_generated_data(self, gen_value, generator_name):
@@ -168,6 +185,3 @@ if __name__ == "__main__":
 	ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
 
 	LOGGER = Logger(ARGS)
-
-	# spin() keeps python from exiting until this node is stopped
-	rospy.spin()

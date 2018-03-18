@@ -330,7 +330,7 @@ def _analyse_entries(log_entry_generator):
 		found_classes, entries_per_class, app_ids_per_class)
 
 
-def _split_log_entries_flow(log_entries, split, squelch_output=False):
+def _split_log_entries_flow(log_entry_iterable, split, squelch_output=False):
 	""" Split the given log entries equally by app_id and each app_id's class.
 	Updates the user about progress and success. """
 
@@ -342,8 +342,12 @@ def _split_log_entries_flow(log_entries, split, squelch_output=False):
 	# { app_id : { class : [entries] } }
 	entries_per_app_id_per_class = {}
 
+	entry_count = 0
+
 	# Sort items into buckets
-	for log_entry in log_entries:
+	for log_entry in log_entry_iterable:
+		entry_count += 1
+
 		app_id = ids_tools.log_entry_to_app_id(log_entry)
 		its_class = log_entry.intrusion
 
@@ -367,7 +371,7 @@ def _split_log_entries_flow(log_entries, split, squelch_output=False):
 			result_train += items[:its_split]
 			result_score += items[its_split:]
 
-	achieved_split = round((len(result_train) / float(len(log_entries))) * 100, 2)
+	achieved_split = round((len(result_train) / float(entry_count)) * 100, 2)
 	printer.prt("Done. Achieved a split of {}/{}".format(achieved_split, 100 - achieved_split))
 	return result_train, result_score
 

@@ -175,6 +175,12 @@ def _train_and_score(file_path, split, iterations, multi_class):
 	_print_table(result_table, headline="Results")
 
 
+def split_call(args):
+	""" Unpack the args and call _split.
+	Expects 'file_path' and 'train_split' or 'split_per_app_id'. """
+	raise NotImplementedError()
+
+
 def convert_call(args):
 	""" Unpack the args and call _convert.
 	Expects 'file_path' and 'split' or 'pickle'. """
@@ -534,6 +540,15 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
 		TRAINSCORE_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
+
+		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")
+		SPLIT_PARSER.add_argument("file_path", metava="PATH")
+		MODE_GROUP = SPLIT_PARSER.add_mutually_exclusive_group(required=True)
+		MODE_GROUP.add_argument("--train-and-score", "-t", type=int, dest="train_split",
+			help="Split into train and score file based on the given percentage.")
+		MODE_GROUP.add_argument("--per-app-id", "-i", action="store_true", dest="split_per_app_id",
+			help="Split into sub-files containing entires separated by app id.")
+		SPLIT_PARSER.set_defaults(function=split_call)
 
 		CONV_PARSER = SUBPARSERS.add_parser("convert", help="Convert log files")
 		CONV_PARSER.add_argument("file_path", metavar="PATH")

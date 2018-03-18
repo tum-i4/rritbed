@@ -255,9 +255,9 @@ def _analyse(file_path):
 	""" Analyse the given log file. """
 	print("Analysing...")
 
-	# Reading file #
+	# Get file access #
 
-	log_entries = _read_file_flow(file_path)
+	log_entry_generator = _yield_log_entries_from_file(file_path)
 
 	# Analysis #
 
@@ -265,9 +265,9 @@ def _analyse(file_path):
 	all_classes = ids_data.get_labels()
 
 	(
-		found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
+		total_entries, found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
 		found_classes, entries_per_class, app_ids_per_class
-	) = _analyse_entries(log_entries)
+	) = _analyse_entries(log_entry_generator)
 
 	# Output #
 
@@ -275,7 +275,7 @@ def _analyse(file_path):
 
 	print("")
 	print("Found {} entries with {}/{} app id{} and {}/{} class{}".format(
-		len(log_entries),
+		total_entries,
 		len(found_app_ids), len(all_app_ids), get_pl("s", found_app_ids),
 		len(found_classes), len(all_classes), get_pl("es", found_classes))
 	)

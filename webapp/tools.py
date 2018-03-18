@@ -15,6 +15,9 @@ import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
 
 
+BASE_PATH = os.path.expanduser("~/ros")
+STOP_FILE_PATH = os.path.join(BASE_PATH, "STOP")
+
 _PICKLE_SUFFIX = ".pickle"
 _HISTORY_FILE = "intrusion_classifier_history"
 
@@ -361,7 +364,26 @@ def _analyse_entries(log_entries):
 
 def stop_call(args):
 	""" Call _stop. Expects nothing. """
-	raise NotImplementedError()
+	_stop()
+
+
+def _stop():
+	""" Create a STOP file, wait for user input, then delete it again. """
+
+	if os.path.lexists(STOP_FILE_PATH):
+		print("STOP file exists already.")
+	else:
+		open(STOP_FILE_PATH, "a").close()
+		print("STOP file created.")
+
+	do_not = raw_input("Press [Enter] to delete the file again. Type 'do not' to not do that: ")
+
+	if do_not == "do not":
+		print("File NOT deleted.")
+		return
+
+	os.remove(STOP_FILE_PATH)
+	print("File successfully deleted.")
 
 
 def _split_log_entries_flow(log_entries, split, squelch_output=False):

@@ -36,6 +36,12 @@ class Dir(object):
 		return result
 
 
+	@staticmethod
+	def yield_lines(file_path):
+		""" Yield all lines in the given file. Removes the line terminating character. """
+		raise NotImplementedError()
+
+
 class LogDir(object):
 	""" Log directory and path handling in the IDS. """
 

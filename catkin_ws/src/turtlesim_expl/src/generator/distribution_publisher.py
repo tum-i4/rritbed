@@ -51,6 +51,8 @@ class DistributionPublisher(object):
 		self._generator = None
 		self._generator_arguments = []
 
+		self.debug = args.debug
+
 		return_message = ""
 		queue_size = 10
 
@@ -149,7 +151,8 @@ class DistributionPublisher(object):
 				rospy.logerr("!!! STOP FILE DETECTED !!! KILLED !!!")
 				break
 
-			rospy.loginfo("Value: %s (%s)", next_tuple[0], next_tuple[1])
+			if self.debug:
+				rospy.loginfo("Value: %s (%s)", next_tuple[0], next_tuple[1])
 			self._publisher.publish(GenValue(value=next_tuple[0], intrusion=next_tuple[1]))
 			rate_limiter.sleep()
 
@@ -187,7 +190,9 @@ if __name__ == "__main__":
 		PARSER.add_argument("--id", "-i", required=True, help="ID to publish to")
 		INTRUSION_CHOICES = [DG.ONLY_ZEROES, DG.HUGE_ERROR]
 		PARSER.add_argument("--intrusion-mode", "-e", choices=INTRUSION_CHOICES, dest="intrusion_mode",
-			help="One of the possible intrusion modes: {}".format(INTRUSION_CHOICES))
+			help="Activate the intrusion mode specified.")
+		PARSER.add_argument("--debug", "-d", action="store_true",
+			help="Log generated values for easier debugging")
 
 		SUB_PARSERS = PARSER.add_subparsers(title="modes", dest="mode")
 

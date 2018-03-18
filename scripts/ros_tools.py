@@ -9,6 +9,7 @@ BASE_PATH = os.path.expanduser("~/ros")
 STOP_FILE_PATH = os.path.join(BASE_PATH, "STOP")
 
 
+# pylint: disable-msg=W0613; (Unused argument)
 def stop_call(args):
 	""" Call _stop. Expects nothing. """
 	_stop()

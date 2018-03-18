@@ -33,6 +33,7 @@ from turtlesim_expl.msg import GenValue
 
 
 BASE_PATH = os.path.expanduser("~/ros")
+STOP_FILE_PATH = os.path.join(BASE_PATH, "STOP")
 
 
 class DistributionPublisher(object):
@@ -142,6 +143,10 @@ class DistributionPublisher(object):
 			next_tuple = create_tuple()
 
 			if next_tuple is None:
+				break
+
+			if os.path.lexists(STOP_FILE_PATH):
+				rospy.logerr("!!! STOP FILE DETECTED !!! KILLED !!!")
 				break
 
 			rospy.loginfo("Value: %s (%s)", next_tuple[0], next_tuple[1])

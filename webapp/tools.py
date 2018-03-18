@@ -415,22 +415,6 @@ def _has_pickle_suffix(file_path):
 	return file_path.endswith(_PICKLE_SUFFIX)
 
 
-def _pickle_entries_flow(log_entries, file_path):
-	""" Stores the given LogEntry objects in a pickle. Updates the user about the progress. """
-
-	file_path += _PICKLE_SUFFIX
-
-	if os.path.lexists(file_path):
-		raise IOError("File {} exists already - delete and try again.".format(file_path))
-
-	print("Saving {} entries to {}...".format(len(log_entries), file_path))
-
-	with open(file_path, "w") as file_handle:
-		cPickle.dump(log_entries, file_handle)
-
-	print("Done.")
-
-
 def _print_table(list_of_lists, headline=None, head_sep=True):
 	""" Print the given list of tuple as a table, regarding the first entry the header. """
 

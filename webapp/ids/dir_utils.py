@@ -39,7 +39,11 @@ class Dir(object):
 	@staticmethod
 	def yield_lines(file_path):
 		""" Yield all lines in the given file. Removes the line terminating character. """
-		raise NotImplementedError()
+
+		with open(file_path) as file_handle:
+			for line in file_handle:
+				# Remove the newline character
+				yield line[:-1]
 
 
 class LogDir(object):

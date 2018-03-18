@@ -6,10 +6,15 @@ Rebuilding turtlesim.cpp in Python
 # pylint: disable-msg=R0903; (Too few public methods)
 
 import argparse
+import os
 import sys
 
 import rospy
 from turtle_frame import TurtleFrame
+
+
+BASE_PATH = os.path.expanduser("~/ros")
+STOP_FILE_PATH = os.path.join(BASE_PATH, "STOP")
 
 
 class Turtlesim(object):
@@ -33,8 +38,13 @@ class Turtlesim(object):
 		# pylint: disable-msg=W0612; (Unused variable - need to hold reference)
 		frame = TurtleFrame(draw_gui, intrusion)
 
-		# Block until shut down
-		rospy.spin()
+		# Block until shut down and check for stop file every ten seconds
+		while not rospy.is_shutdown():
+			if os.path.lexists(STOP_FILE_PATH):
+				rospy.logerr("!!! STOP FILE DETECTED !!! KILLED !!!")
+				break
+
+			rospy.sleep(.1)
 
 
 

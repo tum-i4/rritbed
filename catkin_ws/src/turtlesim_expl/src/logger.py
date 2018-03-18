@@ -144,8 +144,8 @@ class Logger(object):
 			requests.post(Logger.URL + "/" + path + "/" + log_method, request)
 		except requests.ConnectionError:
 			time_now = time.time()
-			# Only print an error every second
-			if time_now > self._last_conn_err + 1:
+			# Only print an error every ten seconds
+			if time_now > self._last_conn_err + 10:
 				rospy.logerr("Can't connect to logging API")
 				self._last_conn_err = time_now
 

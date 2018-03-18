@@ -195,59 +195,6 @@ def _split_per_app_id(file_path):
 	raise NotImplementedError()
 
 
-def convert_call(args):
-	""" Unpack the args and call _convert.
-	Expects 'file_path' and 'split' or 'pickle'. """
-	if args.pickle:
-		_convert_pickle(args.file_path)
-	elif args.split:
-		_convert_split(args.file_path, args.split)
-	else:
-		raise NotImplementedError("Arg configuration not implmented")
-
-
-def _convert_split(file_path, split):
-	""" Split the given file and pickle the results. """
-
-	if split <= 0 or split >= 100:
-		raise ValueError("Invalid split \"{}\" given.".format(split))
-
-	log_entries = _read_file_flow(file_path)
-
-	if len(log_entries) < 10000:
-		print("Warning: Only {} entries found. Number might be too small for training or scoring"
-			.format(len(log_entries)))
-
-	training_entries, scoring_entries = _split_log_entries_flow(log_entries, split)
-
-	training_file_path = file_path + "_train"
-	scoring_file_path = file_path + "_score"
-
-	try:
-		_pickle_entries_flow(training_entries, training_file_path)
-		_pickle_entries_flow(scoring_entries, scoring_file_path)
-	except IOError as io_err:
-		print(io_err.message)
-		return
-
-	print("Split was finished successfully!")
-	return
-
-
-def _convert_pickle(file_path):
-	""" Pickle the given file. """
-
-	log_entries = _read_file_flow(file_path)
-
-	try:
-		_pickle_entries_flow(log_entries, file_path)
-	except IOError as io_err:
-		print(io_err.message)
-		return
-
-	print("Pickling finished successfully!")
-
-
 # pylint: disable-msg=W0613; (Unused argument)
 def reset_call(args):
 	""" Call _reset. Expects nothing. """
@@ -563,13 +510,6 @@ if __name__ == "__main__":
 		MODE_GROUP.add_argument("--per-app-id", "-i", action="store_true", dest="split_per_app_id",
 			help="Split into sub-files containing entires separated by app id.")
 		SPLIT_PARSER.set_defaults(function=split_call)
-
-		CONV_PARSER = SUBPARSERS.add_parser("convert", help="Convert log files")
-		CONV_PARSER.add_argument("file_path", metavar="PATH")
-		MODE_GROUP = CONV_PARSER.add_mutually_exclusive_group(required=True)
-		MODE_GROUP.add_argument("--pickle", "-p", action="store_true")
-		MODE_GROUP.add_argument("--split", "-s", type=int)
-		CONV_PARSER.set_defaults(function=convert_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")
 		RESET_PARSER.set_defaults(function=reset_call)

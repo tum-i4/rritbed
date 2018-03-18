@@ -359,6 +359,11 @@ def _analyse_entries(log_entries):
 		found_classes, entries_per_class, app_ids_per_class)
 
 
+def stop_call(args):
+	""" Call _stop. Expects nothing. """
+	raise NotImplementedError()
+
+
 def _split_log_entries_flow(log_entries, split, squelch_output=False):
 	""" Split the given log entries equally by app_id and each app_id's class.
 	Updates the user about progress and success. """
@@ -539,6 +544,10 @@ if __name__ == "__main__":
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
 		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
 		ANAL_PARSER.set_defaults(function=anal_call)
+
+		STOP_PARSER = SUBPARSERS.add_parser("stop", help="Create a STOP file to halt all running nodes.")
+		STOP_PARSER.add_argument("please_do", choices=["please_do"], help="Ensures you want to do this")
+		STOP_PARSER.set_defaults(function=stop_call)
 
 		ARGS = PARSER.parse_args()
 

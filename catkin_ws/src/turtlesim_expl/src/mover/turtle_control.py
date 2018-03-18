@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 """ Interface for publishing to turtle """
 
+import os
 import rospy
 from geometry_msgs.msg import Twist
 
 import move_helper
 from move_strategy import MoveStrategy
+
+
+BASE_PATH = os.path.expanduser("~/ros")
+STOP_FILE_PATH = os.path.join(BASE_PATH, "STOP")
 
 
 class TurtleControl(object):
@@ -34,6 +39,10 @@ class TurtleControl(object):
 			vel_msg = self.move_strategy.get_next()
 
 			if vel_msg is None:
+				break
+
+			if os.path.lexists(STOP_FILE_PATH):
+				rospy.logerr("!!! STOP FILE DETECTED !!! KILLED !!!")
 				break
 
 			assert(isinstance(vel_msg, Twist))

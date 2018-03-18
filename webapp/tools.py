@@ -435,6 +435,11 @@ def _get_log_entries_from_pickle(file_path):
 		return result
 
 
+def _yield_log_entries_from_file(file_path):
+	for line in Dir.yield_lines(file_path):
+		yield LogEntry.from_log_string(line)
+
+
 def _has_pickle_suffix(file_path):
 	return file_path.endswith(_PICKLE_SUFFIX)
 

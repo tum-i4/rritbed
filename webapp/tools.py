@@ -176,8 +176,22 @@ def _train_and_score(file_path, split, iterations, multi_class):
 
 
 def split_call(args):
-	""" Unpack the args and call _split.
+	""" Unpack the args and call the respective _split_*.
 	Expects 'file_path' and 'train_split' or 'split_per_app_id'. """
+
+	if args.train_split:
+		_split_train_and_score(args.file_path, args.train_split)
+	elif args.split_per_app_id:
+		_split_per_app_id(args.file_path)
+	else:
+		raise NotImplementedError("Arg configuration not implemented")
+
+
+def _split_train_and_score(file_path, train_split):
+	raise NotImplementedError()
+
+
+def _split_per_app_id(file_path):
 	raise NotImplementedError()
 
 

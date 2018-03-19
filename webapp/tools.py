@@ -419,6 +419,21 @@ def _has_pickle_suffix(file_path):
 	return file_path.endswith(_PICKLE_SUFFIX)
 
 
+def _save_entries_flow(log_entry_iterator, file_path):
+	""" Stores the given LogEntry objects in a log file. Updates the user about the progress. """
+
+	if os.path.lexists(file_path):
+		raise IOError("File {} exists already - delete and try again.".format(file_path))
+
+	print("Saving entries to {}...".format(file_path))
+
+	with open(file_path, "w") as file_handle:
+		for log_entry in log_entry_iterator:
+			file_handle.write(log_entry.get_log_string() + "\n")
+
+	print("Done.")
+
+
 def _print_table(list_of_lists, headline=None, head_sep=True):
 	""" Print the given list of tuple as a table, regarding the first entry the header. """
 

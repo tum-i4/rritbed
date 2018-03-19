@@ -180,15 +180,35 @@ def split_call(args):
 	Expects 'file_path' and 'train_split' or 'split_per_app_id'. """
 
 	if args.train_split:
-		_split_train_and_score(args.file_path, args.train_split)
+		_split_in_train_and_score(args.file_path, args.train_split)
 	elif args.split_per_app_id:
 		_split_per_app_id(args.file_path)
 	else:
 		raise NotImplementedError("Arg configuration not implemented")
 
 
-def _split_train_and_score(file_path, train_split):
-	raise NotImplementedError()
+def _split_in_train_and_score(file_path, split):
+	""" Split the given file into a training and a scoring file based on the given split. """
+
+	if split <= 0 or split >= 100:
+		raise ValueError("Invalid split \"{}\" given.".format(split))
+
+	log_entry_generator = _yield_log_entries_from_file(file_path)
+
+	training_entries, scoring_entries = _split_log_entries_flow(log_entry_generator, split)
+
+	training_file_path = file_path + "_train"
+	scoring_file_path = file_path + "_score"
+
+	try:
+		_save_entries_flow(training_entries, training_file_path)
+		_save_entries_flow(scoring_entries, scoring_file_path)
+	except IOError as io_err:
+		print(io_err.message)
+		return
+
+	print("Split was finished successfully!")
+	return
 
 
 def _split_per_app_id(file_path):

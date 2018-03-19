@@ -190,7 +190,7 @@ def split_call(args):
 
 
 def _split_in_train_and_score(log_entry_generator, file_path, split):
-	""" Split the given file into a training and a scoring file based on the given split. """
+	""" Split the given entries into a training and a scoring file based on the given split. """
 
 	if split <= 0 or split >= 100:
 		raise ValueError("Invalid split \"{}\" given.".format(split))

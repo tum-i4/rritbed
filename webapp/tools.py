@@ -185,6 +185,8 @@ def split_call(args):
 		_split_in_train_and_score(log_entry_generator, args.file_path, args.train_split)
 	elif args.per_app_id:
 		_split_per_app_id(log_entry_generator, args.file_path, args.max_entries_per_file)
+	elif args.in_chunks:
+		raise NotImplementedError()
 	else:
 		raise NotImplementedError("Arg configuration not implemented")
 
@@ -585,6 +587,11 @@ if __name__ == "__main__":
 			help="Split into train and score file based on the given percentage.")
 		MODE_GROUP.add_argument("--per-app-id", "-i", action="store_true",
 			help="Split into sub-files containing entires separated by app id.")
+		MODE_GROUP.add_argument("--in-chunks", "-c", action="store_true",
+			help="Split into chunks. Specify the number of chunks with --max-entries-per-file/-m.")
+		DEFAULT_MEPF = 1000000
+		SPLIT_PARSER.add_argument("--max-entries-per-file", "-m", type=int, default=DEFAULT_MEPF,
+			help="Limit the number of entries saved per file (default {})".format(DEFAULT_MEPF))
 		SPLIT_PARSER.set_defaults(function=split_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")

@@ -179,21 +179,21 @@ def split_call(args):
 	""" Unpack the args and call the respective _split_*.
 	Expects 'file_path' and 'train_split' or 'split_per_app_id'. """
 
+	log_entry_generator = _yield_log_entries_from_file(args.file_path)
+
 	if args.train_split:
-		_split_in_train_and_score(args.file_path, args.train_split)
+		_split_in_train_and_score(log_entry_generator, args.file_path, args.train_split)
 	elif args.split_per_app_id:
-		_split_per_app_id(args.file_path)
+		_split_per_app_id(log_entry_generator)
 	else:
 		raise NotImplementedError("Arg configuration not implemented")
 
 
-def _split_in_train_and_score(file_path, split):
+def _split_in_train_and_score(log_entry_generator, file_path, split):
 	""" Split the given file into a training and a scoring file based on the given split. """
 
 	if split <= 0 or split >= 100:
 		raise ValueError("Invalid split \"{}\" given.".format(split))
-
-	log_entry_generator = _yield_log_entries_from_file(file_path)
 
 	training_entries, scoring_entries = _split_log_entries_flow(log_entry_generator, split)
 
@@ -211,7 +211,7 @@ def _split_in_train_and_score(file_path, split):
 	return
 
 
-def _split_per_app_id(file_path):
+def _split_per_app_id(log_entry_generator):
 	raise NotImplementedError()
 
 

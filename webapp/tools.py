@@ -342,8 +342,8 @@ def _analyse(file_path):
 	all_classes = ids_data.get_labels()
 
 	(
-		total_entries, found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
-		found_classes, entries_per_class, app_ids_per_class
+		total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
+		found_classes, entry_count_per_class, app_ids_per_class
 	) = _analyse_entries(log_entry_generator)
 
 	# Output #
@@ -361,7 +361,7 @@ def _analyse(file_path):
 	per_app_id = []
 	per_app_id.append(["App ID", "Elements"] + all_classes)
 	for app_id in all_app_ids:
-		line = [app_id, str(len(entries_per_app_id[app_id]))]
+		line = [app_id, str(entry_count_per_app_id[app_id])]
 
 		for a_class in all_classes:
 			class_count_str = ""
@@ -377,7 +377,7 @@ def _analyse(file_path):
 	per_class = []
 	per_class.append(["Class", "Elements", "App Ids"])
 	for a_class in all_classes:
-		per_class.append([a_class, len(entries_per_class[a_class]), len(app_ids_per_class[a_class])])
+		per_class.append([a_class, entry_count_per_class[a_class], len(app_ids_per_class[a_class])])
 
 	_print_table(per_class, headline="Elements per class")
 
@@ -390,28 +390,28 @@ def _analyse(file_path):
 def _analyse_entries(log_entry_generator):
 	"""
 	Analyse the LogEntry objects from the given generator.
-	returns: A tuple containing (found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
-	found_classes, entries_per_class, app_ids_per_class)
+	returns: A tuple containing (found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
+	found_classes, entry_count_per_class, app_ids_per_class)
 	"""
 
 	total_entries = 0
 
 	all_app_ids = ids_data.get_app_ids()
 	found_app_ids = set()
-	entries_per_app_id = {}
+	entry_count_per_app_id = {}
 	elements_per_class_per_app_id = {}
 
 	all_classes = ids_data.get_labels()
 	found_classes = set()
-	entries_per_class = {}
+	entry_count_per_class = {}
 	app_ids_per_class = {}
 
 	for app_id in all_app_ids:
-		entries_per_app_id[app_id] = []
+		entry_count_per_app_id[app_id] = 0
 		elements_per_class_per_app_id[app_id] = {}
 
 	for a_class in all_classes:
-		entries_per_class[a_class] = []
+		entry_count_per_class[a_class] = 0
 		app_ids_per_class[a_class] = set()
 
 	for entry in log_entry_generator:
@@ -426,18 +426,18 @@ def _analyse_entries(log_entry_generator):
 		found_app_ids.add(app_id)
 		found_classes.add(its_class)
 
-		entries_per_app_id[app_id].append(entry)
+		entry_count_per_app_id[app_id] += 1
 
 		if its_class not in elements_per_class_per_app_id[app_id]:
 			elements_per_class_per_app_id[app_id][its_class] = 1
 		else:
 			elements_per_class_per_app_id[app_id][its_class] += 1
 
-		entries_per_class[its_class].append(entry)
+		entry_count_per_class[its_class] += 1
 		app_ids_per_class[its_class].add(app_id)
 
-	return (total_entries, found_app_ids, entries_per_app_id, elements_per_class_per_app_id,
-		found_classes, entries_per_class, app_ids_per_class)
+	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
+		found_classes, entry_count_per_class, app_ids_per_class)
 
 
 def _split_log_entries_flow(log_entry_iterator, split, squelch_output=False):

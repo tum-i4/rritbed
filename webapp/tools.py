@@ -177,7 +177,11 @@ def _train_and_score(file_path, split, iterations, multi_class):
 
 def split_call(args):
 	""" Unpack the args and call the respective _split_*.
-	Expects 'file_path' and 'train_split' or 'split_per_app_id'. """
+	Expects 'file_path', 'max-entries-per-file'
+	and 'train_split' / 'split_per_app_id' / 'split_in_chunks'. """
+
+	if args.max_entries_per_file <= 0:
+		raise ValueError("Max entries need to be > 0. Received: {}".format(args.max_entries_per_file))
 
 	log_entry_generator = _yield_log_entries_from_file(args.file_path)
 
@@ -186,13 +190,15 @@ def split_call(args):
 	elif args.per_app_id:
 		_split_per_app_id(log_entry_generator, args.file_path, args.max_entries_per_file)
 	elif args.in_chunks:
-		raise NotImplementedError()
+		_split_in_chunks(log_entry_generator, args.file_path, args.max_entries_per_file)
 	else:
 		raise NotImplementedError("Arg configuration not implemented")
 
 
 def _split_in_train_and_score(log_entry_generator, file_path, split):
 	""" Split the given entries into a training and a scoring file based on the given split. """
+
+	print("WARNING: --max-entries-per-file is not implemented")
 
 	if split <= 0 or split >= 100:
 		raise ValueError("Invalid split \"{}\" given.".format(split))
@@ -258,6 +264,35 @@ def _split_per_app_id(log_entry_generator, file_path, max_per_file=1000000):
 
 		print("Closed all file handles.")
 
+	print("Done.")
+
+
+def _split_in_chunks(log_entry_generator, file_path, max_entries_per_file):
+	""" Split the given entries into chunks of size <max_entries_per_file>. """
+
+	file_path_no_ext, ext = os.path.splitext(file_path)
+	path_creator = lambda idx: file_path_no_ext + "_" + str(idx) + ext
+	writer_msg = lambda idx: "Writing file {}...".format(path_creator(idx))
+
+	current_count = 0
+	current_index = 1
+	current_file = _init_file_handle(path_creator(current_index))
+
+	print(writer_msg(current_index))
+
+	for log_entry in log_entry_generator:
+		if current_count == max_entries_per_file:
+			current_count = 0
+			current_index += 1
+			current_file.close()
+
+			print(writer_msg(current_index))
+			current_file = _init_file_handle(path_creator(current_index))
+
+		current_file.write(log_entry.get_log_string() + "\n")
+		current_count += 1
+
+	current_file.close()
 	print("Done.")
 
 

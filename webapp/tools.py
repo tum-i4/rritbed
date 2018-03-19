@@ -184,7 +184,7 @@ def split_call(args):
 	if args.train_split:
 		_split_in_train_and_score(log_entry_generator, args.file_path, args.train_split)
 	elif args.split_per_app_id:
-		_split_per_app_id(log_entry_generator)
+		_split_per_app_id(log_entry_generator, args.file_path)
 	else:
 		raise NotImplementedError("Arg configuration not implemented")
 
@@ -211,8 +211,33 @@ def _split_in_train_and_score(log_entry_generator, file_path, split):
 	return
 
 
-def _split_per_app_id(log_entry_generator):
-	raise NotImplementedError()
+def _split_per_app_id(log_entry_generator, file_path):
+	""" Split the given entries into separate files for each app id. """
+
+	file_path_no_ext, ext = os.path.splitext(file_path)
+
+	all_app_ids = ids_data.get_app_ids()
+	dest_paths = dict()
+	file_handles = dict()
+	entry_counts = dict.fromkeys(all_app_ids, 0)
+
+	for app_id in all_app_ids:
+		new_path = file_path_no_ext + "_" + app_id + ext
+		if os.path.lexists(new_path):
+			print("File {} exists - please delete and try again.".format(new_path))
+			return
+
+		dest_paths[app_id] = new_path
+		file_handles[app_id] = open(new_path, "w")
+
+	for log_entry in log_entry_generator:
+		app_id = ids_tools.log_entry_to_app_id(log_entry)
+		file_handles[app_id].write(log_entry.get_log_string() + "\n")
+		entry_counts[app_id] += 1
+
+	for file_handle in file_handles.values():
+		file_handle.close()
+
 
 
 # pylint: disable-msg=W0613; (Unused argument)

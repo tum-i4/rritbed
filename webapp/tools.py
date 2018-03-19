@@ -183,8 +183,8 @@ def split_call(args):
 
 	if args.train_split:
 		_split_in_train_and_score(log_entry_generator, args.file_path, args.train_split)
-	elif args.split_per_app_id:
-		_split_per_app_id(log_entry_generator, args.file_path)
+	elif args.per_app_id:
+		_split_per_app_id(log_entry_generator, args.file_path, args.max_entries_per_file)
 	else:
 		raise NotImplementedError("Arg configuration not implemented")
 
@@ -560,14 +560,14 @@ if __name__ == "__main__":
 
 		TRAIN_PARSER = SUBPARSERS.add_parser("train", help="Train the classifier")
 		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH", help="The training data")
-		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true", dest="extend_models",
+		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true",
 			help="Allow existing models to be extended.")
-		TRAIN_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
+		TRAIN_PARSER.add_argument("--multi-class", "-m", action="store_true")
 		TRAIN_PARSER.set_defaults(function=train_call)
 
 		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")
 		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
-		SCORE_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
+		SCORE_PARSER.add_argument("--multi_class", "-m", action="store_true")
 		SCORE_PARSER.set_defaults(function=score_call)
 
 		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train, score, reset")
@@ -575,7 +575,7 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--split", "-s", type=int, default=80,
 			help="The percentage of data points to be used for training.")
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
-		TRAINSCORE_PARSER.add_argument("--multiclass", "-m", action="store_true", dest="multi_class")
+		TRAINSCORE_PARSER.add_argument("--multi_class", "-m", action="store_true")
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")
@@ -583,7 +583,7 @@ if __name__ == "__main__":
 		MODE_GROUP = SPLIT_PARSER.add_mutually_exclusive_group(required=True)
 		MODE_GROUP.add_argument("--train-and-score", "-t", type=int, dest="train_split",
 			help="Split into train and score file based on the given percentage.")
-		MODE_GROUP.add_argument("--per-app-id", "-i", action="store_true", dest="split_per_app_id",
+		MODE_GROUP.add_argument("--per-app-id", "-i", action="store_true",
 			help="Split into sub-files containing entires separated by app id.")
 		SPLIT_PARSER.set_defaults(function=split_call)
 

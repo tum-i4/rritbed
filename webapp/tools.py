@@ -526,7 +526,7 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")
-		SPLIT_PARSER.add_argument("file_path", metava="PATH")
+		SPLIT_PARSER.add_argument("file_path", metavar="PATH")
 		MODE_GROUP = SPLIT_PARSER.add_mutually_exclusive_group(required=True)
 		MODE_GROUP.add_argument("--train-and-score", "-t", type=int, dest="train_split",
 			help="Split into train and score file based on the given percentage.")

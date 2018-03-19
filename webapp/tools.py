@@ -330,7 +330,7 @@ def _analyse_entries(log_entry_generator):
 		found_classes, entries_per_class, app_ids_per_class)
 
 
-def _split_log_entries_flow(log_entry_iterable, split, squelch_output=False):
+def _split_log_entries_flow(log_entry_iterator, split, squelch_output=False):
 	""" Split the given log entries equally by app_id and each app_id's class.
 	Updates the user about progress and success. """
 
@@ -345,7 +345,7 @@ def _split_log_entries_flow(log_entry_iterable, split, squelch_output=False):
 	entry_count = 0
 
 	# Sort items into buckets
-	for log_entry in log_entry_iterable:
+	for log_entry in log_entry_iterator:
 		entry_count += 1
 
 		app_id = ids_tools.log_entry_to_app_id(log_entry)

@@ -211,33 +211,61 @@ def _split_in_train_and_score(log_entry_generator, file_path, split):
 	return
 
 
-def _split_per_app_id(log_entry_generator, file_path):
+def _split_per_app_id(log_entry_generator, file_path, max_per_file=1000000):
 	""" Split the given entries into separate files for each app id. """
+
+	print("Splitting the given file per app id...")
 
 	file_path_no_ext, ext = os.path.splitext(file_path)
 
 	all_app_ids = ids_data.get_app_ids()
-	dest_paths = dict()
 	file_handles = dict()
 	entry_counts = dict.fromkeys(all_app_ids, 0)
+	file_indices = dict.fromkeys(all_app_ids, 0)
 
-	for app_id in all_app_ids:
-		new_path = file_path_no_ext + "_" + app_id + ext
-		if os.path.lexists(new_path):
-			print("File {} exists - please delete and try again.".format(new_path))
-			return
+	try:
+		for app_id in all_app_ids:
+			new_path = file_path_no_ext + "_" + app_id + ext
+			file_handles[app_id] = _init_file_handle(new_path)
 
-		dest_paths[app_id] = new_path
-		file_handles[app_id] = open(new_path, "w")
+		for log_entry in log_entry_generator:
+			app_id = ids_tools.log_entry_to_app_id(log_entry)
 
-	for log_entry in log_entry_generator:
-		app_id = ids_tools.log_entry_to_app_id(log_entry)
-		file_handles[app_id].write(log_entry.get_log_string() + "\n")
-		entry_counts[app_id] += 1
+			if entry_counts[app_id] == max_per_file:
+				print("Entry count for {} has reached allowed maximum of {}. Creating a new file..."
+					.format(app_id, max_per_file))
 
-	for file_handle in file_handles.values():
-		file_handle.close()
+				entry_counts[app_id] = 0
+				file_indices[app_id] += 1
 
+				new_index = file_indices[app_id]
+				new_path = file_path_no_ext + "_" + app_id + "_" + new_index + ext
+
+				file_handles[app_id].close()
+				file_handles[app_id] = _init_file_handle(new_path)
+
+
+			file_handles[app_id].write(log_entry.get_log_string() + "\n")
+			entry_counts[app_id] += 1
+	except IOError as io_err:
+		print(io_err.message)
+		return
+	finally:
+		for file_handle in file_handles.values():
+			file_handle.close()
+
+		print("Closed all file handles.")
+
+	print("Done.")
+
+
+def _init_file_handle(path):
+	""" Check if the given file exists and open it if it does. """
+
+	if os.path.lexists(path):
+		raise IOError("File {} exists - please delete and try again.".format(path))
+
+	return open(path, "w")
 
 
 # pylint: disable-msg=W0613; (Unused argument)

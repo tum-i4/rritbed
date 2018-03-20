@@ -332,11 +332,14 @@ def _reset(classifier, server_log, reset_all):
 	message = ""
 
 	if classifier:
-		message += "\n# Classifier\n"
+		message += "\n# Classifier\nTraining history: "
 		if os.path.lexists(_HISTORY_FILE):
 			os.remove(_HISTORY_FILE)
-			message += "Training history: File was removed.\n"
-		message += "Model directory: " + ModelDir.reset_dir()
+			message += "File was removed."
+		else:
+			message += "No history file found."
+
+		message += "\nModel directory: " + ModelDir.reset_dir()
 		if server_log:
 			message += "\n"
 

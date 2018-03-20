@@ -137,13 +137,16 @@ class IntrusionClassifier(object):
 
 		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
 		printer.prt("Verifying given data...")
+		removed_lines = 0
 		for app_id, train_set in app_id_datasets.items():
-			received_classes = set(train_set[1])
-			if any([self._converter.class_means_intruded(x) for x in received_classes]):
-				raise ValueError("The given samples for classifier {} contain intrusions.".format(app_id) +
-					" Please supply only normal behaviour for training. Received: {}".format(
-					[self._int_label_mapping[x] for x in received_classes])
-				)
+			for i, item in enumerate(train_set):
+				if self._converter.class_means_intruded(item[1]):
+					del(train_set[i])
+					removed_lines += 1
+
+		if removed_lines > 0:
+			printer.prt("Warning! Found intruded data in the input file. {} entries were removed."
+				.format(removed_lines))
 
 		app_id_count = 1
 

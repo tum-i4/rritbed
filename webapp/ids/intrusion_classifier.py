@@ -135,23 +135,15 @@ class IntrusionClassifier(object):
 			or any([True for x in self._converter.app_ids if x not in app_id_datasets])):
 			raise ValueError("Couldn't find data for every current app_id!")
 
-		# Ensure each app_id classifier has samples of all classes to learn from.
+		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
 		printer.prt("Verifying given data...")
 		for app_id, train_set in app_id_datasets.items():
-			expected_classes = self._converter.get_expected_classes(app_id)
 			received_classes = set(train_set[1])
-			value_error = ValueError(
-				"The given samples for classifier {} don't contain all expected classes.".format(app_id)
-				+ " Expected: {}. Received: {}.".format(
-					[self._int_label_mapping[x] for x in expected_classes],
+			if any([self._converter.class_means_intruded(x) for x in received_classes]):
+				raise ValueError("The given samples for classifier {} contain intrusions.".format(app_id) +
+					" Please supply only normal behaviour for training. Received: {}".format(
 					[self._int_label_mapping[x] for x in received_classes])
-			)
-
-			if len(expected_classes) != len(received_classes):
-				raise value_error
-			for exp_class in expected_classes:
-				if exp_class not in received_classes:
-					raise value_error
+				)
 
 		app_id_count = 1
 

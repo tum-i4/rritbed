@@ -63,18 +63,18 @@ def _train_entries(log_entry_generator, extend_models, squelch_output=False):
 
 def score_call(args):
 	""" Unpack the args and call _score.
-	Expects 'test_file_path' and 'multi_class'. """
-	_score(args.test_file_path, args.multi_class)
+	Expects 'test_file_path'. """
+	_score(args.test_file_path)
 
 
-def _score(file_path, multi_class):
+def _score(file_path):
 	""" Score the prediction of the classifier with the given test file. """
 
 	log_entries = _read_file_flow(file_path)
-	_score_entries(log_entries, multi_class)
+	_score_entries(log_entries)
 
 
-def _score_entries(log_entries, multi_class, do_return=False, squelch_output=False):
+def _score_entries(log_entries, do_return=False, squelch_output=False):
 	"""
 	Score the given LogEntry objects.
 	returns: Boolean flag indicating success
@@ -83,8 +83,7 @@ def _score_entries(log_entries, multi_class, do_return=False, squelch_output=Fal
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
-		result = clas.score(log_entries, multi_class=multi_class,
-			do_return=do_return, squelch_output=squelch_output)
+		result = clas.score(log_entries, do_return=do_return, squelch_output=squelch_output)
 		return result if do_return else True
 	except ValueError as val_err:
 		print(val_err.message)
@@ -626,7 +625,6 @@ if __name__ == "__main__":
 
 		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")
 		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
-		SCORE_PARSER.add_argument("--multi_class", "-m", action="store_true")
 		SCORE_PARSER.set_defaults(function=score_call)
 
 		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train, score, reset")

@@ -90,6 +90,11 @@ class IdsConverter(object):
 			raise ValueError("Unexpected intrusion type encountered: {}".format(log_entry.intrusion))
 
 
+	def class_to_intruded(self, the_class):
+		""" Map the given class to a boolean 'is intruded'. """
+		return the_class != 0
+
+
 	@staticmethod
 	def vin_to_int_list(vin):
 		""" Convert the given VIN to [ord(char), int(rest)]. """

@@ -163,31 +163,24 @@ class IntrusionClassifier(object):
 		printer.prt("Batch {}: Starting training with {} LogEntry objects"
 			.format(batch_number, len(log_entries)))
 
+		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
+		printer.prt("Checking for intruded entries...")
+		og_entry_count = len(log_entries)
+		log_entries[:] = [e for e in log_entries
+			if not self._converter.class_means_intruded(self._converter.log_entry_to_class(e))]
+
+		if len(log_entries) != og_entry_count:
+			printer.prt("Warning! Found intruded data in the input file. {} entries were removed."
+				.format(og_entry_count - len(log_entries)))
+
+		printer.prt("Converting...")
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
 
-		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
-		printer.prt("Verifying given data...")
-		removed_lines = 0
-		for app_id, train_set in app_id_datasets.items():
-			if not train_set[0]:
-				del(app_id_datasets[app_id])
-				continue
-
-			# pylint: disable-msg=C0200; (Consider using enumerate - wouldn't work)
-			for index, item_set in enumerate(zip(train_set[0], train_set[1])):
-				if self._converter.class_means_intruded(item_set[1]):
-					del(train_set[index])
-					removed_lines += 1
-
-		if removed_lines > 0:
-			printer.prt("Warning! Found intruded data in the input file. {} entries were removed."
-				.format(removed_lines))
-
-		app_id_count = 1
+		app_id_number = 1
 
 		for app_id, train_set in app_id_datasets.items():
 			printer.prt("({}/{}) Training model for \"{}\": "
-				.format(app_id_count, len(app_id_datasets), app_id), newline=False)
+				.format(app_id_number, len(app_id_datasets), app_id), newline=False)
 
 			# Load model if it exists already
 			clf = ModelDir.load_model(app_id)
@@ -203,11 +196,11 @@ class IntrusionClassifier(object):
 			ModelDir.save_model(clf, app_id, overwrite=True)
 			printer.prt("Done! ")
 
-			app_id_count += 1
+			app_id_number += 1
 
 		self._load_models()
 
-		return app_id_count
+		return app_id_number
 
 
 	def score(self, log_entries, do_return=False, squelch_output=False):

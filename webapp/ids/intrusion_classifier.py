@@ -113,20 +113,51 @@ class IntrusionClassifier(object):
 	### Train ###
 
 
-	def train(self, log_entries, extend_models=False, squelch_output=False):
+	def train(self, log_entry_generator, extend_models=False, squelch_output=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
+		Splits up in batches of 1 mio. entries from given generator.
 		"""
 
 		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
+		batch_limit = 1000000
+
+		total_entry_count = 0
+		app_ids_found = set()
+		current_batch = []
+		batch_number = 1
+		for log_entry in log_entry_generator:
+			if len(current_batch) == batch_limit:
+				batch_found_app_ids = self._train_batch(current_batch, batch_number, extend_models, printer)
+				app_ids_found.add(batch_found_app_ids)
+				current_batch = []
+				batch_number += 1
+
+			total_entry_count += 1
+			current_batch.append(log_entry)
+
+		if current_batch:
+			batch_found_app_ids = self._train_batch(current_batch, batch_number, extend_models, printer)
+			app_ids_found.add(batch_found_app_ids)
+
+		printer.prt("")
+		printer.prt("Finished training with {} batches and a total of {} elements."
+			.format(batch_number, total_entry_count))
+		printer.prt("Trained models for {}/{} app ids."
+			.format(len(app_ids_found), len(self._converter.app_ids)))
+
+
+	def _train_batch(self, log_entries, batch_number, extend_models, printer):
+		"""
+		Train the app_id based classifiers with the given labelled entries.
+		"""
+
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
-		printer.prt("Starting training with {} LogEntry objects".format(len(log_entries)))
-		start_time = time.time()
-
-		printer.prt("Found all {} app ids".format(len(self._converter.app_ids)))
+		printer.prt("Batch {}: Starting training with {} LogEntry objects"
+			.format(batch_number, len(log_entries)))
 
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
 
@@ -151,30 +182,28 @@ class IntrusionClassifier(object):
 		app_id_count = 1
 
 		for app_id, train_set in app_id_datasets.items():
-			printer.prt("({}/{}) Training model for \"{}\""
-				.format(app_id_count, len(app_id_datasets), app_id))
+			printer.prt("({}/{}) Training model for \"{}\": "
+				.format(app_id_count, len(app_id_datasets), app_id), newline=False)
 
 			# Load model if it exists already
 			clf = ModelDir.load_model(app_id)
 			if not clf:
 				clf = sk_svm.OneClassSVM(random_state=0)
-				printer.prt("Creating and training new model...")
+				printer.prt("Creating and training new model... ", newline=False)
 			else:
-				printer.prt("Model retrieved from disk. Training...")
+				printer.prt("Model retrieved from disk. Training... ", newline=False)
 
 			clf.fit(train_set[0])
 
-			printer.prt("Saving to disk...")
-			ModelDir.save_model(clf, app_id, overwrite=True)
-			printer.prt("Done!")
+			printer.prt("Saving to disk... ", newline=False)
+			ModelDir.save_model(clf, app_id, overwrite=extend_models)
+			printer.prt("Done! ")
 
 			app_id_count += 1
 
 		self._load_models()
 
-		time_expired = time.time() - start_time
-		printer.prt("")
-		printer.prt("Training completed in {}.".format(ids_tools.format_time_passed(time_expired)))
+		return app_id_count
 
 
 	def score(self, log_entries, do_return=False, squelch_output=False):

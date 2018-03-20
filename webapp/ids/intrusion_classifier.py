@@ -157,12 +157,12 @@ class IntrusionClassifier(object):
 			# Load model if it exists already
 			clf = ModelDir.load_model(app_id)
 			if not clf:
-				clf = sk_svm.LinearSVC()
+				clf = sk_svm.OneClassSVM(random_state=0)
 				printer.prt("Creating and training new model...")
 			else:
 				printer.prt("Model retrieved from disk. Training...")
 
-			clf.fit(train_set[0], train_set[1])
+			clf.fit(train_set[0])
 
 			printer.prt("Saving to disk...")
 			ModelDir.save_model(clf, app_id, overwrite=True)

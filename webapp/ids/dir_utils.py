@@ -93,7 +93,7 @@ class LogDir(object):
 	def _create_unique_folder_name():
 		""" Create a unique name for a backup folder based on the current time. """
 		return _create_unique_name(lambda: (
-			"logs_until_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())))
+			"logs_until_" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())))
 
 
 	@staticmethod
@@ -183,7 +183,7 @@ class ModelDir(object):
 	def _create_unique_folder_name():
 		""" Create a unique name for a model backup folder based on the current time. """
 		return _create_unique_name(lambda: (
-			"model_backup_at_" + time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())))
+			"model_backup_at_" + time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())))
 
 
 	@staticmethod

@@ -299,24 +299,3 @@ class IntrusionClassifier(object):
 		""" Reset the models.
 		returns: A status message. """
 		return ModelDir.reset_dir(purge)
-
-
-
-	### Util ###
-
-
-	@staticmethod
-	def _aggregate_ints_to_float(list_of_ints, pad_zeroes=None):
-		""" Aggregate the given ints as float(intintint). """
-
-		result = ""
-		for i in list_of_ints:
-			str_i = str(i)
-
-			if pad_zeroes:
-				assert(len(str_i) <= pad_zeroes)
-				str_i = str_i.zfill(pad_zeroes)
-
-			result += str_i
-
-		return float(result)

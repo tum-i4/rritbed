@@ -190,8 +190,7 @@ class ModelDir(object):
 	def save_model(model, app_id, overwrite=False):
 		""" Persist the given model for the given app_id on disk. """
 
-		if not isinstance(model, sk_svm.LinearSVC):
-			raise ValueError("Models can currently only be of type svm.LinearSVC")
+		ModelDir._verify_model_type(model)
 
 		model_path = ModelDir.get_model_path_for_app_id(app_id)
 		if os.path.lexists(model_path):
@@ -214,11 +213,20 @@ class ModelDir(object):
 
 		model = joblib.load(ModelDir.get_model_path_for_app_id(app_id))
 
-		if not isinstance(model, sk_svm.LinearSVC):
-			raise ValueError("Invalid model class retrieved."
-				+ " Expected: svm.LinearSVC; Got: {}".format(type(model)))
+		ModelDir._verify_model_type(model)
 
 		return model
+
+
+	@staticmethod
+	def _verify_model_type(model):
+		""" Verifies that the model is of correct type. """
+
+		legal_class = sk_svm.OneClassSVM
+
+		if not isinstance(model, legal_class):
+			raise ValueError("Models can currently only be of type {}. Got: {}"
+				.format(legal_class.__name__, type(model).__name__))
 
 
 	@staticmethod

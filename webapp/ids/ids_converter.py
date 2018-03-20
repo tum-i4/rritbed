@@ -14,28 +14,24 @@ class IdsConverter(object):
 	def __init__(self):
 		""" Ctor. """
 
-		self._app_ids = ids_data.get_app_ids()
-		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
+		self.app_ids = ids_data.get_app_ids()
+		ids_tools.verify_md5(self.app_ids, "cacafa61f61b645c279954952ac6ba8f")
 
-		self._level_mapping = ids_tools.enumerate_to_dict(
+		self.level_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_levels(),
 			verify_hash="49942f0268aa668e146e533b676f03d0")
 
-		self._poi_type_mapping = ids_tools.enumerate_to_dict(
+		self.poi_type_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_poi_types(),
 			verify_hash="f2fba0ed17e382e274f53bbcb142565b")
 
-		self._poi_result_mapping = ids_tools.enumerate_to_dict(
+		self.poi_result_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_poi_results(),
 			verify_hash="dd1c18c7188a48a686619fef8007fc64")
 
-		self._label_int_mapping = ids_tools.enumerate_to_dict(
+		self.label_int_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_labels(),
 			verify_hash="69a262192b246d16e8411b6db06e237b")
-
-		self._int_label_mapping = ids_tools.flip_dict(
-			self._label_int_mapping,
-			verify_hash="c29a85dae460b57fac78db12e72ae24a")
 
 
 	def log_entry_to_ndarray(self, log_entry, app_id):
@@ -54,7 +50,7 @@ class IdsConverter(object):
 		# Discard time_unix
 		# time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
-		level_int = self._level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
+		level_int = self.level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
 		# Convert gps_position to float
 		gps_int_list = self.gps_position_to_int_list(data_dict[LogEntry.GPS_POSITION_FIELD])
 		# Convert log_message to float based on app_id
@@ -126,7 +122,7 @@ class IdsConverter(object):
 	def log_message_to_float_list(self, log_message, app_id):
 		""" Convert the given log message to a float list based on the given app_id. """
 
-		if app_id not in self._app_ids:
+		if app_id not in self.app_ids:
 			raise ValueError("Invalid value for app_id given: {}".format(app_id))
 
 		# Generators send "{f}"
@@ -157,8 +153,8 @@ class IdsConverter(object):
 			pair = log_message.split(",")
 			assert(len(pair) == 2)
 
-			type_int = self._poi_type_mapping[pair[0]]
-			result_int = self._poi_result_mapping[pair[1]]
+			type_int = self.poi_type_mapping[pair[0]]
+			result_int = self.poi_result_mapping[pair[1]]
 
 			# Make sure we only have single digits as expected
 			for val in [type_int, result_int]:

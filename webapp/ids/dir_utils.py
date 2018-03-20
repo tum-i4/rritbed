@@ -114,7 +114,6 @@ class ModelDir(object):
 
 	_MODEL_DIR = "models"
 	_MODEL_FILE_SUFFIX = ".model"
-	_TYPE_FILE_SUFFIX = ".modeltype"
 
 
 	@staticmethod
@@ -156,25 +155,14 @@ class ModelDir(object):
 	def reset_dir(purge=False):
 		""" Move all model related files to a new, unique sub directory and return a status message. """
 
-		file_list = ModelDir._list_model_files(include_type_file=True)
+		file_list = ModelDir._list_model_files()
 		return _reset_dir(file_list, ModelDir._mk_unique_backup_dir, purge)
 
 
 	@staticmethod
-	def _list_model_files(include_type_file=False):
+	def _list_model_files():
 		""" Return a list of relative paths of all current model files. """
-
-		model_files = _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._MODEL_FILE_SUFFIX)
-		if include_type_file:
-			model_files += ModelDir._list_type_files()
-
-		return model_files
-
-
-	@staticmethod
-	def _list_type_files():
-		""" Return a list of relative paths of all current type files. """
-		return _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._TYPE_FILE_SUFFIX)
+		return _list_files_by_suffix(ModelDir.get_model_dir(), ModelDir._MODEL_FILE_SUFFIX)
 
 
 	@staticmethod
@@ -234,53 +222,6 @@ class ModelDir(object):
 
 
 	@staticmethod
-	def set_model_type(model_type):
-		""" Save the given model type for the current models. """
-
-		if not isinstance(model_type, ModelDir.Type):
-			raise ValueError("Argument model_type must be of type ModelDir.Type")
-
-		if model_type == ModelDir.Type.NONE:
-			raise ValueError("Type NONE can't be saved.")
-
-		if ModelDir._list_type_files():
-			raise IOError("Type file exists! Make sure you only set the type once.")
-
-		type_file_name = ModelDir._get_type_file_str(model_type)
-
-		open(ModelDir.get_model_path_for_file(type_file_name + ModelDir._TYPE_FILE_SUFFIX), "a"
-			).close()
-
-
-	@staticmethod
-	def load_model_type():
-		""" Load the ModelDir.Type and return it. """
-
-		type_files = ModelDir._list_type_files()
-
-		if len(type_files) > 1:
-			raise IOError("Invalid number of type files found.")
-
-		if not type_files:
-			return ModelDir.Type.NONE
-
-		type_file_name = os.path.basename(type_files[0]).split(os.path.extsep)[0]
-		return ModelDir.Type(type_file_name)
-
-
-	@staticmethod
-	def _get_type_file_str(model_type):
-		""" Convert the given model type to the corresponding file name. """
-
-		if not isinstance(model_type, ModelDir.Type):
-			raise ValueError("Invalid type given.")
-		if model_type == ModelDir.Type.NONE:
-			raise ValueError("ModelDir.Type.NONE has no file!")
-
-		return model_type.value + ModelDir._TYPE_FILE_SUFFIX
-
-
-	@staticmethod
 	def get_model_name_for(app_id):
 		""" Return the model name for the given app_id. """
 		return "{}{}".format(app_id, ModelDir._MODEL_FILE_SUFFIX)
@@ -310,13 +251,6 @@ class ModelDir(object):
 		NONE = 0
 		SOME = 1
 		ALL = 2
-
-
-	class Type(Enum):
-		""" What type the current models have. """
-		NONE = ""
-		TWOCLASS = "twoclass"
-		MULTICLASS = "multiclass"
 
 
 

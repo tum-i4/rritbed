@@ -83,6 +83,11 @@ class IdsConverter(object):
 
 	def class_means_intruded(self, the_class):
 		""" Map the given class to a boolean 'is intruded'. """
+
+		legal_labels = ids_data.get_legal_labels()
+		if len(legal_labels) != 1 or self.label_int_mapping[legal_labels[0]] != 0:
+			raise ValueError("Expected value has changed!")
+
 		return the_class != 0
 
 

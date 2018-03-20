@@ -60,9 +60,11 @@ class IdsConverter(object):
 		# Convert log_message to float based on app_id
 		log_msg_float_list = self.log_message_to_float_list(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
-		data = [log_msg_float, vin_float, level_int, time_unix]
-		if gps_float is not None:
-			data += [gps_float]
+		# 2 VIN ints, level int, 1-4 log message ints
+		data = vin_int_list + [level_int] + log_msg_float_list
+		# 0/2 GPS ints
+		if gps_int_list is not None:
+			data += gps_int_list
 
 		result = numpy.array(
 			data,

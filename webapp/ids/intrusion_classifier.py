@@ -119,6 +119,9 @@ class IntrusionClassifier(object):
 		Splits up in batches of 1 mio. entries from given generator.
 		"""
 
+		if not extend_models and self._has_models() != ModelDir.Found.NONE:
+			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
+
 		batch_limit = 1000000
 
 		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
@@ -133,7 +136,7 @@ class IntrusionClassifier(object):
 		batch_number = 1
 		for log_entry in log_entry_generator:
 			if len(current_batch) == batch_limit:
-				batch_found_app_ids = self._train_batch(current_batch, batch_number, extend_models, printer)
+				batch_found_app_ids = self._train_batch(current_batch, batch_number, printer)
 				app_ids_found.add(batch_found_app_ids)
 				current_batch = []
 				batch_number += 1
@@ -143,23 +146,19 @@ class IntrusionClassifier(object):
 			current_batch.append(log_entry)
 
 		if current_batch:
-			batch_found_app_ids = self._train_batch(current_batch, batch_number, extend_models, printer)
+			batch_found_app_ids = self._train_batch(current_batch, batch_number, printer)
 			app_ids_found.add(batch_found_app_ids)
 
-		printer.prt("")
-		printer.prt("Finished training with {} batches and a total of {} elements."
+		printer.prt("\nFinished training with {} batches and a total of {} elements."
 			.format(batch_number, total_entry_count))
 		printer.prt("Trained models for {}/{} app ids."
 			.format(len(app_ids_found), len(self._converter.app_ids)))
 
 
-	def _train_batch(self, log_entries, batch_number, extend_models, printer):
+	def _train_batch(self, log_entries, batch_number, printer):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		"""
-
-		if not extend_models and self._has_models() != ModelDir.Found.NONE:
-			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
 		printer.prt("Batch {}: Starting training with {} LogEntry objects"
 			.format(batch_number, len(log_entries)))
@@ -201,7 +200,7 @@ class IntrusionClassifier(object):
 			clf.fit(train_set[0])
 
 			printer.prt("Saving to disk... ", newline=False)
-			ModelDir.save_model(clf, app_id, overwrite=extend_models)
+			ModelDir.save_model(clf, app_id, overwrite=True)
 			printer.prt("Done! ")
 
 			app_id_count += 1

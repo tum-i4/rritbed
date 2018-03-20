@@ -119,9 +119,13 @@ class IntrusionClassifier(object):
 		Splits up in batches of 1 mio. entries from given generator.
 		"""
 
+		batch_limit = 1000000
+
 		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
-		batch_limit = 1000000
+		printer.prt("Streaming from file in batches of {} entries.".format(batch_limit))
+		fill_msg = "Filling batch..."
+		printer.prt(fill_msg)
 
 		total_entry_count = 0
 		app_ids_found = set()
@@ -133,6 +137,7 @@ class IntrusionClassifier(object):
 				app_ids_found.add(batch_found_app_ids)
 				current_batch = []
 				batch_number += 1
+				printer.prt(fill_msg)
 
 			total_entry_count += 1
 			current_batch.append(log_entry)

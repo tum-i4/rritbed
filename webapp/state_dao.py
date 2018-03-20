@@ -15,10 +15,18 @@ from log_entry import LogEntry
 class StateDao(object):
 	""" DAO class for handling the STATE objects """
 
+	_INSTANCE = None
+
+
 	def __init__(self, verbose, flush_frequency=None, max_entries_in_state=None):
 		""" Ctor """
 
+		if StateDao._INSTANCE:
+			raise ValueError("DAO is already instantiated!")
+
 		object.__init__(self)
+
+		StateDao._INSTANCE = self
 		self._verbose = verbose
 
 		self._state_path = "state"

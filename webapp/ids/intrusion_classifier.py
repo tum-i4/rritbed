@@ -38,10 +38,11 @@ class IntrusionClassifier(object):
 		if IntrusionClassifier._INSTANCE:
 			raise ValueError("Class is already instantiated! Retrieve the instance with get_singleton().")
 
-		self._app_ids = ids_data.get_app_ids()
-		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
-
 		self._converter = ids_converter.IdsConverter()
+
+		self._int_label_mapping = ids_tools.flip_dict(
+			self._converter.label_int_mapping,
+			verify_hash="c29a85dae460b57fac78db12e72ae24a")
 
 		self._load_models()
 
@@ -99,11 +100,11 @@ class IntrusionClassifier(object):
 			raise IOError("Some or all model files are missing.")
 
 		app_id = ids_tools.log_entry_to_app_id(log_entry)
-		ndarray = self._log_entry_to_ndarray(log_entry, app_id)
+		ndarray = self._converter.log_entry_to_ndarray(log_entry, app_id)
 		predicted_class = self._models[app_id].predict([ndarray])[0]
 
 		classification = Classification.normal
-		if self._int_label_mapping[predicted_class] in ids_data.get_intrusion_labels():
+		if self._converter.class_means_intruded(predicted_class):
 			classification = Classification.intrusion
 
 		return IdsResult(classification=classification, confidence=70)
@@ -113,7 +114,7 @@ class IntrusionClassifier(object):
 	### Train ###
 
 
-	def train(self, log_entries, multi_class, extend_models=False, squelch_output=False):
+	def train(self, log_entries, extend_models=False, squelch_output=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		"""
@@ -123,27 +124,22 @@ class IntrusionClassifier(object):
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
-		if extend_models and ((self._type == ModelDir.Type.MULTICLASS) != multi_class):
-			raise ValueError("Extending models was activated but classifier type does not match train type.")
-
-		printer.prt("Starting training with {} LogEntry objects ({})".format(
-			len(log_entries),
-			"multi-class" if multi_class else "two-class"))
+		printer.prt("Starting training with {} LogEntry objects".format(len(log_entries)))
 		start_time = time.time()
 
-		printer.prt("Found all {} app ids".format(len(self._app_ids)))
+		printer.prt("Found all {} app ids".format(len(self._converter.app_ids)))
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class, printer)
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
 
 		# Ensure that all app_ids exist in the dataset
-		if (len(app_id_datasets) != len(self._app_ids)
-			or any([True for x in self._app_ids if x not in app_id_datasets])):
+		if (len(app_id_datasets) != len(self._converter.app_ids)
+			or any([True for x in self._converter.app_ids if x not in app_id_datasets])):
 			raise ValueError("Couldn't find data for every current app_id!")
 
 		# Ensure each app_id classifier has samples of all classes to learn from.
 		printer.prt("Verifying given data...")
 		for app_id, train_set in app_id_datasets.items():
-			expected_classes = self._get_expected_classes(app_id, multi_class)
+			expected_classes = self._converter.get_expected_classes(app_id)
 			received_classes = set(train_set[1])
 			value_error = ValueError(
 				"The given samples for classifier {} don't contain all expected classes.".format(app_id)
@@ -158,7 +154,7 @@ class IntrusionClassifier(object):
 				if exp_class not in received_classes:
 					raise value_error
 
-		model_type = ModelDir.Type.MULTICLASS if multi_class else ModelDir.Type.TWOCLASS
+		model_type = ModelDir.Type.TWOCLASS
 		ModelDir.set_model_type(model_type)
 
 		app_id_count = 1
@@ -190,7 +186,7 @@ class IntrusionClassifier(object):
 		printer.prt("Training completed in {}.".format(ids_tools.format_time_passed(time_expired)))
 
 
-	def score(self, log_entries, multi_class, do_return=False, squelch_output=False):
+	def score(self, log_entries, do_return=False, squelch_output=False):
 		"""
 		Score the models' prediction for the given log entries.
 		: param do_return : Return a machine-readable { app_id: score } dict.
@@ -206,14 +202,10 @@ class IntrusionClassifier(object):
 
 		if self._type == ModelDir.Type.NONE:
 			raise ValueError("No model type set.")
-		elif (self._type == ModelDir.Type.MULTICLASS) != multi_class:
-			raise ValueError("Trained models are of invalid type.")
 
-		printer.prt("Starting scoring with {} LogEntry objects ({}).".format(
-			len(log_entries),
-			"multi-class" if multi_class else "two-class"))
+		printer.prt("Starting scoring with {} LogEntry objects.".format(len(log_entries)))
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, multi_class, printer)
+		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
 
 		app_id_count = 1
 		scores = {}
@@ -243,19 +235,19 @@ class IntrusionClassifier(object):
 			return scores
 
 
-	def _log_entries_to_app_id_train_data_dict(self, log_entries, multi_class, printer):
+	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):
 		""" Convert the given log entries to feature vectors and classes per app_id. """
 
 		printer.prt("Transforming the log data to trainable vectors...")
 
 		app_id_datasets = {}
-		for app_id in self._app_ids:
+		for app_id in self._converter.app_ids:
 			app_id_datasets[app_id] = ([], [])
 
 		for log_entry in log_entries:
 			app_id = ids_tools.log_entry_to_app_id(log_entry)
-			ndarray = self._log_entry_to_ndarray(log_entry, app_id)
-			its_class = self._log_entry_to_class(log_entry, multi_class)
+			ndarray = self._converter.log_entry_to_ndarray(log_entry, app_id)
+			its_class = self._converter.log_entry_to_class(log_entry)
 
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
@@ -274,18 +266,18 @@ class IntrusionClassifier(object):
 		raises: If not all models could be found.
 		"""
 
-		if ModelDir.has_models(self._app_ids) != ModelDir.Found.ALL:
+		if ModelDir.has_models(self._converter.app_ids) != ModelDir.Found.ALL:
 			self._models = None
 			return
 
 		models = {}
-		for app_id in self._app_ids:
+		for app_id in self._converter.app_ids:
 			model = ModelDir.load_model(app_id)
 			if not model:
 				raise IOError("Model for \"{}\" could not be retrieved".format(app_id))
 			models[app_id] = model
 
-		if len(models) != len(self._app_ids):
+		if len(models) != len(self._converter.app_ids):
 			raise IOError("Invalid number of model files received.")
 
 		self._models = models
@@ -297,11 +289,11 @@ class IntrusionClassifier(object):
 		Checks the ModelDir for all current app_ids.
 		returns: A ModelDir.Found enum
 		"""
-		return ModelDir.has_models(self._app_ids)
+		return ModelDir.has_models(self._converter.app_ids)
 
 
 	@staticmethod
 	def reset_models(purge=False):
 		""" Reset the models.
 		returns: A status message. """
-		return ModelDir.reset_dir(purge)
+		return ModelDir.reset_dir(purge=purge)

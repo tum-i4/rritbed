@@ -15,27 +15,27 @@ class IdsConverter(object):
 		""" Ctor. """
 
 		self._app_ids = ids_data.get_app_ids()
-		ids_tools.verify_md5(self._app_ids, ids_data.APP_IDS_MD5)
+		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
 
 		self._level_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_levels(),
-			verify_hash=ids_data.LEVEL_MAPPING_MD5)
+			verify_hash="49942f0268aa668e146e533b676f03d0")
 
 		self._poi_type_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_poi_types(),
-			verify_hash=ids_data.POI_TYPE_MAPPING_MD5)
+			verify_hash="f2fba0ed17e382e274f53bbcb142565b")
 
 		self._poi_result_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_poi_results(),
-			verify_hash=ids_data.POI_RESULT_MAPPING_MD5)
+			verify_hash="dd1c18c7188a48a686619fef8007fc64")
 
 		self._label_int_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_labels(),
-			verify_hash=ids_data.LABEL_INT_MAPPING_MD5)
+			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 		self._int_label_mapping = ids_tools.flip_dict(
 			self._label_int_mapping,
-			verify_hash=ids_data.INT_LABEL_MAPPING_MD5)
+			verify_hash="c29a85dae460b57fac78db12e72ae24a")
 
 
 	def log_entry_to_ndarray(self, log_entry, app_id):

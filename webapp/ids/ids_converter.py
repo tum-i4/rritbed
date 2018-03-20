@@ -50,9 +50,9 @@ class IdsConverter(object):
 		data_dict = log_entry.data
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
 		# Convert vin to float
-		vin_float = self.vin_to_float(data_dict[LogEntry.VIN_FIELD])
-		# Keep time_unix as is
-		time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
+		vin_int_list = self.vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
+		# Discard time_unix
+		# time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
 		level_int = self._level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
 		# Convert gps_position to float
@@ -97,13 +97,13 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def vin_to_float(vin):
-		""" Convert the given VIN to float(aggregate([ord(char), int(rest)])). """
+	def vin_to_int_list(vin):
+		""" Convert the given VIN to [ord(char), int(rest)]. """
 
 		if len(vin) != 7:
 			raise ValueError("Invalid VIN")
 
-		return IdsConverter.aggregate_ints_to_float([ord(vin[0]), int(vin[1:])])
+		return [ord(vin[0]), int(vin[1:])]
 
 
 	@staticmethod

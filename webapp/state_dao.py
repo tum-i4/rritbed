@@ -134,6 +134,15 @@ class StateDao(object):
 		return (log_length - len(log_lines), log_length, new_file_path)
 
 
+	@staticmethod
+	def reset_in_instance():
+		""" Reset the STATE without having to initialise a DAO first. """
+
+		with StateDao._INSTANCE or StateDao(verbose=False) as dao:
+			return dao.reset()
+
+
+
 	def reset(self):
 		"""
 		Reset the STATE by deleting the underlying files.\n

@@ -238,22 +238,24 @@ class IdsConverter(object):
 
 		constraints = {}
 		# 1 value (generated)
-		constraint_generators = {len_key : base_len + 1}
 		for gen_key in ids_data.get_generators():
-			constraints[gen_key] = constraint_generators
+			constraints[gen_key] = {len_key : base_len + 1}
 		# 3 values for each colour dimension
-		constraint_colours = {len_key : base_len + 3}
 		for colr_key in ids_data.get_colours():
-			constraints[colr_key] = constraint_colours
+			constraints[colr_key] = {len_key : base_len + 3}
+		# Poses all have GPS
+		for pose_key in ids_data.get_poses():
+			constraints[pose_key] = {len_key : base_len + 2}
 
 		# CC
-		constraints[ids_data.POSE_CC] = {len_key : base_len + 1}
+		constraints[ids_data.POSE_CC][len_key] += 1
 		# type, result
-		constraints[ids_data.POSE_POI] = {len_key : base_len + 2}
+		constraints[ids_data.POSE_POI][len_key] += 2
 		# x, y, targ_x, targ_y
-		constraints[ids_data.POSE_TSP] = {len_key : base_len + 4}
+		constraints[ids_data.POSE_TSP][len_key] += 4
 
 		expected_len = constraints[app_id][len_key]
 		if len(ndarray) != expected_len:
-			raise ValueError("Given ndarray is too short. Expected {} elements. Received: {}"
+			print(app_id)
+			raise ValueError("Given ndarray has invalid length. Expected {} elements. Received: {}"
 				.format(expected_len, ndarray))

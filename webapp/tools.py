@@ -28,6 +28,9 @@ def train_call(args):
 
 def _train(file_path, extend_models):
 	""" Train the classifier with the given file. Optionally allow extension of models. """
+
+	print("Using file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+
 	saved_so_far = []
 
 	if os.path.lexists(_HISTORY_FILE):

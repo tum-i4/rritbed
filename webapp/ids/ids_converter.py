@@ -187,7 +187,7 @@ class IdsConverter(object):
 
 			# Make sure we only have single digits as expected
 			for val in [type_int, result_int]:
-				assert(val >= 1 and val <= 9)
+				assert(val >= 0 and val <= 9)
 
 			# Return list with mapped type and result
 			return [type_int, result_int]

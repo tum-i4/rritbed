@@ -78,15 +78,7 @@ class IdsConverter(object):
 		if not log_entry.intrusion:
 			raise ValueError("Given LogEntry does not have a set intrusion to convert.")
 
-		if self.class_means_intruded(0):
-			raise ValueError("The class that was about to be returned would have been false.")
-
-		if log_entry.intrusion in ids_data.get_legal_labels():
-			return 0
-		elif log_entry.intrusion in ids_data.get_intrusion_labels():
-			return 1
-		else:
-			raise ValueError("Unexpected intrusion type encountered: {}".format(log_entry.intrusion))
+		return self.label_int_mapping[log_entry.intrusion]
 
 
 	def class_means_intruded(self, the_class):

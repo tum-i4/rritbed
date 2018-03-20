@@ -308,16 +308,19 @@ def _init_file_handle(path):
 
 # pylint: disable-msg=W0613; (Unused argument)
 def reset_call(args):
-	""" Call _reset. Expects 'classifier' and 'server_log'. """
-	_reset(args.classifier, args.server_log)
+	""" Call _reset. Expects 'classifier', 'server_log' or 'all'. """
+	_reset(args.classifier, args.server_log, args.all)
 
 
-def _reset(classifier, server_log):
+def _reset(classifier, server_log, all):
 	""" Move the generated models to a sub-folder and reset the intrusion_classifier_history. """
 
-	if not (classifier or server_log):
-		print("No selection was made! Add either --classifier or --server-log to reset.")
+	if not (classifier or server_log or all):
+		print("No selection was made! Add either --classifier, --server-log or --all to reset.")
 		return
+
+	classifier |= all
+	server_log |= all
 
 	print("Resetting {}{}{}...".format(
 		"classifier" if classifier else "",
@@ -653,6 +656,7 @@ if __name__ == "__main__":
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")
 		RESET_PARSER.add_argument("--classifier", "-c", action="store_true")
 		RESET_PARSER.add_argument("--server-log", "-l", action="store_true")
+		RESET_PARSER.add_argument("--all", "-a", action="store_true")
 		RESET_PARSER.set_defaults(function=reset_call)
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")

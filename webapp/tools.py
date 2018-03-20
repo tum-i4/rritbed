@@ -312,15 +312,15 @@ def reset_call(args):
 	_reset(args.classifier, args.server_log, args.all)
 
 
-def _reset(classifier, server_log, all):
+def _reset(classifier, server_log, reset_all):
 	""" Move the generated models to a sub-folder and reset the intrusion_classifier_history. """
 
-	if not (classifier or server_log or all):
+	if not (classifier or server_log or reset_all):
 		print("No selection was made! Add either --classifier, --server-log or --all to reset.")
 		return
 
-	classifier |= all
-	server_log |= all
+	classifier |= reset_all
+	server_log |= reset_all
 
 	print("Resetting {}{}{}...".format(
 		"classifier" if classifier else "",

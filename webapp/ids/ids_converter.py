@@ -56,7 +56,7 @@ class IdsConverter(object):
 		# Map level to int
 		level_int = self._level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
 		# Convert gps_position to float
-		gps_float = self.gps_position_to_float(data_dict[LogEntry.GPS_POSITION_FIELD], app_id)
+		gps_int_list = self.gps_position_to_int_list(data_dict[LogEntry.GPS_POSITION_FIELD])
 		# Convert log_message to float based on app_id
 		log_msg_float = self.log_message_to_float(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
@@ -107,10 +107,10 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def gps_position_to_float(gps_position, app_id):
+	def gps_position_to_int_list(gps_position):
 		""" Convert the given GPS position string to (lat, lon). """
 
-		if app_id not in ids_data.get_poses():
+		if not gps_position:
 			return None
 
 		# Format: lat,lon
@@ -118,7 +118,7 @@ class IdsConverter(object):
 		if len(split) != 2:
 			raise ValueError("Invalid string")
 
-		return IdsConverter.aggregate_ints_to_float([int(split[0]), int(split[1])])
+		return [int(split[0]), int(split[1])]
 
 
 	def log_message_to_float(self, log_message, app_id):

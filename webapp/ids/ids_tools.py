@@ -98,6 +98,7 @@ class Printer(object):
 		object.__init__(self)
 		self.squelch = squelch
 		self.name = name
+		self.last_ended_in_newline = True
 
 	def prt(self, message, preface=True, newline=True):
 		""" Print if not squelching. """
@@ -105,8 +106,10 @@ class Printer(object):
 		if self.squelch:
 			return
 
-		if preface and self.name:
+		if preface and self.name and self.last_ended_in_newline:
 			message = "[{}] {}".format(self.name, message)
+
+		self.last_ended_in_newline = newline
 
 		print(message, end="\n" if newline else "")
 		sys.stdout.flush()

@@ -22,11 +22,11 @@ _HISTORY_FILE = "intrusion_classifier_history"
 
 def train_call(args):
 	""" Unpack the args and call _train.
-	Expects 'train_file_path', 'multi_class' and 'extend_models'. """
-	_train(args.train_file_path, args.multi_class, args.extend_models)
+	Expects 'train_file_path' and 'extend_models'. """
+	_train(args.train_file_path, args.extend_models)
 
 
-def _train(file_path, multi_class, extend_models):
+def _train(file_path, extend_models):
 	""" Train the classifier with the given file. Optionally allow extension of models. """
 	saved_so_far = []
 
@@ -38,14 +38,14 @@ def _train(file_path, multi_class, extend_models):
 			+ " If you think this is a mistake, rename it and run again.")
 		return
 
-	log_entries = _read_file_flow(file_path)
-	_train_entries(log_entries, multi_class, extend_models)
+	log_entry_generator = _yield_log_entries_from_file(file_path)
+	_train_entries(log_entry_generator, extend_models)
 
 	with open(_HISTORY_FILE, 'a') as hist_file:
 		hist_file.write(file_path + "\n")
 
 
-def _train_entries(log_entries, multi_class, extend_models, squelch_output=False):
+def _train_entries(log_entry_generator, extend_models, squelch_output=False):
 	"""
 	Train with the given LogEntry objects.
 	returns: Boolean flag indicating success
@@ -54,8 +54,7 @@ def _train_entries(log_entries, multi_class, extend_models, squelch_output=False
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
-		clas.train(log_entries, multi_class=multi_class,
-			extend_models=extend_models, squelch_output=squelch_output)
+		clas.train(log_entry_generator, extend_models=extend_models, squelch_output=squelch_output)
 		return True
 	except ValueError as val_err:
 		print(val_err.message)
@@ -623,7 +622,6 @@ if __name__ == "__main__":
 		TRAIN_PARSER.add_argument("train_file_path", metavar="PATH", help="The training data")
 		TRAIN_PARSER.add_argument("--extend-models", "-e", action="store_true",
 			help="Allow existing models to be extended.")
-		TRAIN_PARSER.add_argument("--multi-class", "-m", action="store_true")
 		TRAIN_PARSER.set_defaults(function=train_call)
 
 		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")

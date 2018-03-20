@@ -196,6 +196,7 @@ class IdsConverter(object):
 
 		return int(result)
 
+
 	@staticmethod
 	def verify_ndarray(ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
@@ -203,34 +204,31 @@ class IdsConverter(object):
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:
 			raise ValueError("Given array is of invalid type.")
 
-		expected_len = 4
-		if app_id in ids_data.get_poses():
-			expected_len += 1
+		# 2 VIN ints, level int
+		base_len = 3
+		len_key = "len"
+
+		constraints = {}
+		# 1 value (generated)
+		constraint_generators = {len_key : base_len + 1}
+		for gen_key in ids_data.get_generators():
+			constraints[gen_key] = constraint_generators
+		# 3 values for each colour dimension
+		constraint_colours = {len_key : base_len + 3}
+		for colr_key in ids_data.get_colours():
+			constraints[colr_key] = constraint_colours
+
+		# CC
+		constraints[ids_data.POSE_CC] = {len_key : base_len + 1}
+		# type, result
+		constraints[ids_data.POSE_POI] = {len_key : base_len + 2}
+		# x, y, targ_x, targ_y
+		constraints[ids_data.POSE_TSP] = {len_key : base_len + 4}
+
+		expected_len = constraints[app_id][len_key]
 		if len(ndarray) != expected_len:
 			raise ValueError("Given ndarray is too short. Expected {} elements. Received: {}"
 				.format(expected_len, ndarray))
-
-		constraints = {}
-
-		# No constraint
-		for gen in ids_data.get_generators():
-			constraints[gen] = lambda x: True
-
-		# Min: 1,1,1; max: 256,256,256
-		for colr in ids_data.get_colours():
-			constraints[colr] = lambda x: x >= 1001001 and x <= 256256256
-
-		# For each char: min: 65 ("A"); max: 90 ("Z")
-		constraints[ids_data.POSE_CC] = lambda x: x >= 6565 and x <= 9090
-
-		# For both ints: [1,9]
-		constraints[ids_data.POSE_POI] = lambda x: x >= 11 and x <= 99
-
-		# Min: 1,1,1,1; max: 500,500,500,500
-		constraints[ids_data.POSE_TSP] = lambda x: x >= 1001001001 and x <= 500500500500
-
-		# Check the constraint with the log_message float
-		assert(constraints[app_id](ndarray[0]))
 
 
 	def get_expected_classes(self, app_id, multi_class):

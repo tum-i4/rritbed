@@ -166,18 +166,18 @@ class IntrusionClassifier(object):
 
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
 
-		# Ensure that all app_ids exist in the dataset
-		if (len(app_id_datasets) != len(self._converter.app_ids)
-			or any([True for x in self._converter.app_ids if x not in app_id_datasets])):
-			raise ValueError("Couldn't find data for every current app_id!")
-
 		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
 		printer.prt("Verifying given data...")
 		removed_lines = 0
 		for app_id, train_set in app_id_datasets.items():
-			for i, item in enumerate(train_set):
-				if self._converter.class_means_intruded(item[1]):
-					del(train_set[i])
+			if not train_set[0]:
+				del(app_id_datasets[app_id])
+				continue
+
+			# pylint: disable-msg=C0200; (Consider using enumerate - wouldn't work)
+			for index, item_set in enumerate(zip(train_set[0], train_set[1])):
+				if self._converter.class_means_intruded(item_set[1]):
+					del(train_set[index])
 					removed_lines += 1
 
 		if removed_lines > 0:

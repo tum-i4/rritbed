@@ -9,6 +9,7 @@ from log_entry import LogEntry
 
 import ids_data
 import ids_tools
+import ids_converter
 from dir_utils import ModelDir
 from ids_classification import IdsResult, Classification
 
@@ -36,6 +37,11 @@ class IntrusionClassifier(object):
 
 		if IntrusionClassifier._INSTANCE:
 			raise ValueError("Class is already instantiated! Retrieve the instance with get_singleton().")
+
+		self._app_ids = ids_data.get_app_ids()
+		ids_tools.verify_md5(self._app_ids, "cacafa61f61b645c279954952ac6ba8f")
+
+		self._converter = ids_converter.IdsConverter()
 
 		self._load_models()
 

@@ -58,7 +58,7 @@ class IdsConverter(object):
 		# Convert gps_position to float
 		gps_int_list = self.gps_position_to_int_list(data_dict[LogEntry.GPS_POSITION_FIELD])
 		# Convert log_message to float based on app_id
-		log_msg_float = self.log_message_to_float(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
+		log_msg_float_list = self.log_message_to_float_list(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
 		data = [log_msg_float, vin_float, level_int, time_unix]
 		if gps_float is not None:
@@ -121,7 +121,7 @@ class IdsConverter(object):
 		return [int(split[0]), int(split[1])]
 
 
-	def log_message_to_float(self, log_message, app_id):
+	def log_message_to_float_list(self, log_message, app_id):
 		""" Convert the given log message to a float list based on the given app_id. """
 
 		if app_id not in self._app_ids:
@@ -129,7 +129,8 @@ class IdsConverter(object):
 
 		# Generators send "{f}"
 		if app_id in ids_data.get_generators():
-			return float(log_message)
+			# Return list with value
+			return [float(log_message)]
 
 		# Colour sends "{i},{i},{i}"
 		if app_id in ids_data.get_colours():
@@ -138,36 +139,31 @@ class IdsConverter(object):
 			for val in vals:
 				assert(val >= 0 and val <= 255)
 
-			# Transform from [0, 255] to [1, 256] to not have zeroes
-			vals = [v + 1 for v in vals]
-
-			# Pad to ensure 12,155,1 is different from 121,55,1
-			return IdsConverter.aggregate_ints_to_float(vals, pad_zeroes=3)
-
-		# Poses
-		assert(app_id in ids_data.get_poses())
+			# Return list with the three values
+			return vals
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
 			assert(len(log_message) == 2)
 
 			ord_ints = [ord(x) for x in log_message]
-			return IdsConverter.aggregate_ints_to_float(ord_ints)
+			# Return list with the chars as one aggregated int
+			return [IdsConverter.aggregate_ints(ord_ints)]
 
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:
 			pair = log_message.split(",")
 			assert(len(pair) == 2)
 
-			# Transform from [0,] to [1,] to not have zeroes
-			type_int = 1 + self._poi_type_mapping[pair[0]]
-			result_int = 1 + self._poi_result_mapping[pair[1]]
+			type_int = self._poi_type_mapping[pair[0]]
+			result_int = self._poi_result_mapping[pair[1]]
 
 			# Make sure we only have single digits as expected
 			for val in [type_int, result_int]:
 				assert(val >= 1 and val <= 9)
 
-			return IdsConverter.aggregate_ints_to_float([type_int, result_int])
+			# Return list with mapped type and result
+			return [type_int, result_int]
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == ids_data.POSE_TSP:
@@ -176,18 +172,15 @@ class IdsConverter(object):
 			for coord in coords:
 				assert(coord >= 0 and coord < 500)
 
-			# Transfrom from [0, 499] to [1, 500] to not have zeroes
-			coords = [c + 1 for c in coords]
-
-			# Pad to ensure 1,100,1,110 is different from 11,1,1,1
-			return IdsConverter.aggregate_ints_to_float(coords, pad_zeroes=3)
+			# Return list of coordinates
+			return coords
 
 		raise NotImplementedError("Pose type {} not implemented".format(app_id))
 
 
 	@staticmethod
-	def aggregate_ints_to_float(list_of_ints, pad_zeroes=None):
-		""" Aggregate the given ints as float(intintint). """
+	def aggregate_ints(list_of_ints, pad_zeroes=None):
+		""" Aggregate the given ints as int(intintint). """
 
 		result = ""
 		for i in list_of_ints:
@@ -199,8 +192,7 @@ class IdsConverter(object):
 
 			result += str_i
 
-		return float(result)
-
+		return int(result)
 
 	@staticmethod
 	def verify_ndarray(ndarray, app_id):

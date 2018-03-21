@@ -84,11 +84,24 @@ class IdsConverter(object):
 	def class_means_intruded(self, the_class):
 		""" Map the given class to a boolean 'is intruded'. """
 
+		# Ensure we still have the state we expect.
 		legal_labels = ids_data.get_legal_labels()
 		if len(legal_labels) != 1 or self.label_int_mapping[legal_labels[0]] != 0:
 			raise ValueError("Expected value has changed!")
 
 		return the_class != 0
+
+
+	def prediction_means_outlier(self, prediction):
+		""" Map the given outlier prediction to a boolean 'is outlier'. """
+
+		# +1 means outlier, -1 means normal
+		if prediction == 1:
+			return True
+		elif prediction == -1:
+			return False
+		else:
+			raise ValueError("Predictions can only be +1 or -1!")
 
 
 	def get_expected_classes(self, app_id):

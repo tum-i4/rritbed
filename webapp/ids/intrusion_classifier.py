@@ -249,9 +249,18 @@ class IntrusionClassifier(object):
 			return scores
 
 
-	def _score_outlier_detection(self, model, train_set):
+	def _score_outlier_detection(self, model, score_set):
 		""" Score the given model with the given train_set (labelled). """
-		raise NotImplementedError()
+
+		predictions = model.predict(score_set[0])
+		prediction_was_correct = []
+
+		for correct_class, prediction in zip(score_set, predictions):
+			is_outlier = self._converter.class_means_intruded(correct_class)
+			# +1 means outlier, -1 means normal
+			prediction_was_correct.append((prediction == 1) == is_outlier)
+
+		return float(len(filter(None, prediction_was_correct))) / len(prediction_was_correct)
 
 
 	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):

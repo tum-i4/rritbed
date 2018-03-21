@@ -63,6 +63,8 @@ class LaunchFileOrchestrator(object):
 			help="Advise logger to not label intrusions (might improve performance when scoring).")
 		optionals_group.add_argument("--random-gen-args", "-r", action="store_true",
 			dest="random_gen_args", help="Force use of the default generator arguments.")
+		optionals_group.add_argument("--dont-seed-gens", "-e", action="store_false", dest="seed_gens",
+			help="Don't seed the generators (making them truly random when started repeatedly).")
 
 		# Intrusions
 		optionals_group.add_argument("--intrusions", "-p", type=int, dest="intrusion_percentage",
@@ -162,6 +164,9 @@ class LaunchFileOrchestrator(object):
 		self._namespace_count = _raise_on_none_else_return(args.namespace_count)
 		self._label_intrusions = _raise_on_none_else_return(args.label_intrusions)
 		self._random_gen_args = _raise_on_none_else_return(args.random_gen_args)
+		self._seed_gens = _raise_on_none_else_return(args.seed_gens)
+		self._generator_seeds = {}
+		self._current_seed = 1
 
 		# Intrusions
 		intrusion_percentage = _raise_on_none_else_return(args.intrusion_percentage)
@@ -351,15 +356,24 @@ class LaunchFileOrchestrator(object):
 			intruded, selected_generators)
 
 		for gen_name, intrusion_mode in selected_generator_tuples:
+			# Create unique name with appended index ("GAUSSIAN_1")
 			selected_generator_frequency[gen_name] += 1
 			gen_key = "{}_{}".format(gen_name, selected_generator_frequency[gen_name])
 			selected_generator_keys.append(gen_key)
+
+			# Generator seeds
+			if gen_name not in self._generator_seeds:
+				self._generator_seeds[gen_name] = None
+				if self._seed_gens:
+					self._generator_seeds[gen_name] = self._current_seed
+					self._current_seed += 1
 
 			group_element.append(self._create_generator_node_element(
 				gen_key,
 				gen_name,
 				generator_definitions[gen_name],
-				intrusion_mode=intrusion_mode))
+				intrusion_mode=intrusion_mode,
+				seed=self._generator_seeds[gen_name]))
 
 		assert(len(selected_generator_tuples) == len(selected_generator_keys))
 
@@ -403,7 +417,7 @@ class LaunchFileOrchestrator(object):
 		return node_element
 
 
-	def _create_generator_node_element(self, gen_id, gen_name, gen_def, intrusion_mode=None):
+	def _create_generator_node_element(self, gen_id, gen_name, gen_def, intrusion_mode, seed):
 		""" Create a generator node element. """
 
 		args = "--id {}".format(gen_id)
@@ -418,6 +432,9 @@ class LaunchFileOrchestrator(object):
 			if self._random_gen_args:
 				arg = random.uniform(float(arg_def["min"]), float(arg_def["max"]))
 			args += " {:f}".format(arg)
+
+		if seed is not None:
+			args += " --seed {:d}".format(seed)
 
 		return self._create_node_element(
 			gen_id, "distribution_publisher.py", "turtlesim_expl", n_args=args)

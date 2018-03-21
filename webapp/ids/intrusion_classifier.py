@@ -257,10 +257,14 @@ class IntrusionClassifier(object):
 
 		for correct_class, prediction in zip(score_set, predictions):
 			is_outlier = self._converter.class_means_intruded(correct_class)
-			# +1 means outlier, -1 means normal
-			prediction_was_correct.append((prediction == 1) == is_outlier)
+			predicted_as_outlier = self._converter.prediction_means_outlier(prediction)
 
-		return float(len(filter(None, prediction_was_correct))) / len(prediction_was_correct)
+			prediction_was_correct.append(is_outlier == predicted_as_outlier)
+
+		# Filter for True values
+		correct_prediction_count = len(filter(None, prediction_was_correct))
+		score = float(correct_prediction_count) / len(prediction_was_correct)
+		return score
 
 
 	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):

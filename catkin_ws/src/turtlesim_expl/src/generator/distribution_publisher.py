@@ -117,13 +117,18 @@ class DistributionPublisher(object):
 
 		self._generator = generator
 
+		message = "Initialising with "
+
 		# pylint: disable-msg=W1202
 		if len(parameters) != generator.get_args_count():
 			self._generator_arguments = generator.get_default_values()
-			return "Initialising with default values {}".format(self._generator_arguments)
+			message += "default values {}".format(self._generator_arguments)
+		else:
+			self._generator_arguments = [float(x) for x in parameters]
+			message += "given values {}".format(self._generator_arguments)
 
-		self._generator_arguments = [float(x) for x in parameters]
-		return "Initialising with values {}".format(self._generator_arguments)
+		message += " (seed: {})".format(seed)
+		return message
 
 
 	def run(self):

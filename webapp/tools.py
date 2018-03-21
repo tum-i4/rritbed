@@ -95,11 +95,11 @@ def _score_entries(log_entries, do_return=False, squelch_output=False):
 
 def train_score_call(args):
 	""" Unpack the args and call _train_and_score.
-	Expects 'file_path', 'split' , 'iterations' and 'multi_class'. """
-	_train_and_score(args.file_path, args.split, args.iterations, args.multi_class)
+	Expects 'file_path', 'split' and 'iterations' """
+	_train_and_score(args.file_path, args.split, args.iterations)
 
 
-def _train_and_score(file_path, split, iterations, multi_class):
+def _train_and_score(file_path, split, iterations):
 	""" Split the given file and use the first part for training, the second for scoring. """
 
 	if split <= 0 or split >= 100:
@@ -128,7 +128,7 @@ def _train_and_score(file_path, split, iterations, multi_class):
 
 		# Train
 		printer.prt("Training... ", newline=False)
-		training_succeeded = _train_entries(training_entries, multi_class,
+		training_succeeded = _train_entries(training_entries,
 			extend_models=False, squelch_output=True)
 		if not training_succeeded:
 			printer.prt("")
@@ -137,7 +137,7 @@ def _train_and_score(file_path, split, iterations, multi_class):
 
 		# Score
 		printer.prt("Scoring... ", newline=False)
-		scoring_result = _score_entries(scoring_entries, multi_class,
+		scoring_result = _score_entries(scoring_entries,
 			do_return=True, squelch_output=True)
 		if not scoring_result:
 			printer.prt("")
@@ -638,7 +638,6 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--split", "-s", type=int, default=80,
 			help="The percentage of data points to be used for training.")
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
-		TRAINSCORE_PARSER.add_argument("--multi_class", "-m", action="store_true")
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")

@@ -2,6 +2,7 @@ log
 state
 training_data/*.pickle
 ids/models
+intrusion_classifier_history
 
 # Template at https://www.gitignore.io/api/VisualStudioCode
 

@@ -142,9 +142,12 @@ def format_time_passed(time_in_sec):
 	return result.strip()
 
 
-def format_percentage(value):
+def format_percentage(value, pad_spaces=False):
 	""" Formats the given float value in [0, 1] as a percentage string. """
-	return "%d %%" % round(value * 100, 2)
+	string = "%d %%" % round(value * 100, 2)
+	if pad_spaces:
+		return string.rjust(5)
+	return string
 
 
 def generate_log_entries(number):

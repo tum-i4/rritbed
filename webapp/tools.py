@@ -66,15 +66,49 @@ def _train_entries(log_entry_generator, extend_models, squelch_output=False):
 
 def score_call(args):
 	""" Unpack the args and call _score.
-	Expects 'test_file_path'. """
-	_score(args.test_file_path)
+	Expects 'test_file_path' and 'iterations'. """
+	_score(args.test_file_path, args.iterations)
 
 
-def _score(file_path):
+def _score(file_path, iterations):
 	""" Score the prediction of the classifier with the given test file. """
 
 	log_entries = _read_file_flow(file_path)
-	_score_entries(log_entries)
+	if iterations == 1:
+		_score_entries(log_entries)
+	elif iterations > 1:
+		_score_entries_in_iterations(log_entries, iterations)
+	else:
+		print("Iterations must be a positive value! Got: {}".format(iterations))
+
+
+def _score_entries_in_iterations(log_entries, iterations):
+	""" Score the given LogEntry objects in multiple iterations and print the output. """
+
+	scores = {}
+	for app_id in ids_data.get_app_ids():
+		scores[app_id] = []
+
+	printer = ids_tools.Printer()
+
+	printer.prt("Scoring in {} iterations: ".format(iterations), newline=False)
+
+	for i in range(iterations, 0, -1):
+		# Score
+		printer.prt("{}...".format(i), newline=False)
+		scoring_result = _score_entries(log_entries,
+			do_return=True, squelch_output=True)
+		if not scoring_result:
+			printer.prt("")
+			printer.prt("Scoring failed!")
+			# Don't continue; reset needs to happen in order to allow for the next iteration
+
+		for app_id in scoring_result:
+			scores[app_id].append(scoring_result[app_id])
+
+	printer.prt("Done!")
+
+	_print_scores(scores, printer)
 
 
 def _score_entries(log_entries, do_return=False, squelch_output=False):
@@ -637,6 +671,7 @@ if __name__ == "__main__":
 
 		SCORE_PARSER = SUBPARSERS.add_parser("score", help="Score the predictions of the current models")
 		SCORE_PARSER.add_argument("test_file_path", metavar="PATH", help="The test data")
+		SCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
 		SCORE_PARSER.set_defaults(function=score_call)
 
 		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train, score, reset")

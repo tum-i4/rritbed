@@ -161,7 +161,7 @@ def _train_and_score(file_path, split, iterations):
 	if len(scores.itervalues().next()) == 1:
 		result_table.append(["Classifier", "Score"])
 		for app_id in scores:
-			result_table.append([app_id, ids_tools.format_percentage(scores[app_id][0])])
+			result_table.append([app_id, ids_tools.format_percentage(scores[app_id][0], True)])
 	else:
 		result_table.append(["Classifier", "Avg. score", "Variance", "", "All scores"])
 		for app_id in scores:
@@ -171,7 +171,7 @@ def _train_and_score(file_path, split, iterations):
 				ids_tools.format_percentage(ids_tools.avg(row)),
 				round(stat.variance([x * 100 for x in row]), 2),
 				"",
-				", ".join([ids_tools.format_percentage(x) for x in row])
+				", ".join([ids_tools.format_percentage(x, pad_spaces=True) for x in row])
 			])
 
 	_print_table(result_table, headline="Results")

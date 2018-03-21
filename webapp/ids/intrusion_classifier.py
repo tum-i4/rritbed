@@ -229,11 +229,11 @@ class IntrusionClassifier(object):
 				.format(app_id_count, len(app_id_datasets), app_id))
 
 			# Load model if it exists already
-			clf = ModelDir.load_model(app_id)
-			if not clf:
+			model = ModelDir.load_model(app_id)
+			if not model:
 				raise ValueError("Model is missing!")
 
-			score = clf.score(train_set[0], train_set[1])
+			score = self._score_outlier_detection(model, train_set)
 
 			printer.prt("Model scored {}.".format(ids_tools.format_percentage(score)))
 
@@ -247,6 +247,11 @@ class IntrusionClassifier(object):
 
 		if do_return:
 			return scores
+
+
+	def _score_outlier_detection(self, model, train_set):
+		""" Score the given model with the given train_set (labelled). """
+		raise NotImplementedError()
 
 
 	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):

@@ -278,9 +278,8 @@ PARSER = argparse.ArgumentParser()
 PARSER.add_argument("--verbose", "-v", action="store_true")
 PARSER.add_argument("--dont-detect", "-d", action="store_false", dest="detect")
 PARSER.add_argument("--dont-store", "-s", action="store_false", dest="store")
-PARSER.add_argument("--flush-frequency", "-f", type=int, dest="flush_frequency", metavar="SECONDS")
-PARSER.add_argument("--max-entries-in-state", "-m", type=int,
-	dest="max_entries_in_state", metavar="NUMBER")
+PARSER.add_argument("--flush-frequency", "-f", type=int, metavar="S")
+PARSER.add_argument("--max-entries-in-state", "-m", type=int, metavar="N")
 ARGS = PARSER.parse_args()
 
 DETECT = ARGS.detect

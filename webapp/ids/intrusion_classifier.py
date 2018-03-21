@@ -221,6 +221,15 @@ class IntrusionClassifier(object):
 
 		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
 
+		# Verify
+		printer.prt("Verifying data...")
+		for app_id, score_set in app_id_datasets.items():
+			expected_classes = self._converter.get_expected_classes(app_id)
+			received_classes = set(score_set[1])
+			if (len(expected_classes) != len(received_classes)
+				or any([x not in received_classes for x in expected_classes])):
+				printer.prt("Didn't receive all classes for scoring of {}.".format(app_id))
+
 		app_id_count = 1
 		scores = {}
 

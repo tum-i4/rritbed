@@ -152,6 +152,12 @@ def _train_and_score(file_path, split, iterations):
 		IntrusionClassifier.reset_models(purge=True)
 		printer.prt("Done.")
 
+	_print_scores(scores, printer)
+
+
+def _print_scores(scores, printer):
+	""" Print the given scores in a table. """
+
 	if not scores or not scores.itervalues().next():
 		printer.prt("No results!")
 		return

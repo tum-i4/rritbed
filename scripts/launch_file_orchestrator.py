@@ -59,8 +59,8 @@ class LaunchFileOrchestrator(object):
 			"namespaces to the number of individual identifiers in file!"))
 		optionals_group.add_argument("--namespaces", "-n", type=int, dest="namespace_count",
 			metavar="NS_COUNT", default=1, help="Number of namespaces to create")
-		optionals_group.add_argument("--label", "-l", action="store_true", dest="label_intrusions",
-			help="Advise logger to label intrusions (used for training data).")
+		optionals_group.add_argument("--dont-label", "-l", action="store_false", dest="label_intrusions",
+			help="Advise logger to not label intrusions (might improve performance when scoring).")
 		optionals_group.add_argument("--random-gen-args", "-r", action="store_true",
 			dest="random_gen_args", help="Force use of the default generator arguments.")
 

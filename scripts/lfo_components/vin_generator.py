@@ -42,14 +42,13 @@ class VinGenerator(object):
 	def generate_vins(number_of_vins, vary_plant=True):
 		""" Generates VIN tails in the format [A-Z][0-9]{6} (from WBAUV710X0A192738) """
 
-		# Maximum start for one VIN: 999999
-		possible_starts = range(100000, 1000001-number_of_vins)
-		start = random.choice(possible_starts)
+		possible_numbers = range(100000, 1000001-number_of_vins)
+		selected_numbers = random.sample(possible_numbers, number_of_vins)
 
 		vins = []
 		plant_letter = VinGenerator._get_random_plant_letter()
 
-		for serial_number in range(start, start+number_of_vins):
+		for serial_number in selected_numbers:
 			if vary_plant:
 				plant_letter = VinGenerator._get_random_plant_letter()
 			vins.append(plant_letter + str(serial_number))

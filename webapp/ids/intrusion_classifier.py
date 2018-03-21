@@ -224,7 +224,7 @@ class IntrusionClassifier(object):
 		app_id_count = 1
 		scores = {}
 
-		for app_id, train_set in app_id_datasets.items():
+		for app_id, score_set in app_id_datasets.items():
 			printer.prt("({}/{}) Scoring model for \"{}\"..."
 				.format(app_id_count, len(app_id_datasets), app_id))
 
@@ -233,7 +233,7 @@ class IntrusionClassifier(object):
 			if not model:
 				raise ValueError("Model is missing!")
 
-			score = self._score_outlier_detection(model, train_set)
+			score = self._score_outlier_detection(model, score_set)
 
 			printer.prt("Model scored {}.".format(ids_tools.format_percentage(score)))
 

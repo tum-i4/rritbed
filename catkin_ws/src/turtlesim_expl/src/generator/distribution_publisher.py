@@ -194,7 +194,7 @@ if __name__ == "__main__":
 
 		PARSER.add_argument("--id", "-i", required=True, help="ID to publish to")
 		INTRUSION_CHOICES = [DG.ONLY_ZEROES, DG.HUGE_ERROR]
-		PARSER.add_argument("--intrusion-mode", "-e", choices=INTRUSION_CHOICES, dest="intrusion_mode",
+		PARSER.add_argument("--intrusion-mode", "-m", choices=INTRUSION_CHOICES, dest="intrusion_mode",
 			help="Activate the intrusion mode specified.")
 		PARSER.add_argument("--debug", "-d", action="store_true",
 			help="Log generated values for easier debugging")

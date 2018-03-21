@@ -197,8 +197,9 @@ class LaunchFileOrchestrator(object):
 			"yes" if args.label_intrusions else "no")
 		print(self._header_label)
 
-		self._header_gen_args = "Generator arguments: {}".format(
-			"random" if args.random_gen_args else "default")
+		self._header_gen_args = "Generators: {} arguments, {} seed".format(
+			"random" if args.random_gen_args else "default",
+			"do" if args.seed_gens else "don't")
 		print(self._header_gen_args)
 
 

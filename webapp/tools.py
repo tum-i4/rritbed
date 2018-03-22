@@ -3,6 +3,7 @@
 
 import argparse
 import cPickle
+import md5
 import os
 import statistics as stat
 import sys
@@ -506,6 +507,19 @@ def _analyse_entries(log_entry_generator):
 
 	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 		found_classes, entry_count_per_class, app_ids_per_class)
+
+
+def _get_content_hash(log_entry):
+	""" Hash only the content of the given log entry.
+	Omits app_id, time_unix and log id. Includes label. """
+
+	entry_string = log_entry.data[LogEntry.VIN_FIELD]
+	entry_string += log_entry.data[LogEntry.LEVEL_FIELD]
+	entry_string += log_entry.data[LogEntry.GPS_POSITION_FIELD]
+	entry_string += log_entry.data[LogEntry.LOG_MESSAGE_FIELD]
+	entry_string += log_entry.intrusion
+
+	return md5.new(entry_string).hexdigest()
 
 
 def _split_log_entries_flow(log_entry_iterator, split, squelch_output=False):

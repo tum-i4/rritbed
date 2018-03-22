@@ -455,11 +455,11 @@ def _analyse(file_path):
 	duplicates.append(["App ID", "All", "Unique", "Duplicates", "Duplicate %"])
 	for app_id in all_app_ids:
 		result = duplicate_elements_per_app_id[app_id]
-		all_count = sum(result.values())
-		unique_count = len(result)
-		duplicate_count = all_count - unique_count
+		unique_count = result["uniq"]
+		duplicate_count = result["dupe"]
+		all_count = unique_count + duplicate_count
 		duplicate_percent_str = ids_tools.format_percentage(0)
-		if result:
+		if all_count > 0:
 			duplicate_percent_str = ids_tools.format_percentage(
 				float(duplicate_count) / all_count)
 
@@ -497,12 +497,15 @@ def _analyse_entries(log_entry_generator):
 	app_ids_per_class = {}
 
 	duplicate_elements_per_app_id = {}
+	last_hash_per_app_id = {}
 
 	for app_id in all_app_ids:
 		entry_count_per_app_id[app_id] = 0
 		elements_per_class_per_app_id[app_id] = {}
 
-		duplicate_elements_per_app_id[app_id] = {}
+		# Unique, Duplicates
+		duplicate_elements_per_app_id[app_id] = dict(uniq=0, dupe=0)
+		last_hash_per_app_id[app_id] = None
 
 	for a_class in all_classes:
 		entry_count_per_class[a_class] = 0
@@ -531,10 +534,11 @@ def _analyse_entries(log_entry_generator):
 		app_ids_per_class[its_class].add(app_id)
 
 		entry_hash = _get_content_hash(entry)
-		if entry_hash not in duplicate_elements_per_app_id[app_id]:
-			duplicate_elements_per_app_id[app_id][entry_hash] = 1
+		if entry_hash == last_hash_per_app_id[app_id]:
+			duplicate_elements_per_app_id[app_id]["dupe"] += 1
 		else:
-			duplicate_elements_per_app_id[app_id][entry_hash] += 1
+			duplicate_elements_per_app_id[app_id]["uniq"] += 1
+		last_hash_per_app_id[app_id] = entry_hash
 
 
 	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,

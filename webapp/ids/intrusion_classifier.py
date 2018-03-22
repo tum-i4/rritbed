@@ -165,7 +165,7 @@ class IntrusionClassifier(object):
 				.format(og_entry_count - len(log_entries)))
 
 		printer.prt("Converting...")
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
+		app_id_datasets = self._log_entries_to_train_dict(log_entries, printer)
 
 		app_id_number = 1
 
@@ -191,8 +191,6 @@ class IntrusionClassifier(object):
 
 		self._load_models()
 
-		return app_id_number
-
 
 	def score(self, log_entries, do_return=False, squelch_output=False):
 		"""
@@ -210,7 +208,7 @@ class IntrusionClassifier(object):
 
 		printer.prt("Starting scoring with {} LogEntry objects.".format(len(log_entries)))
 
-		app_id_datasets = self._log_entries_to_app_id_train_data_dict(log_entries, printer)
+		app_id_datasets = self._log_entries_to_train_dict(log_entries, printer)
 
 		# Verify
 		printer.prt("Verifying data...")
@@ -288,25 +286,6 @@ class IntrusionClassifier(object):
 
 		for converted_entry in converted_entries:
 			app_id, ndarray, its_class = converted_entry
-
-			app_id_datasets[app_id][0].append(ndarray)
-			app_id_datasets[app_id][1].append(its_class)
-
-		printer.prt("Done.")
-		return app_id_datasets
-
-
-	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):
-		""" Convert the given log entries to feature vectors and classes per app_id. """
-
-		printer.prt("Transforming the log data to trainable vectors...")
-
-		app_id_datasets = {}
-		for app_id in self._converter.app_ids:
-			app_id_datasets[app_id] = ([], [])
-
-		for log_entry in log_entries:
-			app_id, ndarray, its_class = self._log_entry_to_prepared_tuple(log_entry)
 
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)

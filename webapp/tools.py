@@ -132,11 +132,11 @@ def _score_entries(log_entries, do_return=False, squelch_output=False):
 
 def train_score_call(args):
 	""" Unpack the args and call _train_and_score.
-	Expects 'file_path', 'split', 'iterations' and 'folds'. """
-	_train_and_score(args.file_path, args.split, args.iterations, args.folds)
+	Expects 'file_path', 'iterations' and 'folds'. """
+	_train_and_score(args.file_path, args.iterations, args.folds)
 
 
-def _train_and_score(file_path, split, iterations, folds):
+def _train_and_score(file_path, iterations, folds):
 	""" Split the given file and use the first part for training, the second for scoring. """
 
 	raise NotImplementedError()
@@ -730,8 +730,6 @@ if __name__ == "__main__":
 
 		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train, score, reset")
 		TRAINSCORE_PARSER.add_argument("file_path", metavar="PATH", help="The data")
-		TRAINSCORE_PARSER.add_argument("--split", "-s", type=int, default=80,
-			help="The percentage of data points to be used for training.")
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
 		TRAINSCORE_PARSER.add_argument("--folds", "-f", type=int, default=5)
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)

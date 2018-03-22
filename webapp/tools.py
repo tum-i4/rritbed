@@ -9,6 +9,8 @@ import statistics as stat
 import sys
 import time
 
+import sklearn.model_selection as sk_mod
+
 from log_entry import LogEntry
 from state_dao import StateDao
 from ids.intrusion_classifier import IntrusionClassifier

@@ -146,26 +146,23 @@ class IntrusionClassifier(object):
 			.format(len(found_app_ids), len(self._converter.app_ids)))
 
 
-	def _train_batch(self, log_entries, batch_number, printer):
-		"""
-		Train the app_id based classifiers with the given labelled entries.
-		"""
+	def _train_entries(self, converted_entries, printer):
+		""" Train the app_id based classifiers with the given labelled entries. """
 
-		printer.prt("Batch {}: Starting training with {} LogEntry objects"
-			.format(batch_number, len(log_entries)))
+		printer.prt("Starting training with {} entries".format(len(converted_entries)))
 
 		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
 		printer.prt("Checking for intruded entries...")
-		og_entry_count = len(log_entries)
-		log_entries[:] = [e for e in log_entries
-			if not self._converter.class_means_intruded(self._converter.log_entry_to_class(e))]
+		og_entry_count = len(converted_entries)
+		converted_entries[:] = [e for e in converted_entries
+			if not self._converter.class_means_intruded(e[2])]
 
-		if len(log_entries) != og_entry_count:
+		if len(converted_entries) != og_entry_count:
 			printer.prt("Warning! Found intruded data in the input file. {} entries were removed."
-				.format(og_entry_count - len(log_entries)))
+				.format(og_entry_count - len(converted_entries)))
 
 		printer.prt("Converting...")
-		app_id_datasets = self._log_entries_to_train_dict(log_entries, printer)
+		app_id_datasets = self._prepared_tuples_to_train_dict(converted_entries, printer)
 
 		app_id_number = 1
 

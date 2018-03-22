@@ -299,7 +299,7 @@ class IntrusionClassifier(object):
 
 		printer.prt("Transforming the log data to trainable vectors...")
 		converted_entries = [self._log_entry_to_prepared_tuple(e) for e in log_entries]
-		return self._prepared_tuples_to_train_dict(converted_entries)
+		return self._prepared_tuples_to_train_dict(converted_entries, printer)
 
 
 

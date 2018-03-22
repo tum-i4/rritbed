@@ -6,7 +6,7 @@ import time
 
 from intrusion_classifier import IntrusionClassifier
 from ids_classification import Classification
-from dir_utils import Dir, LogDir, ModelDir
+from dir_utils import LogDir, ModelDir
 
 
 class LiveIds(object):

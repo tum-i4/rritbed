@@ -277,6 +277,25 @@ class IntrusionClassifier(object):
 		return (app_id, ndarray, its_class)
 
 
+	def _prepared_tuples_to_train_dict(self, converted_entries, printer):
+		""" Store the given converted entry tuples as { app_id : (X, y) }. """
+
+		printer.prt("Dividing the data per app id...")
+
+		app_id_datasets = {}
+		for app_id in self._converter.app_ids:
+			app_id_datasets[app_id] = ([], [])
+
+		for converted_entry in converted_entries:
+			app_id, ndarray, its_class = converted_entry
+
+			app_id_datasets[app_id][0].append(ndarray)
+			app_id_datasets[app_id][1].append(its_class)
+
+		printer.prt("Done.")
+		return app_id_datasets
+
+
 	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):
 		""" Convert the given log entries to feature vectors and classes per app_id. """
 

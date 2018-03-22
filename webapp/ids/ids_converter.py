@@ -84,6 +84,9 @@ class IdsConverter(object):
 	def class_means_intruded(self, the_class):
 		""" Map the given class to a boolean 'is intruded'. """
 
+		if not isinstance(the_class, int):
+			raise TypeError("Expected int. Got: {}".format(type(the_class)))
+
 		# Ensure we still have the state we expect.
 		legal_labels = ids_data.get_legal_labels()
 		if len(legal_labels) != 1 or self.label_int_mapping[legal_labels[0]] != 0:

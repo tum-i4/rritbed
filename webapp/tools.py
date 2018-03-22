@@ -458,8 +458,10 @@ def _analyse(file_path):
 		all_count = sum(result.values())
 		unique_count = len(result)
 		duplicate_count = all_count - unique_count
-		duplicate_percent_str = ids_tools.format_percentage(
-			float(duplicate_count) / all_count)
+		duplicate_percent_str = ids_tools.format_percentage(0)
+		if result:
+			duplicate_percent_str = ids_tools.format_percentage(
+				float(duplicate_count) / all_count)
 
 		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
 

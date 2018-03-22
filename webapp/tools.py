@@ -139,11 +139,6 @@ def train_score_call(args):
 def _train_and_score(file_path, iterations, folds):
 	""" Split the given file and use the first part for training, the second for scoring. """
 
-	raise NotImplementedError()
-
-	if split <= 0 or split >= 100:
-		raise ValueError("Invalid split \"{}\" given.".format(split))
-
 	log_entries = _read_file_flow(file_path)
 
 	if len(log_entries) < 10000:
@@ -155,13 +150,20 @@ def _train_and_score(file_path, iterations, folds):
 
 	printer = ids_tools.Printer()
 
-	for i in range(1, iterations + 1):
-		printer.prt("Iteration {} of {}.".format(i, iterations))
+	printer.prt("Using {}-fold cross-validation with {} iteration{}.".format(
+		folds, iterations, "s" if iterations > 1 else ""))
 
-		# Split
+	repeated_folds = sk_mod.RepeatedKFold(n_splits=folds, n_repeats=iterations)
+	current_iteration = 1
+
+	for train_indices, score_indices in repeated_folds.split(log_entries):
+		printer.prt("Iteration {} of {}.".format(current_iteration, folds * iterations))
+		current_iteration += 1
+
+		# Selecting items based on the given indices
 		printer.prt("Splitting... ", newline=False)
-		training_entries, scoring_entries = _split_log_entries_flow(
-			log_entries, split, squelch_output=True)
+		training_entries = [log_entries[i] for i in train_indices]
+		scoring_entries = [log_entries[i] for i in score_indices]
 
 		preconditions_msg = "Please make sure that all preconditions are met and rerun."
 

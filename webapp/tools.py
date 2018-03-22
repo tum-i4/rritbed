@@ -412,7 +412,7 @@ def _analyse(file_path):
 
 	(
 		total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
-		found_classes, entry_count_per_class, app_ids_per_class
+		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id
 	) = _analyse_entries(log_entry_generator)
 
 	# Output #
@@ -460,7 +460,7 @@ def _analyse_entries(log_entry_generator):
 	"""
 	Analyse the LogEntry objects from the given generator.
 	returns: A tuple containing (found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
-	found_classes, entry_count_per_class, app_ids_per_class)
+	found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id)
 	"""
 
 	total_entries = 0
@@ -475,9 +475,13 @@ def _analyse_entries(log_entry_generator):
 	entry_count_per_class = {}
 	app_ids_per_class = {}
 
+	duplicate_elements_per_app_id = {}
+
 	for app_id in all_app_ids:
 		entry_count_per_app_id[app_id] = 0
 		elements_per_class_per_app_id[app_id] = {}
+
+		duplicate_elements_per_app_id[app_id] = {}
 
 	for a_class in all_classes:
 		entry_count_per_class[a_class] = 0
@@ -505,8 +509,15 @@ def _analyse_entries(log_entry_generator):
 		entry_count_per_class[its_class] += 1
 		app_ids_per_class[its_class].add(app_id)
 
+		entry_hash = _get_content_hash(entry)
+		if entry_hash not in duplicate_elements_per_app_id[app_id]:
+			duplicate_elements_per_app_id[app_id][entry_hash] = 1
+		else:
+			duplicate_elements_per_app_id[app_id][entry_hash] += 1
+
+
 	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
-		found_classes, entry_count_per_class, app_ids_per_class)
+		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id)
 
 
 def _get_content_hash(log_entry):

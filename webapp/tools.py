@@ -465,7 +465,11 @@ def _analyse(file_path):
 
 		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
 
-	_print_table(duplicates, headline="Duplicates per app ID")
+	# Check content (skip header) for found duplicates
+	if not any([l[3] > 0 for l in duplicates[1:]]):
+		print("\nDuplicate analysis: No duplicates found!")
+	else:
+		_print_table(duplicates, headline="Duplicates per app ID")
 
 	# TODO: score??
 	# harmonious? all labelled / some / none?

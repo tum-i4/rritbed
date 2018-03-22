@@ -294,9 +294,7 @@ class IntrusionClassifier(object):
 			app_id_datasets[app_id] = ([], [])
 
 		for log_entry in log_entries:
-			app_id = ids_tools.log_entry_to_app_id(log_entry)
-			ndarray = self._converter.log_entry_to_ndarray(log_entry, app_id)
-			its_class = self._converter.log_entry_to_class(log_entry)
+			app_id, ndarray, its_class = self._log_entry_to_prepared_tuple(log_entry)
 
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)

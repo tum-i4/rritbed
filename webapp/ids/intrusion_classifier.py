@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """ Classifier """
 
-import time
-
 import sklearn.svm as sk_svm
 
 from log_entry import LogEntry

@@ -125,7 +125,7 @@ class IntrusionClassifier(object):
 		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
 		printer.prt("Streaming from file up to a maximum of {} entries.".format(limit))
-		printer.prt("Loading entries...")
+		printer.prt("Loading and converting entries...")
 
 		total_entry_count = 0
 		found_app_ids = set()

@@ -315,6 +315,14 @@ class IntrusionClassifier(object):
 		return app_id_datasets
 
 
+	def _log_entries_to_train_dict(self, log_entries, printer):
+		""" Convert the given log entries to { app_id : (X, y) }. """
+
+		printer.prt("Transforming the log data to trainable vectors...")
+		converted_entries = [self._log_entry_to_prepared_tuple(e) for e in log_entries]
+		return self._prepared_tuples_to_train_dict(converted_entries)
+
+
 
 	### Load, check and save model ###
 

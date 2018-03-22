@@ -114,43 +114,36 @@ class IntrusionClassifier(object):
 	def train(self, log_entry_generator, extend_models=False, squelch_output=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
-		Splits up in batches of 1 mio. entries from given generator.
+		Only loads up to 5 mio entries to ensure the process does not consume too much memory.
 		"""
 
 		if not extend_models and self._has_models() != ModelDir.Found.NONE:
 			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
 
-		batch_limit = 1000000
+		limit = 5000000
 
 		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
-		printer.prt("Streaming from file in batches of {} entries.".format(batch_limit))
-		fill_msg = "Filling batch..."
-		printer.prt(fill_msg)
+		printer.prt("Streaming from file up to a maximum of {} entries.".format(limit))
+		printer.prt("Loading entries...")
 
 		total_entry_count = 0
-		app_ids_found = set()
-		current_batch = []
-		batch_number = 1
+		found_app_ids = set()
+		# Save tuple (app_id, vector, class) for lower memory usage
+		converted_entries = []
 		for log_entry in log_entry_generator:
-			if len(current_batch) == batch_limit:
-				batch_found_app_ids = self._train_batch(current_batch, batch_number, printer)
-				app_ids_found.add(batch_found_app_ids)
-				current_batch = []
-				batch_number += 1
-				printer.prt(fill_msg)
+			if len(converted_entries) == limit:
+				break
 
 			total_entry_count += 1
-			current_batch.append(log_entry)
+			converted_entry = self._log_entry_to_prepared_tuple(log_entry)
+			found_app_ids.add(converted_entry[0])
+			converted_entries.append(converted_entry)
 
-		if current_batch:
-			batch_found_app_ids = self._train_batch(current_batch, batch_number, printer)
-			app_ids_found.add(batch_found_app_ids)
+		self._train_entries(converted_entries, printer)
 
-		printer.prt("\nFinished training with {} batches and a total of {} elements."
-			.format(batch_number, total_entry_count))
-		printer.prt("Trained models for {}/{} app ids."
-			.format(len(app_ids_found), len(self._converter.app_ids)))
+		printer.prt("Finished training classifiers for {}/{} app ids."
+			.format(len(found_app_ids), len(self._converter.app_ids)))
 
 
 	def _train_batch(self, log_entries, batch_number, printer):

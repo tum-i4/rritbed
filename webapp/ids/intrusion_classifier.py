@@ -274,6 +274,16 @@ class IntrusionClassifier(object):
 		return score
 
 
+	def _log_entry_to_prepared_tuple(self, log_entry):
+		""" Convert the given LogEntry object to a (app_id, vector, class) tuple. """
+
+		app_id = ids_tools.log_entry_to_app_id(log_entry)
+		ndarray = self._converter.log_entry_to_ndarray(log_entry, app_id)
+		its_class = self._converter.log_entry_to_class(log_entry)
+
+		return (app_id, ndarray, its_class)
+
+
 	def _log_entries_to_app_id_train_data_dict(self, log_entries, printer):
 		""" Convert the given log entries to feature vectors and classes per app_id. """
 

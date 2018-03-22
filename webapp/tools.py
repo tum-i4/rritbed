@@ -450,6 +450,21 @@ def _analyse(file_path):
 
 	_print_table(per_class, headline="Elements per class")
 
+	# Duplicate table
+	duplicates = []
+	duplicates.append(["App ID", "All", "Unique", "Duplicates", "Duplicate %"])
+	for app_id in all_app_ids:
+		result = duplicate_elements_per_app_id[app_id]
+		all_count = sum(result.values())
+		unique_count = len(result)
+		duplicate_count = all_count - unique_count
+		duplicate_percent_str = ids_tools.format_percentage(
+			float(duplicate_count) / all_count)
+
+		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
+
+	_print_table(duplicates, headline="Duplicates per app ID")
+
 	# TODO: score??
 	# harmonious? all labelled / some / none?
 	# for each app id: are there roughly the same number of entries per class?

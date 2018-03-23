@@ -53,7 +53,7 @@ class StateDao(object):
 		# Statistics
 		self._current_total_entries = self.count_log_lines()
 		if self._current_total_entries:
-			self._printer.prt("Current log length: {}".format(self._current_total_entries))
+			self._printer.prt("Current log length: {:,}".format(self._current_total_entries))
 		else:
 			self._printer.prt("Log is empty.")
 
@@ -104,7 +104,7 @@ class StateDao(object):
 
 		lines_removed, log_length, new_file_path = result
 
-		return "Process finished! Removed {} from the original {} lines.\nSaved file to: {}".format(
+		return "Process finished! Removed {:,} from the original {:,} lines.\nSaved file to: {}".format(
 			lines_removed, log_length, new_file_path)
 
 
@@ -181,13 +181,11 @@ class StateDao(object):
 		time_now = time.time()
 		self._current_total_entries += number_of_entries
 
-		self._printer.prt("{} - Flushing {} log entries. Last flush was {} ago. Log is now at {} lines."
-			.format(
-				time.strftime("%H:%M:%S", time.localtime(time_now)),
-				len(self._new_log_entries),
-				util.fmtr.format_time_passed(time_now - self._last_flush),
-				self._current_total_entries
-			)
+		self._printer.prt("{} - Flushing {:,} log entries. Last flush was {} ago."
+			.format(time.strftime("%H:%M:%S", time.localtime(time_now)),
+					len(self._new_log_entries),
+					util.fmtr.format_time_passed(time_now - self._last_flush))
+			+ " Log file is now at {:,} lines.".format(self._current_total_entries)
 		)
 
 		# Remove new entries from list and save them to disk

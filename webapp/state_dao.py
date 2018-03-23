@@ -50,6 +50,13 @@ class StateDao(object):
 		self._auto_flush = flush_frequency is not None or max_entries_in_state is not None
 		self._last_flush = time.time()
 
+		# Statistics
+		self._current_total_entries = self.count_log_lines()
+		if self._current_total_entries:
+			self._printer.prt("Current log length: {}".format(self._current_total_entries))
+		else:
+			self._printer.prt("Log is empty.")
+
 
 	def __enter__(self):
 		""" Initialise this DAO. """

@@ -124,12 +124,18 @@ def _score_entries(log_entries, squelch_output=False):
 
 def train_score_call(args):
 	""" Unpack the args and call _train_and_score.
-	Expects 'file_path', 'iterations' and 'folds'. """
-	_train_and_score(args.file_path, args.iterations, args.folds)
+	Expects 'file_path', 'folds' and optionally 'iterations'. """
+	_train_and_score(args.file_path, args.folds, args.iterations)
 
 
-def _train_and_score(file_path, iterations, folds):
-	""" Split the given file and use the first part for training, the second for scoring. """
+def _train_and_score(file_path, folds, iterations=None):
+	"""
+	Use the given log_entries to score the classifier in a <fold>-fold cross-validation.
+	: param iterations : Optionally specify to repeat <iterations> times.
+	"""
+
+	if iterations <= 1:
+		iterations = None
 
 	log_entries = _read_file_flow(file_path)
 
@@ -142,15 +148,21 @@ def _train_and_score(file_path, iterations, folds):
 
 	printer = util.prtr.Printer()
 
-	printer.prt("Using {}-fold cross-validation with {} iteration{}.".format(
-		folds, iterations, "s" if iterations > 1 else ""))
+	printer.prt("Using {}-fold cross-validation".format(folds)
+		+ "" if iterations is None else " with {} iteration{}."
+			.format(iterations, "s" if iterations > 1 else ""))
 
-	repeated_folds = sk_mod.RepeatedKFold(n_splits=folds, n_repeats=iterations)
-	current_iteration = 1
+	folds = None
+	if iterations:
+		folds = sk_mod.RepeatedKFold(n_splits=folds, n_repeats=iterations)
+	else:
+		folds = sk_mod.KFold(n_splits=folds)
 
-	for train_indices, score_indices in repeated_folds.split(log_entries):
-		printer.prt("Iteration {} of {}.".format(current_iteration, folds * iterations))
-		current_iteration += 1
+	current_round = 1
+
+	for train_indices, score_indices in folds.split(log_entries):
+		printer.prt("Round {} of {}.".format(current_round, folds * iterations))
+		current_round += 1
 
 		# Selecting items based on the given indices
 		printer.prt("Splitting... ", newline=False)
@@ -169,8 +181,7 @@ def _train_and_score(file_path, iterations, folds):
 
 		# Score
 		printer.prt("Scoring... ", newline=False)
-		scoring_result = _score_entries(scoring_entries,
-			do_return=True, squelch_output=True)
+		scoring_result = _score_entries(scoring_entries, squelch_output=True)
 		if not scoring_result:
 			printer.prt("")
 			printer.prt("Scoring failed. " + preconditions_msg)
@@ -728,8 +739,8 @@ if __name__ == "__main__":
 
 		TRAINSCORE_PARSER = SUBPARSERS.add_parser("train-and-score", help="Split, train, score, reset")
 		TRAINSCORE_PARSER.add_argument("file_path", metavar="PATH", help="The data")
-		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int, default=1)
 		TRAINSCORE_PARSER.add_argument("--folds", "-f", type=int, default=5)
+		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int)
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")

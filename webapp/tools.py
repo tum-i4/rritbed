@@ -13,6 +13,9 @@ import sklearn.model_selection as sk_mod
 
 from log_entry import LogEntry
 from state_dao import StateDao
+import util.fmtr
+import util.prtr
+import util.seqr
 from ids.intrusion_classifier import IntrusionClassifier
 from ids.dir_utils import Dir, ModelDir
 import ids.ids_tools as ids_tools
@@ -92,7 +95,7 @@ def _score_entries_in_iterations(log_entries, iterations):
 	for app_id in ids_data.get_app_ids():
 		scores[app_id] = []
 
-	printer = ids_tools.Printer()
+	printer = util.prtr.Printer()
 
 	printer.prt("Scoring in {} iterations: ".format(iterations), newline=False)
 
@@ -148,7 +151,7 @@ def _train_and_score(file_path, iterations, folds):
 	for app_id in ids_data.get_app_ids():
 		scores[app_id] = []
 
-	printer = ids_tools.Printer()
+	printer = util.prtr.Printer()
 
 	printer.prt("Using {}-fold cross-validation with {} iteration{}.".format(
 		folds, iterations, "s" if iterations > 1 else ""))
@@ -207,17 +210,17 @@ def _print_scores(scores, printer):
 	if len(scores.itervalues().next()) == 1:
 		result_table.append(["Classifier", "Score"])
 		for app_id in scores:
-			result_table.append([app_id, ids_tools.format_percentage(scores[app_id][0], True)])
+			result_table.append([app_id, util.fmtr.format_percentage(scores[app_id][0], True)])
 	else:
 		result_table.append(["Classifier", "Avg. score", "Variance", "", "All scores"])
 		for app_id in scores:
 			row = scores[app_id]
 			result_table.append([
 				app_id,
-				ids_tools.format_percentage(ids_tools.avg(row)),
+				util.fmtr.format_percentage(util.seqr.avg(row)),
 				round(stat.variance([x * 100 for x in row]), 2),
 				"",
-				", ".join([ids_tools.format_percentage(x, pad_spaces=True) for x in row])
+				", ".join([util.fmtr.format_percentage(x, pad_spaces=True) for x in row])
 			])
 
 	_print_table(result_table, headline="Results")
@@ -463,9 +466,9 @@ def _analyse(file_path):
 		unique_count = result["uniq"]
 		duplicate_count = result["dupe"]
 		all_count = unique_count + duplicate_count
-		duplicate_percent_str = ids_tools.format_percentage(0)
+		duplicate_percent_str = util.fmtr.format_percentage(0)
 		if all_count > 0:
-			duplicate_percent_str = ids_tools.format_percentage(
+			duplicate_percent_str = util.fmtr.format_percentage(
 				float(duplicate_count) / all_count)
 
 		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
@@ -567,7 +570,7 @@ def _split_log_entries_flow(log_entry_iterator, split, squelch_output=False):
 	""" Split the given log entries equally by app_id and each app_id's class.
 	Updates the user about progress and success. """
 
-	printer = ids_tools.Printer(squelch=squelch_output)
+	printer = util.prtr.Printer(squelch=squelch_output)
 
 	printer.prt("Trying to split the entries according to given split of {}/{}"
 		.format(split, 100 - split))
@@ -612,7 +615,7 @@ def _split_log_entries_flow(log_entry_iterator, split, squelch_output=False):
 def _read_file_flow(file_path, squelch_output=False):
 	""" Read the given file as LogEntry objects. Updates the user about the progress. """
 
-	printer = ids_tools.Printer(squelch=squelch_output)
+	printer = util.prtr.Printer(squelch=squelch_output)
 
 	log_entries = []
 
@@ -766,7 +769,7 @@ if __name__ == "__main__":
 		print("")
 		print("Finished task '{}' in {}".format(
 			sys.argv[1],
-			ids_tools.format_time_passed(TIME_EXPIRED)))
+			util.fmtr.format_time_passed(TIME_EXPIRED)))
 		exit()
 	except KeyboardInterrupt:
 		pass

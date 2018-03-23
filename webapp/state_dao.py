@@ -29,8 +29,7 @@ class StateDao(object):
 		object.__init__(self)
 
 		StateDao._INSTANCE = self
-		self._printer = util.prtr.Printer(name="DAO")
-		self._verbose = verbose
+		self._printer = util.prtr.Printer(verbose=verbose, name="DAO")
 
 		self._state_path = "state"
 		self._state_file_name = "state"
@@ -70,8 +69,8 @@ class StateDao(object):
 			# State not initialised and files exist - load from file
 			self._load_state_from_file(file_name)
 
-		if self._verbose:
-			self._printer.prt("Loaded state from {} files from disk.".format(len(files)))
+		self._printer.prt("Loaded state from {} files from disk.".format(len(files)),
+			only_verbose=True)
 
 		return self
 
@@ -81,8 +80,8 @@ class StateDao(object):
 
 		self._write_all_to_files()
 
-		if self._verbose:
-			self._printer.prt("Successfully saved state to disk.")
+		self._printer.prt("Successfully saved state to disk.",
+			only_verbose=True)
 
 
 

@@ -9,7 +9,6 @@ monkey.patch_all()
 
 # pylint: disable-msg=C0411,C0413
 import argparse
-import datetime
 import random
 import time
 from bottle import post, get, run, request, BaseResponse

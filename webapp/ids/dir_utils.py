@@ -119,19 +119,18 @@ class ModelDir(object):
 	@staticmethod
 	def has_model(app_id):
 		""" Check the model directory if there exists a model for the given app_id. """
-		return ModelDir.has_models([app_id]) == ModelDir.Found.ALL
+		return ModelDir.has_models([app_id])
 
 
 	@staticmethod
 	def has_models(app_id_list):
 		"""
 		Check the model directory on disk if there are existing models for each given app_id.
-		returns: ModelDir.Found object
 		"""
 
 		model_files = ModelDir._list_model_files()
 		if not model_files:
-			return ModelDir.Found.NONE
+			return False
 
 		model_names = [os.path.basename(path) for path in model_files]
 
@@ -144,11 +143,11 @@ class ModelDir(object):
 			found_all &= found_this
 
 		if found_all:
-			return ModelDir.Found.ALL
+			return True
 		elif found_some:
-			return ModelDir.Found.SOME
+			raise IOError("Only found some of the expected models! Please verify the model directory.")
 
-		return ModelDir.Found.NONE
+		return False
 
 
 	@staticmethod
@@ -251,14 +250,6 @@ class ModelDir(object):
 	def get_model_path_for_file(file_name):
 		""" Build a path to the given file in the model directory. """
 		return os.path.join(ModelDir.get_model_dir(), file_name)
-
-
-	# pylint: disable-msg=R0903; (Too few public methods - it's an enum)
-	class Found(Enum):
-		""" How many results where found. """
-		NONE = 0
-		SOME = 1
-		ALL = 2
 
 
 

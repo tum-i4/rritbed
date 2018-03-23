@@ -77,19 +77,9 @@ def score_call(args):
 
 
 def _score(file_path, iterations):
-	""" Score the prediction of the classifier with the given test file. """
+	""" Score the given LogEntry objects in multiple iterations and print the output. """
 
 	log_entries = _read_file_flow(file_path)
-	if iterations == 1:
-		_score_entries(log_entries)
-	elif iterations > 1:
-		_score_entries_in_iterations(log_entries, iterations)
-	else:
-		print("Iterations must be a positive value! Got: {}".format(iterations))
-
-
-def _score_entries_in_iterations(log_entries, iterations):
-	""" Score the given LogEntry objects in multiple iterations and print the output. """
 
 	scores = {}
 	for app_id in ids_data.get_app_ids():
@@ -102,8 +92,7 @@ def _score_entries_in_iterations(log_entries, iterations):
 	for i in range(iterations, 0, -1):
 		# Score
 		printer.prt("{}...".format(i), newline=False)
-		scoring_result = _score_entries(log_entries,
-			do_return=True, squelch_output=True)
+		scoring_result = _score_entries(log_entries, squelch_output=True)
 		if not scoring_result:
 			printer.prt("")
 			printer.prt("Scoring failed!")

@@ -8,25 +8,29 @@ import sys
 class Printer(object):
 	""" Printer that allows squelching output. """
 
-	def __init__(self, squelch=False, name=None):
+	def __init__(self, squelch=False, verbose=True, name=None):
 		""" Ctor """
 		object.__init__(self)
 		self.squelch = squelch
+		self.verbose = verbose
 		self.name = name
 		self.last_ended_in_newline = True
 
 
-	def prt(self, message, preface=True, newline=True):
-		""" Print if not squelching. Handles newline characters in the message. """
+	def prt(self, message, only_verbose=False, preface=True, newline=True):
+		"""
+		Print if not squelching. Handles newline characters in the message.
+		: param only_verbose : Pass True to only print the message in verbose mode.
+		"""
 
 		for line in message.split("\n"):
-			self._prt_line(line, preface, newline)
+			self._prt_line(line, only_verbose, preface, newline)
 
 
-	def _prt_line(self, line, preface=True, newline=True):
+	def _prt_line(self, line, only_verbose, preface, newline):
 		""" Print single line. """
 
-		if self.squelch:
+		if self.squelch or only_verbose and not self.verbose:
 			return
 
 		if preface and self.name and self.last_ended_in_newline:

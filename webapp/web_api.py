@@ -308,6 +308,7 @@ with StateDao(verbose=ARGS.verbose,
 		print("")
 
 	DAO = dao
-	IDS = LiveIds(verbose=ARGS.verbose)
+	if DETECT:
+		IDS = LiveIds(verbose=ARGS.verbose)
 
 	run(server="gevent", host="localhost", port=5000, quiet=(not ARGS.verbose))

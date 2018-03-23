@@ -20,6 +20,7 @@ from ids.live_ids import LiveIds
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
 from functionality.tsp_routing_mapper import TspRoutingMapper
+import util.fmtr
 
 
 DAO = None
@@ -288,7 +289,7 @@ STORE = ARGS.store
 YES_NO = lambda x: "yes" if x else "no"
 IT_NOT = lambda x: x if x else "not set"
 FLUSH_FREQ_TXT = ("flush frequency: {}"
-	.format(str(datetime.timedelta(seconds=ARGS.flush_frequency))
+	.format(util.fmtr.format_time_passed(ARGS.flush_frequency)
 	if ARGS.flush_frequency
 	else "not set"))
 CFG_MSG = ("detect: {} | store: {} | {} | max. entries in state: {}"

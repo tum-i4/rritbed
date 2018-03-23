@@ -10,6 +10,7 @@ import shutil
 import time
 
 from log_entry import LogEntry
+import util.fmtr
 
 
 class StateDao(object):
@@ -164,22 +165,26 @@ class StateDao(object):
 	def flush_log(self):
 		""" Force a write of all new log entries to disk. """
 
-		self._last_flush = time.time()
-
 		number_of_entries = len(self._new_log_entries)
 
 		if number_of_entries == 0:
 			return
 
-		print("Flushing {} log entries. Last flush was {}."
-			.format(len(self._new_log_entries),
-				time.strftime("%H:%M:%S", time.localtime(self._last_flush))))
+		time_now = time.time()
+
+		print("{}: Flushing {} log entries. Last flush was {} ago.".format(
+			time.strftime("%H:%M:%S", time.localtime(time_now)),
+			len(self._new_log_entries),
+			util.fmtr.format_time_passed(time_now - self._last_flush)
+		))
 
 		# Remove new entries from list and save them to disk
 		with open(self._log_file_path, "a") as log_file:
 			for _ in range(0, number_of_entries):
 				new_log_entry = self._new_log_entries.pop(0)
 				log_file.write(new_log_entry.get_log_string() + "\n")
+
+		self._last_flush = time_now
 
 
 	def get_current_min_time(self):

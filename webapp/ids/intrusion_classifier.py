@@ -117,8 +117,8 @@ class IntrusionClassifier(object):
 		Only loads up to 5 mio entries to ensure the process does not consume too much memory.
 		"""
 
-		if not extend_models and self._has_models() != ModelDir.Found.NONE:
-			raise ValueError("Extending models was disallowed but there are existing model files on disk.")
+		if self._has_models():
+			raise ValueError("There are existing model files on disk.")
 
 		limit = 5000000
 
@@ -197,11 +197,8 @@ class IntrusionClassifier(object):
 
 		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
 
-		has_models = self._has_models()
-		if has_models == ModelDir.Found.NONE:
+		if not self._has_models():
 			raise ValueError("The classifier has no trained models! Train first, then score.")
-		if has_models != ModelDir.Found.ALL:
-			raise ValueError("Not all models could be found! Partial scoring is not implemented.")
 
 		printer.prt("Starting scoring with {} LogEntry objects.".format(len(log_entries)))
 
@@ -309,7 +306,7 @@ class IntrusionClassifier(object):
 		raises: If not all models could be found.
 		"""
 
-		if ModelDir.has_models(self._converter.app_ids) != ModelDir.Found.ALL:
+		if not self._has_models():
 			self._models = None
 			return
 
@@ -327,10 +324,7 @@ class IntrusionClassifier(object):
 
 
 	def _has_models(self):
-		"""
-		Checks the ModelDir for all current app_ids.
-		returns: A ModelDir.Found enum
-		"""
+		""" Checks the ModelDir for all current app_ids. """
 		return ModelDir.has_models(self._converter.app_ids)
 
 

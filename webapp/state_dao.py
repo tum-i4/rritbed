@@ -181,7 +181,7 @@ class StateDao(object):
 		time_now = time.time()
 		self._current_total_entries += number_of_entries
 
-		self._printer.prt("{}: Flushing {} log entries. Last flush was {} ago. Log is now at {} lines."
+		self._printer.prt("{} - Flushing {} log entries. Last flush was {} ago. Log is now at {} lines."
 			.format(
 				time.strftime("%H:%M:%S", time.localtime(time_now)),
 				len(self._new_log_entries),

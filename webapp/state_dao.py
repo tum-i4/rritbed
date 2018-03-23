@@ -11,6 +11,7 @@ import time
 
 from log_entry import LogEntry
 import util.fmtr
+import util.prtr
 
 
 class StateDao(object):
@@ -28,6 +29,7 @@ class StateDao(object):
 		object.__init__(self)
 
 		StateDao._INSTANCE = self
+		self._printer = util.prtr.Printer(name="DAO")
 		self._verbose = verbose
 
 		self._state_path = "state"
@@ -69,7 +71,7 @@ class StateDao(object):
 			self._load_state_from_file(file_name)
 
 		if self._verbose:
-			print("Loaded state from {} files from disk.".format(len(files)))
+			self._printer.prt("Loaded state from {} files from disk.".format(len(files)))
 
 		return self
 
@@ -80,7 +82,7 @@ class StateDao(object):
 		self._write_all_to_files()
 
 		if self._verbose:
-			print("Successfully saved state to disk.")
+			self._printer.prt("Successfully saved state to disk.")
 
 
 
@@ -172,7 +174,7 @@ class StateDao(object):
 
 		time_now = time.time()
 
-		print("{}: Flushing {} log entries. Last flush was {} ago.".format(
+		self._printer.prt("{}: Flushing {} log entries. Last flush was {} ago.".format(
 			time.strftime("%H:%M:%S", time.localtime(time_now)),
 			len(self._new_log_entries),
 			util.fmtr.format_time_passed(time_now - self._last_flush)

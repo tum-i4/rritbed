@@ -4,7 +4,6 @@
 from __future__ import print_function
 import md5
 import re
-import sys
 
 import ids_data
 from log_entry import LogEntry
@@ -79,75 +78,7 @@ def _strip_app_id(app_id):
 	return app_id
 
 
-### Sequences ###
-
-
-def avg(sequence):
-	""" Calculate the average value of a sequence. """
-	return sum([float(x) for x in sequence]) / float(len(sequence))
-
-
-### Printing and output ###
-
-
-class Printer(object):
-	""" Printer that allows squelching output. """
-
-	def __init__(self, squelch=False, name=None):
-		""" Ctor """
-		object.__init__(self)
-		self.squelch = squelch
-		self.name = name
-		self.last_ended_in_newline = True
-
-
-	def prt(self, message, preface=True, newline=True):
-		""" Print if not squelching. Handles newline characters in the message. """
-
-		for line in message.split("\n"):
-			self._prt_line(line, preface, newline)
-
-
-	def _prt_line(self, line, preface=True, newline=True):
-		""" Print single line. """
-
-		if self.squelch:
-			return
-
-		if preface and self.name and self.last_ended_in_newline:
-			line = "[{}] {}".format(self.name, line)
-		self.last_ended_in_newline = newline
-
-		print(line, end="\n" if newline else "")
-		sys.stdout.flush()
-
-
-### String formatting ###
-
-
-def format_time_passed(time_in_sec):
-	""" Format the given seconds as "5 s", "2 m 10 s" or "1 h 2 m 1 s". """
-
-	mins, secs = divmod(time_in_sec, 60)
-	hours, mins = divmod(mins, 60)
-
-	result = ""
-	if hours > 0:
-		result += "%d h " % hours
-	if mins > 0:
-		result += "%d m " % mins
-	if secs > 0:
-		result += "%d s" % secs
-
-	return result.strip()
-
-
-def format_percentage(value, pad_spaces=False):
-	""" Formats the given float value in [0, 1] as a percentage string. """
-	string = "%d %%" % round(value * 100, 2)
-	if pad_spaces:
-		return string.rjust(5)
-	return string
+### Generating log entries ###
 
 
 def generate_log_entries(number):

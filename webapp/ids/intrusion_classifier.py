@@ -4,6 +4,8 @@
 import sklearn.svm as sk_svm
 
 from log_entry import LogEntry
+import util.fmtr
+import util.prtr
 
 import ids_tools
 import ids_converter
@@ -122,7 +124,7 @@ class IntrusionClassifier(object):
 
 		limit = 5000000
 
-		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
+		printer = util.prtr.Printer(squelch=squelch_output, name="IC")
 
 		printer.prt("Streaming from file up to a maximum of {} entries.".format(limit))
 		printer.prt("Loading and converting entries...")
@@ -194,7 +196,7 @@ class IntrusionClassifier(object):
 		: param do_return : Return a machine-readable { app_id: score } dict.
 		"""
 
-		printer = ids_tools.Printer(squelch=squelch_output, name="IC")
+		printer = util.prtr.Printer(squelch=squelch_output, name="IC")
 
 		if not self._has_models():
 			raise ValueError("The classifier has no trained models! Train first, then score.")
@@ -226,7 +228,7 @@ class IntrusionClassifier(object):
 
 			score = self._score_outlier_detection(model, score_set)
 
-			printer.prt("Model scored {}.".format(ids_tools.format_percentage(score)))
+			printer.prt("Model scored {}.".format(util.fmtr.format_percentage(score)))
 
 			scores[app_id] = score
 			app_id_count += 1
@@ -234,7 +236,7 @@ class IntrusionClassifier(object):
 		total_score = sum(scores.values()) / len(scores)
 
 		printer.prt("")
-		printer.prt("Total score: {}".format(ids_tools.format_percentage(total_score)))
+		printer.prt("Total score: {}".format(util.fmtr.format_percentage(total_score)))
 
 		if do_return:
 			return scores

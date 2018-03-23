@@ -111,7 +111,7 @@ class IntrusionClassifier(object):
 	### Train ###
 
 
-	def train(self, log_entry_generator, extend_models=False, squelch_output=False):
+	def train(self, log_entry_generator, squelch_output=False):
 		"""
 		Train the app_id based classifiers with the given labelled entries.
 		Only loads up to 5 mio entries to ensure the process does not consume too much memory.
@@ -171,12 +171,11 @@ class IntrusionClassifier(object):
 				.format(app_id_number, len(app_id_datasets), app_id), newline=False)
 
 			# Load model if it exists already
-			clf = ModelDir.load_model(app_id)
-			if not clf:
-				clf = sk_svm.OneClassSVM(random_state=0)
-				printer.prt("Creating and training new model... ", newline=False)
-			else:
-				printer.prt("Model retrieved from disk. Training... ", newline=False)
+			if ModelDir.load_model(app_id):
+				raise IOError("Found existing model on disk!")
+
+			clf = sk_svm.OneClassSVM(random_state=0)
+			printer.prt("Creating and training new model... ", newline=False)
 
 			clf.fit(train_set[0])
 
@@ -220,7 +219,7 @@ class IntrusionClassifier(object):
 			printer.prt("({}/{}) Scoring model for \"{}\"..."
 				.format(app_id_count, len(app_id_datasets), app_id))
 
-			# Load model if it exists already
+			# Load model from disk
 			model = ModelDir.load_model(app_id)
 			if not model:
 				raise ValueError("Model is missing!")

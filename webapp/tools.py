@@ -117,7 +117,7 @@ def _score_entries_in_iterations(log_entries, iterations):
 	_print_scores(scores, printer)
 
 
-def _score_entries(log_entries, do_return=False, squelch_output=False):
+def _score_entries(log_entries, squelch_output=False):
 	"""
 	Score the given LogEntry objects.
 	returns: Boolean flag indicating success
@@ -126,11 +126,11 @@ def _score_entries(log_entries, do_return=False, squelch_output=False):
 	clas = IntrusionClassifier.get_singleton()
 
 	try:
-		result = clas.score(log_entries, do_return=do_return, squelch_output=squelch_output)
-		return result if do_return else True
+		result = clas.score(log_entries, do_return=True, squelch_output=squelch_output)
+		return result
 	except ValueError as val_err:
 		print(val_err.message)
-		return None if do_return else False
+		return None
 
 
 def train_score_call(args):

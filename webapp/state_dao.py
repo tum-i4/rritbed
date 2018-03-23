@@ -179,12 +179,16 @@ class StateDao(object):
 			return
 
 		time_now = time.time()
+		self._current_total_entries += number_of_entries
 
-		self._printer.prt("{}: Flushing {} log entries. Last flush was {} ago.".format(
-			time.strftime("%H:%M:%S", time.localtime(time_now)),
-			len(self._new_log_entries),
-			util.fmtr.format_time_passed(time_now - self._last_flush)
-		))
+		self._printer.prt("{}: Flushing {} log entries. Last flush was {} ago. Log is now at {} lines."
+			.format(
+				time.strftime("%H:%M:%S", time.localtime(time_now)),
+				len(self._new_log_entries),
+				util.fmtr.format_time_passed(time_now - self._last_flush),
+				self._current_total_entries
+			)
+		)
 
 		# Remove new entries from list and save them to disk
 		with open(self._log_file_path, "a") as log_file:

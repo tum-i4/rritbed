@@ -613,7 +613,8 @@ def _split_log_entries_flow(log_entry_iterator, split, squelch_output=False):
 
 
 def _read_file_flow(file_path, squelch_output=False):
-	""" Read the given file as LogEntry objects. Updates the user about the progress. """
+	""" Read up to 5000000 lines of the given file as LogEntry objects.
+	Updates the user about the progress. """
 
 	printer = util.prtr.Printer(squelch=squelch_output)
 
@@ -625,17 +626,23 @@ def _read_file_flow(file_path, squelch_output=False):
 		log_entries = _get_log_entries_from_pickle(file_path)
 	else:
 		printer.prt("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		printer.prt("Reading file and converting lines to LogEntry objects...")
-		log_entries = _get_log_entries_from_file(file_path)
+		printer.prt("Reading file and converting up to 5,000,000 lines to LogEntry objects...")
+		log_entries = _get_log_entries_from_file(file_path, 5000000)
 
 	printer.prt("Done.")
 	return log_entries
 
 
-def _get_log_entries_from_file(file_path):
-	lines = Dir.read_lines(file_path)
-	# Remove newline at the end of the line and create LogEntry objects
-	return [LogEntry.from_log_string(line) for line in lines]
+def _get_log_entries_from_file(file_path, limit):
+	""" Read up to <limit> number of log entries from the given file. """
+
+	log_entries = []
+
+	for line in Dir.yield_lines(file_path):
+		log_entries.append(LogEntry.from_log_string(line))
+
+		if len(log_entries) == limit:
+			return log_entries
 
 
 def _get_log_entries_from_pickle(file_path):

@@ -165,8 +165,7 @@ class LaunchFileOrchestrator(object):
 		self._label_intrusions = _raise_on_none_else_return(args.label_intrusions)
 		self._random_gen_args = _raise_on_none_else_return(args.random_gen_args)
 		self._seed_gens = _raise_on_none_else_return(args.seed_gens)
-		self._generator_seeds = {}
-		self._current_seed = 1
+		self._current_seed = 0 if self._seed_gens else None
 
 		# Intrusions
 		intrusion_percentage = _raise_on_none_else_return(args.intrusion_percentage)
@@ -363,18 +362,15 @@ class LaunchFileOrchestrator(object):
 			selected_generator_keys.append(gen_key)
 
 			# Generator seeds
-			if gen_name not in self._generator_seeds:
-				self._generator_seeds[gen_name] = None
-				if self._seed_gens:
-					self._generator_seeds[gen_name] = self._current_seed
-					self._current_seed += 1
+			if self._seed_gens:
+				self._current_seed += 1
 
 			group_element.append(self._create_generator_node_element(
 				gen_key,
 				gen_name,
 				generator_definitions[gen_name],
 				intrusion_mode=intrusion_mode,
-				seed=self._generator_seeds[gen_name]))
+				seed=self._current_seed))
 
 		assert(len(selected_generator_tuples) == len(selected_generator_keys))
 

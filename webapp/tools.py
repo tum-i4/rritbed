@@ -752,9 +752,8 @@ if __name__ == "__main__":
 			help="Split into sub-files containing entries separated by app id.")
 		MODE_GROUP.add_argument("--in-chunks", "-c", action="store_true",
 			help="Split into chunks. Specify the number of entries per file with --max-entries-per-file/-m.")
-		DEFAULT_MEPF = 1000000
-		SPLIT_PARSER.add_argument("--max-entries-per-file", "-m", type=int, default=DEFAULT_MEPF,
-			help="Limit the number of entries saved per file (default {})".format(DEFAULT_MEPF))
+		SPLIT_PARSER.add_argument("--max-entries-per-file", "-m", type=int,
+			help="Limit the number of entries saved per file")
 		SPLIT_PARSER.set_defaults(function=split_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")

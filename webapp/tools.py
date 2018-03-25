@@ -404,11 +404,11 @@ def _reset(classifier, server_log, reset_all):
 
 def anal_call(args):
 	""" Unpack the args and call _analyse.
-	Expects 'file_path'. """
-	_analyse(args.file_path)
+	Expects 'file_path' and 'to_file'. """
+	_analyse(args.file_path, args.to_file)
 
 
-def _analyse(file_path):
+def _analyse(file_path, to_file):
 	""" Analyse the given log file. """
 	print("Analysing...")
 
@@ -428,10 +428,16 @@ def _analyse(file_path):
 
 	# Output #
 
+	printer = util.prtr.Printer()
+	if to_file:
+		printer = util.prtr.Storer()
+
 	get_pl = lambda s, obj: s if len(obj) > 1 else ""
 
-	print("")
-	print("Found {} entries with {}/{} app id{} and {}/{} class{}".format(
+	if not to_file:
+		printer.prt("")
+
+	printer.prt("Found {} entries with {}/{} app id{} and {}/{} class{}".format(
 		total_entries,
 		len(found_app_ids), len(all_app_ids), get_pl("s", found_app_ids),
 		len(found_classes), len(all_classes), get_pl("es", found_classes))
@@ -451,7 +457,7 @@ def _analyse(file_path):
 
 		per_app_id.append(line)
 
-	_print_table(per_app_id, headline="Elements and classes per app ID")
+	_print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
 
 	# Class table
 	per_class = []
@@ -459,7 +465,7 @@ def _analyse(file_path):
 	for a_class in all_classes:
 		per_class.append([a_class, entry_count_per_class[a_class], len(app_ids_per_class[a_class])])
 
-	_print_table(per_class, headline="Elements per class")
+	_print_table(per_class, headline="Elements per class", printer=printer)
 
 	# Duplicate table
 	duplicates = []
@@ -478,9 +484,16 @@ def _analyse(file_path):
 
 	# Check content (skip header) for found duplicates
 	if not any([l[3] > 0 for l in duplicates[1:]]):
-		print("\nDuplicate analysis: No duplicates found!")
+		printer.prt("\nDuplicate analysis: No duplicates found!")
 	else:
-		_print_table(duplicates, headline="Duplicates per app ID")
+		_print_table(duplicates, headline="Duplicates per app ID", printer=printer)
+
+	if to_file:
+		with open(output_path, "w") as output_file:
+			for line in printer.get_messages():
+				output_file.write(line + "\n")
+
+		print("Successfully saved analysis to \"{}\".".format(output_path))
 
 	# TODO: score??
 	# harmonious? all labelled / some / none?
@@ -770,6 +783,8 @@ if __name__ == "__main__":
 
 		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
 		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
+		ANAL_PARSER.add_argument("--to-file", "-f", action="store_true",
+			help="Save the analysis to file.")
 		ANAL_PARSER.set_defaults(function=anal_call)
 
 		ARGS = PARSER.parse_args()

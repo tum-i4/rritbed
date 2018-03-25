@@ -10,7 +10,9 @@ class Printer(object):
 
 	def __init__(self, squelch=False, verbose=True, name=None):
 		""" Ctor """
+
 		object.__init__(self)
+
 		self.squelch = squelch
 		self.verbose = verbose
 		self.name = name
@@ -34,8 +36,13 @@ class Printer(object):
 			return
 
 		if preface and self.name and self.last_ended_in_newline:
-			line = "[{}] {}".format(self.name, line)
+			line = self._preface_line(line)
 		self.last_ended_in_newline = newline
 
 		print(line, end="\n" if newline else "")
 		sys.stdout.flush()
+
+
+	def _preface_line(self, line):
+		""" Preface the given line with the contained name. """
+		return "[{}] {}".format(self.name, line)

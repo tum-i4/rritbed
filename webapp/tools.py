@@ -321,6 +321,9 @@ def _split_per_app_id(log_entry_generator, file_path, max_per_file=1000000):
 def _split_in_chunks(log_entry_generator, file_path, max_entries_per_file):
 	""" Split the given entries into chunks of size <max_entries_per_file>. """
 
+	if max_entries_per_file is None:
+		raise ValueError("Please specify the number of entries per file!")
+
 	file_path_no_ext, ext = os.path.splitext(file_path)
 	path_creator = lambda idx: file_path_no_ext + "_" + str(idx) + ext
 	writer_msg = lambda idx: "Writing file {}...".format(path_creator(idx))

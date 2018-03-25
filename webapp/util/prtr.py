@@ -46,3 +46,23 @@ class Printer(object):
 	def _preface_line(self, line):
 		""" Preface the given line with the contained name. """
 		return "[{}] {}".format(self.name, line)
+
+
+
+class Storer(Printer):
+	"""
+	Printer replacement that stores all lines given to it.
+	Does NOT support verbosity or non-newlines when storing!
+	"""
+
+	def __init__(self, squelch=False, verbose=True, name=None):
+		""" Ctor """
+
+		super(Storer, self).__init__(squelch, verbose, name)
+		self.lines = []
+
+
+	def prt(self, message, only_verbose=False, preface=True, newline=True):
+		""" Save the given message. """
+
+		self.lines.append((message, only_verbose, preface, newline))

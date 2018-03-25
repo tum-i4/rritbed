@@ -66,3 +66,17 @@ class Storer(Printer):
 		""" Save the given message. """
 
 		self.lines.append((message, only_verbose, preface, newline))
+
+
+	def get_messages(self, purge=False):
+		""" Retrieve the stored messages. Optionally purge them. """
+
+		lines = self.lines
+		if purge:
+			self.lines = []
+
+		messages = []
+		for message, _, _, _ in lines:
+			messages.append(message)
+
+		return messages

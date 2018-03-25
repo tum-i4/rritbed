@@ -680,11 +680,14 @@ def _save_entries_flow(log_entry_iterator, file_path):
 	print("Done.")
 
 
-def _print_table(list_of_lists, headline=None, head_sep=True):
+def _print_table(list_of_lists, headline=None, head_sep=True, printer=None):
 	""" Print the given list of tuple as a table, regarding the first entry the header. """
 
 	if len(list_of_lists) < 2:
 		raise ValueError("Input list needs at least one header and one content line!")
+
+	if printer is None:
+		printer = util.prtr.Printer()
 
 	table_column_count = len(list_of_lists[0])
 	max_width_per_column = [0] * table_column_count
@@ -709,20 +712,20 @@ def _print_table(list_of_lists, headline=None, head_sep=True):
 
 	# Print #
 
-	print("")
+	printer.prt("")
 	if headline:
 		if not isinstance(headline, str):
 			raise ValueError("headline must be string")
 
-		print(headline.center(table_width))
+		printer.prt(headline.center(table_width))
 
-	print(lines_to_print[0])
+	printer.prt(lines_to_print[0])
 
 	if head_sep:
-		print("-" * table_width)
+		printer.prt("-" * table_width)
 
 	for i in range(1, len(lines_to_print)):
-		print(lines_to_print[i])
+		printer.prt(lines_to_print[i])
 
 
 

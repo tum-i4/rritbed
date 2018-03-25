@@ -410,6 +410,15 @@ def anal_call(args):
 
 def _analyse(file_path, to_file):
 	""" Analyse the given log file. """
+
+	# Check output file if requested #
+
+	output_path = file_path + ".analysis"
+
+	if to_file and os.path.lexists(output_path):
+		print("Output file {} exists already! (Re)Move it and try again.".format(output_path))
+		exit()
+
 	print("Analysing...")
 
 	# Get file access #

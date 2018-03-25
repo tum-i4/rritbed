@@ -749,9 +749,9 @@ if __name__ == "__main__":
 		MODE_GROUP.add_argument("--train-and-score", "-t", type=int, dest="train_split",
 			help="Split into train and score file based on the given percentage.")
 		MODE_GROUP.add_argument("--per-app-id", "-i", action="store_true",
-			help="Split into sub-files containing entires separated by app id.")
+			help="Split into sub-files containing entries separated by app id.")
 		MODE_GROUP.add_argument("--in-chunks", "-c", action="store_true",
-			help="Split into chunks. Specify the number of chunks with --max-entries-per-file/-m.")
+			help="Split into chunks. Specify the number of entries per file with --max-entries-per-file/-m.")
 		DEFAULT_MEPF = 1000000
 		SPLIT_PARSER.add_argument("--max-entries-per-file", "-m", type=int, default=DEFAULT_MEPF,
 			help="Limit the number of entries saved per file (default {})".format(DEFAULT_MEPF))

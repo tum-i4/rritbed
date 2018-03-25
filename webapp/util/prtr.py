@@ -80,3 +80,12 @@ class Storer(Printer):
 			messages.append(message)
 
 		return messages
+
+
+	def printout(self):
+		""" Print out the stored lines. Empties the contained lines. """
+
+		for message, only_verbose, preface, newline in self.lines:
+			super(Storer, self)._prt_line(message, only_verbose, preface, newline)
+
+		self.lines = []

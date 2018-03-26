@@ -243,12 +243,13 @@ class IntrusionClassifier(object):
 
 
 	def _score_outlier_detection(self, model, score_set):
-		""" Score the given model with the given train_set (labelled). """
+		""" Score the given model with the given (X,y) set. """
 
-		predictions = model.predict(score_set[0])
+		score_entries, score_classes = score_set
+		predictions = model.predict(score_entries)
 		prediction_was_correct = []
 
-		for correct_class, prediction in zip(score_set[1], predictions):
+		for correct_class, prediction in zip(score_classes, predictions):
 			is_outlier = self._converter.class_means_intruded(correct_class)
 			predicted_as_outlier = self._converter.prediction_means_outlier(prediction)
 

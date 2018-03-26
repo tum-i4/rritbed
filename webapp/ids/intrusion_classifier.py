@@ -248,7 +248,7 @@ class IntrusionClassifier(object):
 		predictions = model.predict(score_set[0])
 		prediction_was_correct = []
 
-		for correct_class, prediction in zip(score_set, predictions):
+		for correct_class, prediction in zip(score_set[1], predictions):
 			is_outlier = self._converter.class_means_intruded(correct_class)
 			predicted_as_outlier = self._converter.prediction_means_outlier(prediction)
 

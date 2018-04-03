@@ -667,7 +667,9 @@ def _get_log_entries_from_file(file_path, limit):
 		log_entries.append(LogEntry.from_log_string(line))
 
 		if len(log_entries) == limit:
-			return log_entries
+			break
+
+	return log_entries
 
 
 def _get_log_entries_from_pickle(file_path):

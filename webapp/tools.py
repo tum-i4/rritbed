@@ -198,6 +198,27 @@ def _train_and_score(file_path, folds, iterations=None):
 	_print_scores(scores, printer)
 
 
+def cross_val_call(args):
+	""" Unpack the args and call _cross_val.
+	Expects 'file_path' and 'iterations'. """
+	_cross_val(args.file_path, args.iterations)
+
+
+def _cross_val(file_path, iterations):
+
+	if iterations <= 1:
+		iterations = 1
+
+	log_entries = _read_file_flow(file_path)
+
+	printer = util.prtr.Printer()
+
+	clas = IntrusionClassifier.get_singleton()
+	scores = clas.cross_val(log_entries, iterations, squelch_output=False)
+
+	_print_scores(scores, printer)
+
+
 def _print_scores(scores, printer):
 	""" Print the given scores in a table. """
 
@@ -772,6 +793,11 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--folds", "-f", type=int, default=5)
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int)
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
+
+		CROSSVAL_PARSER = SUBPARSERS.add_parser("cross-val", help="Cross validate and reset")
+		CROSSVAL_PARSER.add_argument("file_path", metavar="PATH", help="The data")
+		CROSSVAL_PARSER.add_argument("--iterations", "-i", type=int)
+		CROSSVAL_PARSER.set_defaults(function=cross_val_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")
 		SPLIT_PARSER.add_argument("file_path", metavar="PATH")

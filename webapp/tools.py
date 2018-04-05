@@ -741,15 +741,15 @@ def _print_table(list_of_lists, headline=None, head_sep=True, printer=None):
 		if len(one_list) != table_column_count:
 			raise ValueError("One or more of the given input lines have different numbers of entries!")
 
-		for i in range(0, len(one_list)):
-			max_width_per_column[i] = max(max_width_per_column[i], len(str(one_list[i])))
+		for i, one_el in enumerate(one_list):
+			max_width_per_column[i] = max(max_width_per_column[i], len(str(one_el)))
 
 	lines_to_print = []
 	col_separator = " | "
 	for one_list in list_of_lists:
 		justed_strings = []
-		for i in range(0, len(one_list)):
-			justed_strings.append((str(one_list[i]).ljust(max_width_per_column[i])))
+		for i, one_el in enumerate(one_list):
+			justed_strings.append((str(one_el).ljust(max_width_per_column[i])))
 		lines_to_print.append(col_separator.join(justed_strings))
 
 	# Each column plus 3 (" | ")

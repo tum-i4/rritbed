@@ -206,7 +206,35 @@ def score_shit_call(args):
 
 
 def _score_shit(file_path, iterations):
+
+	if not iterations >= 1:
+		raise ValueError("--iterations/-i must be a value >= 1!")
+
+	printer = util.prtr.Printer()
+	converter = IdsConverter()
+
+	printer.prt("Loading entries...")
+	log_entries = _read_file_flow(file_path)
+
+	printer.prt("Converting...")
+	# converted_entries: [(app_id, vector, class)]
+	converted_entries = []
+	for log_entry in log_entries:
+		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry))
+
+	# TODO filter out anomalous instances?
+
+	printer.prt("Splitting...")
+	app_id_datasets = converter.prepared_tuples_to_train_dict(converted_entries, printer)
+
+	# TODO score shit here
 	raise NotImplementedError()
+	scores = {}
+	for app_id, (X, y) in app_id_datasets.items():
+		clf = sk_svm.SVC(kernel='linear', C=1)
+		scores[app_id] = sk_mod.cross_val_score(clf, X, y, cv=iterations)
+
+	_print_scores(scores, printer)
 
 
 def _print_scores(scores, printer):
@@ -784,7 +812,7 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int)
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
-		CROSSVAL_PARSER = SUBPARSERS.add_parser("score-all-kinds-of-shit")
+		CROSSVAL_PARSER = SUBPARSERS.add_parser("score-all-kinds-of-shit", aliases=["shit"])
 		CROSSVAL_PARSER.add_argument("file_path", metavar="PATH", help="The data")
 		CROSSVAL_PARSER.add_argument("--iterations", "-i", type=int)
 		CROSSVAL_PARSER.set_defaults(function=score_shit_call)

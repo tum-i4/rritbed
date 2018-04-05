@@ -34,6 +34,44 @@ class IdsConverter(object):
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
+	def log_entry_to_prepared_tuple(self, log_entry):
+		""" Convert the given LogEntry object to a (app_id, vector, class) tuple. """
+
+		app_id = ids_tools.log_entry_to_app_id(log_entry)
+		ndarray = self.log_entry_to_ndarray(log_entry, app_id)
+		its_class = self.log_entry_to_class(log_entry)
+
+		return (app_id, ndarray, its_class)
+
+
+	def prepared_tuples_to_train_dict(self, converted_entries, printer):
+		""" Store the given converted entry tuples as { app_id : (X, y) }. """
+
+		printer.prt("Dividing the data per app id...")
+
+		app_id_datasets = {}
+		for app_id in self.app_ids:
+			app_id_datasets[app_id] = ([], [])
+
+		for converted_entry in converted_entries:
+			app_id, ndarray, its_class = converted_entry
+
+			app_id_datasets[app_id][0].append(ndarray)
+			app_id_datasets[app_id][1].append(its_class)
+
+		printer.prt("Done.")
+		return app_id_datasets
+
+
+	def log_entries_to_train_dict(self, log_entries, printer):
+		""" Convert the given log entries to { app_id : (X, y) }. """
+
+		printer.prt("Transforming the log data to trainable vectors...")
+		converted_entries = [self.log_entry_to_prepared_tuple(e) for e in log_entries]
+		printer.prt("Done.")
+		return self.prepared_tuples_to_train_dict(converted_entries, printer)
+
+
 	def log_entry_to_ndarray(self, log_entry, app_id):
 		"""
 		Convert the given LogEntry object to a learnable vector.

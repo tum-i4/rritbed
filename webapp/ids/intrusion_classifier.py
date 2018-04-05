@@ -131,7 +131,7 @@ class IntrusionClassifier(object):
 		printer.prt("Loading and converting entries...")
 
 		found_app_ids, converted_entries = self._stream_convert_entries(
-			log_entry_generator, limit, printer)
+			log_entry_generator, limit)
 
 		self._train_entries(converted_entries, printer)
 
@@ -139,7 +139,7 @@ class IntrusionClassifier(object):
 			.format(len(found_app_ids), len(self._converter.app_ids)))
 
 
-	def _stream_convert_entries(self, log_entry_generator, limit, printer):
+	def _stream_convert_entries(self, log_entry_generator, limit):
 		"""
 		Read up to <limit> entries from disk and convert them to (app_id, vector, class) tuples.
 		returns: found_app_ids (set) and converted_entries (tuple list)
@@ -152,7 +152,7 @@ class IntrusionClassifier(object):
 			if len(converted_entries) == limit:
 				break
 
-			converted_entry = self._log_entry_to_prepared_tuple(log_entry)
+			converted_entry = self._converter.log_entry_to_prepared_tuple(log_entry)
 			found_app_ids.add(converted_entry[0])
 			converted_entries.append(converted_entry)
 
@@ -175,7 +175,7 @@ class IntrusionClassifier(object):
 				.format(og_entry_count - len(converted_entries)))
 
 		printer.prt("Converting...")
-		app_id_datasets = self._prepared_tuples_to_train_dict(converted_entries, printer)
+		app_id_datasets = self._converter.prepared_tuples_to_train_dict(converted_entries, printer)
 
 		app_id_number = 1
 
@@ -214,7 +214,7 @@ class IntrusionClassifier(object):
 
 		printer.prt("Starting scoring with {} LogEntry objects.".format(len(log_entries)))
 
-		app_id_datasets = self._log_entries_to_train_dict(log_entries, printer)
+		app_id_datasets = self._converter.log_entries_to_train_dict(log_entries, printer)
 
 		# Verify
 		printer.prt("Verifying data...")
@@ -283,11 +283,11 @@ class IntrusionClassifier(object):
 
 		# converted_entries: [(app_id, vector, class)]
 		found_app_ids, converted_entries = self._stream_convert_entries(
-			log_entry_generator, limit, printer)
+			log_entry_generator, limit)
 
 		# TODO filter out anomalous instances?
 
-		app_id_datasets = self._prepared_tuples_to_train_dict(converted_entries, printer)
+		app_id_datasets = self._converter.prepared_tuples_to_train_dict(converted_entries, printer)
 
 		scores = {}
 		for app_id, (X, y) in app_id_datasets.items():
@@ -295,47 +295,6 @@ class IntrusionClassifier(object):
 			scores[app_id] = sk_mod.cross_val_score(clf, X, y, cv=iterations)
 
 		return scores
-
-
-
-	### Convert ###
-
-
-	def _log_entry_to_prepared_tuple(self, log_entry):
-		""" Convert the given LogEntry object to a (app_id, vector, class) tuple. """
-
-		app_id = ids_tools.log_entry_to_app_id(log_entry)
-		ndarray = self._converter.log_entry_to_ndarray(log_entry, app_id)
-		its_class = self._converter.log_entry_to_class(log_entry)
-
-		return (app_id, ndarray, its_class)
-
-
-	def _prepared_tuples_to_train_dict(self, converted_entries, printer):
-		""" Store the given converted entry tuples as { app_id : (X, y) }. """
-
-		printer.prt("Dividing the data per app id...")
-
-		app_id_datasets = {}
-		for app_id in self._converter.app_ids:
-			app_id_datasets[app_id] = ([], [])
-
-		for converted_entry in converted_entries:
-			app_id, ndarray, its_class = converted_entry
-
-			app_id_datasets[app_id][0].append(ndarray)
-			app_id_datasets[app_id][1].append(its_class)
-
-		printer.prt("Done.")
-		return app_id_datasets
-
-
-	def _log_entries_to_train_dict(self, log_entries, printer):
-		""" Convert the given log entries to { app_id : (X, y) }. """
-
-		printer.prt("Transforming the log data to trainable vectors...")
-		converted_entries = [self._log_entry_to_prepared_tuple(e) for e in log_entries]
-		return self._prepared_tuples_to_train_dict(converted_entries, printer)
 
 
 

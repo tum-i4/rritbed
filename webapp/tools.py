@@ -206,8 +206,8 @@ def cross_val_call(args):
 
 def _cross_val(file_path, iterations):
 
-	if iterations <= 1:
-		iterations = 1
+	if not iterations >= 1:
+		raise ValueError("--iterations must be a value >= 1!")
 
 	log_entries = _read_file_flow(file_path)
 

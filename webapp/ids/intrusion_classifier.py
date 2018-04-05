@@ -289,7 +289,7 @@ class IntrusionClassifier(object):
 		app_id_datasets = self._prepared_tuples_to_train_dict(converted_entries, printer)
 
 		scores = {}
-		for app_id, (X, y) in app_id_datasets:
+		for app_id, (X, y) in app_id_datasets.items():
 			clf = svm.SVC(kernel='linear', C=1)
 			scores[app_id] = sk_mod.cross_val_score(clf, X, y, cv=iterations)
 

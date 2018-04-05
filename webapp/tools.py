@@ -213,10 +213,9 @@ def _score_shit(file_path, iterations):
 	printer = util.prtr.Printer()
 	converter = IdsConverter()
 
-	printer.prt("Loading entries...")
 	log_entries = _read_file_flow(file_path)
 
-	printer.prt("Converting...")
+	printer.prt("Preparing...")
 	# converted_entries: [(app_id, vector, class)]
 	converted_entries = []
 	for log_entry in log_entries:

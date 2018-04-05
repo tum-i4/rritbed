@@ -104,7 +104,9 @@ class DistributionGenerator(object):
 		next_tuple = self._generate_impl(values)
 
 		if self._h_e_last_was_normal:
-			next_value = next_tuple[0] - (next_tuple[0] * 100)
+			error = next_tuple[0] * next_tuple[0]
+			multiplier = random.choice([1, -1])
+			next_value = next_tuple[0] + (multiplier * error)
 			next_str = DistributionGenerator.HUGE_ERROR
 			next_tuple = (next_value, next_str)
 

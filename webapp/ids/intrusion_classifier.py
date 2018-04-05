@@ -284,9 +284,6 @@ class IntrusionClassifier(object):
 		found_app_ids, converted_entries = self._stream_convert_entries(
 			log_entry_generator, limit, printer)
 
-		# TODO
-		raise NotImplementedError()
-
 		# TODO filter out anomalous instances?
 
 		app_id_datasets = self._prepared_tuples_to_train_dict(converted_entries, printer)

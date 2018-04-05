@@ -129,7 +129,21 @@ class IntrusionClassifier(object):
 		printer.prt("Streaming from file up to a maximum of {} entries.".format(limit))
 		printer.prt("Loading and converting entries...")
 
-		total_entry_count = 0
+		found_app_ids, converted_entries = self._stream_convert_entries(
+			log_entry_generator, limit, printer)
+
+		self._train_entries(converted_entries, printer)
+
+		printer.prt("Finished training classifiers for {}/{} app ids."
+			.format(len(found_app_ids), len(self._converter.app_ids)))
+
+
+	def _stream_convert_entries(self, log_entry_generator, limit, printer):
+		"""
+		Read up to <limit> entries from disk and convert them to (app_id, vector, class) tuples.
+		returns: found_app_ids (set) and converted_entries (tuple list)
+		"""
+
 		found_app_ids = set()
 		# Save tuple (app_id, vector, class) for lower memory usage
 		converted_entries = []
@@ -137,15 +151,11 @@ class IntrusionClassifier(object):
 			if len(converted_entries) == limit:
 				break
 
-			total_entry_count += 1
 			converted_entry = self._log_entry_to_prepared_tuple(log_entry)
 			found_app_ids.add(converted_entry[0])
 			converted_entries.append(converted_entry)
 
-		self._train_entries(converted_entries, printer)
-
-		printer.prt("Finished training classifiers for {}/{} app ids."
-			.format(len(found_app_ids), len(self._converter.app_ids)))
+		return (found_app_ids, converted_entries)
 
 
 	def _train_entries(self, converted_entries, printer):

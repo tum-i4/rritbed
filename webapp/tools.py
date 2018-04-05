@@ -796,6 +796,10 @@ if __name__ == "__main__":
 			help="Save the analysis to file.")
 		ANAL_PARSER.set_defaults(function=anal_call)
 
+		if len(sys.argv) == 1:
+			PARSER.print_help()
+			exit()
+
 		ARGS = PARSER.parse_args()
 
 		START_TIME = time.time()

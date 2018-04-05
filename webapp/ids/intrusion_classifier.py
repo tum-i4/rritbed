@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Classifier """
 
+import sklearn.model_selection as sk_mod
 import sklearn.svm as sk_svm
 
 from log_entry import LogEntry

@@ -271,6 +271,38 @@ class IntrusionClassifier(object):
 		return score
 
 
+	def cross_val(self, log_entry_generator, iterations, squelch_output=False):
+
+		limit = 5000000
+
+		printer = util.prtr.Printer(squelch=squelch_output, name="IC")
+
+		printer.prt("Streaming from file up to a maximum of {} entries.".format(limit))
+		printer.prt("Loading and converting entries...")
+
+		# converted_entries: [(app_id, vector, class)]
+		found_app_ids, converted_entries = self._stream_convert_entries(
+			log_entry_generator, limit, printer)
+
+		# TODO
+		raise NotImplementedError()
+
+		# TODO filter out anomalous instances?
+
+		app_id_datasets = self._prepared_tuples_to_train_dict(converted_entries, printer)
+
+		scores = {}
+		for app_id, (X, y) in app_id_datasets:
+			clf = svm.SVC(kernel='linear', C=1)
+			scores[app_id] = sk_mod.cross_val_score(clf, X, y, cv=iterations)
+
+		return scores
+
+
+
+	### Convert ###
+
+
 	def _log_entry_to_prepared_tuple(self, log_entry):
 		""" Convert the given LogEntry object to a (app_id, vector, class) tuple. """
 

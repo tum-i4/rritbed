@@ -5,10 +5,13 @@ import argparse
 import cPickle
 import md5
 import os
+import random
 import statistics as stat
 import sys
 import time
 
+import sklearn
+import sklearn.metrics as sk_met
 import sklearn.model_selection as sk_mod
 
 from log_entry import LogEntry
@@ -221,20 +224,13 @@ def _score_shit(file_path, iterations):
 	for log_entry in log_entries:
 		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
 
-	# TODO filter out anomalous instances?
+	printer.prt("Filtering...")
+	train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
 
 	printer.prt("Splitting...")
-	app_id_datasets = converter.prepared_tuples_to_train_dict(converted_entries, printer)
+	train_dict = converter.prepared_tuples_to_train_dict(train_entries, printer)
+	test_dict = converter.prepared_tuples_to_train_dict(test_entries, printer)
 
-	for app_id in app_id_datasets:
-		# Has X, y
-		# TODO temp
-		print(app_id_datasets[app_id][1][:15])
-		app_id_datasets[app_id][1] = converter.classes_to_binary(app_id_datasets[app_id][1])
-		print(app_id_datasets[app_id][1][:15])
-
-	# TODO score shit here
-	raise NotImplementedError()
 	scores = {}
 	for app_id, (X, y) in app_id_datasets.items():
 		clf = sk_svm.SVC(kernel='linear', C=1)

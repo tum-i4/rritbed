@@ -157,6 +157,15 @@ class IdsConverter(object):
 			return -1
 
 
+	def convert_classes_to_binary(self, input_classes):
+		""" Convert a list of int classes to binary (-1/1). """
+
+		output_classes = []
+		for input_class in input_classes:
+			output_classes.append(self.convert_class_to_binary(input_class))
+		return output_classes
+
+
 	def get_expected_classes(self, app_id):
 		""" Return a list of expected classes for the given app_id classifier. """
 

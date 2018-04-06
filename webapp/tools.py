@@ -226,6 +226,13 @@ def _score_shit(file_path, iterations):
 	printer.prt("Splitting...")
 	app_id_datasets = converter.prepared_tuples_to_train_dict(converted_entries, printer)
 
+	for app_id in app_id_datasets:
+		# Has X, y
+		# TODO temp
+		print(app_id_datasets[app_id][1][:15])
+		app_id_datasets[app_id][1] = converter.classes_to_binary(app_id_datasets[app_id][1])
+		print(app_id_datasets[app_id][1][:15])
+
 	# TODO score shit here
 	raise NotImplementedError()
 	scores = {}

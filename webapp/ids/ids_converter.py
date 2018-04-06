@@ -55,9 +55,7 @@ class IdsConverter(object):
 		for app_id in self.app_ids:
 			app_id_datasets[app_id] = ([], [])
 
-		for converted_entry in converted_entries:
-			app_id, ndarray, its_class = converted_entry
-
+		for app_id, ndarray, its_class in converted_entries:
 			app_id_datasets[app_id][0].append(ndarray)
 			app_id_datasets[app_id][1].append(its_class)
 

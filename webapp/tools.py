@@ -254,15 +254,18 @@ def _score_shit(file_path, iterations):
 	_print_scores(scores, printer)
 
 
-def _converted_entries_to_train_test(converted_entries):
+def _converted_entries_to_train_test(converted_entries, binary=True):
 	""" Splits the entries up. All intruded entries go into the test set, with some normal ones.
 	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """
+
+	if not binary:
+		raise NotImplementedError()
 
 	converter = IdsConverter()
 	entries_normal = []
 	entries_intruded = []
 	for entry in converted_entries:
-		if converter.class_means_intruded(entry[2]):
+		if converter.prediction_means_outlier(entry[2]):
 			entries_intruded.append(entry)
 		else:
 			entries_normal.append(entry)

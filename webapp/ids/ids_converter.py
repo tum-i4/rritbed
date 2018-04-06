@@ -145,6 +145,18 @@ class IdsConverter(object):
 			raise ValueError("Predictions can only be +1 or -1!")
 
 
+	def convert_class_to_binary(self, input_class):
+		""" Convert an int class to binary (-1/1). """
+
+		# +1 means outlier, -1 means normal
+		assert(self.prediction_means_outlier(1))
+
+		if self.class_means_intruded(input_class):
+			return 1
+		else:
+			return -1
+
+
 	def get_expected_classes(self, app_id):
 		""" Return a list of expected classes for the given app_id classifier. """
 

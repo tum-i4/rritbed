@@ -232,9 +232,24 @@ def _score_shit(file_path, iterations):
 	test_dict = converter.prepared_tuples_to_train_dict(test_entries, printer)
 
 	scores = {}
-	for app_id, (X, y) in app_id_datasets.items():
-		clf = sk_svm.SVC(kernel='linear', C=1)
-		scores[app_id] = sk_mod.cross_val_score(clf, X, y, cv=iterations)
+	for app_id in converter.app_ids:
+		printer.prt("Scoring \"{}\"...".format(app_id))
+
+		X_train, y_train = train_dict[app_id]
+		X_test, y_test = test_dict[app_id]
+
+		clf = sklearn.svm.OneClassSVM(random_state=0)
+		clf.fit(X_train)
+
+		result = clf.predict(X_test)
+
+		# TODO
+		printer.prt("LOLZ INCOMING")
+		acc_score = sk_met.accuracy_score(y_test, result)
+		prec_score = sk_met.precision_score(y_test, result)
+		rec_score = sk_met.recall_score(y_test, result)
+		printer.prt("Accuracy: {}, precision: {}, recall: {}".format(
+			util.fmtr.format_percentage(acc_score), util.fmtr.format_percentage(prec_score), util.fmtr.format_percentage(rec_score)))
 
 	_print_scores(scores, printer)
 

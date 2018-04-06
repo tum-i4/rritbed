@@ -231,7 +231,9 @@ def _score_shit(file_path, iterations):
 	train_dict = converter.prepared_tuples_to_train_dict(train_entries, printer)
 	test_dict = converter.prepared_tuples_to_train_dict(test_entries, printer)
 
-	scores = {}
+	scores_acc = {}
+	scores_prec = {}
+	scores_rec = {}
 	for app_id in converter.app_ids:
 		printer.prt("Scoring \"{}\"...".format(app_id))
 
@@ -244,14 +246,16 @@ def _score_shit(file_path, iterations):
 		result = clf.predict(X_test)
 
 		# TODO
-		printer.prt("LOLZ INCOMING")
-		acc_score = sk_met.accuracy_score(y_test, result)
-		prec_score = sk_met.precision_score(y_test, result)
-		rec_score = sk_met.recall_score(y_test, result)
-		printer.prt("Accuracy: {}, precision: {}, recall: {}".format(
-			util.fmtr.format_percentage(acc_score), util.fmtr.format_percentage(prec_score), util.fmtr.format_percentage(rec_score)))
+		scores_acc[app_id] = sk_met.accuracy_score(y_test, result)
+		scores_prec[app_id] = sk_met.precision_score(y_test, result)
+		scores_rec[app_id] = sk_met.recall_score(y_test, result)
 
-	_print_scores(scores, printer)
+	printer.prt("Accuracy:")
+	_print_scores(scores_acc, printer)
+	printer.prt("Precision:")
+	_print_scores(scores_prec, printer)
+	printer.prt("Recall:")
+	_print_scores(scores_rec, printer)
 
 
 def _converted_entries_to_train_test(converted_entries, binary=True):

@@ -218,37 +218,43 @@ def _score_shit(file_path, iterations):
 
 	log_entries = _read_file_flow(file_path)
 
-	printer.prt("Preparing...")
-	# converted_entries: [(app_id, vector, class)]
-	converted_entries = []
-	for log_entry in log_entries:
-		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
+	scores_acc = _empty_app_id_dict()
+	scores_prec = _empty_app_id_dict()
+	scores_rec = _empty_app_id_dict()
 
-	printer.prt("Filtering...")
-	train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
+	for i in range(1, iterations + 1):
+		printer.prt("Iteration {}/{}".format(i, iterations), newline=False)
 
-	printer.prt("Splitting...")
-	train_dict = converter.prepared_tuples_to_train_dict(train_entries, printer)
-	test_dict = converter.prepared_tuples_to_train_dict(test_entries, printer)
+		printer.prt("Preparing...", newline=False)
+		# converted_entries: [(app_id, vector, class)]
+		converted_entries = []
+		for log_entry in log_entries:
+			converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
 
-	scores_acc = {}
-	scores_prec = {}
-	scores_rec = {}
-	for app_id in converter.app_ids:
-		printer.prt("Scoring \"{}\"...".format(app_id))
+		printer.prt("Filtering...", newline=False)
+		train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
 
-		X_train, y_train = train_dict[app_id]
-		X_test, y_test = test_dict[app_id]
+		printer.prt("Splitting...", newline=False)
+		train_dict = converter.prepared_tuples_to_train_dict(train_entries, printer)
+		test_dict = converter.prepared_tuples_to_train_dict(test_entries, printer)
 
-		clf = sklearn.svm.OneClassSVM(random_state=0)
-		clf.fit(X_train)
+		printer.prt("Scoring...", newline=False)
+		for app_id in converter.app_ids:
 
-		result = clf.predict(X_test)
+			X_train, y_train = train_dict[app_id]
+			X_test, y_test = test_dict[app_id]
 
-		# TODO
-		scores_acc[app_id] = sk_met.accuracy_score(y_test, result)
-		scores_prec[app_id] = sk_met.precision_score(y_test, result)
-		scores_rec[app_id] = sk_met.recall_score(y_test, result)
+			clf = sklearn.svm.OneClassSVM(random_state=0)
+			clf.fit(X_train)
+
+			result = clf.predict(X_test)
+
+			# TODO MOAR
+			scores_acc[app_id].append(sk_met.accuracy_score(y_test, result))
+			scores_prec[app_id].append(sk_met.precision_score(y_test, result))
+			scores_rec[app_id].append(sk_met.recall_score(y_test, result))
+
+		printer.prt("Done.")
 
 	printer.prt("Accuracy:")
 	_print_scores(scores_acc, printer)

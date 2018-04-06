@@ -214,6 +214,7 @@ def _score_shit(file_path, iterations):
 		raise ValueError("--iterations/-i must be a value >= 1!")
 
 	printer = util.prtr.Printer()
+	squelcher = util.prtr.Printer(squelch=True)
 	converter = IdsConverter()
 
 	log_entries = _read_file_flow(file_path)
@@ -223,22 +224,22 @@ def _score_shit(file_path, iterations):
 	scores_rec = _empty_app_id_dict()
 
 	for i in range(1, iterations + 1):
-		printer.prt("Iteration {}/{}".format(i, iterations), newline=False)
+		printer.prt("Iteration {}/{} ".format(i, iterations), newline=False)
 
-		printer.prt("Preparing...", newline=False)
+		printer.prt("Preparing... ", newline=False)
 		# converted_entries: [(app_id, vector, class)]
 		converted_entries = []
 		for log_entry in log_entries:
 			converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
 
-		printer.prt("Filtering...", newline=False)
+		printer.prt("Filtering... ", newline=False)
 		train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
 
-		printer.prt("Splitting...", newline=False)
-		train_dict = converter.prepared_tuples_to_train_dict(train_entries, printer)
-		test_dict = converter.prepared_tuples_to_train_dict(test_entries, printer)
+		printer.prt("Splitting... ", newline=False)
+		train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
+		test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
 
-		printer.prt("Scoring...", newline=False)
+		printer.prt("Scoring... ", newline=False)
 		for app_id in converter.app_ids:
 
 			X_train, y_train = train_dict[app_id]

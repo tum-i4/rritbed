@@ -326,7 +326,7 @@ def _print_scores(scores, printer):
 				", ".join([util.fmtr.format_percentage(x, pad_spaces=True) for x in row])
 			])
 
-	_print_table(result_table, headline="Results")
+	_print_table(result_table, headline="Results", printer=printer)
 
 
 def split_call(args):

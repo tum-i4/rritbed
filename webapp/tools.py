@@ -9,6 +9,7 @@ import random
 import statistics as stat
 import sys
 import time
+import warnings
 
 import sklearn
 import sklearn.metrics as sk_met
@@ -251,6 +252,7 @@ def _score_shit(file_path, iterations):
 			result = clf.predict(X_test)
 
 			# TODO MOAR
+			warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWarning)
 			scores_acc[app_id].append(sk_met.accuracy_score(y_test, result))
 			scores_prec[app_id].append(sk_met.precision_score(y_test, result))
 			scores_rec[app_id].append(sk_met.recall_score(y_test, result))

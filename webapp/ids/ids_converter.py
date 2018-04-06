@@ -34,12 +34,14 @@ class IdsConverter(object):
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
-	def log_entry_to_prepared_tuple(self, log_entry):
+	def log_entry_to_prepared_tuple(self, log_entry, binary=False):
 		""" Convert the given LogEntry object to a (app_id, vector, class) tuple. """
 
 		app_id = ids_tools.log_entry_to_app_id(log_entry)
 		ndarray = self.log_entry_to_ndarray(log_entry, app_id)
 		its_class = self.log_entry_to_class(log_entry)
+		if binary:
+			its_class = self.class_to_binary(its_class)
 
 		return (app_id, ndarray, its_class)
 

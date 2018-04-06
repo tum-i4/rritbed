@@ -257,12 +257,9 @@ def _score_shit(file_path, iterations):
 
 		printer.prt("Done.")
 
-	printer.prt("Accuracy:")
-	_print_scores(scores_acc, printer)
-	printer.prt("Precision:")
-	_print_scores(scores_prec, printer)
-	printer.prt("Recall:")
-	_print_scores(scores_rec, printer)
+	_print_scores(scores_acc, printer, headline="Accuracy")
+	_print_scores(scores_prec, printer, headline="Precision")
+	_print_scores(scores_rec, printer, headline="Recall")
 
 
 def _empty_app_id_dict():
@@ -302,7 +299,7 @@ def _converted_entries_to_train_test(converted_entries, binary=True):
 	return (training_entries, scoring_entries)
 
 
-def _print_scores(scores, printer):
+def _print_scores(scores, printer, headline="Results"):
 	""" Print the given scores in a table. """
 
 	if not scores or not scores.itervalues().next():
@@ -327,7 +324,7 @@ def _print_scores(scores, printer):
 				", ".join([util.fmtr.format_percentage(x, pad_spaces=True) for x in row])
 			])
 
-	_print_table(result_table, headline="Results", printer=printer)
+	_print_table(result_table, headline=headline, printer=printer)
 
 
 def split_call(args):

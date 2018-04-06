@@ -258,6 +258,16 @@ def _score_shit(file_path, iterations):
 	_print_scores(scores_rec, printer)
 
 
+def _empty_app_id_dict():
+	""" Initialises an empty dict with { app_id: [] }. """
+
+	result = {}
+	for app_id in IdsConverter().app_ids:
+		result[app_id] = []
+
+	return result
+
+
 def _converted_entries_to_train_test(converted_entries, binary=True):
 	""" Splits the entries up. All intruded entries go into the test set, with some normal ones.
 	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """

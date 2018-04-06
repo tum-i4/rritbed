@@ -219,7 +219,7 @@ def _score_shit(file_path, iterations):
 	# converted_entries: [(app_id, vector, class)]
 	converted_entries = []
 	for log_entry in log_entries:
-		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry))
+		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
 
 	# TODO filter out anomalous instances?
 

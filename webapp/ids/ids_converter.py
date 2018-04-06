@@ -63,6 +63,27 @@ class IdsConverter(object):
 		return app_id_datasets
 
 
+	# pylint: disable-msg=C0103, R0201; (Invalid naming, could be function)
+	def prepared_tuples_to_X_y(self, converted_entries, expected_app_id, printer):
+		""" Transpose the given converted entry tuples to (X, y). """
+
+		printer.prt("Reformatting...")
+
+		X = []
+		y = []
+
+		for app_id, ndarray, its_class in converted_entries:
+			if app_id != expected_app_id:
+				raise ValueError("The entry's app_id \"{}\" doesn't match the expected_app_id \"{}\"!"
+					.format(app_id, expected_app_id))
+
+			X.append(ndarray)
+			y.append(its_class)
+
+		printer.prt("Done.")
+		return (X, y)
+
+
 	def log_entries_to_train_dict(self, log_entries, printer):
 		""" Convert the given log entries to { app_id : (X, y) }. """
 

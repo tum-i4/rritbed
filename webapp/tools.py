@@ -243,6 +243,30 @@ def _score_shit(file_path, iterations):
 	_print_scores(scores, printer)
 
 
+def _converted_entries_to_train_test(converted_entries):
+	""" Splits the entries up. All intruded entries go into the test set, with some normal ones.
+	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """
+
+	converter = IdsConverter()
+	entries_normal = []
+	entries_intruded = []
+	for entry in converted_entries:
+		if converter.class_means_intruded(entry[2]):
+			entries_intruded.append(entry)
+		else:
+			entries_normal.append(entry)
+
+	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
+	test_size = min(percentage_intruded, 0.15)
+	train, test = sklearn.model_selection.train_test_split(entries_normal, test_size=test_size)
+
+	training_entries = train
+	scoring_entries = entries_intruded + test
+	random.shuffle(scoring_entries)
+
+	return (training_entries, scoring_entries)
+
+
 def _print_scores(scores, printer):
 	""" Print the given scores in a table. """
 

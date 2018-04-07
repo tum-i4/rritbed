@@ -33,7 +33,17 @@ def a(file_path):
 		b(X, y)
 
 
-def b(X, y):
+def b(app_id, converted_entries):
+
+	printer = util.prtr.Printer(name=app_id)
+	squelcher = util.prtr.Printer(squelch=True)
+	converter = IdsConverter()
+
+	printer.prt("Splitting... ")
+	train_entries, test_entries = ids_tools.converted_entries_to_train_test(converted_entries)
+	train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
+	test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
+
 	raise NotImplementedError()
 
 

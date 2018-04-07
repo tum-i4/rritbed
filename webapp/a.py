@@ -2,6 +2,7 @@
 
 import argparse
 from ids.dir_utils import Dir
+from ids.ids_converter import IdsConverter
 
 
 def a(file_path):

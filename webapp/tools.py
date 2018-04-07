@@ -223,25 +223,10 @@ def _score_shit(file_path):
 
 	printer.prt("Preparing... ", newline=False)
 
-	# TODO TEMP TIME
-	before_conversion = time.time()
-
 	# converted_entries: [(app_id, vector, class)]
 	converted_entries = []
 	for log_entry in log_entries:
 		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
-
-	# TODO TEMP TIME
-	after_conversion = time.time()
-	diff_time = after_conversion - before_conversion
-	time_per_entry = float(diff_time) / len(log_entries)
-	time_per_10000_entries = time_per_entry * 10000
-	total_str = util.fmtr.format_time_passed(diff_time)
-	per_entry_str = util.fmtr.format_time_passed(time_per_entry)
-	per_10000_str = util.fmtr.format_time_passed(time_per_10000_entries)
-	print("Time for conversion. Total: {}; per 10000 entries: {}".format(total_str, per_10000_str))
-	exit()
-
 
 	printer.prt("Filtering... ", newline=False)
 	train_entries, test_entries = _converted_entries_to_train_test(converted_entries)

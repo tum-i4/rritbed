@@ -3,10 +3,14 @@
 
 from __future__ import print_function
 import md5
+import random
 import re
 
-import ids_data
+import sklearn.model_selection as sk_mod
+
 from log_entry import LogEntry
+import ids_data
+from ids_converter import IdsConverter
 
 
 ### Dicts ###
@@ -76,6 +80,44 @@ def _strip_app_id(app_id):
 		raise ValueError("Invalid app id given!")
 
 	return app_id
+
+
+### Training, testing, validating ###
+
+
+def converted_entries_to_train_test(converted_entries, binary=True):
+	"""
+	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
+	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """
+
+	if not binary:
+		raise NotImplementedError()
+
+	first_entry = converted_entries[0]
+	if (len(first_entry) != 3
+		or len(first_entry[1]) < 2
+		or first_entry[2] not in [1, -1]):
+		raise ValueError("Given entries are probably not converted entries! Please verify data: {}"
+			.format(first_entry))
+
+	converter = IdsConverter()
+	entries_normal = []
+	entries_intruded = []
+	for entry in converted_entries:
+		if converter.prediction_means_outlier(entry[2]):
+			entries_intruded.append(entry)
+		else:
+			entries_normal.append(entry)
+
+	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
+	test_size = min(percentage_intruded, 0.15)
+	train, test = sk_mod.train_test_split(entries_normal, test_size=test_size)
+
+	training_entries = train
+	scoring_entries = entries_intruded + test
+	random.shuffle(scoring_entries)
+
+	return (training_entries, scoring_entries)
 
 
 ### Generating log entries ###

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+from ids.dir_utils import Dir
 
 
 def a(file_path):

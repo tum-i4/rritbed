@@ -2,7 +2,6 @@
 """ Tools for command-line interaction with the server """
 
 import argparse
-import cPickle
 import md5
 import os
 import random

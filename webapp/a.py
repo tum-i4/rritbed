@@ -24,12 +24,12 @@ def a(file_path):
 	# converted_entries: [(app_id, vector, class)]
 	converted_entries = read_convert(file_path)
 
-	entries_per_app = _empty_app_id_tuple_dict()
-	for app_id, vector, its_class in converted_entries:
-		entries_per_app[app_id][0].append(vector)
-		entries_per_app[app_id][1].append(its_class)
+	entries_per_app = _empty_app_id_dict()
+	for entry in converted_entries:
+		entries_per_app[entry[0]] = entry
 
-	for app_id, (X, y) in entries_per_app.items():
+	for app_id, entries in entries_per_app.items():
+		b(app_id, entries)
 		b(X, y)
 
 

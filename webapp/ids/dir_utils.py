@@ -36,13 +36,19 @@ class Dir(object):
 
 
 	@staticmethod
-	def yield_lines(file_path):
+	def yield_lines(file_path, limit):
 		""" Yield all lines in the given file. Removes the line terminating character. """
+
+		count = 0
 
 		with open(file_path) as file_handle:
 			for line in file_handle:
 				# Remove the newline character
 				yield line[:-1]
+
+				count += 1
+				if count == limit:
+					return
 
 
 class LogDir(object):

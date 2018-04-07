@@ -27,7 +27,6 @@ import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
 
 
-_PICKLE_SUFFIX = ".pickle"
 _HISTORY_FILE = "intrusion_classifier_history"
 
 
@@ -750,14 +749,9 @@ def _read_file_flow(file_path, squelch_output=False):
 
 	log_entries = []
 
-	if _has_pickle_suffix(file_path):
-		printer.prt("Using pickle file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		printer.prt("Reading file and verifying contents...")
-		log_entries = _get_log_entries_from_pickle(file_path)
-	else:
-		printer.prt("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
-		printer.prt("Reading file and converting up to 5,000,000 lines to LogEntry objects...")
-		log_entries = _get_log_entries_from_file(file_path, 5000000)
+	printer.prt("Using log file \"{}\"".format(os.path.join(os.getcwd(), file_path)))
+	printer.prt("Reading file and converting up to 5,000,000 lines to LogEntry objects...")
+	log_entries = _get_log_entries_from_file(file_path, 5000000)
 
 	printer.prt("Done.")
 	return log_entries
@@ -774,21 +768,9 @@ def _get_log_entries_from_file(file_path, limit):
 	return log_entries
 
 
-def _get_log_entries_from_pickle(file_path):
-	with open(file_path, "r") as pickle_file:
-		result = cPickle.load(pickle_file)
-		if not isinstance(result[0], LogEntry):
-			raise ValueError("Given pickle file does not contain log entries.")
-		return result
-
-
 def _yield_log_entries_from_file(file_path):
 	for line in Dir.yield_lines(file_path):
 		yield LogEntry.from_log_string(line)
-
-
-def _has_pickle_suffix(file_path):
-	return file_path.endswith(_PICKLE_SUFFIX)
 
 
 def _save_entries_flow(log_entry_iterator, file_path):

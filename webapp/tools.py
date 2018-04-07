@@ -235,7 +235,9 @@ def _score_shit(file_path):
 	train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
 	test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
 
-	printer.prt("Scoring... ", newline=False)
+	result_table = []
+	result_table.append(["App id", "Positives", "Negatives"])
+	printer.prt("Scoring... ")
 	for app_id in converter.app_ids:
 
 		X_train, y_train = train_dict[app_id]
@@ -252,11 +254,14 @@ def _score_shit(file_path):
 		scores_prec[app_id].append(sk_met.precision_score(y_test, result))
 		scores_rec[app_id].append(sk_met.recall_score(y_test, result))
 
-	printer.prt("Done.")
+		tn, fp, fn, tp = sk_met.confusion_matrix(y_test, result).ravel()
+		result_table.append([app_id, tp, fp])
+		result_table.append([app_id, fn, tn])
 
 	_print_scores(scores_acc, printer, headline="Accuracy")
 	_print_scores(scores_prec, printer, headline="Precision")
 	_print_scores(scores_rec, printer, headline="Recall")
+	_print_table(result_table, headline="Confusion matrix", printer=printer)
 
 
 def _empty_app_id_dict():
@@ -310,7 +315,7 @@ def _print_scores(scores, printer, headline="Results"):
 		for app_id in scores:
 			result_table.append([app_id, util.fmtr.format_percentage(scores[app_id][0], True)])
 	else:
-		result_table.append(["Classifier", "Avg. score", "Variance", "", "All scores"])
+		result_table.append(["App id", "Avg. score", "Variance", "", "All scores"])
 		for app_id in scores:
 			row = scores[app_id]
 			result_table.append([

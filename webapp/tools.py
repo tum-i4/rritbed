@@ -236,7 +236,7 @@ def _score_shit(file_path):
 	test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
 
 	result_table = []
-	result_table.append(["App id", "Positives", "Negatives"])
+	result_table.append(["App id", "Actual (+)", "Actual (-)"])
 	printer.prt("Scoring... ")
 	for app_id in converter.app_ids:
 
@@ -255,9 +255,10 @@ def _score_shit(file_path):
 		scores_rec[app_id].append(sk_met.recall_score(y_test, result))
 
 		tn, fp, fn, tp = sk_met.confusion_matrix(y_test, result).ravel()
-		result_table.append([app_id, tp, fp])
-		result_table.append(["", fn, tn])
-		result_table.append(["--", "--", "--"])
+		result_table.append(["{} (+)".format(app_id), tp, fp])
+		result_table.append(["{} (-)".format(" " * len(app_id)), fn, tn])
+		dash = "-" * 10
+		result_table.append([dash, dash, dash])
 
 	_print_scores(scores_acc, printer, headline="Accuracy")
 	_print_scores(scores_prec, printer, headline="Precision")

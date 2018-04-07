@@ -878,9 +878,9 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int)
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
-		CROSSVAL_PARSER = SUBPARSERS.add_parser("shit")
-		CROSSVAL_PARSER.add_argument("file_path", metavar="PATH", help="The data")
-		CROSSVAL_PARSER.set_defaults(function=score_shit_call)
+		SHIT_PARSER = SUBPARSERS.add_parser("shit")
+		SHIT_PARSER.add_argument("file_path", metavar="PATH", help="The data")
+		SHIT_PARSER.set_defaults(function=score_shit_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")
 		SPLIT_PARSER.add_argument("file_path", metavar="PATH")

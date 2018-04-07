@@ -1,11 +1,33 @@
 #!/usr/bin/env python
 
 import argparse
+
+from log_entry import LogEntry
+import util.fmtr
+import util.prtr
+import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
 
 
 def a(file_path):
+
+	printer = util.prtr.Printer(name="a")
+	squelcher = util.prtr.Printer(squelch=True)
+	converter = IdsConverter()
+
+	printer.prt("Reading file and converting...")
+
+	# converted_entries: [(app_id, vector, class)]
+	converted_entries = read_convert(file_path)
+
+	scores_acc = _empty_app_id_dict()
+	scores_prec = _empty_app_id_dict()
+	scores_rec = _empty_app_id_dict()
+
+	printer.prt("Filtering... ", newline=False)
+	train_entries, test_entries = ids_tools.converted_entries_to_train_test(converted_entries)
+
 	raise NotImplementedError()
 
 

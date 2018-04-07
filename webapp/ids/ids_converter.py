@@ -83,7 +83,7 @@ class IdsConverter(object):
 
 		data_dict = log_entry.data
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
-		# Convert vin to float
+		# Convert vin to int list
 		vin_int_list = self.vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
 		# Discard time_unix
 		# time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]

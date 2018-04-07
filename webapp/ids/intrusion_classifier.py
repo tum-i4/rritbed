@@ -193,13 +193,12 @@ class IntrusionClassifier(object):
 
 			clf.fit(train_set[0])
 
-			printer.prt("Saving to disk... ", newline=False)
+			printer.prt("Saving... ", newline=False)
+			self._models[app_id] = clf
 			ModelDir.save_model(clf, app_id, overwrite=True)
 			printer.prt("Done! ")
 
 			app_id_number += 1
-
-		self._load_models()
 
 
 	def score(self, log_entries, do_return=False, squelch_output=False):

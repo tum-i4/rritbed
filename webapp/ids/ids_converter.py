@@ -136,29 +136,29 @@ class IdsConverter(object):
 	def prediction_means_outlier(self, prediction):
 		""" Map the given outlier prediction to a boolean 'is outlier'. """
 
-		# +1 means outlier, -1 means normal
+		# Inliers are labeled 1, while outliers are labeled -1.
 		if prediction == 1:
-			return True
-		elif prediction == -1:
 			return False
+		elif prediction == -1:
+			return True
 		else:
 			raise ValueError("Predictions can only be +1 or -1!")
 
 
 	def class_to_binary(self, input_class):
-		""" Convert an int class to binary (-1/1). """
+		""" Convert an int class to int binary (-1/1). """
 
-		# +1 means outlier, -1 means normal
-		assert(self.prediction_means_outlier(1))
+		# Inliers are labeled 1, while outliers are labeled -1.
+		assert(self.prediction_means_outlier(-1))
 
 		if self.class_means_intruded(input_class):
-			return 1
-		else:
 			return -1
+		else:
+			return 1
 
 
 	def classes_to_binary(self, input_classes):
-		""" Convert a list of int classes to binary (-1/1). """
+		""" Convert a list of int classes to int binary (-1/1). """
 
 		output_classes = []
 		for input_class in input_classes:

@@ -768,11 +768,8 @@ def _get_log_entries_from_file(file_path, limit):
 
 	log_entries = []
 
-	for line in Dir.yield_lines(file_path):
+	for line in Dir.yield_lines(file_path, limit):
 		log_entries.append(LogEntry.from_log_string(line))
-
-		if len(log_entries) == limit:
-			break
 
 	return log_entries
 

@@ -25,8 +25,13 @@ def a(file_path):
 	scores_prec = _empty_app_id_dict()
 	scores_rec = _empty_app_id_dict()
 
-	printer.prt("Filtering... ", newline=False)
+	printer.prt("Splitting... ")
 	train_entries, test_entries = ids_tools.converted_entries_to_train_test(converted_entries)
+	train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
+	test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
+
+	for app_id in converter.app_ids:
+		pass
 
 	raise NotImplementedError()
 

@@ -256,7 +256,8 @@ def _score_shit(file_path):
 
 		tn, fp, fn, tp = sk_met.confusion_matrix(y_test, result).ravel()
 		result_table.append([app_id, tp, fp])
-		result_table.append([app_id, fn, tn])
+		result_table.append(["", fn, tn])
+		result_table.append(["--", "--", "--"])
 
 	_print_scores(scores_acc, printer, headline="Accuracy")
 	_print_scores(scores_prec, printer, headline="Precision")

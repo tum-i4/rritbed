@@ -205,14 +205,11 @@ def _train_and_score(file_path, folds, iterations=None):
 
 def score_shit_call(args):
 	""" Unpack the args and call _score_shit.
-	Expects 'file_path' and 'iterations'. """
-	_score_shit(args.file_path, args.iterations)
+	Expects 'file_path'. """
+	_score_shit(args.file_path)
 
 
-def _score_shit(file_path, iterations):
-
-	if not iterations >= 1:
-		raise ValueError("--iterations/-i must be a value >= 1!")
+def _score_shit(file_path):
 
 	printer = util.prtr.Printer()
 	squelcher = util.prtr.Printer(squelch=True)
@@ -224,56 +221,53 @@ def _score_shit(file_path, iterations):
 	scores_prec = _empty_app_id_dict()
 	scores_rec = _empty_app_id_dict()
 
-	for i in range(1, iterations + 1):
-		printer.prt("Iteration {}/{} ".format(i, iterations), newline=False)
+	printer.prt("Preparing... ", newline=False)
 
-		printer.prt("Preparing... ", newline=False)
+	# TODO TEMP TIME
+	before_conversion = time.time()
 
-		# TODO TEMP TIME
-		before_conversion = time.time()
+	# converted_entries: [(app_id, vector, class)]
+	converted_entries = []
+	for log_entry in log_entries:
+		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
 
-		# converted_entries: [(app_id, vector, class)]
-		converted_entries = []
-		for log_entry in log_entries:
-			converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
-
-		# TODO TEMP TIME
-		after_conversion = time.time()
-		diff_time = after_conversion - before_conversion
-		time_per_entry = float(diff_time) / len(log_entries)
-		time_per_10000_entries = time_per_entry * 10000
-		total_str = util.fmtr.format_time_passed(diff_time)
-		per_entry_str = util.fmtr.format_time_passed(time_per_entry)
-		per_10000_str = util.fmtr.format_time_passed(time_per_10000_entries)
-		print("Time for conversion. Total: {}; per 10000 entries: {}".format(total_str, per_10000_str))
-		exit()
+	# TODO TEMP TIME
+	after_conversion = time.time()
+	diff_time = after_conversion - before_conversion
+	time_per_entry = float(diff_time) / len(log_entries)
+	time_per_10000_entries = time_per_entry * 10000
+	total_str = util.fmtr.format_time_passed(diff_time)
+	per_entry_str = util.fmtr.format_time_passed(time_per_entry)
+	per_10000_str = util.fmtr.format_time_passed(time_per_10000_entries)
+	print("Time for conversion. Total: {}; per 10000 entries: {}".format(total_str, per_10000_str))
+	exit()
 
 
-		printer.prt("Filtering... ", newline=False)
-		train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
+	printer.prt("Filtering... ", newline=False)
+	train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
 
-		printer.prt("Splitting... ", newline=False)
-		train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
-		test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
+	printer.prt("Splitting... ", newline=False)
+	train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
+	test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
 
-		printer.prt("Scoring... ", newline=False)
-		for app_id in converter.app_ids:
+	printer.prt("Scoring... ", newline=False)
+	for app_id in converter.app_ids:
 
-			X_train, y_train = train_dict[app_id]
-			X_test, y_test = test_dict[app_id]
+		X_train, y_train = train_dict[app_id]
+		X_test, y_test = test_dict[app_id]
 
-			clf = sklearn.svm.OneClassSVM(random_state=0)
-			clf.fit(X_train)
+		clf = sklearn.svm.OneClassSVM(random_state=0)
+		clf.fit(X_train)
 
-			result = clf.predict(X_test)
+		result = clf.predict(X_test)
 
-			# TODO MOAR
-			warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWarning)
-			scores_acc[app_id].append(sk_met.accuracy_score(y_test, result))
-			scores_prec[app_id].append(sk_met.precision_score(y_test, result))
-			scores_rec[app_id].append(sk_met.recall_score(y_test, result))
+		# TODO MOAR
+		warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWarning)
+		scores_acc[app_id].append(sk_met.accuracy_score(y_test, result))
+		scores_prec[app_id].append(sk_met.precision_score(y_test, result))
+		scores_rec[app_id].append(sk_met.recall_score(y_test, result))
 
-		printer.prt("Done.")
+	printer.prt("Done.")
 
 	_print_scores(scores_acc, printer, headline="Accuracy")
 	_print_scores(scores_prec, printer, headline="Precision")
@@ -894,7 +888,6 @@ if __name__ == "__main__":
 
 		CROSSVAL_PARSER = SUBPARSERS.add_parser("shit")
 		CROSSVAL_PARSER.add_argument("file_path", metavar="PATH", help="The data")
-		CROSSVAL_PARSER.add_argument("--iterations", "-i", type=int)
 		CROSSVAL_PARSER.set_defaults(function=score_shit_call)
 
 		SPLIT_PARSER = SUBPARSERS.add_parser("split", help="Split a log file")

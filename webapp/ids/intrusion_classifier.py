@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Classifier """
 
+import sklearn.metrics as sk_met
 import sklearn.model_selection as sk_mod
 import sklearn.svm as sk_svm
 
@@ -258,18 +259,8 @@ class IntrusionClassifier(object):
 
 		score_entries, score_classes = score_set
 		predictions = model.predict(score_entries)
-		prediction_was_correct = []
-
-		for correct_class, prediction in zip(score_classes, predictions):
-			is_outlier = self._converter.class_means_intruded(correct_class)
-			predicted_as_outlier = self._converter.prediction_means_outlier(prediction)
-
-			prediction_was_correct.append(is_outlier == predicted_as_outlier)
-
-		# Filter for True values
-		correct_prediction_count = len(filter(None, prediction_was_correct))
-		score = float(correct_prediction_count) / len(prediction_was_correct)
-		return score
+		accuracy = sk_met.accuracy_score(y_true=score_classes, y_pred=predictions)
+		return accuracy
 
 
 

@@ -23,6 +23,16 @@ def read_convert(file_path):
 	return converted_entries
 
 
+def _empty_app_id_dict():
+	""" Initialises an empty dict with { app_id: [] }. """
+
+	result = {}
+	for app_id in IdsConverter().app_ids:
+		result[app_id] = []
+
+	return result
+
+
 if __name__ == "__main__":
 	try:
 		PARSER = argparse.ArgumentParser()

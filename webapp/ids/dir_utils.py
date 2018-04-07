@@ -36,7 +36,7 @@ class Dir(object):
 
 
 	@staticmethod
-	def yield_lines(file_path, limit):
+	def yield_lines(file_path, limit=None):
 		""" Yield all lines in the given file. Removes the line terminating character. """
 
 		count = 0
@@ -47,7 +47,7 @@ class Dir(object):
 				yield line[:-1]
 
 				count += 1
-				if count == limit:
+				if limit is not None and count == limit:
 					return
 
 

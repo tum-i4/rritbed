@@ -227,7 +227,7 @@ def _score_shit(file_path):
 		converted_entries.append(converter.log_entry_to_prepared_tuple(log_entry, binary=True))
 
 	printer.prt("Filtering... ", newline=False)
-	train_entries, test_entries = _converted_entries_to_train_test(converted_entries)
+	train_entries, test_entries = ids_tools.converted_entries_to_train_test(converted_entries)
 
 	printer.prt("Splitting... ", newline=False)
 	train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
@@ -272,33 +272,6 @@ def _empty_app_id_dict():
 		result[app_id] = []
 
 	return result
-
-
-def _converted_entries_to_train_test(converted_entries, binary=True):
-	""" Splits the entries up. All intruded entries go into the test set, with some normal ones.
-	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """
-
-	if not binary:
-		raise NotImplementedError()
-
-	converter = IdsConverter()
-	entries_normal = []
-	entries_intruded = []
-	for entry in converted_entries:
-		if converter.prediction_means_outlier(entry[2]):
-			entries_intruded.append(entry)
-		else:
-			entries_normal.append(entry)
-
-	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
-	test_size = min(percentage_intruded, 0.15)
-	train, test = sklearn.model_selection.train_test_split(entries_normal, test_size=test_size)
-
-	training_entries = train
-	scoring_entries = entries_intruded + test
-	random.shuffle(scoring_entries)
-
-	return (training_entries, scoring_entries)
 
 
 def _print_scores(scores, printer, headline="Results"):

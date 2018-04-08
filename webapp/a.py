@@ -92,11 +92,11 @@ def d(app_id, y_true, y_pred):
 	tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
 	for row in [
-		("", "Actual (+)", "Actual (-)"),
+		("\t", "Actual (+)", "Actual (-)"),
 		("Pred (+)", tp, fp),
 		("Pred (-)", fn, tn)
 	]:
-		print("%s\t\t%s\t\t%s" % row)
+		print("%s\t%s\t\t%s" % row)
 
 	print("WTF")
 

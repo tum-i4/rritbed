@@ -121,13 +121,18 @@ class IdsConverter(object):
 		return result
 
 
-	def log_entry_to_class(self, log_entry):
+	def log_entry_to_class(self, log_entry, binary):
 		""" Map the given LogEntry object to a class to predict. """
 
 		if not log_entry.intrusion:
 			raise ValueError("Given LogEntry does not have a set intrusion to convert.")
 
-		return self.label_int_mapping[log_entry.intrusion]
+		its_class = self.label_int_mapping[log_entry.intrusion]
+
+		if binary:
+			its_class = self.class_to_binary(its_class)
+
+		return its_class
 
 
 	def class_means_intruded(self, the_class):

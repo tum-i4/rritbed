@@ -305,22 +305,16 @@ class IdsConverter(object):
 			# Returns a list with 5 values
 			return IdsConverter.country_codes_one_hot(log_messages)
 
-		raise NotImplementedError()
-
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:
-			pair = log_message.split(",")
-			assert(len(pair) == 2)
+			# Split and check split size
+			poi_pairs = [[(t, r) for t, r in msg.split(",")] for msg in log_messages]
 
-			type_int = self.poi_type_mapping[pair[0]]
-			result_int = self.poi_result_mapping[pair[1]]
+			# TODO DOC
+			# Returns a list with ??
+			return IdsConverter.poi_pairs_one_hot(poi_pairs)
 
-			# Make sure we only have single digits as expected
-			for val in [type_int, result_int]:
-				assert(val >= 0 and val <= 9)
-
-			# Return list with mapped type and result
-			return [type_int, result_int]
+		raise NotImplementedError()
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == ids_data.POSE_TSP:

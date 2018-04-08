@@ -98,12 +98,8 @@ class TimePrinter(Printer):
 	Printer replacement that additionally prefixes each new line with the current time.
 	"""
 
-	def prt(self, message, only_verbose=False, preface=True, newline=True):
-		""" Print if not squelching, adding current time.
-		See Printer.prt() for implementation. """
+	def _preface_line(self, line):
+		""" Preface the given line with the contained name and the current time. """
 
-		if preface:
-			time_str = time.strftime("%H:%M:%S")
-			message = "{} - {}".format(time_str, message)
-
-		super(TimePrinter, self).prt(message, only_verbose, preface, newline)
+		time_str = time.strftime("%H:%M:%S")
+		return "[{}] {} - {}".format(self.name, time_str, line)

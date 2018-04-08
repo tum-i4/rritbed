@@ -425,8 +425,8 @@ class IdsConverter(object):
 
 		binariser = sk_pre.LabelBinarizer()
 		binariser.fit(expected_values)
-		encodings = list(binariser.transform(values))
 
+		encodings = binariser.transform(values)
 		return encodings
 
 
@@ -442,7 +442,7 @@ class IdsConverter(object):
 		if app_id not in self.app_ids:
 			raise ValueError("Invalid app_id: {}".format(app_id))
 
-		# level int
+		# 1 for a binarised level (only two options)
 		base_len = 1
 		len_key = "len"
 

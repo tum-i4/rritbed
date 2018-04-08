@@ -94,26 +94,14 @@ class IdsConverter(object):
 		""" Convert the given log entries to { app_id : (X, y) }. """
 
 		printer.prt("Transforming the log data to trainable vectors...")
-		ids_entries = [self.log_entry_to_ids_entry(e) for e in log_entries]
-		printer.prt("Done.")
-		return self.ids_entries_to_train_dict(ids_entries, printer)
+		ids_entries_dict = self.log_entries_to_ids_entries_dict(log_entries)
 
-
-	def ids_entries_to_train_dict(self, ids_entries, printer):
-		""" Store the given IdsEntry objects as { app_id : (X, y) }. """
-
-		printer.prt("Dividing the data per app id...")
-
-		app_id_datasets = {}
-		for app_id in self.app_ids:
-			app_id_datasets[app_id] = ([], [])
-
-		for entry in ids_entries:
-			app_id_datasets[entry.app_id][0].append(entry.vector)
-			app_id_datasets[entry.app_id][1].append(entry.vclass)
+		train_dict = {}
+		for app_id, ids_entries in ids_entries_dict.items():
+			train_dict[app_id] = self.ids_entries_to_X_y(app_id, ids_entries)
 
 		printer.prt("Done.")
-		return app_id_datasets
+		return train_dict
 
 
 	def log_entries_to_vectors(self, app_id, log_entries):

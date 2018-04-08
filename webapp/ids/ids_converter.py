@@ -298,14 +298,14 @@ class IdsConverter(object):
 			# Returns a list with 12 values
 			return IdsConverter.colours_one_hot(colours)
 
-		raise NotImplementedError()
-
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
-			assert(len(log_message) == 2)
+			assert(len(log_messages[0]) == 2)
 
 			# Returns a list with 5 values
-			return IdsConverter.country_code_one_hot(log_message)
+			return IdsConverter.country_codes_one_hot(log_messages)
+
+		raise NotImplementedError()
 
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:

@@ -101,8 +101,9 @@ class IntrusionClassifier(object):
 			raise IOError("Some or all model files are missing.")
 
 		app_id = ids_tools.log_entry_to_app_id(log_entry)
-		ndarray = self._converter.log_entry_to_ndarray(log_entry, app_id)
-		predicted_class = self._models[app_id].predict([ndarray])[0]
+		vector = self._converter.log_entry_to_vector(app_id, log_entry)
+
+		predicted_class = self._models[app_id].predict([vector])[0]
 
 		classification = Classification.normal
 		if self._converter.class_means_intruded(predicted_class):

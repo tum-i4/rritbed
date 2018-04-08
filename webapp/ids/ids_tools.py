@@ -9,6 +9,7 @@ import re
 import sklearn.model_selection as sk_mod
 
 from log_entry import LogEntry
+from ids_entry import IdsEntry
 import ids_data
 from ids_converter import IdsConverter
 
@@ -85,7 +86,7 @@ def _strip_app_id(app_id):
 ### Training, testing, validating ###
 
 
-def converted_entries_to_train_test(converted_entries, binary=True):
+def ids_entries_to_train_test(ids_entries, binary=True):
 	"""
 	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
 	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """
@@ -93,21 +94,20 @@ def converted_entries_to_train_test(converted_entries, binary=True):
 	if not binary:
 		raise NotImplementedError()
 
-	first_entry = converted_entries[0]
-	if (len(first_entry) != 3
-		or len(first_entry[1]) < 2
-		or first_entry[2] not in [1, -1]):
-		raise ValueError("Given entries are probably not converted entries! Please verify data: {}"
+	first_entry = ids_entries[0]
+	if (not isinstance(first_entry, IdsEntry)
+		or first_entry.vclass not in [1, -1]):
+		raise ValueError("Given entries are not valid IdsEntry objects! Please verify data: {}"
 			.format(first_entry))
 
 	converter = IdsConverter()
 	entries_normal = []
 	entries_intruded = []
-	for entry in converted_entries:
-		if converter.prediction_means_outlier(entry[2]):
-			entries_intruded.append(entry)
+	for ids_entry in ids_entries:
+		if converter.prediction_means_outlier(ids_entry.vclass):
+			entries_intruded.append(ids_entry)
 		else:
-			entries_normal.append(entry)
+			entries_normal.append(ids_entry)
 
 	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
 	test_size = min(percentage_intruded, 0.15)

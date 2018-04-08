@@ -30,7 +30,6 @@ def a(file_path):
 
 	for app_id, entries in entries_per_app.items():
 		b(app_id, entries)
-		b(X, y)
 
 
 def b(app_id, converted_entries):

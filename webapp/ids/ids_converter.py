@@ -267,7 +267,7 @@ class IdsConverter(object):
 	def encode_levels(levels):
 		"""
 		Do a one-hot encoding of the given colour.
-		returns: Two-dimensional numpy.ndarray() with a 2 element binary encoding per row.
+		returns: Two-dimensional numpy.ndarray with a 2 element binary encoding per row.
 		"""
 
 		# For expected levels, see web_api.log_entry.LogEntry
@@ -280,17 +280,18 @@ class IdsConverter(object):
 
 	@staticmethod
 	def encode_log_messages(app_id, log_messages):
-		raise NotImplementedError()
-
-
-
-	def log_message_to_float_list(self, log_message, app_id):
-		""" Convert the given log message to a float list based on the given app_id. """
+		"""
+		Either just convert the data (data generators) or do a one-hot encoding of the log message.
+		returns: Two-dimensional numpy.ndarray with either one float value
+		or up to ?? binary encoded values per row.
+		"""
 
 		# Generators send "{f}"
 		if app_id in ids_data.get_generators():
 			# Return list with value
-			return [float(log_message)]
+			return numpy.array([float(log_message) for log_message in log_messages])
+
+		raise NotImplementedError()
 
 		# Colour sends "{i},{i},{i}"
 		if app_id in ids_data.get_colours():
@@ -399,7 +400,7 @@ class IdsConverter(object):
 	def generic_one_hot(expected_values, values):
 		"""
 		Do a one-hot encoding of the given values, which are one of expected_values.
-		returns: A two-dimensional array with one encoding per row.
+		returns: A two-dimensional numpy.ndarray with one encoding per row.
 		"""
 
 		if any([value not in expected_values for value in values]):

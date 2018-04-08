@@ -340,9 +340,11 @@ class IdsConverter(object):
 		blues = [0, 100, 120, 210, 250]
 		ids_tools.verify_md5(reds + greens + blues, "32b6449030a035c63654c4a11ab15eae")
 
-		red_encodings = IdsConverter.generic_one_hot(reds, colours[:, 0])
-		green_encodings = IdsConverter.generic_one_hot(greens, colours[:, 1])
-		blue_encodings = IdsConverter.generic_one_hot(blues, colours[:, 2])
+		colours_array = numpy.array(colours)
+
+		red_encodings = IdsConverter.generic_one_hot(reds, colours_array[:, 0])
+		green_encodings = IdsConverter.generic_one_hot(greens, colours_array[:, 1])
+		blue_encodings = IdsConverter.generic_one_hot(blues, colours_array[:, 2])
 
 		encodings = numpy.concatenate((red_encodings, green_encodings, blue_encodings), axis=1)
 		return encodings

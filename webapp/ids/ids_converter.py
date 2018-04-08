@@ -433,8 +433,7 @@ class IdsConverter(object):
 	### Verification ###
 
 
-	@staticmethod
-	def verify_ndarray(ndarray, app_id):
+	def verify_ndarray(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:

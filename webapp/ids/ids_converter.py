@@ -307,8 +307,7 @@ class IdsConverter(object):
 
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:
-			# Split and check split size
-			poi_pairs = [[(t, r) for t, r in msg.split(",")] for msg in log_messages]
+			poi_pairs = [msg.split(",") for msg in log_messages]
 
 			# Returns a list with 10 values
 			return IdsConverter.poi_pairs_one_hot(poi_pairs)

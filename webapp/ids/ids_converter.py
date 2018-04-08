@@ -289,7 +289,7 @@ class IdsConverter(object):
 		# Generators send "{f}"
 		if app_id in ids_data.get_generators():
 			# Return list with value
-			return numpy.array([float(log_message) for log_message in log_messages])
+			return numpy.array([[float(log_message)] for log_message in log_messages])
 
 		# Colour sends "{i},{i},{i}"
 		if app_id in ids_data.get_colours():

@@ -379,20 +379,21 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def generic_one_hot(all_values, value):
-		""" Do a one-hot encoding of the given value, which is one of all_values. """
+	def generic_one_hot(expected_values, values):
+		"""
+		Do a one-hot encoding of the given values, which are one of expected_values.
+		returns: A two-dimensional array with one encoding per row.
+		"""
 
-		if value not in all_values:
-			raise ValueError("Given value \"{}\" is invalid! Expected one of: {}".format(value, all_values))
+		if any([value not in expected_values for value in values]):
+			raise ValueError("Given value \"{}\" is invalid! Expected one of: {}"
+				.format(value, expected_values))
 
 		binariser = sk_pre.LabelBinarizer()
-		binariser.fit(all_values)
-		encoding = list(
-			binariser.transform([value])
-			[0]
-		)
+		binariser.fit(expected_values)
+		encodings = list(binariser.transform(values))
 
-		return encoding
+		return encodings
 
 
 	@staticmethod

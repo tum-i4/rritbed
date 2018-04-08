@@ -371,11 +371,11 @@ class IdsConverter(object):
 		"""
 
 		# For expected POI types, see turtlesim_expl.pipes.pose_processor
-		expected_types = ["restaurant", "gas station", "private home", "nsa hq"]
-		ids_tools.verify_md5(expected_types, "d36c52a68115ddd49db3f8b8fb818798")
+		expected_types = ["gas station", "nsa hq", "private home", "restaurant"]
+		ids_tools.verify_md5(expected_types, "e545240e0a39da6af18c018df5952044")
 		# For expected POI results, see web_api.functionality.poi_mapper
-		exptected_results = ["Italian", "German", "French", "Total", "Shell", "Aral"]
-		ids_tools.verify_md5(exptected_results, "ce5b1e82cc76efb5835d6f78e7cd3af4")
+		exptected_results = ["Aral", "French", "German", "Italian", "Shell", "Total", "Invalid"]
+		ids_tools.verify_md5(exptected_results, "88234d800fbb78a73e0dd99379461e07")
 
 		poi_pairs_array = numpy.array(poi_pairs)
 

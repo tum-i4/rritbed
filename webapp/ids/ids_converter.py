@@ -248,9 +248,8 @@ class IdsConverter(object):
 		if app_id == ids_data.POSE_CC:
 			assert(len(log_message) == 2)
 
-			ord_ints = [ord(x) for x in log_message]
-			# Return list with the chars as one aggregated int
-			return [IdsConverter.aggregate_ints(ord_ints)]
+			# TODO DOC
+			return IdsConverter.country_code_one_hot(log_message)
 
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:
@@ -309,6 +308,11 @@ class IdsConverter(object):
 			[0])
 
 		return encoding
+
+
+	@staticmethod
+	def country_code_one_hot(country_code):
+		raise NotImplementedError()
 
 
 	@staticmethod

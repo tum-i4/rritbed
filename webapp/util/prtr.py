@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 import sys
+import time
 
 
 class Printer(object):
@@ -89,3 +90,27 @@ class Storer(Printer):
 			super(Storer, self)._prt_line(message, only_verbose, preface, newline)
 
 		self.lines = []
+
+
+
+class TimePrinter(Printer):
+	"""
+	Printer replacement that additionally prefixes each new line with the current time.
+	"""
+
+	def __init__(self, squelch=False, verbose=True, name=None):
+		""" Ctor """
+
+		super(TimePrinter, self).__init__(squelch, verbose, "INVALID")
+		self.printer_name = name
+
+
+	def prt(self, message, only_verbose=False, preface=True, newline=True):
+		""" Print if not squelching, adding current time.
+		See Printer.prt() for implementation. """
+
+		if preface:
+			time_str = time.strftime("%H:%M:%S")
+			message = "{} - {}".format(time_str, message)
+
+		super(TimePrinter, self).prt(message, only_verbose, preface, newline)

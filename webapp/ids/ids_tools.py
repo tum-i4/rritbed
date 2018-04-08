@@ -93,6 +93,8 @@ def ids_entries_to_train_test(ids_entries, binary=True):
 	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)])
 	"""
 
+	# TODO: Allow for some intruded entries in the training set?
+
 	if not binary:
 		raise NotImplementedError()
 

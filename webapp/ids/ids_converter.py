@@ -264,9 +264,6 @@ class IdsConverter(object):
 	def log_message_to_float_list(self, log_message, app_id):
 		""" Convert the given log message to a float list based on the given app_id. """
 
-		if app_id not in self.app_ids:
-			raise ValueError("Invalid value for app_id given: {}".format(app_id))
-
 		# Generators send "{f}"
 		if app_id in ids_data.get_generators():
 			# Return list with value
@@ -392,6 +389,9 @@ class IdsConverter(object):
 
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:
 			raise ValueError("Given array is of invalid type.")
+
+		if app_id not in self.app_ids:
+			raise ValueError("Invalid app_id: {}".format(app_id))
 
 		# level int
 		base_len = 1

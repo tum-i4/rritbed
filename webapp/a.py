@@ -43,6 +43,9 @@ def b(app_id, ids_entries):
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
+	# import sklearn.pipeline as sk_pipe
+	# import sklearn.preprocessing as sk_pre
+
 	print("NO PREPROCESSING")
 	c(app_id, ids_entries)
 
@@ -54,19 +57,11 @@ def c(app_id, ids_entries):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
 	printer = util.prtr.Printer(name=app_id)
-	squelcher = util.prtr.Printer(squelch=True)
-	converter = IdsConverter()
 
 	printer.prt("Splitting... ")
 	train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)
-	train_dict = converter.ids_entries_to_train_dict(train_entries, squelcher)
-	test_dict = converter.ids_entries_to_train_dict(test_entries, squelcher)
-
-	if len(train_dict) > 1 or len(test_dict) > 1:
-		raise NotImplementedError("Method is built for converted entries of one app only!")
-
-	X_train, _ = train_dict[app_id]
-	X_test, y_true = test_dict[app_id]
+	X_train, _ = unravel_ids_entries(train_entries, app_id)
+	X_test, y_true = unravel_ids_entries(test_entries, app_id)
 
 	printer.prt("Fitting... ")
 

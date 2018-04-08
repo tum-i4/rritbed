@@ -4,6 +4,7 @@
 import numpy
 
 from log_entry import LogEntry
+from ids.ids_entry import IdsEntry
 import ids_data
 import ids_tools
 
@@ -34,8 +35,8 @@ class IdsConverter(object):
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
-	def log_entry_to_prepared_tuple(self, log_entry, binary=False):
-		""" Convert the given LogEntry object to a (app_id, vector, class) tuple. """
+	def log_entry_to_ids_entry(self, log_entry, binary=False):
+		""" Convert the given LogEntry object to a IdsEntry object. """
 
 		app_id = ids_tools.log_entry_to_app_id(log_entry)
 		ndarray = self.log_entry_to_ndarray(log_entry, app_id)
@@ -43,7 +44,8 @@ class IdsConverter(object):
 		if binary:
 			its_class = self.class_to_binary(its_class)
 
-		return (app_id, ndarray, its_class)
+		ids_entry = IdsEntry(app_id, ndarray, its_class)
+		return ids_entry
 
 
 	def prepared_tuples_to_train_dict(self, converted_entries, printer):

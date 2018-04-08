@@ -57,6 +57,15 @@ class IdsConverter(object):
 		raise NotImplementedError()
 
 
+	def log_entries_to_train_dict(self, log_entries, printer):
+		""" Convert the given log entries to { app_id : (X, y) }. """
+
+		printer.prt("Transforming the log data to trainable vectors...")
+		ids_entries = [self.log_entry_to_ids_entry(e) for e in log_entries]
+		printer.prt("Done.")
+		return self.ids_entries_to_train_dict(ids_entries, printer)
+
+
 	def ids_entries_to_train_dict(self, ids_entries, printer):
 		""" Store the given IdsEntry objects as { app_id : (X, y) }. """
 
@@ -72,15 +81,6 @@ class IdsConverter(object):
 
 		printer.prt("Done.")
 		return app_id_datasets
-
-
-	def log_entries_to_train_dict(self, log_entries, printer):
-		""" Convert the given log entries to { app_id : (X, y) }. """
-
-		printer.prt("Transforming the log data to trainable vectors...")
-		ids_entries = [self.log_entry_to_ids_entry(e) for e in log_entries]
-		printer.prt("Done.")
-		return self.ids_entries_to_train_dict(ids_entries, printer)
 
 
 	def log_entry_to_ndarray(self, log_entry, app_id):

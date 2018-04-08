@@ -17,6 +17,7 @@ import sklearn.model_selection as sk_mod
 from log_entry import LogEntry
 from state_dao import StateDao
 import util.fmtr
+import util.outp
 import util.prtr
 import util.seqr
 from ids.dir_utils import Dir, ModelDir
@@ -261,7 +262,7 @@ def _score_shit(file_path):
 	_print_scores(scores_acc, printer, headline="Accuracy")
 	_print_scores(scores_prec, printer, headline="Precision")
 	_print_scores(scores_rec, printer, headline="Recall")
-	_print_table(result_table, headline="Confusion matrix", printer=printer)
+	util.outp.print_table(result_table, headline="Confusion matrix", printer=printer)
 
 
 def _empty_app_id_dict():
@@ -299,7 +300,7 @@ def _print_scores(scores, printer, headline="Results"):
 				", ".join([util.fmtr.format_percentage(x, pad_spaces=True) for x in row])
 			])
 
-	_print_table(result_table, headline=headline, printer=printer)
+	util.outp.print_table(result_table, headline=headline, printer=printer)
 
 
 def split_call(args):
@@ -542,7 +543,7 @@ def _analyse(file_path, to_file):
 
 		per_app_id.append(line)
 
-	_print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
+	util.outp.print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
 
 	# Class table
 	per_class = []
@@ -550,7 +551,7 @@ def _analyse(file_path, to_file):
 	for a_class in all_classes:
 		per_class.append([a_class, entry_count_per_class[a_class], len(app_ids_per_class[a_class])])
 
-	_print_table(per_class, headline="Elements per class", printer=printer)
+	util.outp.print_table(per_class, headline="Elements per class", printer=printer)
 
 	# Duplicate table
 	duplicates = []
@@ -571,7 +572,7 @@ def _analyse(file_path, to_file):
 	if not any([l[3] > 0 for l in duplicates[1:]]):
 		printer.prt("\nDuplicate analysis: No duplicates found!")
 	else:
-		_print_table(duplicates, headline="Duplicates per app ID", printer=printer)
+		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)
 
 	if to_file:
 		with open(output_path, "w") as output_file:
@@ -758,54 +759,6 @@ def _save_entries_flow(log_entry_iterator, file_path):
 			file_handle.write(log_entry.get_log_string() + "\n")
 
 	print("Done.")
-
-
-def _print_table(list_of_lists, headline=None, head_sep=True, printer=None):
-	""" Print the given list of tuple as a table, regarding the first entry the header. """
-
-	if len(list_of_lists) < 2:
-		raise ValueError("Input list needs at least one header and one content line!")
-
-	if printer is None:
-		printer = util.prtr.Printer()
-
-	table_column_count = len(list_of_lists[0])
-	max_width_per_column = [0] * table_column_count
-
-	for one_list in list_of_lists:
-		if len(one_list) != table_column_count:
-			raise ValueError("One or more of the given input lines have different numbers of entries!")
-
-		for i, one_el in enumerate(one_list):
-			max_width_per_column[i] = max(max_width_per_column[i], len(str(one_el)))
-
-	lines_to_print = []
-	col_separator = " | "
-	for one_list in list_of_lists:
-		justed_strings = []
-		for i, one_el in enumerate(one_list):
-			justed_strings.append((str(one_el).ljust(max_width_per_column[i])))
-		lines_to_print.append(col_separator.join(justed_strings))
-
-	# Each column plus 3 (" | ")
-	table_width = sum(max_width_per_column) + len(col_separator) * (table_column_count - 1)
-
-	# Print #
-
-	printer.prt("")
-	if headline:
-		if not isinstance(headline, str):
-			raise ValueError("headline must be string")
-
-		printer.prt(headline.center(table_width))
-
-	printer.prt(lines_to_print[0])
-
-	if head_sep:
-		printer.prt("-" * table_width)
-
-	for i in range(1, len(lines_to_print)):
-		printer.prt(lines_to_print[i])
 
 
 

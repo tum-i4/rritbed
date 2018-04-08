@@ -115,22 +115,6 @@ def read_convert(file_path):
 	return ids_entries_dict
 
 
-def unravel_ids_entries(ids_entries, expected_app_id):
-	""" Convert the given IdsEntry objects to X and y. """
-
-	X = []
-	y = []
-
-	for entry in ids_entries:
-		if entry.app_id != expected_app_id:
-			raise ValueError("Given IdsEntry has an incorrect app_id!")
-
-		X.append(entry.vector)
-		y.append(entry.vclass)
-
-	return (X, y)
-
-
 if __name__ == "__main__":
 	try:
 		PARSER = argparse.ArgumentParser()

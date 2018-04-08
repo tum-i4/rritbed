@@ -89,7 +89,7 @@ class IdsConverter(object):
 
 		for ids_entry in ids_entries:
 			if ids_entry.app_id != app_id:
-				raise ValueError("Given entries don't conform to the expected app_id!")
+				raise ValueError("Given IdsEntry has an incorrect app_id!")
 
 			X.append(ids_entry.vector)
 			y.append(ids_entry.vclass)

@@ -357,25 +357,25 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def country_code_one_hot(country_code):
+	def country_codes_one_hot(country_codes):
 		"""
-		Do a one-hot encoding of the given colour.
-		returns: A list with a 5 element binary encoding.
+		Do a one-hot encoding of the given country codes.
+		returns: A two-dimensional numpy.ndarray with a 5 element binary encoding per row.
 		"""
 
 		# For expected country codes, see web_api.functionality.country_code_mapper
-		country_codes = ["AT", "CH", "DE", "FR", "IT"]
-		ids_tools.verify_md5(country_codes, "b1d9e303bda676c3c6a61dc21e1d07c3")
+		expected_cc = ["AT", "CH", "DE", "FR", "IT"]
+		ids_tools.verify_md5(expected_cc, "b1d9e303bda676c3c6a61dc21e1d07c3")
 
-		encoding = IdsConverter.generic_one_hot(country_codes, country_code)
-		return encoding
+		encodings = IdsConverter.generic_one_hot(expected_cc, country_codes)
+		return encodings
 
 
 	@staticmethod
 	def encode_gps_positions(gps_positions):
 		"""
 		Convert the given "x,y" GPS position strings to (x, y) or None.
-		returns: Two-dimensional numpy.ndarray with a result (tuple or None) per row.
+		returns: A two-dimensional numpy.ndarray with a result (tuple or None) per row.
 		"""
 
 		encoded_positions = [IdsConverter.gps_position_to_int_list(gps_pos) for gps_pos in gps_positions]

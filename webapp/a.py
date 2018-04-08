@@ -64,7 +64,7 @@ def c(app_id, ids_entries):
 
 	printer = TimePrinter(name=app_id)
 
-	printer.prt("Splitting... ")
+	printer.prt("Splitting... ", newline=False)
 	try:
 		train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)
 	except ValueError as val_err:
@@ -74,7 +74,7 @@ def c(app_id, ids_entries):
 	X_train, _ = unravel_ids_entries(train_entries, app_id)
 	X_test, y_true = unravel_ids_entries(test_entries, app_id)
 
-	printer.prt("Fitting... ")
+	printer.prt("Fitting... ", newline=False)
 
 	clf = sklearn.svm.OneClassSVM(random_state=0)
 	clf.fit(X_train)

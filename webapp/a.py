@@ -55,9 +55,9 @@ def c(app_id, ids_entries):
 	converter = IdsConverter()
 
 	printer.prt("Splitting... ")
-	train_entries, test_entries = ids_tools.converted_entries_to_train_test(ids_entries)
-	train_dict = converter.prepared_tuples_to_train_dict(train_entries, squelcher)
-	test_dict = converter.prepared_tuples_to_train_dict(test_entries, squelcher)
+	train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)
+	train_dict = converter.ids_entries_to_train_dict(train_entries, squelcher)
+	test_dict = converter.ids_entries_to_train_dict(test_entries, squelcher)
 
 	if len(train_dict) > 1 or len(test_dict) > 1:
 		raise NotImplementedError("Method is built for converted entries of one app only!")

@@ -65,7 +65,12 @@ def c(app_id, ids_entries):
 	printer = TimePrinter(name=app_id)
 
 	printer.prt("Splitting... ")
-	train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)
+	try:
+		train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)
+	except ValueError as val_err:
+		print(val_err.message)
+		exit()
+
 	X_train, _ = unravel_ids_entries(train_entries, app_id)
 	X_test, y_true = unravel_ids_entries(test_entries, app_id)
 

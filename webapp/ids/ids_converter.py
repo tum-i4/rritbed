@@ -151,8 +151,7 @@ class IdsConverter(object):
 		for enc_lvl, enc_msg, enc_gps in (
 			zip(enc_levels_array, enc_log_messages_array, enc_gps_positions_array)):
 
-			# TODO DOC
-			# 2 level ints, 1-?? log message floats
+			# 2 level ints, 1-12 log message floats or ints
 			data = list(enc_lvl) + list(enc_msg)
 			# 0/2 GPS ints
 			if enc_gps is not None:
@@ -310,8 +309,7 @@ class IdsConverter(object):
 			# Split and check split size
 			poi_pairs = [[(t, r) for t, r in msg.split(",")] for msg in log_messages]
 
-			# TODO DOC
-			# Returns a list with ??
+			# Returns a list with 10 values
 			return IdsConverter.poi_pairs_one_hot(poi_pairs)
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
@@ -321,7 +319,7 @@ class IdsConverter(object):
 			for coord in coords_list[0]:
 				assert(coord >= 0 and coord < 500)
 
-			# Return list of coordinates
+			# Return list of 4 coordinates
 			return coords_list
 
 		raise NotImplementedError("App ID {} not implemented".format(app_id))

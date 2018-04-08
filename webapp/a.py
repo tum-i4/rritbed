@@ -43,10 +43,16 @@ def b(app_id, ids_entries):
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
+	printer = TimePrinter(name="b")
+
+	if not ids_entries:
+		printer.prt("No input data for {}".format(app_id))
+		return
+
 	# import sklearn.pipeline as sk_pipe
 	# import sklearn.preprocessing as sk_pre
 
-	print("NO PREPROCESSING")
+	printer.prt("NO PREPROCESSING")
 	c(app_id, ids_entries)
 
 

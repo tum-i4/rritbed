@@ -2,6 +2,7 @@
 """ Converter """
 
 import numpy
+import sklearn.preprocessing as sk_pre
 
 from log_entry import LogEntry
 from ids.ids_entry import IdsEntry
@@ -240,8 +241,7 @@ class IdsConverter(object):
 		if app_id in ids_data.get_colours():
 			red, green, blue = [int(val) for val in log_message.split(",")]
 
-			# TODO
-			# Return a list with ?? values
+			# Returns a list with 12 values
 			return IdsConverter.colour_one_hot(red, green, blue)
 
 		# Country code string like "DE" or "CH"
@@ -281,16 +281,32 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def colour_one_hot(r, g, b):
-		""" Do a one-hot encoding of the given colour. """
+	def colour_one_hot(red, green, blue):
+		"""
+		Do a one-hot encoding of the given colour.
+		returns: A 3+4+5=12 element binary encoding.
+		"""
+
+		unique_list = lambda x: list(set(x))
+		reds = unique_list([100, 150, 255])
+		greens = unique_list([0, 125, 180, 240])
+		blues = unique_list([0, 100, 120, 210, 250])
+		ids_tools.verify_md5(reds + greens + blues, "32b6449030a035c63654c4a11ab15eae")
 
 		# For expected colours see py_turtlesim.util.Rgb
-		if (r not in [100, 150, 255]
-			or g not in [0, 125, 180, 240]
-			or b not in [0, 100, 120, 210, 250]):
+		if (red not in reds
+			or green not in greens
+			or blue not in blues):
 			raise ValueError("Given colour is invalid! Adapt, retrain, retry.")
 
-		raise NotImplementedError()
+		red_idx = reds.index(red)
+		green_idx = greens.index(green)
+		blue_idx = blues.index(blue)
+
+		one_hot = sk_pre.OneHotEncoder(n_values=[len(reds), len(greens), len(blues)])
+		encoding = one_hot.fit_transform([[red, green, blue]]).toarray()[0]
+
+		return encoding
 
 
 	@staticmethod
@@ -328,9 +344,9 @@ class IdsConverter(object):
 		# 1 value (generated)
 		for gen_key in ids_data.get_generators():
 			constraints[gen_key] = {len_key : base_len + 1}
-		# 3 values for each colour dimension
+		# 12 values for a one-hot encoded colour
 		for colr_key in ids_data.get_colours():
-			constraints[colr_key] = {len_key : base_len + 3}
+			constraints[colr_key] = {len_key : base_len + 12}
 		# Poses all have GPS
 		for pose_key in ids_data.get_poses():
 			constraints[pose_key] = {len_key : base_len + 2}

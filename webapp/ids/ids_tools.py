@@ -97,10 +97,11 @@ def _strip_app_id(app_id):
 ### Training, testing, validating ###
 
 
-def ids_entries_to_train_test(ids_entries, binary=True):
+# pylint: disable-msg=C0103; (Invalid name)
+def X_y_to_train_test(X, y, binary=True):
 	"""
 	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
-	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)])
+	returns: (X_train, y_train, X_test, y_test)
 	"""
 
 	# TODO: Allow for some intruded entries in the training set?
@@ -108,22 +109,20 @@ def ids_entries_to_train_test(ids_entries, binary=True):
 	if not binary:
 		raise NotImplementedError()
 
-	first_entry = ids_entries[0]
-	if (not isinstance(first_entry, IdsEntry)
-		or first_entry.vclass not in [1, -1]):
-		raise ValueError("Given entries are not valid IdsEntry objects! Please verify data: {}"
-			.format(first_entry))
-
 	converter = IdsConverter()
-	entries_normal = []
-	entries_intruded = []
-	for ids_entry in ids_entries:
-		if converter.prediction_means_outlier(ids_entry.vclass):
-			entries_intruded.append(ids_entry)
+	X_normal = []
+	y_normal = []
+	X_intruded = []
+	y_intruded = []
+	for vector, vclass in zip(X, y):
+		if converter.prediction_means_outlier(vclass):
+			X_normal.append(vector)
+			y_normal.append(vclass)
 		else:
-			entries_normal.append(ids_entry)
+			X_intruded.append(vector)
+			y_intruded.append(vclass)
 
-	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
+	percentage_intruded = (len(X_intruded) / float(len(X_normal)))
 
 	if percentage_intruded > 0.7:
 		raise ValueError("Given data has too few (< 30 %) normal samples.")
@@ -134,14 +133,14 @@ def ids_entries_to_train_test(ids_entries, binary=True):
 
 	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
 	test_size = max(0.1, 0.3 - percentage_intruded)
-	train, test = sk_mod.train_test_split(entries_normal, test_size=test_size)
+	X_train, X_test, y_train, y_test = sk_mod.train_test_split(
+		X_normal, y_normal, test_size=test_size)
 
 	# All intruded entries go to the test set
-	training_entries = train
-	scoring_entries = entries_intruded + test
-	random.shuffle(scoring_entries)
+	X_test += X_intruded
+	y_test += y_intruded
 
-	return (training_entries, scoring_entries)
+	return (X_train, y_train, X_test, y_test)
 
 
 ### Generating log entries ###

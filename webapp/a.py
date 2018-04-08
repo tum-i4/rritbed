@@ -11,7 +11,7 @@ import sklearn.metrics as sk_metr
 from log_entry import LogEntry
 from ids.ids_entry import IdsEntry
 import util.fmtr
-import util.prtr
+from util.prtr import TimePrinter
 import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
@@ -23,7 +23,7 @@ from ids.ids_converter import IdsConverter
 def a(file_path):
 	""" Read entries, convert them, split them per app_id and call b() for each app. """
 
-	printer = util.prtr.Printer(name="a")
+	printer = TimePrinter(name="a")
 	printer.prt("Reading file and converting...")
 
 	# ids_entries: { app_id, vector, my_class }
@@ -56,7 +56,7 @@ def c(app_id, ids_entries):
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
-	printer = util.prtr.Printer(name=app_id)
+	printer = TimePrinter(name=app_id)
 
 	printer.prt("Splitting... ")
 	train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)

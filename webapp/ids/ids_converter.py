@@ -286,12 +286,12 @@ class IdsConverter(object):
 		returns: A list with a 3+4+5=12 element binary encoding.
 		"""
 
+		# For expected colours, see py_turtlesim.util.Rgb
 		reds = [100, 150, 255]
 		greens = [0, 125, 180, 240]
 		blues = [0, 100, 120, 210, 250]
 		ids_tools.verify_md5(reds + greens + blues, "32b6449030a035c63654c4a11ab15eae")
 
-		# For expected colours see py_turtlesim.util.Rgb
 		if (red not in reds
 			or green not in greens
 			or blue not in blues):
@@ -305,14 +305,42 @@ class IdsConverter(object):
 		encoding = list(
 			one_hot.fit_transform([[red_idx, green_idx, blue_idx]])
 			.toarray()
-			[0])
+			[0]
+		)
 
 		return encoding
 
 
 	@staticmethod
 	def country_code_one_hot(country_code):
-		raise NotImplementedError()
+		"""
+		Do a one-hot encoding of the given colour.
+		returns: A list with a 5 element binary encoding.
+		"""
+
+		# For expected country codes, see web_api.functionality.country_code_mapper
+		country_codes = ["AT", "CH", "DE", "FR", "IT"]
+		ids_tools.verify_md5(country_codes, "b1d9e303bda676c3c6a61dc21e1d07c3")
+
+		encoding = IdsConverter.generic_one_hot(country_codes, country_code)
+		return encoding
+
+
+	@staticmethod
+	def generic_one_hot(all_values, value):
+		""" Do a one-hot encoding of the given value, which is one of all_values. """
+
+		if value not in all_values:
+			raise ValueError("Given value \"{}\" is invalid! Expected one of: {}".format(value, all_values))
+
+		binariser = sk_pre.LabelBinarizer()
+		binariser.fit(all_values)
+		encoding = list(
+			binariser.transform([value])
+			[0]
+		)
+
+		return encoding
 
 
 	@staticmethod

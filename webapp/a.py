@@ -5,6 +5,9 @@
 
 import argparse
 
+import sklearn
+import sklearn.metrics as sk_metrx
+
 from log_entry import LogEntry
 from ids.ids_entry import IdsEntry
 import util.fmtr
@@ -79,6 +82,9 @@ def c(app_id, ids_entries):
 
 def d(app_id, y_true, y_pred):
 	""" Score, print. """
+
+	tn, fp, fn, tp = sk_metr.confusion_matrix(y_test, result).ravel()
+	print("WTF")
 	raise NotImplementedError()
 
 

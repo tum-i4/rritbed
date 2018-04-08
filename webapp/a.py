@@ -53,14 +53,14 @@ def read_convert(file_path):
 	""" Read log entries from the given file and convert the result. """
 
 	converter = IdsConverter()
-	converted_entries = []
+	ids_entries = []
 
 	for line in Dir.yield_lines(file_path, 5000000):
 		log_entry = LogEntry.from_log_string(line)
-		converted_entry = converter.log_entry_to_prepared_tuple(log_entry, binary=True)
-		converted_entries.append(converted_entry)
+		ids_entry = converter.log_entry_to_ids_entry(log_entry, binary=True)
+		ids_entries.append(ids_entry)
 
-	return converted_entries
+	return ids_entries
 
 
 def _empty_app_id_dict():

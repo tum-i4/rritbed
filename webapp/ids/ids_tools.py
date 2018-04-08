@@ -122,7 +122,7 @@ def X_y_to_train_test(X, y, binary=True):
 			X_intruded.append(vector)
 			y_intruded.append(vclass)
 
-	percentage_intruded = (len(X_intruded) / float(len(X_normal)))
+	percentage_intruded = (len(X_intruded) / float(len(X)))
 
 	if percentage_intruded > 0.7:
 		raise ValueError("Given data has too few (< 30 %) normal samples.")

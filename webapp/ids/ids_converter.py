@@ -248,7 +248,7 @@ class IdsConverter(object):
 		if app_id == ids_data.POSE_CC:
 			assert(len(log_message) == 2)
 
-			# TODO DOC
+			# Returns a list with 5 values
 			return IdsConverter.country_code_one_hot(log_message)
 
 		# POI pair "type,result"
@@ -374,7 +374,7 @@ class IdsConverter(object):
 			constraints[pose_key] = {len_key : base_len + 2}
 
 		# CC
-		constraints[ids_data.POSE_CC][len_key] += 1
+		constraints[ids_data.POSE_CC][len_key] += 5
 		# type, result
 		constraints[ids_data.POSE_POI][len_key] += 2
 		# x, y, targ_x, targ_y

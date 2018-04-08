@@ -156,7 +156,7 @@ class IdsConverter(object):
 			data = list(enc_lvl) + list(enc_msg)
 			# 0/2 GPS ints
 			if enc_gps is not None:
-				data += enc_gps
+				data += list(enc_gps)
 
 			ndarray = numpy.array(
 				data,

@@ -85,8 +85,8 @@ class IdsConverter(object):
 
 		data_dict = log_entry.data
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
-		# Convert vin to int list
-		vin_int_list = self.vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
+		# Discard VIN (we don't plan on involvin specific VINs in intrusion detection)
+		# vin_int_list = self.vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
 		# Discard time_unix
 		# time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
@@ -96,8 +96,8 @@ class IdsConverter(object):
 		# Convert log_message to float based on app_id
 		log_msg_float_list = self.log_message_to_float_list(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
 
-		# 2 VIN ints, level int, 1-4 log message ints
-		data = vin_int_list + [level_int] + log_msg_float_list
+		# level int, 1-4 log message ints
+		data = [level_int] + log_msg_float_list
 		# 0/2 GPS ints
 		if gps_int_list is not None:
 			data += gps_int_list
@@ -309,8 +309,8 @@ class IdsConverter(object):
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:
 			raise ValueError("Given array is of invalid type.")
 
-		# 2 VIN ints, level int
-		base_len = 3
+		# level int
+		base_len = 1
 		len_key = "len"
 
 		constraints = {}

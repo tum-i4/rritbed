@@ -238,13 +238,11 @@ class IdsConverter(object):
 
 		# Colour sends "{i},{i},{i}"
 		if app_id in ids_data.get_colours():
-			vals = [int(val) for val in log_message.split(",")]
-			assert(len(vals) == 3)
-			for val in vals:
-				assert(val >= 0 and val <= 255)
+			red, green, blue = [int(val) for val in log_message.split(",")]
 
-			# Return list with the three values
-			return vals
+			# TODO
+			# Return a list with ?? values
+			return IdsConverter.colour_one_hot(red, green, blue)
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
@@ -280,6 +278,13 @@ class IdsConverter(object):
 			return coords
 
 		raise NotImplementedError("Pose type {} not implemented".format(app_id))
+
+
+	@staticmethod
+	def colour_one_hot(r, g, b):
+		""" Do a one-hot encoding of the given colour. """
+
+		raise NotImplementedError()
 
 
 	@staticmethod

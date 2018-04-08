@@ -14,6 +14,7 @@ from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
 from ids.ids_entry import IdsEntry
 import util.fmtr
+import util.outp
 from util.prtr import TimePrinter
 
 
@@ -87,9 +88,11 @@ def d(app_id, y_true, y_pred):
 
 	tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
-	print("\t\t%s\t%s" % ("Actual (+)", "Actual (-)"))
-	print("%s\t%s\t\t%s" % ("Pred (+)", tp, fp))
-	print("%s\t%s\t\t%s" % ("Pred (-)", fn, tn))
+	table = []
+	table.append(["", "Actual (+)", "Actual (-)"])
+	table.append(["Pred (+)", tp, fp])
+	table.append(["Pred (-)", fn, tn])
+	util.outp.print_table(table)
 
 	# TODO FOLLOWING IS TEMP SHIT BLA BLUB CODE
 	exit()

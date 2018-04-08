@@ -6,7 +6,7 @@
 import argparse
 
 import sklearn
-import sklearn.metrics as sk_metrx
+import sklearn.metrics as sk_metr
 
 from log_entry import LogEntry
 from ids.ids_entry import IdsEntry
@@ -83,9 +83,16 @@ def c(app_id, ids_entries):
 def d(app_id, y_true, y_pred):
 	""" Score, print. """
 
-	tn, fp, fn, tp = sk_metr.confusion_matrix(y_test, result).ravel()
+	tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
+
+	for row in [
+		("", "Actual (+)", "Actual (-)"),
+		("Pred (+)", tp, fp),
+		("Pred (-)", fn, tn)
+	]:
+		print("%s\t%s\t%s" % row)
+
 	print("WTF")
-	raise NotImplementedError()
 
 
 ### Helpers ###

@@ -33,11 +33,11 @@ def a(file_path):
 	ids_entries_per_app = read_convert(file_path)
 
 	for app_id, ids_entries in ids_entries_per_app.items():
-		b(app_id, ids_entries)
+		handle_app(app_id, ids_entries)
 
 
-def b(app_id, ids_entries):
-	""" Pre-processes the given entries. """
+def handle_app(app_id, ids_entries):
+	""" Full flow for one classifier. """
 
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")

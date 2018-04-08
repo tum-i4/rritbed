@@ -5,6 +5,7 @@ from __future__ import print_function
 import md5
 import random
 import re
+import warnings
 
 import sklearn.model_selection as sk_mod
 
@@ -89,7 +90,8 @@ def _strip_app_id(app_id):
 def ids_entries_to_train_test(ids_entries, binary=True):
 	"""
 	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
-	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)]) """
+	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)])
+	"""
 
 	if not binary:
 		raise NotImplementedError()
@@ -110,9 +112,19 @@ def ids_entries_to_train_test(ids_entries, binary=True):
 			entries_normal.append(ids_entry)
 
 	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
-	test_size = min(percentage_intruded, 0.15)
+
+	if percentage_intruded > 0.7:
+		raise ValueError("Given data has too few (< 30 %) normal samples.")
+	elif percentage_intruded < 0.1:
+		raise ValueError("Given data has too few (< 10 %) intruded samples.")
+	elif percentage_intruded <= 0.2:
+		warnings.warn("Given data has very few (10-20 %) intruded samples.")
+
+	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
+	test_size = max(0.1, 0.3 - percentage_intruded)
 	train, test = sk_mod.train_test_split(entries_normal, test_size=test_size)
 
+	# All intruded entries go to the test set
 	training_entries = train
 	scoring_entries = entries_intruded + test
 	random.shuffle(scoring_entries)

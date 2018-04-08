@@ -372,6 +372,11 @@ class IdsConverter(object):
 
 
 	@staticmethod
+	def poi_pairs_one_hot(poi_pairs):
+		raise NotImplementedError()
+
+
+	@staticmethod
 	def encode_gps_positions(gps_positions):
 		"""
 		Convert the given "x,y" GPS position strings to (x, y) or None.

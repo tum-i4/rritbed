@@ -36,17 +36,25 @@ class IdsConverter(object):
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
-	def log_entry_to_ids_entry(self, log_entry, binary=False):
-		""" Convert the given LogEntry object to a IdsEntry object. """
+	def log_entries_to_ids_entries_dict(self, log_entries, binary=True):
+		""" Convert the given LogEntry objects to a { app_id : IdsEntrys } dict. """
 
-		app_id = ids_tools.log_entry_to_app_id(log_entry)
-		ndarray = self.log_entry_to_ndarray(log_entry, app_id)
-		its_class = self.log_entry_to_class(log_entry)
-		if binary:
-			its_class = self.class_to_binary(its_class)
+		log_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
 
-		ids_entry = IdsEntry(app_id, ndarray, its_class)
-		return ids_entry
+		for log_entry in log_entries:
+			app_id = ids_tools.log_entry_to_app_id(log_entry)
+			log_entries_per_app_id[app_id].append(log_entry)
+
+		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
+		for app_id in log_entries_per_app_id:
+			ids_entries = self.log_entries_to_ids_entries(app_id, log_entries, binary)
+			ids_entries_per_app_id[app_id] = ids_entries
+
+		return ids_entries_per_app_id
+
+
+	def log_entries_to_ids_entries(self, app_id, log_entries, binary):
+		raise NotImplementedError()
 
 
 	def ids_entries_to_train_dict(self, ids_entries, printer):

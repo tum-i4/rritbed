@@ -115,42 +115,59 @@ class IdsConverter(object):
 		return app_id_datasets
 
 
-	def log_entry_to_ndarray(self, log_entry, app_id):
+	def log_entries_to_vectors(self, app_id, log_entries):
 		"""
-		Convert the given LogEntry object to a learnable vector.
+		Convert the given LogEntry objects to learnable vectors.
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64
 		"""
 
 		# We have: vin, app_id, level, log_message, gps_position, time_unix, log_id
-		assert(len(log_entry.data) == 7)
+		assert(len(log_entries[0].data) == 7)
 
-		data_dict = log_entry.data
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
 		# Discard VIN (we don't plan on involvin specific VINs in intrusion detection)
 		# vin_int_list = self.vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
 		# Discard time_unix
-		# time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
-		# Map level to int
-		level_int = self.level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
-		# Convert log_message to float based on app_id
-		log_msg_float_list = self.log_message_to_float_list(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
-		# Convert gps_position to float
-		gps_int_list = self.gps_position_to_int_list(data_dict[LogEntry.GPS_POSITION_FIELD])
+		levels = []
+		log_messages = []
+		gps_positions = []
 
-		# level int, 1-4 log message ints
-		data = [level_int] + log_msg_float_list
-		# 0/2 GPS ints
-		if gps_int_list is not None:
-			data += gps_int_list
+		for log_entry in log_entries:
+			data_dict = log_entry.data
 
-		result = numpy.array(
-			data,
-			dtype=numpy.float_,
-			order="C")
+			levels.append(data_dict[LogEntry.LEVEL_FIELD])
+			log_messages.append(data_dict[LogEntry.LOG_MESSAGE_FIELD])
+			gps_positions.append(data_dict[LogEntry.GPS_POSITION_FIELD])
 
-		self.verify_ndarray(result, app_id)
+		# One-hot encoding of levels -> [0, 1]
+		enc_levels_array = IdsConverter.encode_levels(levels)
+		# Conversion (data gens) or one-hot encoding of log messages -> [0, 1, ...]
+		enc_log_messages_array = IdsConverter.encode_log_messages(app_id, log_messages)
+		# Convert GPS positions to None or (x, y)
+		enc_gps_positions_array = IdsConverter.encode_gps_positions(gps_positions)
 
-		return result
+		vectors = []
+
+		for enc_lvl, enc_msg, enc_gps in (
+			zip(enc_levels_array, enc_log_messages_array, enc_gps_positions_array)):
+
+			# TODO DOC
+			# 2 level ints, 1-?? log message floats
+			data = list(enc_lvl) + list(enc_msg)
+			# 0/2 GPS ints
+			if enc_gps is not None:
+				data += enc_gps
+
+			ndarray = numpy.array(
+				data,
+				dtype=numpy.float_,
+				order="C")
+
+			self.verify_ndarray(ndarray, app_id)
+
+			vectors.append(ndarray)
+
+		return vectors
 
 
 	def log_entry_to_class(self, log_entry, binary):

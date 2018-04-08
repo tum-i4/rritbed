@@ -292,23 +292,11 @@ class IdsConverter(object):
 		blues = [0, 100, 120, 210, 250]
 		ids_tools.verify_md5(reds + greens + blues, "32b6449030a035c63654c4a11ab15eae")
 
-		if (red not in reds
-			or green not in greens
-			or blue not in blues):
-			raise ValueError("Given colour is invalid! Adapt, retrain, retry.")
+		red_encoding = IdsConverter.generic_one_hot(reds, red)
+		green_encoding = IdsConverter.generic_one_hot(greens, green)
+		blue_encoding = IdsConverter.generic_one_hot(blues, blue)
 
-		red_idx = reds.index(red)
-		green_idx = greens.index(green)
-		blue_idx = blues.index(blue)
-
-		one_hot = sk_pre.OneHotEncoder(n_values=[len(reds), len(greens), len(blues)])
-		encoding = list(
-			one_hot.fit_transform([[red_idx, green_idx, blue_idx]])
-			.toarray()
-			[0]
-		)
-
-		return encoding
+		return red_encoding + green_encoding + blue_encoding
 
 
 	@staticmethod

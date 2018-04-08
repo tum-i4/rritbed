@@ -131,74 +131,77 @@ class IntrusionClassifier(object):
 		printer.prt("Streaming from file up to a maximum of {} entries.".format(limit))
 		printer.prt("Loading and converting entries...")
 
-		found_app_ids, converted_entries = self._stream_convert_entries(
-			log_entry_generator, limit)
+		ids_entries_dict = self._read_convert_entries(log_entry_generator, limit)
 
-		self._train_entries(converted_entries, printer)
+		self._train_entries(ids_entries_dict, printer)
 
 		printer.prt("Finished training classifiers for {}/{} app ids."
-			.format(len(found_app_ids), len(self._converter.app_ids)))
+			.format(len(ids_entries_dict), len(self._converter.app_ids)))
 
 
-	def _stream_convert_entries(self, log_entry_generator, limit):
+	def _read_convert_entries(self, log_entry_generator, limit):
 		"""
 		Read up to <limit> entries from disk and convert them to (app_id, vector, class) tuples.
 		returns: found_app_ids (set) and converted_entries (tuple list)
 		"""
 
-		found_app_ids = set()
-		# Save tuple (app_id, vector, class) for lower memory usage
-		converted_entries = []
+		# Read up to <limit> entries
+		log_entries = []
 		for log_entry in log_entry_generator:
-			if len(converted_entries) == limit:
+			if len(log_entries) == limit:
 				break
 
-			converted_entry = self._converter.log_entry_to_prepared_tuple(log_entry)
-			found_app_ids.add(converted_entry[0])
-			converted_entries.append(converted_entry)
+			log_entries.append(log_entry)
 
-		return (found_app_ids, converted_entries)
+		# Convert entries to { app_id : (X, y) } dict
+		ids_entries_dict = self._converter.log_entries_to_ids_entries_dict(log_entries)
+		return ids_entries_dict
 
 
-	def _train_entries(self, converted_entries, printer):
-		""" Train the app_id based classifiers with the given labelled entries. """
-
-		printer.prt("Starting training with {} entries".format(len(converted_entries)))
-
-		# Ensure each app_id classifier has only samples for normal behaviour to learn from.
-		printer.prt("Checking for intruded entries...")
-		og_entry_count = len(converted_entries)
-		converted_entries[:] = [e for e in converted_entries
-			if not self._converter.class_means_intruded(e[2])]
-
-		if len(converted_entries) != og_entry_count:
-			printer.prt("Warning! Found intruded data in the input file. {} entries were removed."
-				.format(og_entry_count - len(converted_entries)))
-
-		printer.prt("Converting...")
-		app_id_datasets = self._converter.prepared_tuples_to_train_dict(converted_entries, printer)
+	def _train_entries(self, ids_entries_dict, printer):
+		""" Train all app_id based classifiers with the given labelled entries. """
 
 		app_id_number = 1
-
-		for app_id, train_set in app_id_datasets.items():
+		for app_id, ids_entries in ids_entries_dict.items():
 			printer.prt("({}/{}) Training model for \"{}\": "
-				.format(app_id_number, len(app_id_datasets), app_id), newline=False)
+				.format(app_id_number, len(ids_entries_dict), app_id), newline=False)
 
-			# Load model if it exists already
-			if ModelDir.load_model(app_id):
+			# Check for existing model
+			if ModelDir.has_model(app_id):
 				raise IOError("Found existing model on disk!")
 
-			clf = sk_svm.OneClassSVM(random_state=0)
-			printer.prt("Creating and training new model... ", newline=False)
-
-			clf.fit(train_set[0])
-
-			printer.prt("Saving... ", newline=False)
-			self._models[app_id] = clf
-			ModelDir.save_model(clf, app_id, overwrite=True)
-			printer.prt("Done! ")
+			self._train_entries_per_app(app_id, ids_entries, printer)
 
 			app_id_number += 1
+
+
+	def _train_entries_per_app(self, app_id, ids_entries, printer):
+		""" Train this app_id based classifier with the given labelled entries. """
+
+		printer.prt("Starting training with {} entries".format(len(ids_entries)))
+
+		# Ensure the classifier has only samples for normal behaviour to learn from.
+		printer.prt("Checking for intruded entries...")
+		og_entry_count = len(ids_entries)
+		ids_entries[:] = [e for e in ids_entries
+			if not self._converter.class_means_intruded(e.vclass)]
+
+		if len(ids_entries) != og_entry_count:
+			printer.prt("Warning! Found intruded data in the input file. {} entries were removed."
+				.format(og_entry_count - len(ids_entries)))
+
+		printer.prt("Converting...")
+		# pylint: disable-msg=C0103; (Invalid variable name)
+		X_train, _ = self._converter.ids_entries_to_X_y(app_id, ids_entries)
+
+		printer.prt("Creating and training new model... ", newline=False)
+		clf = sk_svm.OneClassSVM(random_state=0)
+		clf.fit(X_train)
+
+		printer.prt("Saving... ", newline=False)
+		self._models[app_id] = clf
+		ModelDir.save_model(clf, app_id, overwrite=True)
+		printer.prt("Done! ")
 
 
 	def score(self, log_entries, do_return=False, squelch_output=False):

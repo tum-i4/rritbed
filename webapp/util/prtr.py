@@ -98,13 +98,6 @@ class TimePrinter(Printer):
 	Printer replacement that additionally prefixes each new line with the current time.
 	"""
 
-	def __init__(self, squelch=False, verbose=True, name=None):
-		""" Ctor """
-
-		super(TimePrinter, self).__init__(squelch, verbose, "INVALID")
-		self.printer_name = name
-
-
 	def prt(self, message, only_verbose=False, preface=True, newline=True):
 		""" Print if not squelching, adding current time.
 		See Printer.prt() for implementation. """

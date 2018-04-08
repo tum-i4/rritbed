@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+""" a """
 
 # pylint: disable-msg=C0103; (Invalid name)
 
 import argparse
 
 from log_entry import LogEntry
+from ids.ids_entry import IdsEntry
 import util.fmtr
 import util.prtr
 import ids.ids_tools as ids_tools
@@ -21,15 +23,15 @@ def a(file_path):
 	printer = util.prtr.Printer(name="a")
 	printer.prt("Reading file and converting...")
 
-	# converted_entries: [(app_id, vector, class)]
-	converted_entries = read_convert(file_path)
+	# ids_entries: { app_id, vector, my_class }
+	ids_entries = read_convert(file_path)
 
-	entries_per_app = _empty_app_id_dict()
-	for entry in converted_entries:
-		entries_per_app[entry[0]] = entry
+	ids_entries_per_app = _empty_app_id_dict()
+	for ids_entry in ids_entries:
+		ids_entries_per_app[ids_entry.app_id].append(ids_entry)
 
-	for app_id, entries in entries_per_app.items():
-		b(app_id, entries)
+	for app_id, ids_entries in ids_entries_per_app.items():
+		b(app_id, ids_entries)
 
 
 def b(app_id, converted_entries):

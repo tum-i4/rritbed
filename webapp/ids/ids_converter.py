@@ -59,7 +59,7 @@ class IdsConverter(object):
 
 		for entry in ids_entries:
 			app_id_datasets[entry.app_id][0].append(entry.vector)
-			app_id_datasets[entry.app_id][1].append(entry.my_class)
+			app_id_datasets[entry.app_id][1].append(entry.vclass)
 
 		printer.prt("Done.")
 		return app_id_datasets

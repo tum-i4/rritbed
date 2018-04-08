@@ -8,4 +8,4 @@ import attr
 class IdsEntry(object):
 	app_id = attr.ib()
 	vector = attr.ib()
-	my_class = attr.ib()
+	vclass = attr.ib()

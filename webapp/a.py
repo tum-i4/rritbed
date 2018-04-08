@@ -29,7 +29,7 @@ def a(file_path):
 	# ids_entries: { app_id, vector, my_class }
 	ids_entries = read_convert(file_path)
 
-	ids_entries_per_app = empty_app_id_dict()
+	ids_entries_per_app = ids_tools.empty_app_id_to_list_dict()
 	for ids_entry in ids_entries:
 		ids_entries_per_app[ids_entry.app_id].append(ids_entry)
 
@@ -113,16 +113,6 @@ def read_convert(file_path):
 		ids_entries.append(ids_entry)
 
 	return ids_entries
-
-
-def empty_app_id_dict():
-	""" Initialise an empty dict with { app_id: [] }. """
-
-	result = {}
-	for app_id in IdsConverter().app_ids:
-		result[app_id] = []
-
-	return result
 
 
 def unravel_ids_entries(ids_entries, expected_app_id):

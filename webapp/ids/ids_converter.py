@@ -309,7 +309,7 @@ class IdsConverter(object):
 		if app_id == ids_data.POSE_POI:
 			poi_pairs = [msg.split(",") for msg in log_messages]
 
-			# Returns a list with 10 values
+			# Returns a list with 11 values
 			return IdsConverter.poi_pairs_one_hot(poi_pairs)
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
@@ -367,7 +367,7 @@ class IdsConverter(object):
 	def poi_pairs_one_hot(poi_pairs):
 		"""
 		Do a one-hot encoding of the given POI pairs.
-		returns: A two-dimensional numpy.ndarray with a 4+6=10 element binary encoding per row.
+		returns: A two-dimensional numpy.ndarray with a 4+7=11 element binary encoding per row.
 		"""
 
 		# For expected POI types, see turtlesim_expl.pipes.pose_processor
@@ -457,11 +457,11 @@ class IdsConverter(object):
 		for pose_key in ids_data.get_poses():
 			constraints[pose_key] = {len_key : base_len + 2}
 
-		# CC
+		# CC: One of five
 		constraints[ids_data.POSE_CC][len_key] += 5
-		# type, result
-		constraints[ids_data.POSE_POI][len_key] += 2
-		# x, y, targ_x, targ_y
+		# POI: One of 4 types, one of 7 results
+		constraints[ids_data.POSE_POI][len_key] += 11
+		# TSP: x, y, targ_x, targ_y
 		constraints[ids_data.POSE_TSP][len_key] += 4
 
 		expected_len = constraints[app_id][len_key]

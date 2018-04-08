@@ -39,50 +39,39 @@ def a(file_path):
 def handle_app(app_id, ids_entries):
 	""" Full flow for one classifier. """
 
-	if not isinstance(ids_entries[0], IdsEntry):
-		raise TypeError("Given list does not contain IdsEntry objects.")
-
-	printer = TimePrinter(name="b")
+	printer = TimePrinter(name=app_id)
 
 	if not ids_entries:
 		printer.prt("No input data for {}".format(app_id))
 		return
 
-	# import sklearn.pipeline as sk_pipe
-	# import sklearn.preprocessing as sk_pre
-
-	printer.prt("NO PREPROCESSING")
-	c(app_id, ids_entries)
-
-
-def c(app_id, ids_entries):
-	""" Fit, predict. """
-
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
-	printer = TimePrinter(name=app_id)
+	raise NotImplementedError()
+
+
+def preprocess_fit_score(app_id, ids_entries, preprocessor, classifier, printer):
+
+	converter = IdsConverter()
+	X, y = converter.ids_entries_to_X_y(app_id, ids_entries)
+
+	printer.prt("Preprocessing... ", newline=False)
+	X = preprocessor(X)
 
 	printer.prt("Splitting... ", newline=False)
-	try:
-		train_entries, test_entries = ids_tools.ids_entries_to_train_test(ids_entries)
-	except ValueError as val_err:
-		print(val_err.message)
-		exit()
-
-	X_train, _ = unravel_ids_entries(train_entries, app_id)
-	X_test, y_true = unravel_ids_entries(test_entries, app_id)
+	X_train, _, X_test, y_true = ids_tools.X_y_to_train_test(X, y)
 
 	printer.prt("Fitting... ", newline=False)
-
-	clf = sklearn.svm.OneClassSVM(random_state=0)
-	clf.fit(X_train)
+	classifier = sklearn.svm.OneClassSVM(kernel="linear", random_state=0)
+	classifier.fit(X_train)
 
 	printer.prt("Predicting... ")
+	y_pred = classifier.predict(X_test)
 
-	y_pred = clf.predict(X_test)
+	visualise(app_id, y_true, y_pred)
 
-	d(app_id, y_true, y_pred)
+	return (y_true, y_pred)
 
 
 def visualise(app_id, y_true, y_pred):

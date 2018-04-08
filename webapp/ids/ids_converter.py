@@ -72,6 +72,23 @@ class IdsConverter(object):
 		return ids_entries
 
 
+	def ids_entries_to_X_y(self, app_id, ids_entries):
+		""" Convert the given IdsEntry objects to (X, y). """
+
+		# pylint: disable-msg=C0103; (Invalid variable name)
+		X = []
+		y = []
+
+		for ids_entry in ids_entries:
+			if ids_entry.app_id != app_id:
+				raise ValueError("Given entries don't conform to the expected app_id!")
+
+			X.append(ids_entry.vector)
+			y.append(ids_entry.vclass)
+
+		return (X, y)
+
+
 	def log_entries_to_train_dict(self, log_entries, printer):
 		""" Convert the given log entries to { app_id : (X, y) }. """
 

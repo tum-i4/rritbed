@@ -54,7 +54,22 @@ class IdsConverter(object):
 
 
 	def log_entries_to_ids_entries(self, app_id, log_entries, binary):
-		raise NotImplementedError()
+		""" Convert the given LogEntry objects to IdsEntry objects for this app_id. """
+
+		app_ids = [ids_tools.log_entry_to_app_id(log_entry) for log_entry in log_entries]
+
+		if any([a != app_id for a in app_ids]):
+			raise ValueError("Given elements are not all of the expected app type: {}".format(app_id))
+
+		vectors = self.log_entries_to_vectors(app_id, log_entries)
+		vclasses = [self.log_entry_to_class(log_entry, binary) for log_entry in log_entries]
+
+		ids_entries = []
+		for app_id, vector, vclass in zip(app_ids, vectors, vclasses):
+			ids_entry = IdsEntry(app_id, vector, vclass)
+			ids_entries.append(ids_entry)
+
+		return ids_entries
 
 
 	def log_entries_to_train_dict(self, log_entries, printer):

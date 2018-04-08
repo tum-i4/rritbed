@@ -92,10 +92,10 @@ class IdsConverter(object):
 		# time_unix = data_dict[LogEntry.TIME_UNIX_FIELD]
 		# Map level to int
 		level_int = self.level_mapping[data_dict[LogEntry.LEVEL_FIELD]]
-		# Convert gps_position to float
-		gps_int_list = self.gps_position_to_int_list(data_dict[LogEntry.GPS_POSITION_FIELD])
 		# Convert log_message to float based on app_id
 		log_msg_float_list = self.log_message_to_float_list(data_dict[LogEntry.LOG_MESSAGE_FIELD], app_id)
+		# Convert gps_position to float
+		gps_int_list = self.gps_position_to_int_list(data_dict[LogEntry.GPS_POSITION_FIELD])
 
 		# level int, 1-4 log message ints
 		data = [level_int] + log_msg_float_list
@@ -284,13 +284,12 @@ class IdsConverter(object):
 	def colour_one_hot(red, green, blue):
 		"""
 		Do a one-hot encoding of the given colour.
-		returns: A 3+4+5=12 element binary encoding.
+		returns: A list with a 3+4+5=12 element binary encoding.
 		"""
 
-		unique_list = lambda x: list(set(x))
-		reds = unique_list([100, 150, 255])
-		greens = unique_list([0, 125, 180, 240])
-		blues = unique_list([0, 100, 120, 210, 250])
+		reds = [100, 150, 255]
+		greens = [0, 125, 180, 240]
+		blues = [0, 100, 120, 210, 250]
 		ids_tools.verify_md5(reds + greens + blues, "32b6449030a035c63654c4a11ab15eae")
 
 		# For expected colours see py_turtlesim.util.Rgb
@@ -304,7 +303,10 @@ class IdsConverter(object):
 		blue_idx = blues.index(blue)
 
 		one_hot = sk_pre.OneHotEncoder(n_values=[len(reds), len(greens), len(blues)])
-		encoding = one_hot.fit_transform([[red, green, blue]]).toarray()[0]
+		encoding = list(
+			one_hot.fit_transform([[red_idx, green_idx, blue_idx]])
+			.toarray()
+			[0])
 
 		return encoding
 

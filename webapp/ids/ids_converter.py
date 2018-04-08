@@ -282,8 +282,8 @@ class IdsConverter(object):
 	def encode_log_messages(app_id, log_messages):
 		"""
 		Either just convert the data (data generators) or do a one-hot encoding of the log message.
-		returns: Two-dimensional numpy.ndarray with either one float value
-		or up to ?? binary encoded values per row.
+		returns: Two-dimensional numpy.ndarray with either 1 float value, 4 int values
+		or up to 12 binary encoded values per row.
 		"""
 
 		# Generators send "{f}"
@@ -314,17 +314,15 @@ class IdsConverter(object):
 			# Returns a list with ??
 			return IdsConverter.poi_pairs_one_hot(poi_pairs)
 
-		raise NotImplementedError()
-
 		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == ids_data.POSE_TSP:
-			coords = [int(coord) for coord in log_message.split(",")]
-			assert(len(coords) == 4)
-			for coord in coords:
+			coords_list = [[int(coord) for coord in msg.split(",")] for msg in log_messages]
+			assert(len(coords_list[0]) == 4)
+			for coord in coords_list[0]:
 				assert(coord >= 0 and coord < 500)
 
 			# Return list of coordinates
-			return coords
+			return coords_list
 
 		raise NotImplementedError("App ID {} not implemented".format(app_id))
 

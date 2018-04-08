@@ -45,7 +45,7 @@ def b(app_id, ids_entries):
 
 
 def c(app_id, ids_entries):
-	""" Fit, score, print. """
+	""" Fit, predict. """
 
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
@@ -62,6 +62,23 @@ def c(app_id, ids_entries):
 	if len(train_dict) > 1 or len(test_dict) > 1:
 		raise NotImplementedError("Method is built for converted entries of one app only!")
 
+	X_train, _ = train_dict[app_id]
+	X_test, y_true = test_dict[app_id]
+
+	printer.prt("Fitting... ")
+
+	clf = sklearn.svm.OneClassSVM(random_state=0)
+	clf.fit(X_train)
+
+	printer.prt("Predicting... ")
+
+	y_pred = clf.predict(X_test)
+
+	d(app_id, y_true, y_pred)
+
+
+def d(app_id, y_true, y_pred):
+	""" Score, print. """
 	raise NotImplementedError()
 
 

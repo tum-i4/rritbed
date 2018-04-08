@@ -29,7 +29,7 @@ def a(file_path):
 	# ids_entries: { app_id, vector, my_class }
 	ids_entries = read_convert(file_path)
 
-	ids_entries_per_app = _empty_app_id_dict()
+	ids_entries_per_app = empty_app_id_dict()
 	for ids_entry in ids_entries:
 		ids_entries_per_app[ids_entry.app_id].append(ids_entry)
 
@@ -112,14 +112,30 @@ def read_convert(file_path):
 	return ids_entries
 
 
-def _empty_app_id_dict():
-	""" Initialises an empty dict with { app_id: [] }. """
+def empty_app_id_dict():
+	""" Initialise an empty dict with { app_id: [] }. """
 
 	result = {}
 	for app_id in IdsConverter().app_ids:
 		result[app_id] = []
 
 	return result
+
+
+def unravel_ids_entries(ids_entries, expected_app_id):
+	""" Convert the given IdsEntry objects to X and y. """
+
+	X = []
+	y = []
+
+	for entry in ids_entries:
+		if entry.app_id != expected_app_id:
+			raise ValueError("Given IdsEntry has an incorrect app_id!")
+
+		X.append(entry.vector)
+		y.append(entry.vclass)
+
+	return (X, y)
 
 
 if __name__ == "__main__":

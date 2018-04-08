@@ -7,8 +7,10 @@ import argparse
 
 import sklearn
 import sklearn.metrics as sk_metr
+import sklearn.preprocessing as sk_pre
 
 from log_entry import LogEntry
+import ids.ids_data as ids_data
 import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
@@ -93,9 +95,6 @@ def d(app_id, y_true, y_pred):
 	table.append(["Pred (+)", tp, fp])
 	table.append(["Pred (-)", fn, tn])
 	util.outp.print_table(table)
-
-	# TODO FOLLOWING IS TEMP SHIT BLA BLUB CODE
-	exit()
 
 
 ### Helpers ###

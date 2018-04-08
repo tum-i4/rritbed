@@ -69,9 +69,9 @@ class IdsConverter(object):
 		""" Convert the given log entries to { app_id : (X, y) }. """
 
 		printer.prt("Transforming the log data to trainable vectors...")
-		converted_entries = [self.log_entry_to_prepared_tuple(e) for e in log_entries]
+		ids_entries = [self.log_entry_to_ids_entry(e) for e in log_entries]
 		printer.prt("Done.")
-		return self.prepared_tuples_to_train_dict(converted_entries, printer)
+		return self.ids_entries_to_train_dict(ids_entries, printer)
 
 
 	def log_entry_to_ndarray(self, log_entry, app_id):

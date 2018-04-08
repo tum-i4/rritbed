@@ -335,32 +335,6 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def encode_gps_positions(gps_positions):
-		"""
-		Convert the given "x,y" GPS position strings to (x, y) or None.
-		returns: Two-dimensional numpy.ndarray() with a result (tuple or None) per row.
-		"""
-
-		encoded_positions = [IdsConverter.gps_position_to_int_list(gps_pos) for gps_pos in gps_positions]
-		return numpy.array(encoded_positions)
-
-
-	@staticmethod
-	def gps_position_to_int_list(gps_position):
-		""" Convert the given GPS position string to (lat, lon). """
-
-		if not gps_position:
-			return None
-
-		# Format: lat,lon
-		split = gps_position.split(",")
-		if len(split) != 2:
-			raise ValueError("Invalid string")
-
-		return [int(split[0]), int(split[1])]
-
-
-	@staticmethod
 	def colour_one_hot(red, green, blue):
 		"""
 		Do a one-hot encoding of the given colour.
@@ -393,6 +367,32 @@ class IdsConverter(object):
 
 		encoding = IdsConverter.generic_one_hot(country_codes, country_code)
 		return encoding
+
+
+	@staticmethod
+	def encode_gps_positions(gps_positions):
+		"""
+		Convert the given "x,y" GPS position strings to (x, y) or None.
+		returns: Two-dimensional numpy.ndarray with a result (tuple or None) per row.
+		"""
+
+		encoded_positions = [IdsConverter.gps_position_to_int_list(gps_pos) for gps_pos in gps_positions]
+		return numpy.array(encoded_positions)
+
+
+	@staticmethod
+	def gps_position_to_int_list(gps_position):
+		""" Convert the given GPS position string to (lat, lon). """
+
+		if not gps_position:
+			return None
+
+		# Format: lat,lon
+		split = gps_position.split(",")
+		if len(split) != 2:
+			raise ValueError("Invalid string")
+
+		return [int(split[0]), int(split[1])]
 
 
 	@staticmethod

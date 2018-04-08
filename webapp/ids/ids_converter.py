@@ -291,14 +291,14 @@ class IdsConverter(object):
 			# Return list with value
 			return numpy.array([float(log_message) for log_message in log_messages])
 
-		raise NotImplementedError()
-
 		# Colour sends "{i},{i},{i}"
 		if app_id in ids_data.get_colours():
-			red, green, blue = [int(val) for val in log_message.split(",")]
+			colours = [[int(val) for val in msg.split(",")] for msg in log_messages]
 
 			# Returns a list with 12 values
-			return IdsConverter.colour_one_hot(red, green, blue)
+			return IdsConverter.colours_one_hot(colours)
+
+		raise NotImplementedError()
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:

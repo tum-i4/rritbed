@@ -48,8 +48,8 @@ class IdsConverter(object):
 		return ids_entry
 
 
-	def prepared_tuples_to_train_dict(self, converted_entries, printer):
-		""" Store the given converted entry tuples as { app_id : (X, y) }. """
+	def ids_entries_to_train_dict(self, ids_entries, printer):
+		""" Store the given IdsEntry objects as { app_id : (X, y) }. """
 
 		printer.prt("Dividing the data per app id...")
 
@@ -57,9 +57,9 @@ class IdsConverter(object):
 		for app_id in self.app_ids:
 			app_id_datasets[app_id] = ([], [])
 
-		for app_id, ndarray, its_class in converted_entries:
-			app_id_datasets[app_id][0].append(ndarray)
-			app_id_datasets[app_id][1].append(its_class)
+		for entry in ids_entries:
+			app_id_datasets[entry.app_id][0].append(entry.vector)
+			app_id_datasets[entry.app_id][1].append(entry.my_class)
 
 		printer.prt("Done.")
 		return app_id_datasets

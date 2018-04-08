@@ -36,6 +36,13 @@ class IdsConverter(object):
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
+	def log_entry_to_vector(self, app_id, log_entry, binary=True):
+		""" Convert the given log_entry to a classifiable vector. """
+
+		vectors = self.log_entries_to_vectors(app_id, [log_entry])
+		return vectors[0]
+
+
 	def log_entries_to_ids_entries_dict(self, all_log_entries, binary=True):
 		""" Convert the given LogEntry objects to a { app_id : IdsEntrys } dict. """
 

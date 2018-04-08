@@ -85,7 +85,7 @@ def c(app_id, ids_entries):
 	d(app_id, y_true, y_pred)
 
 
-def d(app_id, y_true, y_pred):
+def visualise(app_id, y_true, y_pred):
 	""" Score, print. """
 
 	tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()

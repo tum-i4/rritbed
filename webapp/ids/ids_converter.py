@@ -284,6 +284,12 @@ class IdsConverter(object):
 	def colour_one_hot(r, g, b):
 		""" Do a one-hot encoding of the given colour. """
 
+		# For expected colours see py_turtlesim.util.Rgb
+		if (r not in [100, 150, 255]
+			or g not in [0, 125, 180, 240]
+			or b not in [0, 100, 120, 210, 250]):
+			raise ValueError("Given colour is invalid! Adapt, retrain, retry.")
+
 		raise NotImplementedError()
 
 

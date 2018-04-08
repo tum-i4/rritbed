@@ -367,7 +367,25 @@ class IdsConverter(object):
 
 	@staticmethod
 	def poi_pairs_one_hot(poi_pairs):
-		raise NotImplementedError()
+		"""
+		Do a one-hot encoding of the given POI pairs.
+		returns: A two-dimensional numpy.ndarray with a 4+6=10 element binary encoding per row.
+		"""
+
+		# For expected POI types, see turtlesim_expl.pipes.pose_processor
+		expected_types = ["restaurant", "gas station", "private home", "nsa hq"]
+		ids_tools.verify_md5(expected_types, "d36c52a68115ddd49db3f8b8fb818798")
+		# For expected POI results, see web_api.functionality.poi_mapper
+		exptected_results = ["Italian", "German", "French", "Total", "Shell", "Aral"]
+		ids_tools.verify_md5(exptected_results, "ce5b1e82cc76efb5835d6f78e7cd3af4")
+
+		poi_pairs_array = numpy.array(poi_pairs)
+
+		types_encodings = IdsConverter.generic_one_hot(expected_types, poi_pairs_array[:, 0])
+		results_encodings = IdsConverter.generic_one_hot(exptected_results, poi_pairs_array[:, 1])
+
+		encodings = numpy.concatenate((types_encodings, results_encodings), axis=1)
+		return encodings
 
 
 	@staticmethod

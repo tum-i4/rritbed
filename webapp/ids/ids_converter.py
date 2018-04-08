@@ -336,10 +336,10 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def colour_one_hot(red, green, blue):
+	def colours_one_hot(colours):
 		"""
-		Do a one-hot encoding of the given colour.
-		returns: A list with a 3+4+5=12 element binary encoding.
+		Do a one-hot encoding of the given colours.
+		returns: A two-dimensional numpy.ndarray with a 3+4+5=12 element binary encoding per row.
 		"""
 
 		# For expected colours, see py_turtlesim.util.Rgb
@@ -348,11 +348,12 @@ class IdsConverter(object):
 		blues = [0, 100, 120, 210, 250]
 		ids_tools.verify_md5(reds + greens + blues, "32b6449030a035c63654c4a11ab15eae")
 
-		red_encoding = IdsConverter.generic_one_hot(reds, red)
-		green_encoding = IdsConverter.generic_one_hot(greens, green)
-		blue_encoding = IdsConverter.generic_one_hot(blues, blue)
+		red_encodings = IdsConverter.generic_one_hot(reds, colours[:, 0])
+		green_encodings = IdsConverter.generic_one_hot(greens, colours[:, 1])
+		blue_encodings = IdsConverter.generic_one_hot(blues, colours[:, 2])
 
-		return red_encoding + green_encoding + blue_encoding
+		encodings = numpy.concatenate((red_encodings, green_encodings, blue_encodings), axis=1)
+		return encodings
 
 
 	@staticmethod

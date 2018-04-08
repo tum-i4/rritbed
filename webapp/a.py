@@ -95,7 +95,8 @@ def d(app_id, y_true, y_pred):
 	print("%s\t%s\t\t%s" % ("Pred (+)", tp, fp))
 	print("%s\t%s\t\t%s" % ("Pred (-)", fn, tn))
 
-	print("WTF\n")
+	# TODO FOLLOWING IS TEMP SHIT BLA BLUB CODE
+	exit()
 
 
 ### Helpers ###

@@ -85,7 +85,7 @@ def d(app_id, y_true, y_pred):
 		("Pred (+)", tp, fp),
 		("Pred (-)", fn, tn)
 	]:
-		print("%s\t%s\t%s" % row)
+		print("%s\t\t%s\t\t%s" % row)
 
 	print("WTF")
 

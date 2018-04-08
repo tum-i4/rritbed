@@ -261,6 +261,27 @@ class IdsConverter(object):
 		return [int(split[0]), int(split[1])]
 
 
+	@staticmethod
+	def encode_levels(levels):
+		"""
+		Do a one-hot encoding of the given colour.
+		returns: Two-dimensional numpy.ndarray() with a 2 element binary encoding per row.
+		"""
+
+		# For expected levels, see web_api.log_entry.LogEntry
+		expected_levels = ["DEBUG", "ERROR"]
+		ids_tools.verify_md5(expected_levels, "7692bbdba09aa7f2c9a15ca0e9a654cd")
+
+		encoded_levels = IdsConverter.generic_one_hot(expected_levels, levels)
+		return encoded_levels
+
+
+	@staticmethod
+	def encode_log_messages(app_id, log_messages):
+		raise NotImplementedError()
+
+
+
 	def log_message_to_float_list(self, log_message, app_id):
 		""" Convert the given log message to a float list based on the given app_id. """
 
@@ -308,7 +329,18 @@ class IdsConverter(object):
 			# Return list of coordinates
 			return coords
 
-		raise NotImplementedError("Pose type {} not implemented".format(app_id))
+		raise NotImplementedError("App ID {} not implemented".format(app_id))
+
+
+	@staticmethod
+	def encode_gps_positions(gps_positions):
+		"""
+		Convert the given "x,y" GPS position strings to (x, y) or None.
+		returns: Two-dimensional numpy.ndarray() with a result (tuple or None) per row.
+		"""
+
+		encoded_positions = [IdsConverter.gps_position_to_int_list(gps_pos) for gps_pos in gps_positions]
+		return numpy.array(encoded_positions)
 
 
 	@staticmethod

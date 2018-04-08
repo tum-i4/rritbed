@@ -247,21 +247,6 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def gps_position_to_int_list(gps_position):
-		""" Convert the given GPS position string to (lat, lon). """
-
-		if not gps_position:
-			return None
-
-		# Format: lat,lon
-		split = gps_position.split(",")
-		if len(split) != 2:
-			raise ValueError("Invalid string")
-
-		return [int(split[0]), int(split[1])]
-
-
-	@staticmethod
 	def encode_levels(levels):
 		"""
 		Do a one-hot encoding of the given colour.
@@ -341,6 +326,21 @@ class IdsConverter(object):
 
 		encoded_positions = [IdsConverter.gps_position_to_int_list(gps_pos) for gps_pos in gps_positions]
 		return numpy.array(encoded_positions)
+
+
+	@staticmethod
+	def gps_position_to_int_list(gps_position):
+		""" Convert the given GPS position string to (lat, lon). """
+
+		if not gps_position:
+			return None
+
+		# Format: lat,lon
+		split = gps_position.split(",")
+		if len(split) != 2:
+			raise ValueError("Invalid string")
+
+		return [int(split[0]), int(split[1])]
 
 
 	@staticmethod

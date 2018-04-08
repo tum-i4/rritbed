@@ -36,19 +36,20 @@ class IdsConverter(object):
 			verify_hash="69a262192b246d16e8411b6db06e237b")
 
 
-	def log_entries_to_ids_entries_dict(self, log_entries, binary=True):
+	def log_entries_to_ids_entries_dict(self, all_log_entries, binary=True):
 		""" Convert the given LogEntry objects to a { app_id : IdsEntrys } dict. """
 
 		log_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
 
-		for log_entry in log_entries:
+		for log_entry in all_log_entries:
 			app_id = ids_tools.log_entry_to_app_id(log_entry)
 			log_entries_per_app_id[app_id].append(log_entry)
 
 		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
 		for app_id in log_entries_per_app_id:
-			ids_entries = self.log_entries_to_ids_entries(app_id, log_entries, binary)
-			ids_entries_per_app_id[app_id] = ids_entries
+			my_log_entries = log_entries_per_app_id[app_id]
+			my_ids_entries = self.log_entries_to_ids_entries(app_id, my_log_entries, binary)
+			ids_entries_per_app_id[app_id] = my_ids_entries
 
 		return ids_entries_per_app_id
 

@@ -202,16 +202,6 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def vin_to_int_list(vin):
-		""" Convert the given VIN to [ord(char), int(rest)]. """
-
-		if len(vin) != 7:
-			raise ValueError("Invalid VIN")
-
-		return [ord(vin[0]), int(vin[1:])]
-
-
-	@staticmethod
 	def gps_position_to_int_list(gps_position):
 		""" Convert the given GPS position string to (lat, lon). """
 

@@ -9,12 +9,12 @@ import sklearn
 import sklearn.metrics as sk_metr
 
 from log_entry import LogEntry
-from ids.ids_entry import IdsEntry
-import util.fmtr
-from util.prtr import TimePrinter
 import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
+from ids.ids_entry import IdsEntry
+import util.fmtr
+from util.prtr import TimePrinter
 
 
 ### Workers ###

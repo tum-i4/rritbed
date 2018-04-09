@@ -126,7 +126,7 @@ def _strip_app_id(app_id):
 ### Training, testing, validating ###
 
 
-def straighten_dataset(ids_entries, binary=True):
+def straighten_dataset(ids_entries):
 	""" Ensure a 9:1 ratio of inliers:outliers for each app_id in the given entries. """
 
 	if not binary:
@@ -147,11 +147,8 @@ def straighten_dataset(ids_entries, binary=True):
 	return all_entries
 
 
-def straighten_dataset_for_app(ids_entries, binary=True):
+def straighten_dataset_for_app(ids_entries):
 	""" Ensure a 9:1 ratio of inliers:outliers in the given entries. """
-
-	if not binary:
-		raise NotImplementedError()
 
 	# (inliers, outliers)
 	its_entries = ([], [])
@@ -183,16 +180,13 @@ def straighten_dataset_for_app(ids_entries, binary=True):
 
 
 # pylint: disable-msg=C0103; (Invalid name)
-def X_y_to_train_test(X, y, binary=True):
+def X_y_to_train_test(X, y):
 	"""
 	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
 	returns: (X_train, y_train, X_test, y_test)
 	"""
 
 	# TODO: Allow for some intruded entries in the training set?
-
-	if not binary:
-		raise NotImplementedError()
 
 	X_normal = []
 	y_normal = []

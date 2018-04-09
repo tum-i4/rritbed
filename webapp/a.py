@@ -52,6 +52,7 @@ def handle_app(app_id, ids_entries):
 
 
 def preprocess_fit_score(app_id, ids_entries, preprocessor, classifier, printer):
+	""" Use the given preprocessor on the data, classify it with the given classifier and score. """
 
 	converter = IdsConverter()
 	X, y = converter.ids_entries_to_X_y(app_id, ids_entries)
@@ -63,7 +64,6 @@ def preprocess_fit_score(app_id, ids_entries, preprocessor, classifier, printer)
 	X_train, _, X_test, y_true = ids_tools.X_y_to_train_test(X, y)
 
 	printer.prt("Fitting... ", newline=False)
-	classifier = sklearn.svm.OneClassSVM(kernel="linear", random_state=0)
 	classifier.fit(X_train)
 
 	printer.prt("Predicting... ")

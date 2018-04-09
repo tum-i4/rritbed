@@ -194,15 +194,8 @@ class IdsConverter(object):
 
 
 	def prediction_means_outlier(self, prediction):
-		""" Map the given outlier prediction to a boolean 'is outlier'. """
-
-		# Inliers are labeled 1, while outliers are labeled -1.
-		if prediction == 1:
-			return False
-		elif prediction == -1:
-			return True
-		else:
-			raise ValueError("Predictions can only be +1 or -1!")
+		""" LEGACY """
+		return ids_tools.is_outlier(prediction)
 
 
 	def class_to_binary(self, input_class):

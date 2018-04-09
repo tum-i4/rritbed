@@ -106,6 +106,46 @@ def _strip_app_id(app_id):
 ### Training, testing, validating ###
 
 
+def straighten_dataset(ids_entries, binary=True):
+	""" Ensure a 9:1 ratio of inliers:outliers for each app_id in the given entries. """
+
+	if not binary:
+		raise NotImplementedError()
+
+	# { app_id : (inliers, outliers) }
+	tuple_dict = empty_app_id_to_list_tuple_dict()
+
+	for ids_entry in ids_entries:
+		idx = -1
+		if ids_entry.vclass == 1:
+			idx = 0
+		elif ids_entry.vclass == -1:
+			idx = 1
+
+		tuple_dict[ids_entry.app_id][idx] = ids_entry
+
+	all_entries = []
+
+	for app_id in tuple_dict:
+		its_inliers = tuple_dict[app_id][0]
+		its_outliers = tuple_dict[app_id][1]
+		total_entry_count = len(its_inliers) + len(its_outliers)
+
+		expected_outlier_percent = 0.1
+		expected_outlier_count = int(expected_outlier_percent * total_entry_count)
+
+		if (len(its_inliers) == 0
+			or len(its_outliers) < expected_outlier_count):
+			raise ValueError("Given data is insufficient for straightening.")
+
+		its_result = its_inliers
+		its_result += random.sample(its_outliers, expected_outlier_count)
+
+		all_entries += its_result
+
+	return all_entries
+
+
 # pylint: disable-msg=C0103; (Invalid name)
 def X_y_to_train_test(X, y, binary=True):
 	"""

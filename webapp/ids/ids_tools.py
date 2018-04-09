@@ -11,7 +11,6 @@ import sklearn.model_selection as sk_mod
 
 from log_entry import LogEntry
 import ids_data
-from ids_converter import IdsConverter
 
 
 ### ML ###
@@ -195,13 +194,12 @@ def X_y_to_train_test(X, y, binary=True):
 	if not binary:
 		raise NotImplementedError()
 
-	converter = IdsConverter()
 	X_normal = []
 	y_normal = []
 	X_intruded = []
 	y_intruded = []
 	for vector, vclass in zip(X, y):
-		if converter.prediction_means_outlier(vclass):
+		if is_inlier(vclass):
 			X_normal.append(vector)
 			y_normal.append(vclass)
 		else:

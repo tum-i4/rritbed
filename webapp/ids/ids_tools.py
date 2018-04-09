@@ -14,6 +14,27 @@ import ids_data
 from ids_converter import IdsConverter
 
 
+### ML ###
+
+
+def is_inlier(result):
+	""" Convenience method. Maps to 'not is_outlier()'. """
+	return not is_outlier(result)
+
+
+def is_outlier(result):
+	""" Map the given outlier class to a boolean 'is_outlier'. """
+
+	if not isinstance(result, int):
+		raise TypeError("Given type must be int!")
+
+	if result not in [1, -1]:
+		raise ValueError("Values can only be +1 or -1!")
+
+	# Inliers are labeled 1, while outliers are labeled -1.
+	return result == -1
+
+
 ### Dicts ###
 
 

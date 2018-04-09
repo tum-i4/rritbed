@@ -10,7 +10,6 @@ import warnings
 import sklearn.model_selection as sk_mod
 
 from log_entry import LogEntry
-from ids_entry import IdsEntry
 import ids_data
 from ids_converter import IdsConverter
 
@@ -151,7 +150,6 @@ def X_y_to_train_test(X, y, binary=True):
 
 def generate_log_entries(number):
 	""" Generate <number> LogEntry objects. """
-	import random
 
 	result = []
 	vins = [chr(random.choice(range(65, 91))) + str(x)

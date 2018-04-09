@@ -129,9 +129,6 @@ def _strip_app_id(app_id):
 def straighten_dataset(ids_entries):
 	""" Ensure a 9:1 ratio of inliers:outliers for each app_id in the given entries. """
 
-	if not binary:
-		raise NotImplementedError()
-
 	# { app_id : its_entries }
 	ids_entry_dict = empty_app_id_to_list_dict()
 

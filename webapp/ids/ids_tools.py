@@ -51,6 +51,16 @@ def empty_app_id_to_list_dict():
 	return result
 
 
+def empty_app_id_to_list_tuple_dict():
+	""" Create an empty dict with { app_id : ([], []) }. """
+
+	result = {}
+	for app_id in ids_data.get_app_ids():
+		result[app_id] = ([], [])
+
+	return result
+
+
 ### MD5 ###
 
 

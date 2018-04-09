@@ -136,6 +136,9 @@ def X_y_to_train_test(X, y, binary=True):
 	X_train, X_test, y_train, y_test = sk_mod.train_test_split(
 		X_normal, y_normal, test_size=test_size)
 
+	if not (isinstance(X_test, list) and isinstance(y_test, list)):
+		raise RuntimeError("Invalid data structure type.")
+
 	# All intruded entries go to the test set
 	X_test += X_intruded
 	y_test += y_intruded

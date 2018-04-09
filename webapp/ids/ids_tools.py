@@ -179,6 +179,25 @@ def straighten_dataset_for_app(ids_entries):
 	return its_result
 
 
+def split_inliers_outliers(ids_entries):
+	""" Splits the given entries into inliers and outliers (regardless of app_id).
+	returns: (inliers, outliers) """
+
+	inliers = []
+	outliers = []
+
+	for ids_entry in ids_entries:
+		if is_inlier(ids_entry.vclass):
+			inliers.append(ids_entry)
+		elif is_outlier(ids_entry.vclass):
+			outliers.append(ids_entry)
+
+	if len(ids_entries) != len(inliers) + len(outliers):
+		raise RuntimeError("Missed some entries...")
+
+	return (inliers, outliers)
+
+
 # pylint: disable-msg=C0103; (Invalid name)
 def X_y_to_train_test(X, y):
 	"""

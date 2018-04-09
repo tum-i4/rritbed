@@ -123,10 +123,10 @@ def X_y_to_train_test(X, y, binary=True):
 
 	percentage_intruded = (len(X_intruded) / float(len(X)))
 
-	if percentage_intruded > 0.7:
-		raise ValueError("Given data has too few (< 30 %) normal samples.")
-	elif percentage_intruded < 0.1:
-		raise ValueError("Given data has too few (< 10 %) intruded samples.")
+	if percentage_intruded > 0.9:
+		raise ValueError("Given data has too few (< 10 %) normal samples.")
+	elif percentage_intruded > 0.7:
+		warnings.warn("Given data has very few (< 30 %) normal samples.")
 	elif percentage_intruded <= 0.2:
 		warnings.warn("Given data has very few (10-20 %) intruded samples.")
 

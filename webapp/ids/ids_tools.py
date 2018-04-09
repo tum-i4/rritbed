@@ -147,31 +147,19 @@ def straighten_dataset(ids_entries):
 def straighten_dataset_for_app(ids_entries):
 	""" Ensure a 9:1 ratio of inliers:outliers in the given entries. """
 
-	# (inliers, outliers)
-	its_entries = ([], [])
-	for ids_entry in ids_entries:
-		idx = -1
-		if is_inlier(ids_entry.vclass):
-			idx = 0
-		elif is_outlier(ids_entry.vclass):
-			idx = 1
+	inliers, outliers = split_inliers_outliers(ids_entries)
 
-		its_entries[idx].append(ids_entry)
-
-	its_inliers = its_entries[0]
-	its_outliers = its_entries[1]
-
-	total_entry_count = len(its_inliers) + len(its_outliers)
+	total_entry_count = len(inliers) + len(outliers)
 
 	expected_outlier_percent = 0.1
 	expected_outlier_count = int(expected_outlier_percent * total_entry_count)
 
-	if (not its_inliers
-		or len(its_outliers) < expected_outlier_count):
+	if (not inliers
+		or len(outliers) < expected_outlier_count):
 		raise ValueError("Given data is insufficient for straightening.")
 
-	its_result = its_inliers
-	its_result += random.sample(its_outliers, expected_outlier_count)
+	its_result = inliers
+	its_result += random.sample(outliers, expected_outlier_count)
 
 	return its_result
 

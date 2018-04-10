@@ -159,13 +159,10 @@ class DistributionGenerator(object):
 		""" Calculate a huge error based on the selected intrusion level. """
 
 		normal_value, _ = self._generate_impl(values)
-		factor = numpy.random.choice([-1, 1])
-		if normal_value != 0:
-			# +1 or -1
-			factor = normal_value / abs(normal_value)
-
+		factor = -1
 		error_span = self._errors[self._intrusion_level].l
-		if factor > 0:
+		if normal_value >= self._mean:
+			factor = 1
 			error_span = self._errors[self._intrusion_level].r
 
 		# Generated value < 0: take span_l, subtract from mean

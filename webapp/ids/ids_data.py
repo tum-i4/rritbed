@@ -12,7 +12,7 @@ POSE_POI = "POI"
 POSE_TSP = "TSPROUTING"
 def get_generators():
 	return list(["GAUSSIAN", "GUMBEL", "LAPLACE", "LOGISTIC", "PARETO", "RAYLEIGH",
-	"UNIFORM", "VONMISES", "WALD", "WEIBULL", "ZIPF"])
+	"UNIFORM", "VONMISES", "WALD", "WEIBULL"])
 def get_colours():
 	return list(["COLOUR"])
 def get_poses():

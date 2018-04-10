@@ -33,8 +33,8 @@ class DistributionGenerator(object):
 			if any([l not in input_dict for l in DistributionGenerator.LEVELS]):
 				raise ValueError("Given error dictionary is erronous.")
 
-		if any([not isinstance(v, float) for v in off_value_values.values()]):
-			raise TypeError("Off-value values are expected to be of float type.")
+		if any([not isinstance(v, list) for v in off_value_values.values()]):
+			raise TypeError("Off-value values are expected to be lists.")
 
 		if any([not callable(l) for l in huge_error_lambdas.values()]):
 			raise TypeError("Huge-error lambdas are expected to be callables.")
@@ -115,7 +115,8 @@ class DistributionGenerator(object):
 	def _generate_intrusion_off_value(self, values=None):
 		""" Return the off-value of the selected intrusion level. """
 
-		off_value = self._off_value_values[self._intrusion_level]
+		choices = self._off_value_values[self._intrusion_level]
+		off_value = numpy.random.choice(choices)
 
 		return (off_value, DistributionGenerator.OFF_VALUE)
 

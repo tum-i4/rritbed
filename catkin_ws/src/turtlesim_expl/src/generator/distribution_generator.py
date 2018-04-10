@@ -17,7 +17,7 @@ class DistributionGenerator(object):
 
 
 	def __init__(self,
-		method_name, name, args_constraints, expected_values,
+		method_name, name, args_constraints, expected_range, mean,
 		rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
@@ -28,10 +28,14 @@ class DistributionGenerator(object):
 		self.rate_in_hz = rate_in_hz
 		self.queue_size = queue_size
 
-		if not isinstance(expected_values, list) or len(expected_values) != 2:
-			raise ValueError("expected_values is supposed to be a list with two values [min, max].")
+		if not isinstance(expected_range, list) or len(expected_range) != 2:
+			raise TypeError("expected_values is supposed to be a list with two values [min, max].")
 
-		self._expected_values = expected_values
+		if not isinstance(mean, float):
+			raise TypeError("mean expects a float value")
+
+		self._expected_range = expected_range
+		self._mean = mean
 		self._set_intrusion_parameters()
 		self._intrusion_level = None
 

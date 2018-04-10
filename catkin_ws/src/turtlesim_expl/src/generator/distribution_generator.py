@@ -17,8 +17,7 @@ class DistributionGenerator(object):
 
 
 	def __init__(self,
-		method_name, name, args_constraints,
-		expected_values, huge_error_lambdas,
+		method_name, name, args_constraints, expected_values,
 		rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
@@ -32,13 +31,8 @@ class DistributionGenerator(object):
 		if not isinstance(expected_values, list) or len(expected_values) != 2:
 			raise ValueError("expected_values is supposed to be a list with two values [min, max].")
 
-		self._set_off_value_values(expected_values)
-
-		if (any([l not in huge_error_lambdas for l in DistributionGenerator.LEVELS])
-			or any([not callable(l) for l in huge_error_lambdas.values()])):
-			raise ValueError("Given huge_error_lambdas dictionary is erronous.")
-
-		self._huge_error_lambdas = huge_error_lambdas
+		self._expected_values = expected_values
+		self._set_intrusion_parameters()
 		self._intrusion_level = None
 
 		self.generate = self._generate_impl
@@ -53,28 +47,36 @@ class DistributionGenerator(object):
 		}
 
 
-	def _set_off_value_values(self, expected_values):
+	def _set_intrusion_parameters(self):
 		""" Calculate the off_value values based on the given expected min/max values. """
 
-		min_val = min(expected_values)
-		max_val = max(expected_values)
+		min_val = min(self._expected_values)
+		max_val = max(self._expected_values)
 		# Distance from center to either edge
 		base = (max_val - min_val) / float(2)
+		center = min_val + base
+		assert(min_val + base == max_val - base)
 
 		if len(DistributionGenerator.LEVELS) != 3:
 			raise NotImplementedError("Expected three levels")
 
-		easy_err = base * 9
-		med_err = base * 4
-		hard_err = base * 0.5
+		easy_err = base * 10
+		med_err = base * 5
+		hard_err = base * 1.5
 
-		self.off_value_values = {
+		self._errors = {
+			DistributionGenerator.LEVELS[0] : easy_err,
+			DistributionGenerator.LEVELS[1] : med_err,
+			DistributionGenerator.LEVELS[2] : hard_err
+		}
+
+		self._off_value_values = {
 			DistributionGenerator.LEVELS[0] :
-				[min_val - easy_err, max_val + easy_err],
+				[center - easy_err, center + easy_err],
 			DistributionGenerator.LEVELS[1] :
-				[min_val - med_err, max_val + med_err],
+				[center - med_err, center + med_err],
 			DistributionGenerator.LEVELS[2] :
-				[min_val - hard_err, max_val + hard_err],
+				[center - hard_err, center + hard_err],
 		}
 
 

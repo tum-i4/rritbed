@@ -75,7 +75,7 @@ class PoseProcessor(object):
 		# [Intrusion] Jump to random spot that is at least 10 pixels off
 		new_request = self._intrude_cc_request(request)
 		# Method chooses likelihood for different intrusion levels
-		intrude = self._is_intruded_with_likelihood()
+		intrude = self._is_intruded()
 
 		if intrude:
 			request = new_request
@@ -119,7 +119,7 @@ class PoseProcessor(object):
 		# [Intrusion] Illegal type
 		intruded_choice = random.choice(["private home", "nsa hq"])
 
-		intrude = self._is_intruded_with_likelihood()
+		intrude = self._is_intruded()
 
 		if intrude:
 			choice = intruded_choice
@@ -143,7 +143,7 @@ class PoseProcessor(object):
 		# [Intrusion] Request a routing to exactly our own position
 		intruded_x_y = (request[self._X_STR], request[self._Y_STR])
 
-		intrude = self._is_intruded_with_likelihood()
+		intrude = self._is_intruded()
 
 		if intrude:
 			targ_x_y = intruded_x_y
@@ -162,25 +162,9 @@ class PoseProcessor(object):
 		return request
 
 
-	def _is_intruded_with_likelihood(self):
+	def _is_intruded(self):
 		""" Choose from the two given objects with a likelihood corresponding to the intrusion level. """
-
-		normal = False
-		intruded = True
-
-		if self._intrusion is None:
-			return normal
-		# Easy: 50 % likelihood
-		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[0]:
-			return random.choice([normal, intruded])
-		# Medium: 30 % likelihood for intruded
-		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[1]:
-			return random.choice([normal] * 70 + [intruded] * 30)
-		# Hard: 20 % likelihood for intruded == 1/5
-		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[2]:
-			return random.choice([normal] * 4 + [intruded] * 1)
-		else:
-			raise NotImplementedError("Not implemented for intrusion value: {}".format(self._intrusion))
+		return self._intrusion is not None
 
 
 	def _label_request(self, request, intruded, intrusion_label):

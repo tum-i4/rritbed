@@ -62,7 +62,7 @@ class DistributionPublisher(object):
 		#    b) Generator based
 		elif args.mode == "gen":
 			return_message = self._setup_generator(
-				args.generator, args.params, args.intrusion_mode, args.seed)
+				args.generator, args.params, args.intrusion_mode, args.intrusion_level, args.seed)
 			queue_size = self._generator.queue_size
 		else:
 			raise NotImplementedError()
@@ -101,8 +101,11 @@ class DistributionPublisher(object):
 			file_path, " (repeating)" if self._repeat_file else "")
 
 
-	def _setup_generator(self, gen_name, parameters, intrusion_mode, seed=None):
+	def _setup_generator(self, gen_name, parameters, intrusion_mode, intrusion_level, seed=None):
 		""" Setup for data generation """
+
+		if intrusion_mode is not None and intrusion_level is None:
+			raise ValueError("Please select intrusion level!")
 
 		try:
 			generator = GENS.GENERATORS[gen_name]
@@ -110,7 +113,7 @@ class DistributionPublisher(object):
 			raise Exception("Could not find specified sub-routine {}".format(gen_name))
 
 		if intrusion_mode is not None:
-			generator.activate_intrusion(intrusion_mode)
+			generator.activate_intrusion(intrusion_mode, intrusion_level)
 
 		if seed is not None:
 			generator.seed(seed)
@@ -194,8 +197,10 @@ if __name__ == "__main__":
 
 		PARSER.add_argument("--id", "-i", required=True, help="ID to publish to")
 		INTRUSION_CHOICES = [DG.ONLY_ZEROES, DG.HUGE_ERROR]
-		PARSER.add_argument("--intrusion-mode", "-m", choices=INTRUSION_CHOICES, dest="intrusion_mode",
+		PARSER.add_argument("--intrusion-mode", "-m", choices=INTRUSION_CHOICES,
 			help="Activate the intrusion mode specified.")
+		PARSER.add_argument("--intrusion-level", "-l", choices=DG.LEVELS,
+			help="Select the intrusion level")
 		PARSER.add_argument("--debug", "-d", action="store_true",
 			help="Log generated values for easier debugging")
 

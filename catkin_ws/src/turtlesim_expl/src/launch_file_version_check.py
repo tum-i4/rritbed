@@ -3,6 +3,7 @@
 
 import argparse
 import rospy
+import sys
 
 EXPECTED_VERSION = 1.1
 
@@ -15,10 +16,10 @@ PARSER = argparse.ArgumentParser(prog="version_check",
 	description="Ensures all launch files are of the correct version")
 PARSER.add_argument("launch_file_version", metavar="X.Y",
 	help="The version of the launch file to check.")
-ARGS = PARSER.parse_args()
+ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
+
+rospy.init_node("version_check", anonymous=True)
 
 if ARGS.launch_file_version != EXPECTED_VERSION:
 	INVALID_MSG = "LAUNCH FILE VERSION INVALID!"
 	rospy.logfatal(INVALID_MSG)
-	rospy.signal_shutdown(INVALID_MSG)
-	raise rospy.ROSException(INVALID_MSG)

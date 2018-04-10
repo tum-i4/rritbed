@@ -14,15 +14,16 @@ class DistributionGenerator(object):
 	HUGE_ERROR = "huge-error"
 
 
-	def __init__(
-		self, method_name, name, args_constraints=None, rate_in_hz=10, queue_size=10):
+
+	def __init__(self,
+		method_name, name, args_constraints,
+		rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
 		object.__init__(self)
 
 		self.name = name
-		# Default argument count: 2, default values: 0.0 and 1.0
-		self.args_constraints = args_constraints or [ArgumentConstraint(0.0), ArgumentConstraint(1.0)]
+		self.args_constraints = args_constraints
 		self.rate_in_hz = rate_in_hz
 		self.queue_size = queue_size
 

@@ -150,9 +150,19 @@ class DistributionGenerator(object):
 		""" Calculate a huge error based on the selected intrusion level. """
 
 		normal_value, _ = self._generate_impl(values)
-		erroneous_value = self._huge_error_lambdas[self._intrusion_level](normal_value)
+		error_distance = self._errors[self._intrusion_level]
 
-		return (erroneous_value, DistributionGenerator.HUGE_ERROR)
+		next_value = None
+		if normal_value == 0:
+			factor = numpy.random.choice([-1, 1])
+			next_value = self._center + factor * error_distance
+		else:
+			# +1 or -1
+			factor = normal_value / abs(normal_value)
+			error_level = self._center + factor * error_distance
+			next_value = error_level + factor * (normal_value * normal_value)
+
+		return (next_value, DistributionGenerator.HUGE_ERROR)
 
 
 

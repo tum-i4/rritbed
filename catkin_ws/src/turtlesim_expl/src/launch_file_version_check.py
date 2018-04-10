@@ -14,7 +14,7 @@ EXPECTED_VERSION = 1.1
 
 PARSER = argparse.ArgumentParser(prog="version_check",
 	description="Ensures all launch files are of the correct version")
-PARSER.add_argument("launch_file_version", metavar="X.Y",
+PARSER.add_argument("launch_file_version", metavar="X.Y", type=float,
 	help="The version of the launch file to check.")
 ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
 

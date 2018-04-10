@@ -29,18 +29,15 @@ class DistributionGenerator(object):
 		self.rate_in_hz = rate_in_hz
 		self.queue_size = queue_size
 
-		if any([l not in huge_error_lambdas for l in DistributionGenerator.LEVELS]):
-			raise ValueError("Given huge_error_lambdas dictionary is erronous.")
-
 		if not isinstance(expected_values, list) or len(expected_values) != 2:
 			raise ValueError("expected_values is supposed to be a list with two values [min, max].")
 
 		self._set_off_value_values(expected_values)
 
-		if any([not callable(l) for l in huge_error_lambdas.values()]):
-			raise TypeError("Huge-error lambdas are expected to be callables.")
+		if (any([l not in huge_error_lambdas for l in DistributionGenerator.LEVELS])
+			or any([not callable(l) for l in huge_error_lambdas.values()])):
+			raise ValueError("Given huge_error_lambdas dictionary is erronous.")
 
-		self._off_value_values = off_value_values
 		self._huge_error_lambdas = huge_error_lambdas
 		self._intrusion_level = None
 

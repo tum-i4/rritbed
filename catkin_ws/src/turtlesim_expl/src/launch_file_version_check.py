@@ -6,6 +6,11 @@ import rospy
 
 EXPECTED_VERSION = 1.1
 
+# VERSIONS:
+# 1.0 - Generators: Removes Zipf
+# 1.1 - Generators: Removes --intrusion-mode zeroes, introduces --intrusion-mode off-value
+#     - Generators: Adds --intrusion-level x
+
 PARSER = argparse.ArgumentParser(prog="version_check",
 	description="Ensures all launch files are of the correct version")
 PARSER.add_argument("launch_file_version", metavar="X.Y",

@@ -55,8 +55,13 @@ class DistributionGenerator(object):
 		}
 
 
-	def activate_intrusion(self, intrusion_mode):
+	def activate_intrusion(self, intrusion_mode, intrusion_level):
 		""" Activate the specified intrusion mode. """
+
+		if intrusion_level not in DistributionGenerator.LEVELS:
+			raise ValueError("Given intrusion level is invalid: {}".format(intrusion_level))
+
+		self._intrusion_level = intrusion_level
 
 		try:
 			self.generate = self._intrusion_generators[intrusion_mode]

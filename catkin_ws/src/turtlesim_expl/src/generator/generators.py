@@ -22,40 +22,79 @@ WALD_STR = "wald"
 WEIBULL_STR = "weibull"
 ZIPF_STR = "zipf"
 
+EASY_STR = "easy"
+MED_STR = "med"
+HARD_STR = "hard"
+
+
+# off_value_values: EASY +/- 10 *, MED +/- 5 *, HARD: +/- 1.5 *
+
 
 # pylint: disable-msg=E1101
 GENERATORS = {
 	# Gaussian, Gumbel, Laplace: loc and scale arbitrary
 	GAUSSIAN_STR : DistributionGenerator("normal", GAUSSIAN_STR,
-		[AC(0.0), AC(1.0)]),
-	GUMBEL_STR : DistributionGenerator("gumbel", GUMBEL_STR,
-		[AC(0.0), AC(1.0)]),
-	LAPLACE_STR : DistributionGenerator("laplace", LAPLACE_STR,
-		[AC(0.0), AC(1.0)]),
-	# Logistic: loc arbitrary, scale > 0
-	LOGISTIC_STR : DistributionGenerator("logistic", LOGISTIC_STR,
-		[AC(0.0), AC(1.0, min_value=0.1)]),
-	# Pareto: a(lpha) > 0
-	PARETO_STR : DistributionGenerator("pareto", PARETO_STR,
-		[AC(1.0, min_value=0.1)]),
-	# Rayleigh: scale > 0
-	RAYLEIGH_STR : DistributionGenerator("rayleigh", RAYLEIGH_STR,
-		[AC(1.0, min_value=0.1)]),
-	# Uniform: low < high (not a binding constraint)
-	UNIFORM_STR : DistributionGenerator("uniform", UNIFORM_STR,
-		[AC(0.0), AC(1.0)]),
-	# Von Mises: mu arbitrary, kappa >= 0
-	VON_MISES_STR : DistributionGenerator("vonmises", VON_MISES_STR,
-		[AC(0.0), AC(1.0, min_value=0)]),
-	# Wald: mean > 0, scale > 0
-	WALD_STR : DistributionGenerator("wald", WALD_STR,
-		[AC(1.0, min_value=0.1), AC(1.0, min_value=0.1)]),
-	# Weibull: a > 0
-	WEIBULL_STR : DistributionGenerator("weibull", WEIBULL_STR,
-		[AC(5.0, min_value=0.1)]),
-	# Zipf: a > 1
-	ZIPF_STR : DistributionGenerator("zipf", ZIPF_STR,
-		[AC(2.0, min_value=1.1)])
+		[AC(0.0), AC(1.0)],
+		expected_values=[-3.5, 3.5],
+		huge_error_lambdas={}),
+	# GUMBEL_STR : DistributionGenerator("gumbel", GUMBEL_STR,
+	# 	[AC(0.0), AC(1.0)],
+	# 	# Expects -7 ~ 2.3
+	# 	off_value_values={EASY_STR:[-70, 23], MED_STR:[-35, 11.5], HARD_STR:[-10.5, 3.45]},
+	# 	huge_error_lambdas={}),
+	# LAPLACE_STR : DistributionGenerator("laplace", LAPLACE_STR,
+	# 	[AC(0.0), AC(1.0)],
+	# 	# Expects -6.3 ~ 6.3
+	# 	off_value_values={EASY_STR:[-63, 63], MED_STR:[-31.5, 31.5], HARD_STR:[-9.45, 9.45]},
+	# 	huge_error_lambdas={}),
+	# # Logistic: loc arbitrary, scale > 0
+	# LOGISTIC_STR : DistributionGenerator("logistic", LOGISTIC_STR,
+	# 	[AC(0.0), AC(1.0, min_value=0.1)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Pareto: a(lpha) > 0
+	# PARETO_STR : DistributionGenerator("pareto", PARETO_STR,
+	# 	[AC(1.0, min_value=0.1)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Rayleigh: scale > 0
+	# RAYLEIGH_STR : DistributionGenerator("rayleigh", RAYLEIGH_STR,
+	# 	[AC(1.0, min_value=0.1)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Uniform: low < high (not a binding constraint)
+	# UNIFORM_STR : DistributionGenerator("uniform", UNIFORM_STR,
+	# 	[AC(0.0), AC(1.0)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Von Mises: mu arbitrary, kappa >= 0
+	# VON_MISES_STR : DistributionGenerator("vonmises", VON_MISES_STR,
+	# 	[AC(0.0), AC(1.0, min_value=0)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Wald: mean > 0, scale > 0
+	# WALD_STR : DistributionGenerator("wald", WALD_STR,
+	# 	[AC(1.0, min_value=0.1), AC(1.0, min_value=0.1)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Weibull: a > 0
+	# WEIBULL_STR : DistributionGenerator("weibull", WEIBULL_STR,
+	# 	[AC(5.0, min_value=0.1)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={}),
+	# # Zipf: a > 1
+	# ZIPF_STR : DistributionGenerator("zipf", ZIPF_STR,
+	# 	[AC(2.0, min_value=1.1)],
+	# 	# Expects -TODO ~ TODO
+	# 	off_value_values={EASY_STR:[-35, 35], MED_STR:[-17.5, 17.5], HARD_STR:[-5.25, 5.25]},
+	# 	huge_error_lambdas={})
 }
 
 

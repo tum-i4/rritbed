@@ -2,8 +2,8 @@
 """ Launch file version check: Ensure all launch files are of the correct version. """
 
 import argparse
-import rospy
 import sys
+import rospy
 
 EXPECTED_VERSION = 1.1
 
@@ -24,3 +24,5 @@ if ARGS.launch_file_version != EXPECTED_VERSION:
 	INVALID_MSG = ("LAUNCH FILE VERSION {} INVALID! EXPECTING {}."
 		.format(ARGS.launch_file_version, EXPECTED_VERSION))
 	rospy.logfatal(INVALID_MSG)
+else:
+	rospy.loginfo("Launch file is up-to-date.")

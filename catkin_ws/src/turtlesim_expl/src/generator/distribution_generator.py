@@ -54,7 +54,7 @@ class DistributionGenerator(object):
 
 
 	def _set_off_value_values(self, expected_values):
-
+		""" Calculate the off_value values based on the given expected min/max values. """
 
 		min_val = min(expected_values)
 		max_val = max(expected_values)
@@ -64,9 +64,9 @@ class DistributionGenerator(object):
 		if len(DistributionGenerator.LEVELS) != 3:
 			raise NotImplementedError("Expected three levels")
 
-		easy_err = base * 10
-		med_err = base * 5
-		hard_err = base * 1.5
+		easy_err = base * 9
+		med_err = base * 4
+		hard_err = base * 0.5
 
 		self.off_value_values = {
 			DistributionGenerator.LEVELS[0] :
@@ -76,10 +76,6 @@ class DistributionGenerator(object):
 			DistributionGenerator.LEVELS[2] :
 				[min_val - hard_err, max_val + hard_err],
 		}
-
-		# TODO
-		print(self.off_value_values)
-		exit()
 
 
 	def activate_intrusion(self, intrusion_mode, intrusion_level):

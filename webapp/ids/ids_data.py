@@ -43,7 +43,7 @@ def get_poi_results():
 def get_legal_labels():
 	return list(["normal"])
 def get_intrusion_labels_gens():
-	return list(["zeroes", "huge-error"])
+	return list(["off-value", "huge-error"])
 def get_labels_gens():
 	return list(get_legal_labels() + get_intrusion_labels_gens())
 def get_intrusion_labels_colrs():

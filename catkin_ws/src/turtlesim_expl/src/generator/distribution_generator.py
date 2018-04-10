@@ -18,7 +18,7 @@ class DistributionGenerator(object):
 
 	def __init__(self,
 		method_name, name, args_constraints,
-		off_value_values, huge_error_lambdas,
+		expected_values, huge_error_lambdas,
 		rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
@@ -29,12 +29,13 @@ class DistributionGenerator(object):
 		self.rate_in_hz = rate_in_hz
 		self.queue_size = queue_size
 
-		for input_dict in [off_value_values, huge_error_lambdas]:
-			if any([l not in input_dict for l in DistributionGenerator.LEVELS]):
-				raise ValueError("Given error dictionary is erronous.")
+		if any([l not in huge_error_lambdas for l in DistributionGenerator.LEVELS]):
+			raise ValueError("Given huge_error_lambdas dictionary is erronous.")
 
-		if any([not isinstance(v, list) for v in off_value_values.values()]):
-			raise TypeError("Off-value values are expected to be lists.")
+		if not isinstance(expected_values, list) or len(expected_values) != 2:
+			raise ValueError("expected_values is supposed to be a list with two values [min, max].")
+
+		self._set_off_value_values(expected_values)
 
 		if any([not callable(l) for l in huge_error_lambdas.values()]):
 			raise TypeError("Huge-error lambdas are expected to be callables.")
@@ -53,6 +54,35 @@ class DistributionGenerator(object):
 			DistributionGenerator.OFF_VALUE: self._generate_intrusion_off_value,
 			DistributionGenerator.HUGE_ERROR: self._generate_intrusion_huge_error
 		}
+
+
+	def _set_off_value_values(self, expected_values):
+
+
+		min_val = min(expected_values)
+		max_val = max(expected_values)
+		# Distance from center to either edge
+		base = (max_val - min_val) / float(2)
+
+		if len(DistributionGenerator.LEVELS) != 3:
+			raise NotImplementedError("Expected three levels")
+
+		easy_err = base * 10
+		med_err = base * 5
+		hard_err = base * 1.5
+
+		self.off_value_values = {
+			DistributionGenerator.LEVELS[0] :
+				[min_val - easy_err, max_val + easy_err],
+			DistributionGenerator.LEVELS[1] :
+				[min_val - med_err, max_val + med_err],
+			DistributionGenerator.LEVELS[2] :
+				[min_val - hard_err, max_val + hard_err],
+		}
+
+		# TODO
+		print(self.off_value_values)
+		exit()
 
 
 	def activate_intrusion(self, intrusion_mode, intrusion_level):

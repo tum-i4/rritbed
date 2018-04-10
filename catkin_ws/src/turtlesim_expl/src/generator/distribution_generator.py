@@ -54,7 +54,7 @@ class DistributionGenerator(object):
 		max_val = max(self._expected_values)
 		# Distance from center to either edge
 		base = (max_val - min_val) / float(2)
-		center = min_val + base
+		self._center = min_val + base
 		assert(min_val + base == max_val - base)
 
 		if len(DistributionGenerator.LEVELS) != 3:
@@ -72,11 +72,11 @@ class DistributionGenerator(object):
 
 		self._off_value_values = {
 			DistributionGenerator.LEVELS[0] :
-				[center - easy_err, center + easy_err],
+				[self._center - easy_err, self._center + easy_err],
 			DistributionGenerator.LEVELS[1] :
-				[center - med_err, center + med_err],
+				[self._center - med_err, self._center + med_err],
 			DistributionGenerator.LEVELS[2] :
-				[center - hard_err, center + hard_err],
+				[self._center - hard_err, self._center + hard_err],
 		}
 
 

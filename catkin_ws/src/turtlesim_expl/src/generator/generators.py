@@ -26,9 +26,12 @@ ZIPF_STR = "zipf"
 # pylint: disable-msg=E1101
 GENERATORS = {
 	# Gaussian, Gumbel, Laplace: loc and scale arbitrary
-	GAUSSIAN_STR : DistributionGenerator("normal", GAUSSIAN_STR),
-	GUMBEL_STR : DistributionGenerator("gumbel", GUMBEL_STR),
-	LAPLACE_STR : DistributionGenerator("laplace", LAPLACE_STR),
+	GAUSSIAN_STR : DistributionGenerator("normal", GAUSSIAN_STR,
+		[AC(0.0), AC(1.0)]),
+	GUMBEL_STR : DistributionGenerator("gumbel", GUMBEL_STR,
+		[AC(0.0), AC(1.0)]),
+	LAPLACE_STR : DistributionGenerator("laplace", LAPLACE_STR,
+		[AC(0.0), AC(1.0)]),
 	# Logistic: loc arbitrary, scale > 0
 	LOGISTIC_STR : DistributionGenerator("logistic", LOGISTIC_STR,
 		[AC(0.0), AC(1.0, min_value=0.1)]),
@@ -39,7 +42,8 @@ GENERATORS = {
 	RAYLEIGH_STR : DistributionGenerator("rayleigh", RAYLEIGH_STR,
 		[AC(1.0, min_value=0.1)]),
 	# Uniform: low < high (not a binding constraint)
-	UNIFORM_STR : DistributionGenerator("uniform", UNIFORM_STR),
+	UNIFORM_STR : DistributionGenerator("uniform", UNIFORM_STR,
+		[AC(0.0), AC(1.0)]),
 	# Von Mises: mu arbitrary, kappa >= 0
 	VON_MISES_STR : DistributionGenerator("vonmises", VON_MISES_STR,
 		[AC(0.0), AC(1.0, min_value=0)]),

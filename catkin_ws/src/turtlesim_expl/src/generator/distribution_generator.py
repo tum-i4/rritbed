@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ DistributionGenerator class """
 
+from collections import namedtuple
 import numpy
 
 from argument_constraint import ArgumentConstraint
@@ -54,19 +55,23 @@ class DistributionGenerator(object):
 	def _set_intrusion_parameters(self):
 		""" Calculate the off_value values based on the given expected min/max values. """
 
-		min_val = min(self._expected_values)
-		max_val = max(self._expected_values)
-		# Distance from center to either edge
-		base = (max_val - min_val) / float(2)
-		self._center = min_val + base
-		assert(round(self._center, 2) == round(max_val - base, 2))
+		min_val = min(self._expected_range)
+		max_val = max(self._expected_range)
+		assert(min_val < self._mean)
+		assert(max_val > self._mean)
+
+		# span = max_val - min_val
+		span_l = self._mean - min_val
+		span_r = max_val - self._mean
+		# base = (max_val - min_val) / float(2)
 
 		if len(DistributionGenerator.LEVELS) != 3:
 			raise NotImplementedError("Expected three levels")
 
-		easy_err = base * 10
-		med_err = base * 5
-		hard_err = base * 1.5
+		err_tuple = namedtuple("err_tuple", "l r")
+		easy_err = err_tuple(span_l * 10, span_r * 10)
+		med_err = err_tuple(span_l * 5, span_r * 5)
+		hard_err = err_tuple(span_l * 1.5, span_r * 1.5)
 
 		self._errors = {
 			DistributionGenerator.LEVELS[0] : easy_err,
@@ -76,11 +81,11 @@ class DistributionGenerator(object):
 
 		self._off_value_values = {
 			DistributionGenerator.LEVELS[0] :
-				[self._center - easy_err, self._center + easy_err],
+				[self._mean - easy_err.l, self._mean + easy_err.r],
 			DistributionGenerator.LEVELS[1] :
-				[self._center - med_err, self._center + med_err],
+				[self._mean - med_err.l, self._mean + med_err.r],
 			DistributionGenerator.LEVELS[2] :
-				[self._center - hard_err, self._center + hard_err],
+				[self._mean - hard_err.l, self._mean + hard_err.r],
 		}
 
 

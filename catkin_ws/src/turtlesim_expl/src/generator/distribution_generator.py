@@ -10,13 +10,15 @@ class DistributionGenerator(object):
 	""" Container class for distribution parameters """
 
 	NORMAL = "normal"
-	ONLY_ZEROES = "zeroes"
+	OFF_VALUE = "off-value"
 	HUGE_ERROR = "huge-error"
 
+	LEVELS = ["easy", "med", "hard"]
 
 
 	def __init__(self,
 		method_name, name, args_constraints,
+		off_value_values, huge_error_lambdas,
 		rate_in_hz=10, queue_size=10):
 		""" Ctor """
 
@@ -27,6 +29,20 @@ class DistributionGenerator(object):
 		self.rate_in_hz = rate_in_hz
 		self.queue_size = queue_size
 
+		for input_dict in [off_value_values, huge_error_lambdas]:
+			if any([l not in input_dict for l in DistributionGenerator.LEVELS]):
+				raise ValueError("Given error dictionary is erronous.")
+
+		if any([not isinstance(v, float) for v in off_value_values.values()]):
+			raise TypeError("Off-value values are expected to be of float type.")
+
+		if any([not callable(l) for l in huge_error_lambdas.values()]):
+			raise TypeError("Huge-error lambdas are expected to be callables.")
+
+		self._off_value_values = off_value_values
+		self._huge_error_lambdas = huge_error_lambdas
+		self._intrusion_level = None
+
 		self.generate = self._generate_impl
 
 		# pylint: disable-msg=E1101; (Module has no '...' member)
@@ -34,12 +50,9 @@ class DistributionGenerator(object):
 		self._method = getattr(self.np_rand, method_name)
 
 		self._intrusion_generators = {
-			DistributionGenerator.ONLY_ZEROES: self._generate_intrusion_zeroes,
+			DistributionGenerator.OFF_VALUE: self._generate_intrusion_off_value,
 			DistributionGenerator.HUGE_ERROR: self._generate_intrusion_huge_error
 		}
-
-		# Huge error
-		self._h_e_last_was_normal = True
 
 
 	def activate_intrusion(self, intrusion_mode):

@@ -36,7 +36,7 @@ GENERATORS = {
 	GAUSSIAN_STR : DistributionGenerator("normal", GAUSSIAN_STR,
 		[AC(0.0), AC(1.0)],
 		expected_values=[-3.5, 3.5],
-		huge_error_lambdas={}),
+		huge_error_lambdas={EASY_STR:lambda x: x, MED_STR:lambda x: x, HARD_STR:lambda x: x}),
 	# GUMBEL_STR : DistributionGenerator("gumbel", GUMBEL_STR,
 	# 	[AC(0.0), AC(1.0)],
 	# 	# Expects -7 ~ 2.3

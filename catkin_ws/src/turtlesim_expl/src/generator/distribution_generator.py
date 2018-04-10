@@ -112,26 +112,21 @@ class DistributionGenerator(object):
 
 
 	# pylint: disable-msg=W0613; (Unused argument - is necessary)
-	def _generate_intrusion_zeroes(self, values=None):
-		""" Return zero. """
-		return (0, DistributionGenerator.ONLY_ZEROES)
+	def _generate_intrusion_off_value(self, values=None):
+		""" Return the off-value of the selected intrusion level. """
+
+		off_value = self._off_value_values[self._intrusion_level]
+
+		return (off_value, DistributionGenerator.OFF_VALUE)
 
 
 	def _generate_intrusion_huge_error(self, values=None):
-		""" Subtract every second generated number by (itself * 100). """
+		""" Calculate a huge error based on the selected intrusion level. """
 
-		next_tuple = self._generate_impl(values)
+		normal_value, _ = self._generate_impl(values)
+		erroneous_value = self._huge_error_lambdas[self._intrusion_level](normal_value)
 
-		if self._h_e_last_was_normal:
-			error = next_tuple[0] * next_tuple[0]
-			multiplier = numpy.random.choice([1, -1])
-			next_value = next_tuple[0] + (multiplier * error)
-			next_str = DistributionGenerator.HUGE_ERROR
-			next_tuple = (next_value, next_str)
-
-		self._h_e_last_was_normal = not self._h_e_last_was_normal
-
-		return next_tuple
+		return (erroneous_value, DistributionGenerator.HUGE_ERROR)
 
 
 

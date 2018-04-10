@@ -21,5 +21,6 @@ ARGS = PARSER.parse_args(rospy.myargv(sys.argv)[1:])
 rospy.init_node("version_check", anonymous=True)
 
 if ARGS.launch_file_version != EXPECTED_VERSION:
-	INVALID_MSG = "LAUNCH FILE VERSION INVALID!"
+	INVALID_MSG = ("LAUNCH FILE VERSION {} INVALID! EXPECTING {}."
+		.format(ARGS.launch_file_version, EXPECTED_VERSION))
 	rospy.logfatal(INVALID_MSG)

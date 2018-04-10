@@ -54,8 +54,8 @@ class DistributionGenerator(object):
 		max_val = max(self._expected_values)
 		# Distance from center to either edge
 		base = (max_val - min_val) / float(2)
-		self._center = min_val + base
-		assert(min_val + base == max_val - base)
+		self._center = round(min_val + base, 2)
+		assert(self._center == round(max_val - base, 2))
 
 		if len(DistributionGenerator.LEVELS) != 3:
 			raise NotImplementedError("Expected three levels")

@@ -196,7 +196,7 @@ if __name__ == "__main__":
 		PARSER = argparse.ArgumentParser(prog="dist_pub")
 
 		PARSER.add_argument("--id", "-i", required=True, help="ID to publish to")
-		INTRUSION_CHOICES = [DG.ONLY_ZEROES, DG.HUGE_ERROR]
+		INTRUSION_CHOICES = [DG.OFF_VALUE, DG.HUGE_ERROR]
 		PARSER.add_argument("--intrusion-mode", "-m", choices=INTRUSION_CHOICES,
 			help="Activate the intrusion mode specified.")
 		PARSER.add_argument("--intrusion-level", "-l", choices=DG.LEVELS,

@@ -5,12 +5,13 @@ import argparse
 import sys
 import rospy
 
-EXPECTED_VERSION = 1.1
+EXPECTED_VERSION = 1.2
 
 # VERSIONS:
 # 1.0 - Generators: Removes Zipf
 # 1.1 - Generators: Removes --intrusion-mode zeroes, introduces --intrusion-mode off-value
 #     - Generators: Adds --intrusion-level x
+# 1.2 - Turtlesim:  Movement intelligence should always be 'return'
 
 PARSER = argparse.ArgumentParser(prog="version_check",
 	description="Ensures all launch files are of the correct version")

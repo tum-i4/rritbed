@@ -77,7 +77,7 @@ if RANDOM_NAME:
 
 info("Using target file name \"%s\"\n" % NEW_NAME)
 
-NEW_PATH = os.path.dirname(PATH) + NEW_NAME
+NEW_PATH = os.path.join(os.path.dirname(PATH), NEW_NAME)
 
 if os.path.lexists(NEW_PATH):
 	err_exit("Target file exists! Try again or remove.")

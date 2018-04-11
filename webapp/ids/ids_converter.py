@@ -271,7 +271,7 @@ class IdsConverter(object):
 		"""
 		Either just convert the data (data generators) or do a one-hot encoding of the log message.
 		returns: Two-dimensional numpy.ndarray with either 1 float value, 4 int values
-		or up to 12 binary encoded values per row.
+		or up to 11 binary encoded values per row.
 		"""
 
 		# Generators send "{f}"
@@ -283,8 +283,8 @@ class IdsConverter(object):
 		if app_id in ids_data.get_colours():
 			colours = [[int(val) for val in msg.split(",")] for msg in log_messages]
 
-			# Returns a list with 12 values
-			return IdsConverter.colours_one_hot(colours)
+			# Returns a list with 3 values
+			return IdsConverter.colours_split(colours)
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
@@ -334,6 +334,15 @@ class IdsConverter(object):
 
 		encodings = numpy.concatenate((red_encodings, green_encodings, blue_encodings), axis=1)
 		return encodings
+
+
+	@staticmethod
+	def colours_split(colours):
+		"""
+		Leave the split as-is.
+		returns: A two-dimensional numpy.ndarray with a 3 element split per row.
+		"""
+		return numpy.array(colours)
 
 
 	@staticmethod
@@ -438,9 +447,9 @@ class IdsConverter(object):
 		# 1 value (generated)
 		for gen_key in ids_data.get_generators():
 			constraints[gen_key] = {len_key : base_len + 1}
-		# 12 values for a one-hot encoded colour
+		# 3 values for a split colour
 		for colr_key in ids_data.get_colours():
-			constraints[colr_key] = {len_key : base_len + 12}
+			constraints[colr_key] = {len_key : base_len + 3}
 		# Poses all have GPS
 		for pose_key in ids_data.get_poses():
 			constraints[pose_key] = {len_key : base_len + 2}

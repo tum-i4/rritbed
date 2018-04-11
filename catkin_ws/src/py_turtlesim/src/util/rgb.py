@@ -30,29 +30,41 @@ class Rgb(object):
 
 	@staticmethod
 	def pastel_purple():
-		""" Return a pastel purple Rgb object """
-		return Rgb(r=150, g=125, b=210)
+		""" Return a pastel purple Rgb object. """
+		return Rgb(r=150, g=140, b=200)
 
 
 	@staticmethod
 	def pastel_yellow():
-		""" Return a pastel yellow Rgb object """
-		return Rgb(r=255, g=240, b=120)
+		""" Return a pastel yellow Rgb object. """
+		return Rgb(r=170, g=250, b=140)
 
 
 	@staticmethod
 	def pastel_green():
-		""" Return a pastel green Rgb object """
-		return Rgb(r=100, g=180, b=100)
+		""" Return a pastel green Rgb object. """
+		return Rgb(r=120, g=180, b=130)
 
 
 	@staticmethod
 	def pastel_blue():
-		""" Return a pastel blue Rgb object """
-		return Rgb(r=100, g=180, b=250)
+		""" Return a pastel blue Rgb object. """
+		return Rgb(r=120, g=180, b=200)
 
 
 	@staticmethod
-	def red():
-		""" Return a red Rgb object """
+	def strong_red():
+		""" Return a red Rgb object. """
 		return Rgb(r=Rgb.MAX)
+
+
+	@staticmethod
+	def med_red():
+		""" Return a medium red Rgb object. """
+		return Rgb(r=200, g=50, b=50)
+
+
+	@staticmethod
+	def light_red():
+		""" Return a light red Rgb object. """
+		return Rgb(r=170, g=80, b=80)

@@ -112,8 +112,9 @@ with open(PATH, "r") as ORIG_FILE:
 		LINE_NO = index + 1
 
 		if not any([i in NEW_LINE for i in ["--intrusion", "--intrusion-level"]]):
-			line_warning(LINE_NO, NEW_LINE,
-				"Found identifier \"{}\" in line, but no expected flag".format(md))
+			if not IS_COMMENT:
+				line_warning(LINE_NO, NEW_LINE,
+					"Found identifier in line, but no expected flag")
 
 		if "intelligence" in NEW_LINE and "stay" in NEW_LINE:
 			line_warning(LINE_NO, NEW_LINE, "Found incorrect intelligence mode \"stay\"")

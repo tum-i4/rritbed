@@ -138,25 +138,29 @@ class TurtleFrame(object):
 
 		from_point = Point(0, 0)
 		to_point = Point(0, 0)
+		colour = Rgb()
 
 		assert(len(self.POSSIBLE_INTRUSION_LEVELS) == 3)
 
-		# Easy: 40 % red / 316 * 316
+		# Easy: 40 % strong_red / 316 * 316
 		if intrusion == self.POSSIBLE_INTRUSION_LEVELS[0]:
 			from_point = Point(92, 92)
 			to_point = Point(407, 407)
-		# Medium: 20 % red / 224 * 224
+			colour = Rgb.strong_red()
+		# Medium: 20 % med_red / 224 * 224
 		elif intrusion == self.POSSIBLE_INTRUSION_LEVELS[1]:
 			from_point = Point(138, 138)
 			to_point = Point(361, 361)
-		# Hard: 5 % red / 112 * 112
+			colour = Rgb.med_red()
+		# Hard: 5 % light_red / 112 * 112
 		elif intrusion == self.POSSIBLE_INTRUSION_LEVELS[2]:
 			from_point = Point(194, 194)
 			to_point = Point(305, 305)
+			colour = Rgb.light_red()
 		else:
 			raise NotImplementedError("draw_red: Intrusion level not implemented")
 
-		self._draw_area(Rgb.red(), from_point, to_point)
+		self._draw_area(colour, from_point, to_point)
 
 
 	def _spawn_turtle(self, trt_x, trt_y, name=None):

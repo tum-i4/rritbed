@@ -163,8 +163,27 @@ class PoseProcessor(object):
 
 
 	def _is_intruded(self):
-		""" Choose from the two given objects with a likelihood corresponding to the intrusion level. """
+		""" Return if the current request should be intruded. """
+
+		# Currently always sends the intrusion to increase intrusion density in the data.
 		return self._intrusion is not None
+
+		normal = False
+		intruded = True
+
+		if self._intrusion is None:
+			return normal
+		# Easy: 40 % likelihood = 2/5
+		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[0]:
+			return random.choice([normal] * 3 + [intruded] * 2)
+		# Medium: 20 % likelihood = 1/5
+		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[1]:
+			return random.choice([normal] * 4 + [intruded] * 1)
+		# Hard: 5 % likelihood = 1/20
+		elif self._intrusion == self.POSSIBLE_INTRUSION_LEVELS[2]:
+			return random.choice([normal] * 19 + [intruded] * 1)
+		else:
+			raise NotImplementedError("Not implemented for intrusion value: {}".format(self._intrusion))
 
 
 	def _label_request(self, request, intruded, intrusion_label):

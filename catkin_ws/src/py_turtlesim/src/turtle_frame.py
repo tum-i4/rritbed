@@ -160,6 +160,10 @@ class TurtleFrame(object):
 		else:
 			raise NotImplementedError("draw_red: Intrusion level not implemented")
 
+		# TODO TEMP Currently intruded means ALL is red!
+		from_point = Point(0, 0)
+		to_point = Point(499, 499)
+
 		self._draw_area(colour, from_point, to_point)
 
 

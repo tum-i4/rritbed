@@ -116,10 +116,27 @@ class Logger(object):
 	def log_colour(self, log_data):
 		""" Colour logging """
 
+		# See py_turtlesim.util.Rgb
+		legal_colours = [(150, 140, 200), (170, 250, 140), (120, 180, 130), (120, 180, 200)]
+		illegal_colours = [(255, 0, 0), (200, 50, 50), (170, 80, 80)]
+
+		this_colour = (log_data.r, log_data.g, log_data.b)
+
+		is_red = False
+		if this_colour in legal_colours:
+			is_red = False
+		elif this_colour in illegal_colours:
+			is_red = True
+		else:
+			raise NotImplementedError("This colour is not implemented: (%s, %s, %s)" % this_colour)
+
+		colour_string = "%s,%s,%s" % this_colour
+
 		request = self.copy_base_request()
-		request["colour"] = "{},{},{}".format(log_data.r, log_data.g, log_data.b)
+		request["colour"] = colour_string
+
 		if self._label:
-			request[Logger._INTRUSION_FIELD] = "normal" if log_data != Color(r=255, g=0, b=0) else "red"
+			request[Logger._INTRUSION_FIELD] = "red" if is_red else "normal"
 
 		self.send_request("colour", request)
 

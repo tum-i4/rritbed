@@ -424,8 +424,9 @@ class IdsConverter(object):
 		"""
 
 		if any([value not in expected_values for value in values]):
-			raise ValueError("Given value \"{}\" is invalid! Expected one of: {}"
-				.format(value, expected_values))
+			filtered = filter(lambda x: x not in expected_values, values)
+			raise ValueError("Given values \"{}\" are invalid! Expected one of: {}"
+				.format(filtered, expected_values))
 
 		binariser = sk_pre.LabelBinarizer()
 		binariser.fit(expected_values)

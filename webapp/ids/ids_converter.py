@@ -283,8 +283,8 @@ class IdsConverter(object):
 		if app_id in ids_data.get_colours():
 			colours = [[int(val) for val in msg.split(",")] for msg in log_messages]
 
-			# Returns a list with 3 values
-			return IdsConverter.colours_split(colours)
+			# Returns a list with 3 floats in [0,1]
+			return IdsConverter.colours_scale(colours)
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
@@ -337,12 +337,19 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def colours_split(colours):
+	def colours_scale(colours):
 		"""
-		Leave the split as-is.
+		Scale the split from [0,255] to [0,1].
 		returns: A two-dimensional numpy.ndarray with a 3 element split per row.
 		"""
-		return numpy.array(colours)
+
+		max_val = float(255)
+		scale = lambda x: x / max_val
+
+		scaled = [[scale(c) for c in row]
+			for row in colours]
+
+		return numpy.array(scaled)
 
 
 	@staticmethod

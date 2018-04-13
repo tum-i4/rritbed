@@ -21,6 +21,9 @@ import util.outp
 from util.prtr import TimePrinter
 
 
+ITEM_LIMIT = 5000000
+
+
 ### Workers ###
 
 
@@ -194,7 +197,7 @@ def read_convert(file_path):
 	converter = IdsConverter()
 	log_entries = []
 
-	for line in Dir.yield_lines(file_path, 5000000):
+	for line in Dir.yield_lines(file_path, ITEM_LIMIT):
 		log_entry = LogEntry.from_log_string(line)
 		log_entries.append(log_entry)
 
@@ -207,9 +210,9 @@ def read_sample_convert(file_path):
 
 	converter = IdsConverter()
 	log_entry_generator = (LogEntry.from_log_string(line) for line in Dir.yield_lines(file_path))
-	log_entries = ids_tools.reservoir_sample(log_entry_generator, 5000000)
+	log_entries = ids_tools.reservoir_sample(log_entry_generator, ITEM_LIMIT)
 
-	assert(len(log_entries)) == 5000000
+	assert(len(log_entries)) == ITEM_LIMIT
 
 	ids_entries_dict = converter.log_entries_to_ids_entries_dict(log_entries)
 	return ids_entries_dict

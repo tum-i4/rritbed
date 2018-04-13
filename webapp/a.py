@@ -193,7 +193,8 @@ def read_sample_convert(file_path):
 	""" Sample log entries from the given file and convert the result. """
 
 	converter = IdsConverter()
-	log_entries = ids_tools.reservoir_sample(Dir.yield_lines(file_path), 5000000)
+	log_entry_generator = (LogEntry.from_log_string(line) for line in Dir.yield_lines(file_path))
+	log_entries = ids_tools.reservoir_sample(log_entry_generator, 5000000)
 
 	assert(len(log_entries)) == 5000000
 

@@ -33,7 +33,7 @@ class IdsConverter(object):
 
 		self.label_int_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_labels(),
-			verify_hash="69a262192b246d16e8411b6db06e237b")
+			verify_hash="88074a13baa6f97fa4801f3b0ec53065")
 
 
 	def log_entry_to_vector(self, app_id, log_entry, binary=True):

@@ -205,13 +205,7 @@ def X_y_to_train_test(X, y):
 			y_intruded.append(vclass)
 
 	percentage_intruded = (len(X_intruded) / float(len(X)))
-
-	if percentage_intruded > 0.3:
-		raise ValueError("Given data has too few (< 70 %) normal samples.")
-	elif percentage_intruded > 0.2:
-		warnings.warn("Given data has few (< 80 %) normal samples.")
-	elif percentage_intruded < 0.01:
-		warnings.warn("Given data has very few (< 1 %) intruded samples.")
+	verify_percentage_intruded(percentage_intruded)
 
 	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
 	test_size = max(0.1, 0.3 - percentage_intruded)
@@ -226,6 +220,17 @@ def X_y_to_train_test(X, y):
 	y_test += y_intruded
 
 	return (X_train, y_train, X_test, y_test)
+
+
+def verify_percentage_intruded(percentage_intruded):
+	""" Check the percentage and warn or raise for problematic values. """
+
+	if percentage_intruded > 0.3:
+		raise ValueError("Given data has too few (< 70 %) normal samples.")
+	elif percentage_intruded > 0.2:
+		warnings.warn("Given data has few (< 80 %) normal samples.")
+	elif percentage_intruded < 0.01:
+		warnings.warn("Given data has very few (< 1 %) intruded samples.")
 
 
 ### Generating log entries ###

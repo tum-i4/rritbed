@@ -5,6 +5,7 @@
 
 import argparse
 import os
+import time
 
 import sklearn
 import sklearn.ensemble as sk_ens
@@ -29,31 +30,49 @@ EXPERIMENTS_HOME = "experiments"
 class Experiment(object):
 	""" Do experiments. Start with a(). """
 
-	def __init__(self):
+	def __init__(self, file_path, store_title):
 		""" Ctor """
+
 		object.__init__(self)
+
+		file_path = os.path.expanduser(file_path)
+
+		if not os.path.lexists(file_path):
+			util.outp.exit_on_error("Log file not found: %s" % file_path)
+
+		if store_title is not None:
+			self.store = True
+			self.title = store_title
+			self.experiment_dir = store_title.replace(" ", "_")
+
+		if self.store and os.path.lexists(self.experiment_dir):
+			util.outp.exit_on_error("Experiment folder exists: %s" % self.experiment_dir)
+
+		self.file_path = file_path
+		self.input_file_name = os.path.basename(file_path)
+		self.entries_dict = {}
+		self.classifiers = []
+		self.result = []
+		self.start_time = time.time()
+		self.end_time = None
 
 
 	### Workers ###
 
 
-	def a(self, file_path, experiment_dir):
+	def run(self):
 		""" Read entries, convert them, split them per app_id and call b() for each app. """
-
-		if not os.path.lexists(file_path) or os.path.lexists(experiment_dir):
-			print("Log file not found OR experiment folder exists")
-			exit()
 
 		printer = TimePrinter(name="a")
 		printer.prt("Reading file and converting...")
 
 		# ids_entries: { app_id, vector, my_class }
-		ids_entries_per_app = self.read_convert(file_path)
+		self.entries_dict = self.read_convert(self.file_path)
 
 		# TODO TEMP?
-		self.handle_all(ids_entries_per_app)
+		self.handle_all(self.entries_dict)
 
-		for app_id, ids_entries in ids_entries_per_app.items():
+		for app_id, ids_entries in self.entries_dict.items():
 			self.handle_app(app_id, ids_entries)
 
 
@@ -250,12 +269,12 @@ if __name__ == "__main__":
 	try:
 		PARSER = argparse.ArgumentParser()
 		PARSER.add_argument("file_path", metavar="PATH/FILE", help="Log file")
-		PARSER.add_argument("experiment_dir", metavar="PATH/DIR/", help="Store experiment data")
+		PARSER.add_argument("--store", "-s", metavar="TITLE", help="Experiment title")
 
 		ARGS = PARSER.parse_args()
 
-		experiment = Experiment()
-		experiment.a(ARGS.file_path, ARGS.experiment_dir)
+		experiment = Experiment(ARGS.file_path, ARGS.store)
+		experiment.run()
 
 		exit()
 	except KeyboardInterrupt:

@@ -48,6 +48,8 @@ def _yield_log_lines(yielder, first_line):
 	raise NotImplementedError()
 
 
+
+# pylint: disable-msg=R0903, C0111; (Too few public methods - enum, missing class docstring - obvious)
 class FileType(Enum):
 	LOG_FILE = 0
 	IDSE_FILE = 1

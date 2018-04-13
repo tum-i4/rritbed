@@ -39,6 +39,48 @@ def a(file_path):
 		handle_app(app_id, ids_entries)
 
 
+def handle_all(ids_entries_per_app):
+	""" Full flow for a one-fits-all classifier. """
+
+	ids_entries = []
+
+	# Dict to list
+	for _, entries in ids_entries_per_app:
+		entries = ids_tools.straighten_dataset_for_app(ids_entries)
+		ids_entries.extend(entries)
+
+	training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(ids_entries)
+	X_train, y_train = TEMP_IDS_ENTRIES_TO_X_Y(training_entries)
+
+	scoring_dict = ids_tools.empty_app_id_to_list_dict()
+	for ids_entry in scoring_entries:
+		scoring_dict[ids_entry.app_id] = ids_entry
+
+	# Classify with all entries
+	# training_entries
+	classifier = sklearn.svm.OneClassSVM()
+	classifier.fit(X_train)
+
+	for app_id, app_entries in scoring_dict.items():
+		X_test, y_test = TEMP_IDS_ENTRIES_TO_X_Y(app_entries)
+		y_pred = classifier.predict(X_test)
+		visualise(app_id, y_true, y_pred)
+
+
+def TEMP_IDS_ENTRIES_TO_X_Y(ids_entries):
+	""" Convert the given IdsEntry objects to (X, y). """
+
+	# pylint: disable-msg=C0103; (Invalid variable name)
+	X = []
+	y = []
+
+	for ids_entry in ids_entries:
+		X.append(ids_entry.vector)
+		y.append(ids_entry.vclass)
+
+	return (X, y)
+
+
 def handle_app(app_id, ids_entries):
 	""" Full flow for one classifier. """
 

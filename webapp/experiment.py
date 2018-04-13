@@ -84,7 +84,7 @@ class Experiment(object):
 		all_entries = []
 
 		# Dict to list
-		for _, all_entmy_entriesries in ids_entries_per_app.items():
+		for _, my_entries in ids_entries_per_app.items():
 			my_entries = ids_tools.straighten_dataset_for_app(my_entries)
 			all_entries.extend(my_entries)
 

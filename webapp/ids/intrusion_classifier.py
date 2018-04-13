@@ -193,7 +193,7 @@ class IntrusionClassifier(object):
 
 		printer.prt("Converting...")
 		# pylint: disable-msg=C0103; (Invalid variable name)
-		X_train, _ = self._converter.ids_entries_to_X_y(app_id, ids_entries)
+		X_train, _ = self._converter.ids_entries_to_X_y(ids_entries, app_id)
 
 		printer.prt("Creating and training new model... ", newline=False)
 		clf = sk_svm.OneClassSVM(random_state=0)

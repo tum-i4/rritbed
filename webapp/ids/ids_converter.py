@@ -82,15 +82,16 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def ids_entries_to_X_y(app_id, ids_entries):
-		""" Convert the given IdsEntry objects to (X, y). """
+	def ids_entries_to_X_y(ids_entries, app_id=None):
+		""" Convert the given IdsEntry objects to (X, y).
+		* app_id : Optionally specify the app_id that all entries should have. """
 
 		# pylint: disable-msg=C0103; (Invalid variable name)
 		X = []
 		y = []
 
 		for ids_entry in ids_entries:
-			if ids_entry.app_id != app_id:
+			if app_id and ids_entry.app_id != app_id:
 				raise ValueError("Given IdsEntry has an incorrect app_id!")
 
 			X.append(ids_entry.vector)
@@ -107,7 +108,7 @@ class IdsConverter(object):
 
 		train_dict = {}
 		for app_id, ids_entries in ids_entries_dict.items():
-			train_dict[app_id] = IdsConverter.ids_entries_to_X_y(app_id, ids_entries)
+			train_dict[app_id] = IdsConverter.ids_entries_to_X_y(ids_entries, app_id)
 
 		printer.prt("Done.")
 		return train_dict

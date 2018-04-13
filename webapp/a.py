@@ -42,6 +42,8 @@ def a(file_path):
 def handle_all(ids_entries_per_app):
 	""" Full flow for a one-fits-all classifier. """
 
+	print("ALLLLLLLL\n\n")
+
 	ids_entries = []
 
 	# Dict to list
@@ -65,6 +67,8 @@ def handle_all(ids_entries_per_app):
 		X_test, y_true = TEMP_IDS_ENTRIES_TO_X_Y(app_entries)
 		y_pred = classifier.predict(X_test)
 		visualise(app_id, y_true, y_pred)
+
+	print("\n\n\nSPLIT PER APPPPPPPP\n\n")
 
 
 def TEMP_IDS_ENTRIES_TO_X_Y(ids_entries):

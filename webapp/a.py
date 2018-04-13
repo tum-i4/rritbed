@@ -204,6 +204,30 @@ class Experiment(object):
 		print("WTF\n")
 
 
+	### Persistence ###
+
+
+	def store_experiment(self, experiment_dir, test_set, score_set, classifier, result):
+		pass
+
+
+	def retrieve_experiment(self, experiment_dir):
+		pass
+		# return (test_set, score_set, classifier, result)
+
+
+	@staticmethod
+	def get_experiment_folder(name):
+		""" Get the experiment folder of the given name. """
+
+		result = os.path.join(EXPERIMENTS_HOME, name)
+
+		if not os.path.lexists(result):
+			os.makedirs(result)
+
+		return result
+
+
 	### Helpers ###
 
 	@staticmethod

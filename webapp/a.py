@@ -51,6 +51,10 @@ def handle_all(ids_entries_per_app):
 	ids_entries = []
 
 	# Dict to list
+	print(ids_entries_per_app)
+	print(ids_entries_per_app.keys())
+	print(len(ids_entries_per_app))
+	exit()
 	for _, entries in ids_entries_per_app:
 		entries = ids_tools.straighten_dataset_for_app(ids_entries)
 		ids_entries.extend(entries)

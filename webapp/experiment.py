@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" a """
+""" The Experiment class and program. """
 
 # pylint: disable-msg=C0103; (Invalid name)
 

@@ -27,7 +27,7 @@ class Dir(object):
 		""" Return all lines in the given file. Removes the line terminating character. """
 
 		result = []
-		with open(file_path) as file_handle:
+		with open(file_path, "r") as file_handle:
 			for line in file_handle:
 				# Remove the newline character
 				result.append(line[:-1])
@@ -41,7 +41,7 @@ class Dir(object):
 
 		count = 0
 
-		with open(file_path) as file_handle:
+		with open(file_path, "r") as file_handle:
 			for line in file_handle:
 				# Remove the newline character
 				yield line[:-1]
@@ -57,7 +57,7 @@ class Dir(object):
 
 		line_ending = "\n"
 
-		with open(file_path) as file_handle:
+		with open(file_path, "w") as file_handle:
 			for line in lines_generator:
 				# Only add the line terminating character if it's missing.
 				if not line.endswith(line_ending):

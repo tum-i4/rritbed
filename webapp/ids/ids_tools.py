@@ -272,6 +272,30 @@ def get_test_size(percentage_intruded):
 	return test_size
 
 
+### Sampling ###
+
+
+def reservoir_sample(item_generator, sample_size):
+	""" Sample with 'Reservoir Sampling' from the given generator the given number of elements. """
+
+	reservoir = []
+	index = 0
+	for log_entry in item_generator:
+		if index < sample_size:
+			reservoir.append(log_entry)
+		else:
+			m = random.randint(0, index)
+			if m < sample_size:
+				reservoir[m] = log_entry
+
+		index += 1
+
+	if len(reservoir) < sample_size:
+		raise ValueError("Given generator exceeded before sample_size was reached!")
+
+	return reservoir
+
+
 ### Generating log entries ###
 
 

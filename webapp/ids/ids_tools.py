@@ -207,8 +207,7 @@ def X_y_to_train_test(X, y):
 	percentage_intruded = (len(X_intruded) / float(len(X)))
 	verify_percentage_intruded(percentage_intruded)
 
-	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
-	test_size = max(0.1, 0.3 - percentage_intruded)
+	test_size = get_test_size()
 	X_train, X_test, y_train, y_test = sk_mod.train_test_split(
 		X_normal, y_normal, test_size=test_size)
 
@@ -231,6 +230,14 @@ def verify_percentage_intruded(percentage_intruded):
 		warnings.warn("Given data has few (< 80 %) normal samples.")
 	elif percentage_intruded < 0.01:
 		warnings.warn("Given data has very few (< 1 %) intruded samples.")
+
+
+def get_test_size(percentage_intruded):
+	""" Get the test size based on the given percentage of intruded samples. """
+
+	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
+	test_size = max(0.1, 0.3 - percentage_intruded)
+	return test_size
 
 
 ### Generating log entries ###

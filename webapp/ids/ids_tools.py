@@ -221,6 +221,38 @@ def X_y_to_train_test(X, y):
 	return (X_train, y_train, X_test, y_test)
 
 
+def ids_entries_to_train_test(ids_entries):
+	"""
+	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
+	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)])
+	"""
+
+	if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
+		raise ValueError("Given entries are not valid IdsEntry objects!")
+
+	entries_normal = []
+	entries_intruded = []
+	for ids_entry in ids_entries:
+		if is_inlier(ids_entry.vclass):
+			entries_normal.append(ids_entry)
+		else:
+			entries_intruded.append(ids_entry)
+
+	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
+	verify_percentage_intruded(percentage_intruded)
+
+	test_size = get_test_size(percentage_intruded)
+	train, test = sk_mod.train_test_split(entries_normal, test_size=test_size)
+
+	# All intruded entries go to the test set
+	training_entries = train
+	scoring_entries = entries_intruded + test
+
+	# Shuffle entries?
+
+	return (training_entries, scoring_entries)
+
+
 def verify_percentage_intruded(percentage_intruded):
 	""" Check the percentage and warn or raise for problematic values. """
 

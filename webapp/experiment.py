@@ -81,14 +81,14 @@ class Experiment(object):
 
 		print("ALLLLLLLL\n\n")
 
-		ids_entries = []
+		all_entries = []
 
 		# Dict to list
-		for _, entries in ids_entries_per_app.items():
-			entries = ids_tools.straighten_dataset_for_app(ids_entries)
-			ids_entries.extend(entries)
+		for _, all_entmy_entriesries in ids_entries_per_app.items():
+			my_entries = ids_tools.straighten_dataset_for_app(my_entries)
+			all_entries.extend(my_entries)
 
-		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(ids_entries)
+		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
 		X_train, _ = self.TEMP_IDS_ENTRIES_TO_X_Y(training_entries)
 
 		scoring_dict = ids_tools.empty_app_id_to_list_dict()

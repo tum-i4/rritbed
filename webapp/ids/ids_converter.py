@@ -67,7 +67,8 @@ class IdsConverter(object):
 		app_ids = [ids_tools.log_entry_to_app_id(log_entry) for log_entry in log_entries]
 
 		if any([a != expected_app_id for a in app_ids]):
-			raise ValueError("Given elements are not all of the expected app type: {}".format(expected_app_id))
+			raise ValueError("Given elements are not all of the expected app type: {}"
+				.format(expected_app_id))
 
 		vectors = self.log_entries_to_vectors(expected_app_id, log_entries)
 		vclasses = [self.log_entry_to_class(log_entry, binary) for log_entry in log_entries]
@@ -80,7 +81,8 @@ class IdsConverter(object):
 		return ids_entries
 
 
-	def ids_entries_to_X_y(self, app_id, ids_entries):
+	@staticmethod
+	def ids_entries_to_X_y(app_id, ids_entries):
 		""" Convert the given IdsEntry objects to (X, y). """
 
 		# pylint: disable-msg=C0103; (Invalid variable name)
@@ -105,7 +107,7 @@ class IdsConverter(object):
 
 		train_dict = {}
 		for app_id, ids_entries in ids_entries_dict.items():
-			train_dict[app_id] = self.ids_entries_to_X_y(app_id, ids_entries)
+			train_dict[app_id] = IdsConverter.ids_entries_to_X_y(app_id, ids_entries)
 
 		printer.prt("Done.")
 		return train_dict

@@ -8,6 +8,7 @@ from enum import Enum
 from log_entry import LogEntry
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
+from ids.ids_entry import IdsEntry
 
 
 #### IDSE FILE SPECIFICATION
@@ -79,6 +80,14 @@ def _detect_type(first_line):
 
 
 def _yield_idse_lines(yielder):
+	""" Yield (and verify) IDSE lines one by one from the given yielder. """
+
+	for line in yielder:
+		app_id, vector, vclass = _process_idse_line(line)
+		yield IdsEntry(app_id, vector, vclass)
+
+
+def _process_idse_line(line):
 	raise NotImplementedError()
 
 

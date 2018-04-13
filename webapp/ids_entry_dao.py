@@ -4,6 +4,19 @@
 import os
 
 
+#### IDSE FILE SPECIFICATION
+#### (aka glorified CSV)
+####
+#### The first line in each file is the header (see CSV):
+HEADER = "APP_ID,FEATURE_COUNT,VCLASS,FEATURES"
+####
+#### Each line contains, comma-separated:
+#### 1   app_id : str
+#### 1   feature_count : int
+#### 1   vclass : [-1, 1]
+#### 1-X feature : float
+
+
 def get_entries(file_path, limit=None):
 	""" Get a generator of IdsEntry objects from the given file.
 	First retrieval might be slower than others. """

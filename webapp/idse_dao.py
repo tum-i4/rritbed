@@ -4,6 +4,7 @@
 import os
 from enum import Enum
 
+from log_entry import LogEntry
 from ids.dir_utils import Dir
 
 
@@ -50,7 +51,16 @@ def save_entries(file_path, entries):
 
 
 def _detect_type(first_line):
-	raise NotImplementedError()
+	""" Detect the file type from the first line. """
+
+	if first_line == HEADER:
+		return FileType.IDSE_FILE
+
+	try:
+		_ = LogEntry.from_log_string(first_line)
+		return FileType.LOG_FILE
+	except ValueError:
+		raise ValueError("Invalid file given! Can't parse:\n%s" % first_line)
 
 
 def _yield_idse_lines(yielder):

@@ -155,10 +155,12 @@ def straighten_dataset_for_app(ids_entries):
 	expected_outlier_count = int(expected_outlier_percent * total_entry_count)
 	expected_inlier_count = len(ids_entries) - expected_outlier_count
 
-	if (not inliers
-		or len(inliers) < 5000
-		or len(outliers) < 500):
-		raise ValueError("Given data is insufficient for straightening: %s inliers, %s outliers"
+	if not inliers or not outliers:
+		raise ValueError("No inliers or outliers! %s inliers, %s outliers"
+		% (len(inliers), len(outliers)))
+
+	if len(inliers) < 5000 or len(outliers) < 500:
+		warnings.warn("Given data will have very few entries: %s inliers, %s outliers"
 			% (len(inliers), len(outliers)))
 
 	its_result = []

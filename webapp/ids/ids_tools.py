@@ -153,13 +153,22 @@ def straighten_dataset_for_app(ids_entries):
 
 	expected_outlier_percent = 0.1
 	expected_outlier_count = int(expected_outlier_percent * total_entry_count)
+	expected_inlier_count = len(ids_entries) - expected_outlier_count
 
 	if (not inliers
-		or len(outliers) < expected_outlier_count):
+		or len(inliers) < 5000
+		or len(outliers) < 500):
 		raise ValueError("Given data is insufficient for straightening.")
 
-	its_result = inliers
-	its_result += random.sample(outliers, expected_outlier_count)
+	its_result = []
+	if len(outliers) < expected_outlier_count:
+		its_result += random.sample(inliers, expected_inlier_count)
+		its_result += outliers
+	else:
+		its_result = inliers
+		its_result += random.sample(outliers, expected_outlier_count)
+
+	random.shuffle(its_result)
 
 	return its_result
 

@@ -61,15 +61,15 @@ class IdsConverter(object):
 		return ids_entries_per_app_id
 
 
-	def log_entries_to_ids_entries(self, app_id, log_entries, binary):
+	def log_entries_to_ids_entries(self, expected_app_id, log_entries, binary):
 		""" Convert the given LogEntry objects to IdsEntry objects for this app_id. """
 
 		app_ids = [ids_tools.log_entry_to_app_id(log_entry) for log_entry in log_entries]
 
-		if any([a != app_id for a in app_ids]):
-			raise ValueError("Given elements are not all of the expected app type: {}".format(app_id))
+		if any([a != expected_app_id for a in app_ids]):
+			raise ValueError("Given elements are not all of the expected app type: {}".format(expected_app_id))
 
-		vectors = self.log_entries_to_vectors(app_id, log_entries)
+		vectors = self.log_entries_to_vectors(expected_app_id, log_entries)
 		vclasses = [self.log_entry_to_class(log_entry, binary) for log_entry in log_entries]
 
 		ids_entries = []

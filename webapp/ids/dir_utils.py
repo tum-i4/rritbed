@@ -51,6 +51,21 @@ class Dir(object):
 					return
 
 
+	@staticmethod
+	def write_lines(file_path, lines_generator):
+		""" Write the given lines to the given file. Adds the line terminating character. """
+
+		line_ending = "\n"
+
+		with open(file_path) as file_handle:
+			for line in lines_generator:
+				# Only add the line terminating character if it's missing.
+				if not line.endswith(line_ending):
+					line += line_ending
+
+				file_handle.write(line)
+
+
 class LogDir(object):
 	""" Log directory and path handling in the IDS. """
 

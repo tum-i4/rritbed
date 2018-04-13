@@ -2,6 +2,9 @@
 """ Convenient access to IDS entries, stored in various forms. """
 
 import os
+from enum import Enum
+
+from ids.dir_utils import Dir
 
 
 #### IDSE FILE SPECIFICATION

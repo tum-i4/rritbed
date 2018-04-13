@@ -4,6 +4,7 @@
 # pylint: disable-msg=C0103; (Invalid name)
 
 import argparse
+import os
 
 import sklearn
 import sklearn.ensemble as sk_ens
@@ -22,6 +23,7 @@ from util.prtr import TimePrinter
 
 
 ITEM_LIMIT = 5000000
+EXPERIMENTS_HOME = "experiments"
 
 
 class Experiment(object):
@@ -35,8 +37,12 @@ class Experiment(object):
 	### Workers ###
 
 
-	def a(self, file_path):
+	def a(self, file_path, experiment_dir):
 		""" Read entries, convert them, split them per app_id and call b() for each app. """
+
+		if not os.path.lexists(file_path) or os.path.lexists(experiment_dir):
+			print("Log file not found OR experiment folder exists")
+			exit()
 
 		printer = TimePrinter(name="a")
 		printer.prt("Reading file and converting...")
@@ -220,6 +226,7 @@ if __name__ == "__main__":
 	try:
 		PARSER = argparse.ArgumentParser()
 		PARSER.add_argument("file_path", metavar="PATH/FILE", help="Log file")
+		PARSER.add_argument("experiment_dir", metavar="PATH/DIR/", help="Store experiment data")
 
 		ARGS = PARSER.parse_args()
 

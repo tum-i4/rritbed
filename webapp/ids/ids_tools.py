@@ -158,7 +158,8 @@ def straighten_dataset_for_app(ids_entries):
 	if (not inliers
 		or len(inliers) < 5000
 		or len(outliers) < 500):
-		raise ValueError("Given data is insufficient for straightening.")
+		raise ValueError("Given data is insufficient for straightening: %s inliers, %s outliers"
+			% (len(inliers), len(outliers)))
 
 	its_result = []
 	if len(outliers) < expected_outlier_count:

@@ -111,6 +111,7 @@ class LogEntry(object):
 		second_part = None
 
 		if not log_string.endswith("}"):
+			# Value error for later use
 			value_error = ValueError("Given string has invalid format: {}".format(log_string))
 
 			bracket_idx = log_string.find("}")

@@ -95,7 +95,7 @@ class Experiment(object):
 			all_entries.extend(my_entries)
 
 		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
-		X_train, _ = self.TEMP_IDS_ENTRIES_TO_X_Y(training_entries)
+		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)
 
 		scoring_dict = ids_tools.empty_app_id_to_list_dict()
 		for ids_entry in scoring_entries:
@@ -107,25 +107,11 @@ class Experiment(object):
 		classifier.fit(X_train)
 
 		for app_id, app_entries in scoring_dict.items():
-			X_test, y_true = self.TEMP_IDS_ENTRIES_TO_X_Y(app_entries)
+			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
 			y_pred = classifier.predict(X_test)
 			self.visualise(app_id, y_true, y_pred)
 
 		print("\n\n\nSPLIT PER APPPPPPPP\n\n")
-
-
-	def TEMP_IDS_ENTRIES_TO_X_Y(self, ids_entries):
-		""" Convert the given IdsEntry objects to (X, y). """
-
-		# pylint: disable-msg=C0103; (Invalid variable name)
-		X = []
-		y = []
-
-		for ids_entry in ids_entries:
-			X.append(ids_entry.vector)
-			y.append(ids_entry.vclass)
-
-		return (X, y)
 
 
 	def handle_app(self, app_id, ids_entries):

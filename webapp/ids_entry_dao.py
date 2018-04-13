@@ -46,3 +46,8 @@ def _yield_idse_lines(yielder):
 
 def _yield_log_lines(yielder, first_line):
 	raise NotImplementedError()
+
+
+class FileType(Enum):
+	LOG_FILE = 0
+	IDSE_FILE = 1

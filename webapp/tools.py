@@ -456,11 +456,12 @@ def _sample(file_path, number_of_elements):
 	if not os.path.lexists(file_path) or os.path.lexists(target_file_path):
 		raise IOError("Input file doesn't OR output file does exist")
 
-	log_lines = ids_tools.reservoir_sample(Dir.yield_lines(file_path), number_of_elements)
-
-	with open(target_file_path, "w") as target_file:
-		for line in log_lines:
-			target_file.write(line)
+	log_line_generator = (
+		line
+		for line
+		in ids_tools.reservoir_sample(Dir.yield_lines(file_path), number_of_elements)
+	)
+	Dir.write_lines(target_file_path, log_line_generator)
 
 	print("Done. Wrote to file:\n%s" % target_file_path)
 

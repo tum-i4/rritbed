@@ -22,8 +22,8 @@ HEADER = "APP_ID,FEATURE_COUNT,VCLASS,FEATURES"
 
 
 def get_entries(file_path, limit=None):
-	""" Yield IdsEntry objects from the given file.
-	First retrieval might be slower than others. """
+	""" Return up IdsEntry objects from the given file.
+	*limit: Optional maximum number of entries to retrieve. """
 
 	if not os.path.lexists(file_path):
 		raise IOError("File not found: %s" % file_path)
@@ -36,7 +36,7 @@ def get_entries(file_path, limit=None):
 	if file_type == FileType.IDSE_FILE:
 		_yield_idse_lines(yielder)
 	elif file_type == FileType.LOG_FILE:
-		_yield_log_lines(yielder, first_line)
+		_read_log_lines(yielder, first_line)
 	else:
 		raise NotImplementedError("File type not implemented: %s" % file_type)
 
@@ -67,7 +67,7 @@ def _yield_idse_lines(yielder):
 	raise NotImplementedError()
 
 
-def _yield_log_lines(yielder, first_line):
+def _read_log_lines(yielder, first_line):
 	raise NotImplementedError()
 
 

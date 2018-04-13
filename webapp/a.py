@@ -34,17 +34,9 @@ def a(file_path):
 	printer.prt("Reading file and converting...")
 
 	# ids_entries: { app_id, vector, my_class }
-	import time
-	start_time = time.time()
-	ids_entries_per_app = read_sample_convert(file_path)
-	resaco_time = time.time()
-	LOL = read_convert(file_path)
-	reco_time = time.time()
+	ids_entries_per_app = read_convert(file_path)
 
-	print("TIME FOR RESACO: %s" % util.fmtr.format_time_passed(resaco_time - start_time))
-	print("TIME FOR RECO__: %s" % util.fmtr.format_time_passed(reco_time - resaco_time))
-	exit()
-
+	# TODO TEMP?
 	handle_all(ids_entries_per_app)
 
 	for app_id, ids_entries in ids_entries_per_app.items():

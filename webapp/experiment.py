@@ -222,7 +222,12 @@ class Experiment(object):
 	### Persistence ###
 
 
-	def store_experiment(self, experiment_dir, test_set, score_set, classifier, result):
+	def store_experiment(self):
+		# Create new file with my entries
+		# Analyse my file
+		# log_file_utils.analyse(args.file_path, args.to_file, util.prtr.Printer())
+		# Save trained classifiers
+		raise NotImplementedError()
 		pass
 
 

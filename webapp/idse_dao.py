@@ -12,7 +12,7 @@ from ids.dir_utils import Dir
 #### (aka glorified CSV)
 ####
 #### The first line in each file is the header (see CSV):
-HEADER = "APP_ID,FEATURE_COUNT,VCLASS,FEATURES"
+HEADER = "IDSE_V_1(APP_ID,FEATURE_COUNT,VCLASS,FEATURES)"
 ####
 #### Each line contains, comma-separated:
 #### 1   app_id : str

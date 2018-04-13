@@ -436,6 +436,35 @@ def _init_file_handle(path):
 	return open(path, "w")
 
 
+def sample_call(args):
+	""" Unpack the args and call _sample.
+	Expects 'file_path' and 'number_of_elements'. """
+
+	if not args.file_path or not args.number_of_elements:
+		raise RuntimeError("Missing arg!")
+
+	_sample(args.file_path, args.number_of_elements)
+
+
+def _sample(file_path, number_of_elements):
+	""" Sample <number_of_elements> from the given file. """
+
+	print("Sampling...")
+
+	target_file_path = "%s_%s-sample" % (file_path, number_of_elements)
+
+	if not os.path.lexists(file_path) or os.path.lexists(target_file_path):
+		raise IOError("Input file doesn't OR output file does exist")
+
+	log_lines = ids_tools.reservoir_sample(Dir.yield_lines(file_path), number_of_elements)
+
+	with open(target_file_path, "w") as target_file:
+		for line in log_lines:
+			target_file.write(line)
+
+	print("Done. Wrote to file:\n%s" % target_file_path)
+
+
 # pylint: disable-msg=W0613; (Unused argument)
 def reset_call(args):
 	""" Call _reset. Expects 'classifier', 'server_log' or 'all'. """
@@ -798,6 +827,12 @@ if __name__ == "__main__":
 		SPLIT_PARSER.add_argument("--max-entries-per-file", "-m", type=int,
 			help="Limit the number of entries saved per file")
 		SPLIT_PARSER.set_defaults(function=split_call)
+
+		SAMPLE_PARSER = SUBPARSERS.add_parser("sample", help="Sample from a log file")
+		SAMPLE_PARSER.add_argument("file_path", metavar="PATH")
+		SAMPLE_PARSER.add_argument("number_of_elements", type=int,
+			help="Sample size. Needs to be smaller than the available lines in the given file.")
+		SPLIT_PARSER.set_defaults(function=sample_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")
 		RESET_PARSER.add_argument("--classifier", "-c", action="store_true")

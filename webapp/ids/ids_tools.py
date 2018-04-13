@@ -207,7 +207,7 @@ def X_y_to_train_test(X, y):
 	percentage_intruded = (len(X_intruded) / float(len(X)))
 	verify_percentage_intruded(percentage_intruded)
 
-	test_size = get_test_size()
+	test_size = get_test_size(percentage_intruded)
 	X_train, X_test, y_train, y_test = sk_mod.train_test_split(
 		X_normal, y_normal, test_size=test_size)
 

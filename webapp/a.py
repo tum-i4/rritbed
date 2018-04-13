@@ -31,7 +31,9 @@ def a(file_path):
 	printer.prt("Reading file and converting...")
 
 	# ids_entries: { app_id, vector, my_class }
-	ids_entries_per_app = read_convert(file_path)
+	ids_entries_per_app = read_sample_convert(file_path)
+
+	handle_all(ids_entries_per_app)
 
 	for app_id, ids_entries in ids_entries_per_app.items():
 		handle_app(app_id, ids_entries)
@@ -140,6 +142,18 @@ def read_convert(file_path):
 	for line in Dir.yield_lines(file_path, 5000000):
 		log_entry = LogEntry.from_log_string(line)
 		log_entries.append(log_entry)
+
+	ids_entries_dict = converter.log_entries_to_ids_entries_dict(log_entries)
+	return ids_entries_dict
+
+
+def read_sample_convert(file_path):
+	""" Sample log entries from the given file and convert the result. """
+
+	converter = IdsConverter()
+	log_entries = ids_tools.reservoir_sample(Dir.yield_lines(file_path), 5000000)
+
+	assert(len(log_entries)) == 5000000
 
 	ids_entries_dict = converter.log_entries_to_ids_entries_dict(log_entries)
 	return ids_entries_dict

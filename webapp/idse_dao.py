@@ -6,6 +6,7 @@ from enum import Enum
 
 from log_entry import LogEntry
 from ids.dir_utils import Dir
+from ids.ids_converter import IdsConverter
 
 
 #### IDSE FILE SPECIFICATION
@@ -36,7 +37,7 @@ def get_entries(file_path, limit=None):
 	if file_type == FileType.IDSE_FILE:
 		_yield_idse_lines(yielder)
 	elif file_type == FileType.LOG_FILE:
-		_read_log_lines(yielder, first_line)
+		_read_log_lines_then_yield(yielder, first_line)
 	else:
 		raise NotImplementedError("File type not implemented: %s" % file_type)
 
@@ -67,8 +68,20 @@ def _yield_idse_lines(yielder):
 	raise NotImplementedError()
 
 
-def _read_log_lines(yielder, first_line):
-	raise NotImplementedError()
+def _read_log_lines_then_yield(yielder, first_line):
+	""" Read all provided log lines from the given yielder. """
+
+	first_entry = LogEntry.from_log_string(first_line)
+	log_entries = [first_entry]
+	for line in yielder:
+		log_entry = LogEntry.from_log_string(line)
+		log_entries.append(log_entry)
+
+	ids_entry_dict = IdsConverter().log_entries_to_ids_entries_dict(log_entries)
+
+	for _, app_entries in ids_entry_dict.items():
+		for ids_entry in app_entries:
+			yield ids_entry
 
 
 

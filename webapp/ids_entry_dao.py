@@ -21,13 +21,23 @@ HEADER = "APP_ID,FEATURE_COUNT,VCLASS,FEATURES"
 
 
 def get_entries(file_path, limit=None):
-	""" Get a generator of IdsEntry objects from the given file.
+	""" Yield IdsEntry objects from the given file.
 	First retrieval might be slower than others. """
 
 	if not os.path.lexists(file_path):
 		raise IOError("File not found: %s" % file_path)
 
-	raise NotImplementedError()
+	yielder = Dir.yield_lines(file_path, limit)
+
+	first_line = yielder.next()
+	file_type = _detect_type(first_line)
+
+	if file_type == FileType.IDSE_FILE:
+		_yield_idse_lines(yielder)
+	elif file_type == FileType.LOG_FILE:
+		_yield_log_lines(yielder, first_line)
+	else:
+		raise NotImplementedError("File type not implemented: %s" % file_type)
 
 
 def save_entries(file_path, entries):

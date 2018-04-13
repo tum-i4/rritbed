@@ -35,10 +35,24 @@ class Experiment(object):
 
 		object.__init__(self)
 
-		file_path = os.path.expanduser(file_path)
+		# State
+		self.store = False
+		self.title = None
+		# Time
+		self.start_time = time.time()
+		self.end_time = None
+		# Loaded entries
+		self.entries_dict = {}
+		# Tuples with (classifier, result)
+		self.classifiers = []
 
-		if not os.path.lexists(file_path):
-			util.outp.exit_on_error("Log file not found: %s" % file_path)
+		# Paths and name
+		self.file_path = os.path.expanduser(file_path)
+		self.input_file_name = os.path.basename(self.file_path)
+		self.experiment_dir = None
+
+		if not os.path.lexists(self.file_path):
+			util.outp.exit_on_error("Log file not found: %s" % self.file_path)
 
 		if store_title is not None:
 			self.store = True
@@ -47,14 +61,6 @@ class Experiment(object):
 
 		if self.store and os.path.lexists(self.experiment_dir):
 			util.outp.exit_on_error("Experiment folder exists: %s" % self.experiment_dir)
-
-		self.file_path = file_path
-		self.input_file_name = os.path.basename(file_path)
-		self.entries_dict = {}
-		self.classifiers = []
-		self.result = []
-		self.start_time = time.time()
-		self.end_time = None
 
 
 	### Workers ###

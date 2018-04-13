@@ -34,3 +34,15 @@ def save_entries(file_path, entries):
 		raise IOError("Output file exists already: %s" % file_path)
 
 	raise NotImplementedError()
+
+
+def _detect_type(first_line):
+	raise NotImplementedError()
+
+
+def _yield_idse_lines(yielder):
+	raise NotImplementedError()
+
+
+def _yield_log_lines(yielder, first_line):
+	raise NotImplementedError()

@@ -17,7 +17,7 @@ class IdsConverter(object):
 		""" Ctor. """
 
 		self.app_ids = ids_data.get_app_ids()
-		ids_tools.verify_md5(self.app_ids, "cacafa61f61b645c279954952ac6ba8f")
+		ids_tools.verify_md5(self.app_ids, "3a88e92473acb1ad1b56e05a8074c7bd")
 
 		self.level_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_levels(),

@@ -160,6 +160,14 @@ def preprocess_fit_score(app_id, ids_entries, preprocessor, classifier, printer)
 def visualise(app_id, y_true, y_pred):
 	""" Score, print. """
 
+	print("\nSCORE FOR >>> %s <<<" % app_id)
+
+	prec = sk_metr.precision_score(y_true, y_pred)
+	reca = sk_metr.recall_score(y_true, y_pred)
+	accu = sk_metr.accuracy_score(y_true, y_pred)
+
+	print("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
+
 	tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
 	table = []
@@ -167,6 +175,8 @@ def visualise(app_id, y_true, y_pred):
 	table.append(["Pred (+)", tp, fp])
 	table.append(["Pred (-)", fn, tn])
 	util.outp.print_table(table)
+
+	print("\nEND FOR  >>> %s <<<" % app_id)
 
 
 def e(app_id, ids_entries):

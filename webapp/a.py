@@ -6,6 +6,7 @@
 import argparse
 
 import sklearn
+import sklearn.ensemble as sk_ens
 import sklearn.metrics as sk_metr
 import sklearn.preprocessing as sk_pre
 
@@ -48,7 +49,29 @@ def handle_app(app_id, ids_entries):
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
-	raise NotImplementedError()
+	ids_entries = ids_tools.straighten_dataset_for_app(ids_entries)
+
+	print("\n\t::: %s :::\n" % app_id)
+
+	# TODO
+	_, _ = preprocess_fit_score(app_id, ids_entries,
+		lambda x: x,
+		sklearn.svm.OneClassSVM(),
+		printer)
+
+	name = "IF"
+	n_est = 100
+	max_sampl = 256
+	print("\n\t> %s - n_est: %s, max_sampl: %s" % (name, n_est, max_sampl))
+	_, _ = preprocess_fit_score(app_id, ids_entries,
+		lambda x: x,
+		sk_ens.IsolationForest(n_estimators=n_est, max_samples=max_sampl, n_jobs=-1, random_state=0),
+		printer)
+
+	# _, _ = preprocess_fit_score(app_id, ids_entries,
+	# 	lambda x: sk_pre.scale(x),
+	# 	sklearn.svm.OneClassSVM(),
+	# 	printer)
 
 
 def preprocess_fit_score(app_id, ids_entries, preprocessor, classifier, printer):
@@ -84,6 +107,25 @@ def visualise(app_id, y_true, y_pred):
 	table.append(["Pred (+)", tp, fp])
 	table.append(["Pred (-)", fn, tn])
 	util.outp.print_table(table)
+
+
+def e(app_id, ids_entries):
+
+	if app_id not in ids_data.get_generators():
+		return
+
+	import numpy as np
+	from sklearn.covariance import EllipticEnvelope
+	from sklearn.svm import OneClassSVM
+	import matplotlib.pyplot as plt
+	import matplotlib.font_manager
+
+	X_list, y = IdsConverter().ids_entries_to_X_y(app_id, ids_entries)
+	X = np.array(X_list)
+
+	X_scaled = sk_pre.scale(X)
+
+	print("WTF\n")
 
 
 ### Helpers ###

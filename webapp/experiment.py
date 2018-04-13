@@ -235,6 +235,32 @@ class Experiment(object):
 		# return (test_set, score_set, classifier, result)
 
 
+	def create_result_lines(self):
+		""" Create a human readable digest of the experiment. """
+
+		exp_date_str = time.strftime("%d.%m.%Y %H:%M", time.localtime(self.start_time))
+		time_passed_str = util.fmtr.format_time_passed(self.end_time - self.start_time)
+
+		heading = ("\"%s\" | experiment on %s | running time: %s"
+			% (self.title, exp_date_str, time_passed_str))
+
+		lines = [
+			heading,
+			"-" * len(heading),
+			""
+		]
+
+		for classifier in self.classifiers:
+			classifier_result = self.create_classifier_result(classifier)
+			lines.extend(classifier_result)
+
+		return lines
+
+
+	def create_classifier_result(self, classifier):
+		raise NotImplementedError()
+
+
 	@staticmethod
 	def get_experiment_folder(name):
 		""" Get the experiment folder of the given name. """

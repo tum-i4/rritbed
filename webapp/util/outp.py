@@ -56,3 +56,9 @@ def exit_on_error(error_message):
 
 	prtr.Printer(name="Error").prt(error_message)
 	exit()
+
+
+def print_debug(debug_message):
+	""" Print the given message as a debug output. """
+
+	prtr.Printer(name="Debug").prt(debug_message)

@@ -6,6 +6,7 @@
 import argparse
 import os
 import time
+from collections import namedtuple
 
 import sklearn
 import sklearn.ensemble as sk_ens
@@ -27,6 +28,9 @@ ITEM_LIMIT = 5000000
 EXPERIMENTS_HOME = "experiments"
 
 
+ClassifierResultPair = namedtuple("ClassifierResultPair", "classifier result")
+
+
 class Experiment(object):
 	""" Do experiments. Start with a(). """
 
@@ -43,7 +47,7 @@ class Experiment(object):
 		self.end_time = None
 		# Loaded entries
 		self.entries_dict = {}
-		# Tuples with (classifier, result)
+		# ClassifierResultPair objects (classifier, result)
 		self.classifiers = []
 
 		# Paths and name

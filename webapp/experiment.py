@@ -97,6 +97,9 @@ class Experiment(object):
 		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)
 
+		print("HANDLE_ALL: type(X_train) = %s" % type(X_train))
+		return
+
 		scoring_dict = ids_tools.empty_app_id_to_list_dict()
 		for ids_entry in scoring_entries:
 			scoring_dict[ids_entry.app_id] = ids_entry
@@ -162,6 +165,9 @@ class Experiment(object):
 
 		printer.prt("Splitting... ", newline=False)
 		X_train, _, X_test, y_true = ids_tools.X_y_to_train_test(X, y)
+
+		print("PREPROFISCO: type(X_train) = %s" % type(X_train))
+		exit()
 
 		printer.prt("Fitting... ", newline=False)
 		classifier.fit(X_train)

@@ -23,8 +23,10 @@ HEADER = "IDSE_V_1(APP_ID,FEATURE_COUNT,VCLASS,FEATURES)"
 
 
 def get_entries(file_path, limit=None):
-	""" Return up IdsEntry objects from the given file.
-	*limit: Optional maximum number of entries to retrieve. """
+	"""
+	Yield IdsEntry objects from the given file. First access on log files is costly!
+	*limit: Optional maximum number of entries to retrieve.
+	"""
 
 	if not os.path.lexists(file_path):
 		raise IOError("File not found: %s" % file_path)

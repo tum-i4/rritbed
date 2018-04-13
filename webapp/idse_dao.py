@@ -2,6 +2,7 @@
 """ Convenient access to IDS entries, stored in various forms. """
 
 import os
+from collections import namedtuple
 from enum import Enum
 
 from log_entry import LogEntry
@@ -20,6 +21,17 @@ HEADER = "IDSE_V_1(APP_ID,FEATURE_COUNT,VCLASS,FEATURES)"
 #### 1   feature_count : int
 #### 1   vclass : [-1, 1]
 #### 1-X feature : float
+
+# Definitions
+MIN_ELEMENTS_PER_LINE = 4
+# Expected types of fields; the last element is the type for all remaining feature fields.
+ELEMENT_TYPES = [str, int, int, float]
+# Verifiers can (but don't have to be) defined; each index will be checked with the given lambda.
+Verifier = namedtuple("Verifier", "element_index, verify_lambda")
+VERIFIER = [
+	Verifier(element_index=1, verify_lambda=lambda x: x > 0),
+	Verifier(element_index=2, verify_lambda=lambda x: x in [-1, 1])
+]
 
 
 def get_entries(file_path, limit=None):

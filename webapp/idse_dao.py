@@ -91,6 +91,10 @@ def _process_idse_line(line):
 	raise NotImplementedError()
 
 
+def _raise_corrupt_idse_error(message):
+	raise IOError("[IDSE DAO] Possibly corrupt IDSE file! %s" % message)
+
+
 def _read_log_lines_then_yield(yielder, first_line):
 	""" Read all provided log lines from the given yielder. """
 

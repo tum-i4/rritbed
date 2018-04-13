@@ -832,7 +832,7 @@ if __name__ == "__main__":
 		SAMPLE_PARSER.add_argument("file_path", metavar="PATH")
 		SAMPLE_PARSER.add_argument("number_of_elements", type=int,
 			help="Sample size. Needs to be smaller than the available lines in the given file.")
-		SPLIT_PARSER.set_defaults(function=sample_call)
+		SAMPLE_PARSER.set_defaults(function=sample_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")
 		RESET_PARSER.add_argument("--classifier", "-c", action="store_true")

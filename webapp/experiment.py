@@ -76,6 +76,9 @@ class Experiment(object):
 	def run(self):
 		""" Read entries, convert them, split them per app_id and call b() for each app. """
 
+		# Prerequisites: I could have loaded from a folder
+		# raise NotImplementedError()
+
 		printer = TimePrinter(name="experiment")
 		printer.prt("Reading file and converting...")
 
@@ -261,7 +264,7 @@ class Experiment(object):
 
 
 	def retrieve_experiment(self, experiment_dir):
-		pass
+		raise NotImplementedError()
 		# return (test_set, score_set, classifier, result)
 
 

@@ -16,6 +16,9 @@ from ids.ids_entry import IdsEntry
 #### IDSE FILE SPECIFICATION
 #### (aka glorified CSV)
 ####
+#### Ideally use the file extension as follows:
+FILE_EXTENSION = "idse"
+####
 #### The first line in each file is the header (see CSV):
 HEADER = "IDSE_V_1(APP_ID,FEATURE_COUNT,VCLASS,FEATURES)"
 ####

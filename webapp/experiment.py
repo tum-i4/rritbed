@@ -76,27 +76,30 @@ class Experiment(object):
 		printer = TimePrinter(name="a")
 		printer.prt("Reading file and converting...")
 
+		# TODO TEMP?
+		self.handle_all(self.file_path)
+
 		# ids_entries: { app_id, vector, my_class }
 		self.entries_dict = self.read_convert(self.file_path)
-
-		# TODO TEMP?
-		self.handle_all(self.entries_dict)
 
 		for app_id, ids_entries in self.entries_dict.items():
 			self.handle_app(app_id, ids_entries)
 
 
-	def handle_all(self, ids_entries_per_app):
+	def handle_all(self, file_path):
 		""" Full flow for a one-fits-all classifier. """
 
 		print("ALLLLLLLL\n\n")
 
-		all_entries = []
+		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER
+		converter = TEMPCONVERTER()
+		log_entries = []
 
-		# Dict to list
-		for _, my_entries in ids_entries_per_app.items():
-			my_entries = ids_tools.straighten_dataset_for_app(my_entries)
-			all_entries.extend(my_entries)
+		for line in Dir.yield_lines(file_path, ITEM_LIMIT):
+			log_entry = LogEntry.from_log_string(line)
+			log_entries.append(log_entry)
+
+		all_entries = converter.LOG_ENTRIES_TO_IDS_ENTRIES(log_entries, binary=True)
 
 		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)

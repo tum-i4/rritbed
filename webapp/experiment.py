@@ -59,7 +59,7 @@ class Experiment(object):
 		experiment_dir_name = None
 
 		if not os.path.lexists(self.file_path):
-			util.outp.exit_on_error("Log file not found: %s" % self.file_path)
+			util.outp.exit_on_error("Input file not found: %s" % self.file_path)
 
 		self.title = store_title
 		if self.title is None:

@@ -364,18 +364,13 @@ class Experiment(object):
 
 
 	def read_convert(self, file_path):
-		""" Read log entries from the given file and convert the result. """
+		""" Read IDS entries from the given file and convert the result. """
 
 		converter = IdsConverter()
-		log_entries = []
 
-		for line in Dir.yield_lines(file_path, ITEM_LIMIT):
-			log_entry = LogEntry.from_log_string(line)
-			log_entries.append(log_entry)
+		self.ids_entries = list(idse_dao.yield_entries(file_path))
+		ids_entries_dict = converter.ids_entries_to_dict(self.ids_entries)
 
-		self.entries_count = len(log_entries)
-
-		ids_entries_dict = converter.log_entries_to_ids_entries_dict(log_entries)
 		return ids_entries_dict
 
 

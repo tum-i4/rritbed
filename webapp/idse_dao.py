@@ -5,6 +5,8 @@ import os
 from collections import namedtuple
 from enum import Enum
 
+import numpy
+
 from log_entry import LogEntry
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
@@ -109,8 +111,27 @@ def _process_idse_line(line):
 			_raise_corrupt_idse_error("Invalid element type. Expected: \"%s\"; Got: \"%s\""
 				% (type(line_el), exp_type))
 
-	# Each line contains: app_id : str, feature_count : int, vclass : [-1, 1], feature_1 : float(, feature_2 : float ...)
-	raise NotImplementedError()
+	for element_index, verify_lambda in VERIFIER:
+		if not verify_lambda(line_elements[element_index]):
+			_raise_corrupt_idse_error("Data doesn't conform to verifier: %s"
+				% line_elements[element_index])
+
+	# Each line contains:
+	# app_id : str, feature_count : int, vclass : [-1, 1], ...
+	app_id = str(line_elements[0])
+	feature_count = int(line_elements[1])
+	vclass = int(line_elements[2])
+	# ... feature_1 : float(, feature_2 : float ...)
+	features = [float(x) for x in line_elements[3:]]
+
+	if len(features) != feature_count:
+		_raise_corrupt_idse_error("Invalid feature count in line! Expected: %s; Got: %s (len: %s)"
+			% (feature_count, features, len(features)))
+
+	vector = numpy.array(features, dtype=numpy.float_, order="C")
+	IdsConverter().verify_vector(vector, app_id)
+
+	return (app_id, vector, vclass)
 
 
 def _raise_corrupt_idse_error(message):

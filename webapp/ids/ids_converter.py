@@ -161,7 +161,7 @@ class IdsConverter(object):
 				dtype=numpy.float_,
 				order="C")
 
-			self.verify_ndarray(ndarray, app_id)
+			self.verify_vector(ndarray, app_id)
 
 			vectors.append(ndarray)
 
@@ -441,7 +441,7 @@ class IdsConverter(object):
 	### Verification ###
 
 
-	def verify_ndarray(self, ndarray, app_id):
+	def verify_vector(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:

@@ -122,28 +122,7 @@ def _process_idse_line(line, converter):
 	""" Verify and convert the given IDSE line to a (app_id, vector, vclass) tuple. """
 
 	line_elements = line.split(",")
-
-	if len(line_elements) < MIN_ELEMENTS_PER_LINE:
-		_raise_corrupt_idse_error("Expected %s elements, got:\n%s"
-			% (MIN_ELEMENTS_PER_LINE, line_elements))
-
-	if len(ELEMENT_TYPES) != 4:
-		raise NotImplementedError("Implementation has changed! Expected 4 ELEMENT_TYPES.")
-
-	line_element_types = ELEMENT_TYPES + [ELEMENT_TYPES[3] for _ in line_elements[3:]]
-
-	if len(line_elements) != len(line_element_types):
-		raise RuntimeError("Invalid list comprehension")
-
-	for line_el, exp_type in zip(line_elements, line_element_types):
-		if not isinstance(line_el, exp_type):
-			_raise_corrupt_idse_error("Invalid element type. Expected: \"%s\"; Got: \"%s\""
-				% (type(line_el), exp_type))
-
-	for element_index, verify_lambda in VERIFIER:
-		if not verify_lambda(line_elements[element_index]):
-			_raise_corrupt_idse_error("Data doesn't conform to verifier: %s"
-				% line_elements[element_index])
+	_verify_line_elements(line_elements)
 
 	# Each line contains:
 	# app_id : str, feature_count : int, vclass : [-1, 1], ...
@@ -155,7 +134,7 @@ def _process_idse_line(line, converter):
 
 	if len(features) != feature_count:
 		_raise_corrupt_idse_error("Invalid feature count in line! Expected: %s; Got: %s (len: %s)"
-			% (feature_count, features, len(features)))
+			% (feature_count, features, len(features)), reading=True)
 
 	vector = numpy.array(features, dtype=numpy.float_, order="C")
 	converter.verify_vector(vector, app_id)
@@ -165,6 +144,28 @@ def _process_idse_line(line, converter):
 
 def _ids_entry_to_idse_string(ids_entry):
 	raise NotImplementedError()
+
+
+def _verify_line_elements(line_elements, reading=True):
+	""" Verify that the given line_elements conform to our requirements. """
+
+	if len(line_elements) < MIN_ELEMENTS_PER_LINE:
+		_raise_corrupt_idse_error("Expected %s elements, got:\n%s"
+			% (MIN_ELEMENTS_PER_LINE, line_elements), reading)
+
+	line_element_types = _get_expected_types(len(line_elements))
+
+	for line_el, exp_type in zip(line_elements, line_element_types):
+		try:
+			_ = exp_type(line_el)
+		except ValueError:
+			_raise_corrupt_idse_error("Invalid element type. Expected: \"%s\"; Got: \"%s\""
+				% (type(line_el), exp_type), reading)
+
+	for element_index, verify_lambda in VERIFIER:
+		if not verify_lambda(line_elements[element_index]):
+			_raise_corrupt_idse_error("Data doesn't conform to verifier: %s"
+				% line_elements[element_index], reading)
 
 
 def _get_expected_types(requested_length):

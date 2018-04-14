@@ -117,7 +117,7 @@ class Experiment(object):
 		for app_id, app_entries in scoring_dict.items():
 			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
 			y_pred = classifier.predict(X_test)
-			self.visualise(app_id, y_true, y_pred)
+			self.visualise_store(app_id, classifier, y_true, y_pred)
 
 		printer.prt("\n\n\nSPLIT PER APPPPPPPP\n\n")
 
@@ -177,12 +177,12 @@ class Experiment(object):
 		printer.prt("Predicting... ")
 		y_pred = classifier.predict(X_test)
 
-		self.visualise(app_id, y_true, y_pred)
+		self.visualise_store(app_id, classifier, y_true, y_pred)
 
 		return (y_true, y_pred)
 
 
-	def visualise(self, app_id, y_true, y_pred):
+	def visualise_store(self, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
 		print("\nSCORE FOR >>> %s <<<" % app_id)

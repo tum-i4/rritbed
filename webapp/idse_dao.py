@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Convenient access to IDS entries, stored in various forms. """
 
+import argparse
 import os
 from collections import namedtuple
 from enum import Enum
@@ -202,3 +203,20 @@ def _raise_corrupt_idse_error(message):
 class FileType(Enum):
 	LOG_FILE = 0
 	IDSE_FILE = 1
+
+
+
+### Main ###
+
+if __name__ == "__main__":
+	try:
+		PARSER = argparse.ArgumentParser()
+		PARSER.add_argument("mode", choices=["convert"])
+		PARSER.add_argument("file_path", help="Log file")
+		ARGS = PARSER.parse_args()
+		if ARGS.mode == "convert":
+			convert(ARGS.file_path)
+		else:
+			print("Doing nothing...")
+	except KeyboardInterrupt:
+		pass

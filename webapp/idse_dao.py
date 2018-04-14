@@ -47,7 +47,7 @@ def get_entries(file_path, limit=None):
 	"""
 
 	if not os.path.lexists(file_path):
-		raise IOError("File not found: %s" % file_path)
+		_raise_file_doesnt_exist(file_path)
 
 	yielder = Dir.yield_lines(file_path, limit)
 
@@ -66,7 +66,7 @@ def save_entries(file_path, ids_entries):
 	""" Store the entries as a IDSE file. """
 
 	if os.path.lexists(file_path):
-		raise IOError("Output file exists already: %s" % file_path)
+		_raise_file_exists(file_path)
 
 	if any([not isinstance(x, IdsEntry) for x in ids_entries[:50]]):
 		raise TypeError("Given elements are no IdsEntry objects!")
@@ -147,10 +147,6 @@ def _process_idse_line(line, converter):
 	return (app_id, vector, vclass)
 
 
-def _raise_corrupt_idse_error(message):
-	raise IOError("[IDSE DAO] Possibly corrupt IDSE file! %s" % message)
-
-
 def _ids_entry_to_idse_string(ids_entry):
 	raise NotImplementedError()
 
@@ -169,6 +165,23 @@ def _read_log_lines_then_yield(yielder, first_line):
 	for _, app_entries in ids_entry_dict.items():
 		for ids_entry in app_entries:
 			yield ids_entry
+
+
+### Errors ###
+
+
+def _raise_file_doesnt_exist(file_path):
+	""" Raise an error for a missing file. """
+	raise IOError("[IDSE DAO] File not found: %s" % file_path)
+
+
+def _raise_file_exists(file_path):
+	""" Raise an error for an existing file. """
+	raise IOError("[IDSE DAO] File exists already: %s" % file_path)
+
+
+def _raise_corrupt_idse_error(message):
+	raise IOError("[IDSE DAO] Possibly corrupt IDSE file! %s" % message)
 
 
 

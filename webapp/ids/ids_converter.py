@@ -219,7 +219,8 @@ class IdsConverter(object):
 		return the_class != 0
 
 
-	def prediction_means_outlier(self, prediction):
+	@staticmethod
+	def prediction_means_outlier(prediction):
 		""" LEGACY """
 		return ids_tools.is_outlier(prediction)
 

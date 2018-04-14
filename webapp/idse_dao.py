@@ -88,6 +88,28 @@ def _yield_idse_lines(yielder):
 
 
 def _process_idse_line(line):
+	""" Verify and convert the given IDSE line to a (app_id, vector, vclass) tuple. """
+
+	line_elements = line.split(",")
+
+	if len(line_elements) < MIN_ELEMENTS_PER_LINE:
+		_raise_corrupt_idse_error("Expected %s elements, got:\n%s"
+			% (MIN_ELEMENTS_PER_LINE, line_elements))
+
+	if len(ELEMENT_TYPES) != 4:
+		raise NotImplementedError("Implementation has changed! Expected 4 ELEMENT_TYPES.")
+
+	line_element_types = ELEMENT_TYPES + [ELEMENT_TYPES[3] for _ in line_elements[3:]]
+
+	if len(line_elements) != len(line_element_types):
+		raise RuntimeError("Invalid list comprehension")
+
+	for line_el, exp_type in zip(line_elements, line_element_types):
+		if not isinstance(line_el, exp_type):
+			_raise_corrupt_idse_error("Invalid element type. Expected: \"%s\"; Got: \"%s\""
+				% (type(line_el), exp_type))
+
+	# Each line contains: app_id : str, feature_count : int, vclass : [-1, 1], feature_1 : float(, feature_2 : float ...)
 	raise NotImplementedError()
 
 

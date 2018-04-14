@@ -91,15 +91,14 @@ class Experiment(object):
 		# ids_entries: { app_id, vector, my_class }
 		ids_entries_dict = self.read_convert(self.file_path)
 
-		printer.prt("Done. Scoring each individual classifier...")
+		# TODO TEMP?
+		printer.prt("Done. Scoring classifier trained with all samples...")
+		self.handle_all(self.file_path)
+
+		printer.prt("Done. Scoring individual classifier...")
 
 		for app_id, ids_entries in ids_entries_dict.items():
 			self.handle_app(app_id, ids_entries)
-
-		printer.prt("Done. Scoring all classifiers...")
-
-		# TODO TEMP?
-		self.handle_all(self.file_path)
 
 		self.store_experiment()
 

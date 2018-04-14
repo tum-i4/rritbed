@@ -64,7 +64,10 @@ def yield_entries(file_path, limit=None):
 
 
 def save_entries(file_path, ids_entry_generator):
-	""" Store the entries as a IDSE file. """
+	"""
+	Store the entries as a IDSE file.
+	returns: The file path which was stored to.
+	"""
 
 	file_path_full = add_idse_extension(file_path)
 
@@ -86,6 +89,8 @@ def save_entries(file_path, ids_entry_generator):
 		lines.append(line)
 
 	Dir.write_lines(file_path_full, lines)
+
+	return file_path_full
 
 
 def convert(input_path):

@@ -151,7 +151,7 @@ def _ids_entry_to_idse_string(ids_entry):
 	vclass = ids_entry.vclass
 	features = ids_entry.vector
 
-	line_elements = [app_id, feature_count, vclass] + features
+	line_elements = [app_id, feature_count, vclass].extend(features)
 	_verify_line_elements(line_elements, reading=False)
 
 	line = ",".join(line_elements)

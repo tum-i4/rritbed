@@ -268,8 +268,8 @@ def ids_entries_to_train_test(ids_entries):
 def verify_percentage_intruded(percentage_intruded):
 	""" Check the percentage and warn or raise for problematic values. """
 
-	if percentage_intruded > 0.3:
-		raise ValueError("Given data has too few (< 70 %) normal samples.")
+	if percentage_intruded > 0.5:
+		raise ValueError("Given data has too few (< 50 %) normal samples.")
 	elif percentage_intruded > 0.2:
 		warnings.warn("Given data has few (< 80 %) normal samples.")
 	elif percentage_intruded < 0.01:

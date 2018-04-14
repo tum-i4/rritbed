@@ -183,9 +183,10 @@ def _verify_line_elements(line_elements, reading=True):
 				% (type(line_el), exp_type), reading)
 
 	for element_index, verify_lambda in VERIFIER:
-		if not verify_lambda(line_elements[element_index]):
-			_raise_corrupt_idse_error("Data doesn't conform to verifier: %s"
-				% line_elements[element_index], reading)
+		element = line_element_types[element_index](line_elements[element_index])
+		if not verify_lambda(element):
+			_raise_corrupt_idse_error("Data at index %s doesn't conform to verifier: %s"
+				% (element_index, line_elements[element_index]), reading)
 
 
 def _get_expected_types(requested_length):

@@ -167,6 +167,18 @@ def _ids_entry_to_idse_string(ids_entry):
 	raise NotImplementedError()
 
 
+def _get_expected_types(requested_length):
+	""" Get a list with expected types of the requested_length. """
+
+	if len(ELEMENT_TYPES) != 4:
+		raise NotImplementedError("Implementation has changed! Expected 4 ELEMENT_TYPES.")
+
+	if requested_length < len(ELEMENT_TYPES):
+		raise ValueError("Requested length is shorter than lenght of ELEMENT_TYPES.")
+
+	return ELEMENT_TYPES + [ELEMENT_TYPES[3]] * (requested_length - len(ELEMENT_TYPES))
+
+
 def _read_log_lines_then_yield(yielder, first_line):
 	""" Read all provided log lines from the given yielder. """
 

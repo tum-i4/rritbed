@@ -86,17 +86,16 @@ class Experiment(object):
 		# raise NotImplementedError()
 
 		printer = TimePrinter(name="experiment")
-		printer.prt("Reading file and converting...")
 
+		# TODO TEMP?
+		printer.prt("Scoring classifier trained with all samples...")
+		self.handle_all(self.file_path)
+
+		printer.prt("Done. Reading file and converting...")
 		# ids_entries: { app_id, vector, my_class }
 		ids_entries_dict = self.read_convert(self.file_path)
 
-		# TODO TEMP?
-		printer.prt("Done. Scoring classifier trained with all samples...")
-		self.handle_all(self.file_path)
-
 		printer.prt("Done. Scoring individual classifier...")
-
 		for app_id, ids_entries in ids_entries_dict.items():
 			self.handle_app(app_id, ids_entries)
 

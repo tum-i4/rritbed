@@ -76,17 +76,21 @@ class Experiment(object):
 	def run(self):
 		""" Read entries, convert them, split them per app_id and call b() for each app. """
 
-		printer = TimePrinter(name="a")
+		printer = TimePrinter(name="experiment")
 		printer.prt("Reading file and converting...")
-
-		# TODO TEMP?
-		self.handle_all(self.file_path)
 
 		# ids_entries: { app_id, vector, my_class }
 		self.entries_dict = self.read_convert(self.file_path)
 
-		for app_id, ids_entries in self.entries_dict.items():
-			self.handle_app(app_id, ids_entries)
+		printer.prt("Done. Scoring each individual classifier...")
+
+		# for app_id, ids_entries in self.entries_dict.items():
+		# 	self.handle_app(app_id, ids_entries)
+
+		printer.prt("Done. Scoring all classifiers...")
+
+		# TODO TEMP?
+		self.handle_all(self.file_path)
 
 		# self.store_experiment()
 
@@ -94,7 +98,7 @@ class Experiment(object):
 	def handle_all(self, file_path):
 		""" Full flow for a one-fits-all classifier. """
 
-		printer = util.prtr.TimePrinter(name="HA")
+		printer = util.prtr.TimePrinter(name="ALL")
 		printer.prt("ALLLLLLLL\n\n")
 
 		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER

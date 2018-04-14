@@ -57,11 +57,15 @@ def _log_num(name):
 def log_colour():
 	""" Log the given colour. """
 
+	crd_x = request.params.x
+	crd_y = request.params.y
+
 	colour_log_entry = _create_base_log_entry(request.params.vin)
 
 	colour_log_entry.complete(
 		app_id="COLOUR",
 		log_message=request.params.colour,
+		gps_position=_get_position_string(crd_x, crd_y),
 		intrusion=request.params.intrusion
 	)
 

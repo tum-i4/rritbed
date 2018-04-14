@@ -70,7 +70,7 @@ class Experiment(object):
 		experiment_dir_name += time.strftime("_%m-%d_%H-%M")
 		self.experiment_dir_path = self.get_experiment_folder(experiment_dir_name)
 
-		while os.path.lexists(self.experiment_dir_path):
+		if os.path.lexists(self.experiment_dir_path):
 			self.experiment_dir_path = Dir.uniquify(self.experiment_dir_path)
 
 

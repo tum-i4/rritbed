@@ -192,19 +192,28 @@ class Experiment(object):
 
 		print("\nSCORE FOR >>> %s <<<" % app_id)
 
+		accu = sk_metr.accuracy_score(y_true, y_pred)
 		prec = sk_metr.precision_score(y_true, y_pred)
 		reca = sk_metr.recall_score(y_true, y_pred)
-		accu = sk_metr.accuracy_score(y_true, y_pred)
+
+		this_result.extend([("Accuracy", accu), ("Precision", prec), ("Recall", reca)])
 
 		print("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
 
 		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
+		this_result.extend([("TN", tn), ("FP", fp), ("FN", fn), ("TP", tp)])
+
+		storer = util.prtr.Storer()
+
 		table = []
 		table.append(["", "Actual (+)", "Actual (-)"])
 		table.append(["Pred (+)", tp, fp])
 		table.append(["Pred (-)", fn, tn])
-		util.outp.print_table(table)
+		util.outp.print_table(table, printer=storer)
+
+		this_result.append(storer.get_messages())
+		storer.printout()
 
 		self.classifier_results.append(
 			ClassifierResultPair(classifier=classifier, result=this_result)

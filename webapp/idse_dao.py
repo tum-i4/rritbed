@@ -56,9 +56,9 @@ def get_entries(file_path, limit=None):
 	file_type = _detect_type(first_line)
 
 	if file_type == FileType.IDSE_FILE:
-		_yield_idse_lines(yielder)
+		return _yield_idse_lines(yielder)
 	elif file_type == FileType.LOG_FILE:
-		_read_log_lines_then_yield(yielder, first_line)
+		return _read_log_lines_then_yield(yielder, first_line)
 	else:
 		raise NotImplementedError("File type not implemented: %s" % file_type)
 

@@ -262,7 +262,7 @@ class Experiment(object):
 		other_file_paths = [entry_file_path, result_file_path]
 		classifiers_file_paths = []
 		for classifier, _ in self.classifier_results:
-			its_name = os.path.join(self.experiment_dir_path, type(x).__name__.replace(" ", "_"))
+			its_name = os.path.join(self.experiment_dir_path, type(classifier).__name__.replace(" ", "_"))
 			while its_name in classifiers_file_paths:
 				its_name += "_"
 			classifiers_file_paths.append(its_name)

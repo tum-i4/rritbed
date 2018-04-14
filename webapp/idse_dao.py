@@ -250,38 +250,6 @@ class FileType(Enum):
 if __name__ == "__main__":
 	try:
 		PARSER = argparse.ArgumentParser()
-
-
-
-
-		# TODO TEMP
-		PARSER.add_argument("first_file")
-		PARSER.add_argument("second_file")
-		ARGS = PARSER.parse_args()
-
-		import time
-		import util.fmtr
-		start_time = time.time()
-		first_entries = list(yield_entries(ARGS.first_file))
-		mid_time = time.time()
-		time_for_first = mid_time - start_time
-		second_entries = list(yield_entries(ARGS.second_file))
-		end_time = time.time()
-		time_for_second = end_time - mid_time
-		print("File \"%s\" (%s entries) took %s (%s per 1000 entries)" % (ARGS.first_file, len(first_entries),
-			util.fmtr.format_time_passed(time_for_first),
-			util.fmtr.format_time_passed((time_for_first / len(first_entries)) * 1000)))
-		print("File \"%s\" (%s entries) took %s (%s per 1000 entries)" % (ARGS.second_file, len(second_entries),
-			util.fmtr.format_time_passed(time_for_second),
-			util.fmtr.format_time_passed((time_for_second / len(second_entries)) * 1000)))
-		exit()
-
-
-
-
-
-
-
 		PARSER.add_argument("mode", choices=["convert"])
 		PARSER.add_argument("file_path", help="Log file")
 		ARGS = PARSER.parse_args()

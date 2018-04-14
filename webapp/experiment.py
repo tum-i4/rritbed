@@ -48,7 +48,7 @@ class Experiment(object):
 		# Loaded entries
 		self.entries_dict = {}
 		# ClassifierResultPair objects (classifier, result)
-		self.classifiers = []
+		self.classifier_results = []
 
 		# Paths and name
 		self.file_path = os.path.expanduser(file_path)
@@ -84,6 +84,8 @@ class Experiment(object):
 
 		for app_id, ids_entries in self.entries_dict.items():
 			self.handle_app(app_id, ids_entries)
+
+		# self.store_experiment()
 
 
 	def handle_all(self, file_path):
@@ -185,6 +187,9 @@ class Experiment(object):
 	def visualise_store(self, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
+		# Result: [accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
+		this_result = []
+
 		print("\nSCORE FOR >>> %s <<<" % app_id)
 
 		prec = sk_metr.precision_score(y_true, y_pred)
@@ -200,6 +205,10 @@ class Experiment(object):
 		table.append(["Pred (+)", tp, fp])
 		table.append(["Pred (-)", fn, tn])
 		util.outp.print_table(table)
+
+		self.classifier_results.append(
+			ClassifierResultPair(classifier=classifier, result=this_result)
+		)
 
 		print("\nEND FOR  >>> %s <<<" % app_id)
 

@@ -364,8 +364,8 @@ class Experiment(object):
 
 	### Helpers ###
 
-	@staticmethod
-	def read_convert(file_path):
+
+	def read_convert(self, file_path):
 		""" Read log entries from the given file and convert the result. """
 
 		converter = IdsConverter()

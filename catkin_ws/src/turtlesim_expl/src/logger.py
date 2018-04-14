@@ -45,6 +45,8 @@ class Logger(object):
 		self._label = args.label
 		self._intrusion = args.intrusion
 
+		self._pose = (0, 0)
+
 		self._last_broadcast = {
 			self.log_colour.__name__ : 0,
 			self.log_pose.__name__ : 0
@@ -132,7 +134,9 @@ class Logger(object):
 
 		colour_string = "%s,%s,%s" % this_colour
 
+		pose_x, pose_y = self._pose
 		request = self.copy_base_request()
+		request = PoseProcessor.add_to_request(request, pose_x, pose_y)
 		request["colour"] = colour_string
 
 		if self._label:
@@ -143,6 +147,8 @@ class Logger(object):
 
 	def log_pose(self, log_data):
 		""" Pose logging """
+
+		self._pose = (log_data.x, log_data.y)
 
 		# Each request with 1/3 probability
 		pose_pipe = PosePipe.create(

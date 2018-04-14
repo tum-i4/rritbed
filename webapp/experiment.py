@@ -10,6 +10,7 @@ from collections import namedtuple
 
 import sklearn
 import sklearn.ensemble as sk_ens
+import sklearn.externals as sk_ext
 import sklearn.metrics as sk_metr
 import sklearn.preprocessing as sk_pre
 
@@ -19,6 +20,8 @@ import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
 from ids.ids_entry import IdsEntry
+import idse_dao
+import log_file_utils
 import util.fmtr
 import util.outp
 from util.prtr import TimePrinter
@@ -255,6 +258,26 @@ class Experiment(object):
 
 
 	def store_experiment(self):
+
+		printer = util.prtr.Printer(name="store")
+		printer.prt("Storing experiment results...")
+
+		entry_file_path = os.path.join(self.experiment_dir_path, "used_entries")
+		result_file_path = os.path.join(self.experiment_dir_path, "result")
+		other_file_paths = [entry_file_path, result_file_path]
+		classifiers_file_paths = [
+			os.path.join(self.experiment_dir_path, type(x).__name__).replace(" ", "_")
+			for (x, _) in self.classifier_results
+		]
+
+		if any([os.path.lexists(x) for x in other_file_paths + classifiers_file_paths]):
+			raise IOError("One of the files exists: %s" % (other_file_paths + classifiers_file_paths))
+
+		all_my_entries = reduce(lambda a, b: a.extend(b), self.entries_dict.values(), [])
+		assert(self.entries_count == len(all_my_entries))
+
+		printer.prt("Data verified. Storing utilised entries...")
+
 		# Create new file with my entries
 		# Analyse my file
 		# log_file_utils.analyse(args.file_path, args.to_file, util.prtr.Printer())

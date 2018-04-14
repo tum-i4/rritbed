@@ -41,7 +41,7 @@ VERIFIER = [
 ]
 
 
-def get_entries(file_path, limit=None):
+def yield_entries(file_path, limit=None):
 	"""
 	Yield IdsEntry objects from the given file. First access on log files is costly!
 	*limit: Optional maximum number of entries to retrieve.
@@ -90,7 +90,7 @@ def convert(input_path):
 	if os.path.lexists(output_path):
 		_raise_file_exists(output_path)
 
-	save_entries(output_path, get_entries(input_path))
+	save_entries(output_path, yield_entries(input_path))
 
 
 def _detect_type(first_line):

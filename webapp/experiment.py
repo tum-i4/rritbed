@@ -109,9 +109,17 @@ class Experiment(object):
 		printer = util.prtr.TimePrinter(name="ALL")
 		printer.prt("ALLLLLLLL\n\n")
 
-		ids_entries = list(idse_dao.yield_entries(file_path))
+		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER
+		converter = TEMPCONVERTER()
+		log_entries = []
 
-		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(ids_entries)
+		for line in Dir.yield_lines(file_path, ITEM_LIMIT):
+			log_entry = LogEntry.from_log_string(line)
+			log_entries.append(log_entry)
+
+		all_entries = converter.LOG_ENTRIES_TO_IDS_ENTRIES(log_entries, binary=True)
+
+		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)
 
 		scoring_dict = ids_tools.empty_app_id_to_list_dict()

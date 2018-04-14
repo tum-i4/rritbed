@@ -49,8 +49,7 @@ class Experiment(object):
 		self.start_time = time.time()
 		self.end_time = None
 		# Loaded entries
-		self.entries_dict = {}
-		self.entries_count = -1
+		self.ids_entries = []
 		# ClassifierResultPair objects (classifier, result)
 		self.classifier_results = []
 
@@ -90,11 +89,11 @@ class Experiment(object):
 		printer.prt("Reading file and converting...")
 
 		# ids_entries: { app_id, vector, my_class }
-		self.entries_dict = self.read_convert(self.file_path)
+		# ids_entries_dict = self.read_convert(self.file_path)
 
-		printer.prt("Done. Scoring each individual classifier...")
+		# printer.prt("Done. Scoring each individual classifier...")
 
-		# for app_id, ids_entries in self.entries_dict.items():
+		# for app_id, ids_entries in ids_entries_dict.items():
 		# 	self.handle_app(app_id, ids_entries)
 
 		printer.prt("Done. Scoring all classifiers...")
@@ -279,13 +278,10 @@ class Experiment(object):
 		if any([os.path.lexists(x) for x in other_file_paths + classifiers_file_paths]):
 			raise IOError("One of the files exists: %s" % (other_file_paths + classifiers_file_paths))
 
-		all_my_entries = reduce(lambda a, b: a.extend(b), self.entries_dict.values(), [])
-		assert(self.entries_count == len(all_my_entries))
-
 		printer.prt("Data verified. Storing utilised entries...")
 
 		# Create new file with my entries
-		saved_path = idse_dao.save_entries(entry_file_path, all_my_entries)
+		saved_path = idse_dao.save_entries(entry_file_path, self.ids_entries)
 
 		printer.prt("Done. Analysing file...")
 

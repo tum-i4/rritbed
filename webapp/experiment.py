@@ -61,19 +61,17 @@ class Experiment(object):
 		if not os.path.lexists(self.file_path):
 			util.outp.exit_on_error("Log file not found: %s" % self.file_path)
 
-		if store_title is not None:
-			self.title = store_title
-			experiment_dir_name = store_title.replace(" ", "_")
-		else:
-			date_str = time.strftime("%m-%d-%H-%M")
+		self.title = store_title
+		if self.title is None:
 			random_num_str = "".join(str(x) for x in (random.sample(range(0, 15), 5)))
-			self.title = "experiment_%s_%s" % (date_str, random_num_str)
-			experiment_dir_name = self.title
+			self.title = "Experiment %s" % random_num_str
 
+		experiment_dir_name = self.title.lower().replace(" ", "_")
+		experiment_dir_name += time.strftime("_%m-%d_%H-%M")
 		self.experiment_dir_path = self.get_experiment_folder(experiment_dir_name)
 
-		if os.path.lexists(self.experiment_dir_path):
-			util.outp.exit_on_error("Experiment folder exists: %s" % self.experiment_dir_path)
+		while os.path.lexists(self.experiment_dir_path):
+			self.experiment_dir_path = Dir.uniquify(self.experiment_dir_path)
 
 
 	### Workers ###

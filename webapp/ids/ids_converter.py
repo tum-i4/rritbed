@@ -35,6 +35,29 @@ class IdsConverter(object):
 			ids_data.get_labels(),
 			verify_hash="88074a13baa6f97fa4801f3b0ec53065")
 
+		## Verifier data ##
+		# 1 for a binarised level (only two options)
+		base_len = 1
+		self._len_key = "len"
+
+		self._vector_constraints = {}
+		# 1 value (generated)
+		for gen_key in ids_data.get_generators():
+			self._vector_constraints[gen_key] = {self._len_key : base_len + 1}
+		# 3 values for a split colour
+		for colr_key in ids_data.get_colours():
+			self._vector_constraints[colr_key] = {self._len_key : base_len + 3}
+		# Poses all have GPS
+		for pose_key in ids_data.get_poses():
+			self._vector_constraints[pose_key] = {self._len_key : base_len + 2}
+
+		# CC: One of five
+		self._vector_constraints[ids_data.POSE_CC][self._len_key] += 5
+		# POI: One of 4 types, one of 7 results
+		self._vector_constraints[ids_data.POSE_POI][self._len_key] += 11
+		# TSP: x, y, targ_x, targ_y
+		self._vector_constraints[ids_data.POSE_TSP][self._len_key] += 4
+
 
 	def log_entry_to_vector(self, app_id, log_entry, binary=True):
 		""" Convert the given log_entry to a classifiable vector. """
@@ -450,30 +473,7 @@ class IdsConverter(object):
 		if app_id not in self.app_ids:
 			raise ValueError("Invalid app_id: {}".format(app_id))
 
-		# 1 for a binarised level (only two options)
-		base_len = 1
-		len_key = "len"
-
-		constraints = {}
-		# 1 value (generated)
-		for gen_key in ids_data.get_generators():
-			constraints[gen_key] = {len_key : base_len + 1}
-		# 3 values for a split colour
-		for colr_key in ids_data.get_colours():
-			constraints[colr_key] = {len_key : base_len + 3}
-		# Poses all have GPS
-		for pose_key in ids_data.get_poses():
-			constraints[pose_key] = {len_key : base_len + 2}
-
-		# CC: One of five
-		constraints[ids_data.POSE_CC][len_key] += 5
-		# POI: One of 4 types, one of 7 results
-		constraints[ids_data.POSE_POI][len_key] += 11
-		# TSP: x, y, targ_x, targ_y
-		constraints[ids_data.POSE_TSP][len_key] += 4
-
-		expected_len = constraints[app_id][len_key]
+		expected_len = self._vector_constraints[app_id][self._len_key]
 		if len(ndarray) != expected_len:
-			print(app_id)
-			raise ValueError("Given ndarray has invalid length. Expected {} elements. Received: {}"
-				.format(expected_len, ndarray))
+			raise ValueError("Given ndarray (app_id: %s) has invalid length. Expected %s; Got: %s (len: %s)"
+				% (app_id, expected_len, ndarray, len(ndarray)))

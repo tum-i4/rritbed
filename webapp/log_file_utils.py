@@ -12,6 +12,7 @@ import util.prtr
 from ids.dir_utils import Dir
 import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
+import idse_dao
 
 
 def analyse(file_path, to_file, output_printer):
@@ -27,6 +28,12 @@ def analyse(file_path, to_file, output_printer):
 	output_printer.prt("Analysing...")
 
 	# Get file access #
+
+	file_type = idse_dao.detect_type(file_path)
+	if file_type == idse_dao.FileType.IDSE_FILE:
+		print("Can't analyse IDSE files!")
+	elif file_type != idse_dao.FileType.LOG_FILE:
+		raise NotImplementedError("File type \"%s\" not implemented!" % file_type)
 
 	log_entry_generator = (LogEntry.from_log_string(line) for line in  Dir.yield_lines(file_path))
 

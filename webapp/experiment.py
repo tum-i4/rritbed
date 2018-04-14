@@ -5,6 +5,7 @@
 
 import argparse
 import os
+import random
 import time
 from collections import namedtuple
 
@@ -43,7 +44,6 @@ class Experiment(object):
 		object.__init__(self)
 
 		# State
-		self.store = False
 		self.title = None
 		# Time
 		self.start_time = time.time()
@@ -63,13 +63,17 @@ class Experiment(object):
 			util.outp.exit_on_error("Log file not found: %s" % self.file_path)
 
 		if store_title is not None:
-			self.store = True
 			self.title = store_title
 			experiment_dir_name = store_title.replace(" ", "_")
+		else:
+			date_str = time.strftime("%m-%d-%H-%M")
+			random_num_str = "".join(str(x) for x in (random.sample(range(0, 15), 5)))
+			self.title = "experiment_%s_%s" % (date_str, random_num_str)
+			experiment_dir_name = self.title
 
 		self.experiment_dir_path = self.get_experiment_folder(experiment_dir_name)
 
-		if self.store and os.path.lexists(self.experiment_dir_path):
+		if os.path.lexists(self.experiment_dir_path):
 			util.outp.exit_on_error("Experiment folder exists: %s" % self.experiment_dir_path)
 
 

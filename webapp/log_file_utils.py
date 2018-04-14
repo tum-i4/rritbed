@@ -32,6 +32,7 @@ def analyse(file_path, to_file, output_printer):
 	file_type = idse_dao.detect_type(file_path)
 	if file_type == idse_dao.FileType.IDSE_FILE:
 		print("Can't analyse IDSE files!")
+		return
 	elif file_type != idse_dao.FileType.LOG_FILE:
 		raise NotImplementedError("File type \"%s\" not implemented!" % file_type)
 

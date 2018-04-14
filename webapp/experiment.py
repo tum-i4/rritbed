@@ -333,11 +333,11 @@ class Experiment(object):
 
 		result_line_1 = ">>> Result | "
 		for element in result[:-1]:
-			result_line_1 += "%s: %s |" % element
-		lines.append(result_line_1[:-2])
+			result_line_1 += "%s: %s | " % element
+		lines.append(result_line_1[:-3])
 
 		lines.append(">>> Confusion matrix:")
-		lines.extend(result[-1:])
+		lines.extend(result[-1])
 
 		return lines
 

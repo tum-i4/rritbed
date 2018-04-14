@@ -110,6 +110,13 @@ def convert(input_path):
 	save_entries(output_path, yield_entries(input_path))
 
 
+def detect_type(file_path):
+	""" Detect the file type of the file. """
+
+	first_line = Dir.yield_lines(file_path).next()
+	return _detect_type(first_line)
+
+
 def add_idse_extension(file_path):
 	""" Adds the .idse extension if not present. """
 

@@ -84,6 +84,16 @@ class IdsConverter(object):
 		return ids_entries_per_app_id
 
 
+	def ids_entries_to_dict(self, ids_entries):
+		""" Store the given LogEntry objects in a { app_id : [IdsEntry] } dict. """
+
+		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
+		for ids_entry in ids_entries:
+			ids_entries_per_app_id[ids_entry.app_id].append(ids_entry)
+
+		return ids_entries_per_app_id
+
+
 	def log_entries_to_ids_entries(self, expected_app_id, log_entries, binary):
 		""" Convert the given LogEntry objects to IdsEntry objects for this app_id. """
 

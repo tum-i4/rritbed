@@ -74,6 +74,9 @@ def save_entries(file_path, ids_entry_generator):
 	if os.path.lexists(file_path_full):
 		_raise_file_exists(file_path_full)
 
+	if isinstance(ids_entry_generator, list):
+		ids_entry_generator = (x for x in ids_entry_generator)
+
 	first_entry = ids_entry_generator.next()
 
 	if not isinstance(first_entry, IdsEntry):

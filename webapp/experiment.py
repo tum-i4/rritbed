@@ -211,8 +211,8 @@ class Experiment(object):
 	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
-		# Result: [accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
-		this_result = []
+		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
+		this_result = [app_id]
 
 		print("\nSCORE FOR >>> %s <<<" % app_id)
 
@@ -328,19 +328,19 @@ class Experiment(object):
 
 
 	def create_classifier_result(self, name, classifier, result):
-		# Result: [accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
+		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
 
 		lines = []
 		lines.append("Classifier: %s (%s)" % (name, type(classifier).__name__))
 		lines.append(str(classifier))
 		lines.append("")
 
-		result_line_1 = ">>> Result | "
-		for element in result[:-1]:
-			result_line_1 += "%s: %s | " % element
-		lines.append(result_line_1[:-3])
+		line_with_result = ">>> %s - Result | " % result[0]
+		for element in result[1:-1]:
+			line_with_result += "%s: %s | " % element
+		lines.append(line_with_result[:-3])
 
-		lines.append(">>> Confusion matrix:")
+		lines.append(">>> %s - Confusion matrix:" % result[0])
 		lines.extend(result[-1])
 
 		return lines

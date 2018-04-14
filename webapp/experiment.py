@@ -279,8 +279,15 @@ class Experiment(object):
 		printer.prt("Data verified. Storing utilised entries...")
 
 		# Create new file with my entries
-		# Analyse my file
-		# log_file_utils.analyse(args.file_path, args.to_file, util.prtr.Printer())
+		saved_path = idse_dao.save_entries(entry_file_path, all_my_entries)
+
+		printer.prt("Done. Analysing file...")
+
+		# Analyse that file
+		log_file_utils.analyse(saved_path, to_file=True, output_printer=util.prtr.Storer())
+
+		printer.prt("Done. Saving classifiers...")
+
 		# Save trained classifiers
 		raise NotImplementedError()
 		pass

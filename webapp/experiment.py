@@ -53,7 +53,7 @@ class Experiment(object):
 		# Paths and name
 		self.file_path = os.path.expanduser(file_path)
 		self.input_file_name = os.path.basename(self.file_path)
-		self.experiment_dir = None
+		experiment_dir_name = None
 
 		if not os.path.lexists(self.file_path):
 			util.outp.exit_on_error("Log file not found: %s" % self.file_path)
@@ -61,10 +61,12 @@ class Experiment(object):
 		if store_title is not None:
 			self.store = True
 			self.title = store_title
-			self.experiment_dir = store_title.replace(" ", "_")
+			experiment_dir_name = store_title.replace(" ", "_")
 
-		if self.store and os.path.lexists(self.experiment_dir):
-			util.outp.exit_on_error("Experiment folder exists: %s" % self.experiment_dir)
+		self.experiment_dir_path = self.get_experiment_folder(experiment_dir_name)
+
+		if self.store and os.path.lexists(self.experiment_dir_path):
+			util.outp.exit_on_error("Experiment folder exists: %s" % self.experiment_dir_path)
 
 
 	### Workers ###

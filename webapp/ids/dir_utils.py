@@ -79,6 +79,10 @@ class Dir(object):
 
 		with open(file_path, "w") as file_handle:
 			for line in lines_generator:
+
+				if not isinstance(line, str):
+					line = "%s %s" % ("CAST TO STRING", str(line))
+
 				# Only add the line terminating character if it's missing.
 				if not line.endswith(line_ending):
 					line += line_ending

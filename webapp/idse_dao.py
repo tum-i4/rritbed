@@ -143,7 +143,18 @@ def _process_idse_line(line, converter):
 
 
 def _ids_entry_to_idse_string(ids_entry):
-	raise NotImplementedError()
+	""" Convert the given IdsEntry to a IDSE conform string. """
+
+	app_id = ids_entry.app_id
+	feature_count = len(ids_entry.vector)
+	vclass = ids_entry.vclass
+	features = ids_entry.vector
+
+	line_elements = [app_id, feature_count, vclass] + features
+	_verify_line_elements(line_elements, reading=False)
+
+	line = ",".join(line_elements)
+	return line
 
 
 def _verify_line_elements(line_elements, reading=True):

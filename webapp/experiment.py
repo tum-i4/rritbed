@@ -128,17 +128,17 @@ class Experiment(object):
 		for ids_entry in scoring_entries:
 			scoring_dict[ids_entry.app_id].append(ids_entry)
 
-		# Classify with all entries
-		# training_entries
+		# Classify with all entries: training_entries
 		classifier = sklearn.svm.OneClassSVM()
 		classifier.fit(X_train)
 
+		# Score for each app: scoring_dict
 		for app_id, app_entries in scoring_dict.items():
 			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
 			y_pred = classifier.predict(X_test)
 			self.visualise_store(app_id, classifier, y_true, y_pred)
 
-		printer.prt("\n\n\nSPLIT PER APPPPPPPP\n\n")
+		printer.prt("\n\n\DONNNNNNEEEE\n\n")
 
 
 	def handle_app(self, app_id, ids_entries):

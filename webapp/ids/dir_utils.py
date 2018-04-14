@@ -2,6 +2,7 @@
 """ Dir utils """
 
 import os
+import random
 import time
 import uuid
 import sklearn.svm as sk_svm
@@ -28,6 +29,17 @@ class Dir(object):
 
 		if not os.path.lexists(folder_path):
 			os.makedirs(folder_path)
+
+
+	@staticmethod
+	def uniquify(any_path):
+		""" Make sure we have a unique <thing> that doesn't exist.
+		returns: The uniquified name. """
+
+		while os.path.lexists(any_path):
+			any_path += str(random.randint(0, 9))
+
+		return any_path
 
 
 	@staticmethod

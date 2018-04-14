@@ -94,7 +94,7 @@ def convert(input_path):
 	if not os.path.lexists(input_path):
 		_raise_file_doesnt_exist(input_path)
 
-	output_path = "%s%s%s" % (input_path, os.path.extsep, FILE_EXTENSION)
+	output_path = add_idse_extension(input_path)
 
 	if os.path.lexists(output_path):
 		_raise_file_exists(output_path)

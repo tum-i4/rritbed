@@ -89,7 +89,8 @@ class Experiment(object):
 	def handle_all(self, file_path):
 		""" Full flow for a one-fits-all classifier. """
 
-		print("ALLLLLLLL\n\n")
+		printer = util.prtr.TimePrinter(name="HA")
+		printer.prt("ALLLLLLLL\n\n")
 
 		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER
 		converter = TEMPCONVERTER()
@@ -118,7 +119,7 @@ class Experiment(object):
 			y_pred = classifier.predict(X_test)
 			self.visualise(app_id, y_true, y_pred)
 
-		print("\n\n\nSPLIT PER APPPPPPPP\n\n")
+		printer.prt("\n\n\nSPLIT PER APPPPPPPP\n\n")
 
 
 	def handle_app(self, app_id, ids_entries):

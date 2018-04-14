@@ -266,7 +266,7 @@ class Experiment(object):
 		printer = util.prtr.Printer(name="store")
 		printer.prt("Storing experiment results...")
 
-		self.open_experiment_folder()
+		Dir.ensure_folder_exists(self.experiment_dir_path)
 
 		entry_file_path = os.path.join(self.experiment_dir_path, "used_entries")
 		result_file_path = os.path.join(self.experiment_dir_path, "result")
@@ -358,13 +358,6 @@ class Experiment(object):
 
 		result = os.path.join(EXPERIMENTS_HOME, name)
 		return result
-
-
-	def open_experiment_folder(self):
-		""" Ensure the experiment folder exists. """
-
-		if not os.path.lexists(self.experiment_dir_path):
-			os.makedirs(self.experiment_dir_path)
 
 
 	### Helpers ###

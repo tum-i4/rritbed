@@ -23,6 +23,14 @@ class Dir(object):
 
 
 	@staticmethod
+	def ensure_folder_exists(folder_path):
+		""" If the folder doesn't exist, create it and all necessary parents. """
+
+		if not os.path.lexists(folder_path):
+			os.makedirs(folder_path)
+
+
+	@staticmethod
 	def read_lines(file_path):
 		""" Return all lines in the given file. Removes the line terminating character. """
 

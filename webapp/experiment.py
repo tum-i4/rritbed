@@ -252,6 +252,8 @@ class Experiment(object):
 	def store_experiment(self):
 		""" Store the results saved in this class in our experiment directory. """
 
+		self.end_time = time.time()
+
 		printer = util.prtr.Printer(name="store")
 		printer.prt("Storing experiment results...")
 

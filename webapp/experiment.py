@@ -266,6 +266,8 @@ class Experiment(object):
 		printer = util.prtr.Printer(name="store")
 		printer.prt("Storing experiment results...")
 
+		self.open_experiment_folder()
+
 		entry_file_path = os.path.join(self.experiment_dir_path, "used_entries")
 		result_file_path = os.path.join(self.experiment_dir_path, "result")
 		other_file_paths = [entry_file_path, result_file_path]

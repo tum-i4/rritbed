@@ -109,7 +109,7 @@ class Experiment(object):
 
 		scoring_dict = ids_tools.empty_app_id_to_list_dict()
 		for ids_entry in scoring_entries:
-			scoring_dict[ids_entry.app_id] = ids_entry
+			scoring_dict[ids_entry.app_id].append(ids_entry)
 
 		# Classify with all entries
 		# training_entries

@@ -83,6 +83,7 @@ def save_entries(file_path, ids_entry_generator):
 
 
 def convert(input_path):
+	""" Convert the given file do a IDSE file. """
 
 	if not os.path.lexists(input_path):
 		_raise_file_doesnt_exist(input_path)

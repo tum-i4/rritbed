@@ -289,8 +289,17 @@ class Experiment(object):
 		printer.prt("Done. Saving classifiers...")
 
 		# Save trained classifiers
-		raise NotImplementedError()
-		pass
+		for (classifier, _), its_path in zip(self.classifier_results, classifiers_file_paths):
+			sk_ext.joblib.dump(classifier, its_path)
+
+		printer.prt("Done. Saving result digest...")
+
+		# Save the result
+		result_lines = self.create_result_lines()
+		Dir.write_lines(result_file_path, result_lines)
+
+		printer.prt("Done!")
+		printer.prt("Experiment stored in: %s" % self.experiment_dir_path)
 
 
 	def retrieve_experiment(self, experiment_dir):

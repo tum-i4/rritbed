@@ -273,15 +273,28 @@ class Experiment(object):
 			""
 		]
 
-		for classifier in self.classifiers:
-			classifier_result = self.create_classifier_result(classifier)
+		for classifier, result in self.classifier_results:
+			classifier_result = self.create_classifier_result(classifier, result)
 			lines.extend(classifier_result)
 
 		return lines
 
 
-	def create_classifier_result(self, classifier):
-		raise NotImplementedError()
+	def create_classifier_result(self, classifier, result):
+		# Result: [accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
+
+		lines = ["Classifier:"]
+		lines.append(str(classifier))
+
+		result_line_1 = ">>> Result | "
+		for element in result[:-1]:
+			result_line_1 += "%s: %s |" % element
+		lines.append(result_line_1[:-2])
+
+		lines.append(">>> Confusion matrix:")
+		lines.extend(result[-1:])
+
+		return lines
 
 
 	@staticmethod

@@ -274,10 +274,12 @@ class Experiment(object):
 		entry_file_path = os.path.join(self.experiment_dir_path, "used_entries")
 		result_file_path = os.path.join(self.experiment_dir_path, "result")
 		other_file_paths = [entry_file_path, result_file_path]
-		classifiers_file_paths = [
-			os.path.join(self.experiment_dir_path, type(x).__name__).replace(" ", "_")
-			for (x, _) in self.classifier_results
-		]
+		classifiers_file_paths = []
+		for classifier, _ in self.classifier_results:
+			its_name = os.path.join(self.experiment_dir_path, type(x).__name__.replace(" ", "_"))
+			while its_name in classifiers_file_paths:
+				its_name += "_"
+			classifiers_file_paths.append(its_name)
 
 		if any([os.path.lexists(x) for x in other_file_paths + classifiers_file_paths]):
 			raise IOError("One of the files exists: %s" % (other_file_paths + classifiers_file_paths))

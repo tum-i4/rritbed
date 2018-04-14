@@ -242,29 +242,11 @@ class Experiment(object):
 		print("\nEND FOR  >>> %s <<<" % app_id)
 
 
-	def e(self, app_id, ids_entries):
-
-		if app_id not in ids_data.get_generators():
-			return
-
-		import numpy as np
-		from sklearn.covariance import EllipticEnvelope
-		from sklearn.svm import OneClassSVM
-		import matplotlib.pyplot as plt
-		import matplotlib.font_manager
-
-		X_list, y = IdsConverter().ids_entries_to_X_y(ids_entries, app_id)
-		X = np.array(X_list)
-
-		X_scaled = sk_pre.scale(X)
-
-		print("WTF\n")
-
-
 	### Persistence ###
 
 
 	def store_experiment(self):
+		""" Store the results saved in this class in our experiment directory. """
 
 		printer = util.prtr.Printer(name="store")
 		printer.prt("Storing experiment results...")

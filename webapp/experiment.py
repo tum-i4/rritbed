@@ -98,7 +98,7 @@ class Experiment(object):
 		# TODO TEMP?
 		self.handle_all(self.file_path)
 
-		# self.store_experiment()
+		self.store_experiment()
 
 
 	def handle_all(self, file_path):

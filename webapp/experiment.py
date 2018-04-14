@@ -89,12 +89,12 @@ class Experiment(object):
 		printer.prt("Reading file and converting...")
 
 		# ids_entries: { app_id, vector, my_class }
-		# ids_entries_dict = self.read_convert(self.file_path)
+		ids_entries_dict = self.read_convert(self.file_path)
 
-		# printer.prt("Done. Scoring each individual classifier...")
+		printer.prt("Done. Scoring each individual classifier...")
 
-		# for app_id, ids_entries in ids_entries_dict.items():
-		# 	self.handle_app(app_id, ids_entries)
+		for app_id, ids_entries in ids_entries_dict.items():
+			self.handle_app(app_id, ids_entries)
 
 		printer.prt("Done. Scoring all classifiers...")
 

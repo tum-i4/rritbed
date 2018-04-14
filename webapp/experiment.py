@@ -32,7 +32,7 @@ ITEM_LIMIT = 5000000
 EXPERIMENTS_HOME = "experiments"
 
 
-ClassifierResultPair = namedtuple("ClassifierResultPair", "classifier result")
+ClassifierResultGroup = namedtuple("ClassifierResultGroup", "name classifier result")
 
 
 class Experiment(object):
@@ -50,7 +50,7 @@ class Experiment(object):
 		self.end_time = None
 		# Loaded entries
 		self.ids_entries = []
-		# ClassifierResultPair objects (classifier, result)
+		# ClassifierResultGroup objects (name, classifier, result)
 		self.classifier_results = []
 
 		# Paths and name
@@ -131,7 +131,7 @@ class Experiment(object):
 		for app_id, app_entries in scoring_dict.items():
 			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
 			y_pred = classifier.predict(X_test)
-			self.visualise_store(app_id, classifier, y_true, y_pred)
+			self.visualise_store("ALL", app_id, classifier, y_true, y_pred)
 
 		printer.prt("\n\n\DONNNNNNEEEE\n\n")
 
@@ -158,7 +158,7 @@ class Experiment(object):
 		classifier = sklearn.svm.OneClassSVM()
 		classifier.fit(X_train)
 		y_pred = classifier.predict(X_test)
-		self.visualise_store(app_id, classifier, y_true, y_pred)
+		self.visualise_store(app_id, app_id, classifier, y_true, y_pred)
 
 		# END TODO
 
@@ -203,12 +203,12 @@ class Experiment(object):
 		printer.prt("Predicting... ")
 		y_pred = classifier.predict(X_test)
 
-		self.visualise_store(app_id, classifier, y_true, y_pred)
+		self.visualise_store(app_id, app_id, classifier, y_true, y_pred)
 
 		return (y_true, y_pred)
 
 
-	def visualise_store(self, app_id, classifier, y_true, y_pred):
+	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
 		# Result: [accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
@@ -240,7 +240,7 @@ class Experiment(object):
 		storer.printout()
 
 		self.classifier_results.append(
-			ClassifierResultPair(classifier=classifier, result=this_result)
+			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
 		)
 
 		print("\nEND FOR  >>> %s <<<" % app_id)
@@ -263,11 +263,12 @@ class Experiment(object):
 		result_file_path = os.path.join(self.experiment_dir_path, "result")
 		other_file_paths = [entry_file_path, result_file_path]
 		classifiers_file_paths = []
-		for classifier, _ in self.classifier_results:
-			its_name = os.path.join(self.experiment_dir_path, type(classifier).__name__.replace(" ", "_"))
-			while its_name in classifiers_file_paths:
-				its_name += "_"
-			classifiers_file_paths.append(its_name)
+		for name, classifier, _ in self.classifier_results:
+			clf_name = "%s_%s" % (name, type(classifier).__name__.replace(" ", "_"))
+			clf_path = os.path.join(self.experiment_dir_path, clf_name)
+			while clf_path in classifiers_file_paths:
+				clf_path += "_"
+			classifiers_file_paths.append(clf_path)
 
 		if any([os.path.lexists(x) for x in other_file_paths + classifiers_file_paths]):
 			raise IOError("One of the files exists: %s" % (other_file_paths + classifiers_file_paths))
@@ -285,7 +286,7 @@ class Experiment(object):
 		printer.prt("Done. Saving classifiers...")
 
 		# Save trained classifiers
-		for (classifier, _), its_path in zip(self.classifier_results, classifiers_file_paths):
+		for (_, classifier, _), its_path in zip(self.classifier_results, classifiers_file_paths):
 			sk_ext.joblib.dump(classifier, its_path)
 
 		printer.prt("Done. Saving result digest...")
@@ -318,18 +319,21 @@ class Experiment(object):
 			""
 		]
 
-		for classifier, result in self.classifier_results:
-			classifier_result = self.create_classifier_result(classifier, result)
+		for name, classifier, result in self.classifier_results:
+			classifier_result = self.create_classifier_result(name, classifier, result)
 			lines.extend(classifier_result)
+			lines.extend(["", ""])
 
 		return lines
 
 
-	def create_classifier_result(self, classifier, result):
+	def create_classifier_result(self, name, classifier, result):
 		# Result: [accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
 
-		lines = ["Classifier:"]
+		lines = []
+		lines.append("Classifier: %s (%s)" % (name, type(classifier).__name__))
 		lines.append(str(classifier))
+		lines.append("")
 
 		result_line_1 = ">>> Result | "
 		for element in result[:-1]:

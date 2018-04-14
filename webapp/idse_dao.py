@@ -208,8 +208,11 @@ def _raise_file_exists(file_path):
 	raise IOError("[IDSE DAO] File exists already: %s" % file_path)
 
 
-def _raise_corrupt_idse_error(message):
-	raise IOError("[IDSE DAO] Possibly corrupt IDSE file! %s" % message)
+def _raise_corrupt_idse_error(message, reading):
+	prefix = "[IDSE DAO] "
+	if reading:
+		prefix += "Possibly corrupt IDSE file!"
+	raise IOError("%s %s" % (prefix, message))
 
 
 

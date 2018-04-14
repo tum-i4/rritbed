@@ -49,3 +49,16 @@ def print_table(list_of_lists, headline=None, col_sep=" | ", head_sep=True, prin
 
 	for i in range(1, len(lines_to_print)):
 		printer.prt(lines_to_print[i])
+
+
+def exit_on_error(error_message):
+	""" Print the given error message and call exit(). """
+
+	prtr.Printer(name="Error").prt(error_message)
+	exit()
+
+
+def print_debug(debug_message):
+	""" Print the given message as a debug output. """
+
+	prtr.Printer(name="Debug").prt(debug_message)

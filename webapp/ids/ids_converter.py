@@ -17,7 +17,7 @@ class IdsConverter(object):
 		""" Ctor. """
 
 		self.app_ids = ids_data.get_app_ids()
-		ids_tools.verify_md5(self.app_ids, "cacafa61f61b645c279954952ac6ba8f")
+		ids_tools.verify_md5(self.app_ids, "3a88e92473acb1ad1b56e05a8074c7bd")
 
 		self.level_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_levels(),
@@ -33,7 +33,30 @@ class IdsConverter(object):
 
 		self.label_int_mapping = ids_tools.enumerate_to_dict(
 			ids_data.get_labels(),
-			verify_hash="69a262192b246d16e8411b6db06e237b")
+			verify_hash="88074a13baa6f97fa4801f3b0ec53065")
+
+		## Verifier data ##
+		# 1 for a binarised level (only two options)
+		base_len = 1
+		self._len_key = "len"
+
+		self._vector_constraints = {}
+		# 1 value (generated)
+		for gen_key in ids_data.get_generators():
+			self._vector_constraints[gen_key] = {self._len_key : base_len + 1}
+		# 3 values for a split colour
+		for colr_key in ids_data.get_colours():
+			self._vector_constraints[colr_key] = {self._len_key : base_len + 3}
+		# Poses all have GPS
+		for pose_key in ids_data.get_poses():
+			self._vector_constraints[pose_key] = {self._len_key : base_len + 2}
+
+		# CC: One of five
+		self._vector_constraints[ids_data.POSE_CC][self._len_key] += 5
+		# POI: One of 4 types, one of 7 results
+		self._vector_constraints[ids_data.POSE_POI][self._len_key] += 11
+		# TSP: x, y, targ_x, targ_y
+		self._vector_constraints[ids_data.POSE_TSP][self._len_key] += 4
 
 
 	def log_entry_to_vector(self, app_id, log_entry, binary=True):
@@ -61,15 +84,26 @@ class IdsConverter(object):
 		return ids_entries_per_app_id
 
 
-	def log_entries_to_ids_entries(self, app_id, log_entries, binary):
+	def ids_entries_to_dict(self, ids_entries):
+		""" Store the given LogEntry objects in a { app_id : [IdsEntry] } dict. """
+
+		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
+		for ids_entry in ids_entries:
+			ids_entries_per_app_id[ids_entry.app_id].append(ids_entry)
+
+		return ids_entries_per_app_id
+
+
+	def log_entries_to_ids_entries(self, expected_app_id, log_entries, binary):
 		""" Convert the given LogEntry objects to IdsEntry objects for this app_id. """
 
 		app_ids = [ids_tools.log_entry_to_app_id(log_entry) for log_entry in log_entries]
 
-		if any([a != app_id for a in app_ids]):
-			raise ValueError("Given elements are not all of the expected app type: {}".format(app_id))
+		if any([a != expected_app_id for a in app_ids]):
+			raise ValueError("Given elements are not all of the expected app type: {}"
+				.format(expected_app_id))
 
-		vectors = self.log_entries_to_vectors(app_id, log_entries)
+		vectors = self.log_entries_to_vectors(expected_app_id, log_entries)
 		vclasses = [self.log_entry_to_class(log_entry, binary) for log_entry in log_entries]
 
 		ids_entries = []
@@ -80,15 +114,17 @@ class IdsConverter(object):
 		return ids_entries
 
 
-	def ids_entries_to_X_y(self, app_id, ids_entries):
-		""" Convert the given IdsEntry objects to (X, y). """
+	@staticmethod
+	def ids_entries_to_X_y(ids_entries, app_id=None):
+		""" Convert the given IdsEntry objects to (X, y).
+		* app_id : Optionally specify the app_id that all entries should have. """
 
 		# pylint: disable-msg=C0103; (Invalid variable name)
 		X = []
 		y = []
 
 		for ids_entry in ids_entries:
-			if ids_entry.app_id != app_id:
+			if app_id and ids_entry.app_id != app_id:
 				raise ValueError("Given IdsEntry has an incorrect app_id!")
 
 			X.append(ids_entry.vector)
@@ -105,7 +141,7 @@ class IdsConverter(object):
 
 		train_dict = {}
 		for app_id, ids_entries in ids_entries_dict.items():
-			train_dict[app_id] = self.ids_entries_to_X_y(app_id, ids_entries)
+			train_dict[app_id] = IdsConverter.ids_entries_to_X_y(ids_entries, app_id)
 
 		printer.prt("Done.")
 		return train_dict
@@ -158,7 +194,7 @@ class IdsConverter(object):
 				dtype=numpy.float_,
 				order="C")
 
-			self.verify_ndarray(ndarray, app_id)
+			self.verify_vector(ndarray, app_id)
 
 			vectors.append(ndarray)
 
@@ -193,7 +229,8 @@ class IdsConverter(object):
 		return the_class != 0
 
 
-	def prediction_means_outlier(self, prediction):
+	@staticmethod
+	def prediction_means_outlier(prediction):
 		""" LEGACY """
 		return ids_tools.is_outlier(prediction)
 
@@ -438,7 +475,7 @@ class IdsConverter(object):
 	### Verification ###
 
 
-	def verify_ndarray(self, ndarray, app_id):
+	def verify_vector(self, ndarray, app_id):
 		""" Verifies the given ndarray fits the app_id classifier. """
 
 		if not isinstance(ndarray, numpy.ndarray) or ndarray.dtype != numpy.float_:
@@ -447,30 +484,7 @@ class IdsConverter(object):
 		if app_id not in self.app_ids:
 			raise ValueError("Invalid app_id: {}".format(app_id))
 
-		# 1 for a binarised level (only two options)
-		base_len = 1
-		len_key = "len"
-
-		constraints = {}
-		# 1 value (generated)
-		for gen_key in ids_data.get_generators():
-			constraints[gen_key] = {len_key : base_len + 1}
-		# 3 values for a split colour
-		for colr_key in ids_data.get_colours():
-			constraints[colr_key] = {len_key : base_len + 3}
-		# Poses all have GPS
-		for pose_key in ids_data.get_poses():
-			constraints[pose_key] = {len_key : base_len + 2}
-
-		# CC: One of five
-		constraints[ids_data.POSE_CC][len_key] += 5
-		# POI: One of 4 types, one of 7 results
-		constraints[ids_data.POSE_POI][len_key] += 11
-		# TSP: x, y, targ_x, targ_y
-		constraints[ids_data.POSE_TSP][len_key] += 4
-
-		expected_len = constraints[app_id][len_key]
+		expected_len = self._vector_constraints[app_id][self._len_key]
 		if len(ndarray) != expected_len:
-			print(app_id)
-			raise ValueError("Given ndarray has invalid length. Expected {} elements. Received: {}"
-				.format(expected_len, ndarray))
+			raise ValueError("Given ndarray (app_id: %s) has invalid length. Expected %s; Got: %s (len: %s)"
+				% (app_id, expected_len, ndarray, len(ndarray)))

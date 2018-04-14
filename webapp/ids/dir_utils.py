@@ -2,6 +2,7 @@
 """ Dir utils """
 
 import os
+import random
 import time
 import uuid
 import sklearn.svm as sk_svm
@@ -23,11 +24,30 @@ class Dir(object):
 
 
 	@staticmethod
+	def ensure_folder_exists(folder_path):
+		""" If the folder doesn't exist, create it and all necessary parents. """
+
+		if not os.path.lexists(folder_path):
+			os.makedirs(folder_path)
+
+
+	@staticmethod
+	def uniquify(any_path):
+		""" Make sure we have a unique <thing> that doesn't exist.
+		returns: The uniquified name. """
+
+		while os.path.lexists(any_path):
+			any_path += str(random.randint(0, 9))
+
+		return any_path
+
+
+	@staticmethod
 	def read_lines(file_path):
 		""" Return all lines in the given file. Removes the line terminating character. """
 
 		result = []
-		with open(file_path) as file_handle:
+		with open(file_path, "r") as file_handle:
 			for line in file_handle:
 				# Remove the newline character
 				result.append(line[:-1])
@@ -41,7 +61,7 @@ class Dir(object):
 
 		count = 0
 
-		with open(file_path) as file_handle:
+		with open(file_path, "r") as file_handle:
 			for line in file_handle:
 				# Remove the newline character
 				yield line[:-1]
@@ -49,6 +69,25 @@ class Dir(object):
 				count += 1
 				if limit is not None and count == limit:
 					return
+
+
+	@staticmethod
+	def write_lines(file_path, lines_generator):
+		""" Write the given lines to the given file. Adds the line terminating character. """
+
+		line_ending = "\n"
+
+		with open(file_path, "w") as file_handle:
+			for line in lines_generator:
+
+				if not isinstance(line, str):
+					line = str(line)
+
+				# Only add the line terminating character if it's missing.
+				if not line.endswith(line_ending):
+					line += line_ending
+
+				file_handle.write(line)
 
 
 class LogDir(object):

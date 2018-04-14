@@ -153,13 +153,25 @@ def straighten_dataset_for_app(ids_entries):
 
 	expected_outlier_percent = 0.1
 	expected_outlier_count = int(expected_outlier_percent * total_entry_count)
+	expected_inlier_count = len(ids_entries) - expected_outlier_count
 
-	if (not inliers
-		or len(outliers) < expected_outlier_count):
-		raise ValueError("Given data is insufficient for straightening.")
+	if not inliers or not outliers:
+		raise ValueError("No inliers or outliers! %s inliers, %s outliers"
+		% (len(inliers), len(outliers)))
 
-	its_result = inliers
-	its_result += random.sample(outliers, expected_outlier_count)
+	if len(inliers) < 5000 or len(outliers) < 500:
+		warnings.warn("Given data will have very few entries: %s inliers, %s outliers"
+			% (len(inliers), len(outliers)))
+
+	its_result = []
+	if len(outliers) < expected_outlier_count:
+		its_result += random.sample(inliers, expected_inlier_count)
+		its_result += outliers
+	else:
+		its_result = inliers
+		its_result += random.sample(outliers, expected_outlier_count)
+
+	random.shuffle(its_result)
 
 	return its_result
 
@@ -205,16 +217,9 @@ def X_y_to_train_test(X, y):
 			y_intruded.append(vclass)
 
 	percentage_intruded = (len(X_intruded) / float(len(X)))
+	verify_percentage_intruded(percentage_intruded)
 
-	if percentage_intruded > 0.3:
-		raise ValueError("Given data has too few (< 70 %) normal samples.")
-	elif percentage_intruded > 0.2:
-		warnings.warn("Given data has few (< 80 %) normal samples.")
-	elif percentage_intruded < 0.01:
-		warnings.warn("Given data has very few (< 1 %) intruded samples.")
-
-	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
-	test_size = max(0.1, 0.3 - percentage_intruded)
+	test_size = get_test_size(percentage_intruded)
 	X_train, X_test, y_train, y_test = sk_mod.train_test_split(
 		X_normal, y_normal, test_size=test_size)
 
@@ -226,6 +231,81 @@ def X_y_to_train_test(X, y):
 	y_test += y_intruded
 
 	return (X_train, y_train, X_test, y_test)
+
+
+def ids_entries_to_train_test(ids_entries):
+	"""
+	Splits the given entries up. All intruded entries go into the test set, with some normal ones.
+	returns: (train: [(app_id, vector, class)], test: [(app_id, vector, class)])
+	"""
+
+	if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
+		raise ValueError("Given entries are not valid IdsEntry objects!")
+
+	entries_normal = []
+	entries_intruded = []
+	for ids_entry in ids_entries:
+		if is_inlier(ids_entry.vclass):
+			entries_normal.append(ids_entry)
+		else:
+			entries_intruded.append(ids_entry)
+
+	percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
+	verify_percentage_intruded(percentage_intruded)
+
+	test_size = get_test_size(percentage_intruded)
+	train, test = sk_mod.train_test_split(entries_normal, test_size=test_size)
+
+	# All intruded entries go to the test set
+	training_entries = train
+	scoring_entries = entries_intruded + test
+
+	# Shuffle entries?
+
+	return (training_entries, scoring_entries)
+
+
+def verify_percentage_intruded(percentage_intruded):
+	""" Check the percentage and warn or raise for problematic values. """
+
+	if percentage_intruded > 0.5:
+		raise ValueError("Given data has too few (< 50 %) normal samples.")
+	elif percentage_intruded > 0.2:
+		warnings.warn("Given data has few (< 80 %) normal samples.")
+	elif percentage_intruded < 0.01:
+		warnings.warn("Given data has very few (< 1 %) intruded samples.")
+
+
+def get_test_size(percentage_intruded):
+	""" Get the test size based on the given percentage of intruded samples. """
+
+	# Take at least 10 %, up to 30 % of other samples, taking more if there are less intruded samples.
+	test_size = max(0.1, 0.3 - percentage_intruded)
+	return test_size
+
+
+### Sampling ###
+
+
+def reservoir_sample(item_generator, sample_size):
+	""" Sample with 'Reservoir Sampling' from the given generator the given number of elements. """
+
+	reservoir = []
+	index = 0
+	for log_entry in item_generator:
+		if index < sample_size:
+			reservoir.append(log_entry)
+		else:
+			m = random.randint(0, index)
+			if m < sample_size:
+				reservoir[m] = log_entry
+
+		index += 1
+
+	if len(reservoir) < sample_size:
+		raise ValueError("Given generator exceeded before sample_size was reached!")
+
+	return reservoir
 
 
 ### Generating log entries ###

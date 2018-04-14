@@ -228,6 +228,7 @@ class StateDao(object):
 
 	def append_to_log(self, log_entry):
 		""" Append the given LogEntry object to the log. """
+
 		self._new_log_entries.append(log_entry)
 
 		if not self._auto_flush:

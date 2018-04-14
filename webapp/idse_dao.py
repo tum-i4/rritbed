@@ -63,17 +63,19 @@ def yield_entries(file_path, limit=None):
 		raise NotImplementedError("File type not implemented: %s" % file_type)
 
 
-def save_entries(file_path, ids_entries):
+def save_entries(file_path, ids_entry_generator):
 	""" Store the entries as a IDSE file. """
 
 	if os.path.lexists(file_path):
 		_raise_file_exists(file_path)
 
-	if any([not isinstance(x, IdsEntry) for x in ids_entries[:50]]):
+	first_entry = ids_entry_generator.next()
+
+	if not isinstance(first_entry, IdsEntry):
 		raise TypeError("Given elements are no IdsEntry objects!")
 
-	lines = []
-	for ids_entry in ids_entries:
+	lines = [_ids_entry_to_idse_string(first_entry)]
+	for ids_entry in ids_entry_generator:
 		line = _ids_entry_to_idse_string(ids_entry)
 		lines.append(line)
 

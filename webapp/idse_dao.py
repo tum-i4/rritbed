@@ -84,12 +84,14 @@ def _detect_type(first_line):
 def _yield_idse_lines(yielder):
 	""" Yield (and verify) IDSE lines one by one from the given yielder. """
 
+	converter = IdsConverter()
+
 	for line in yielder:
-		app_id, vector, vclass = _process_idse_line(line)
+		app_id, vector, vclass = _process_idse_line(line, converter)
 		yield IdsEntry(app_id, vector, vclass)
 
 
-def _process_idse_line(line):
+def _process_idse_line(line, converter):
 	""" Verify and convert the given IDSE line to a (app_id, vector, vclass) tuple. """
 
 	line_elements = line.split(",")
@@ -129,7 +131,7 @@ def _process_idse_line(line):
 			% (feature_count, features, len(features)))
 
 	vector = numpy.array(features, dtype=numpy.float_, order="C")
-	IdsConverter().verify_vector(vector, app_id)
+	converter.verify_vector(vector, app_id)
 
 	return (app_id, vector, vclass)
 

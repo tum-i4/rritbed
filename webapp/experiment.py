@@ -144,24 +144,36 @@ class Experiment(object):
 		if not isinstance(ids_entries[0], IdsEntry):
 			raise TypeError("Given list does not contain IdsEntry objects.")
 
-		ids_entries = ids_tools.straighten_dataset_for_app(ids_entries)
+		# ids_entries = ids_tools.straighten_dataset_for_app(ids_entries)
 
-		print("\n\t::: %s :::\n" % app_id)
+		# TODO TEMP FOR ONE-V-ALL
+		training, scoring = ids_tools.ids_entries_to_train_test(ids_entries)
+		X_train, _ = IdsConverter.ids_entries_to_X_y(training)
+		X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
 
-		# TODO
-		_, _ = self.preprocess_fit_score(app_id, ids_entries,
-			lambda x: x,
-			sklearn.svm.OneClassSVM(),
-			printer)
+		classifier = sklearn.svm.OneClassSVM()
+		classifier.fit(X_train)
+		y_pred = classifier.predict(X_test)
+		self.visualise_store(app_id, classifier, y_true, y_pred)
 
-		name = "IF"
-		n_est = 100
-		max_sampl = 256
-		print("\n\t> %s - n_est: %s, max_sampl: %s" % (name, n_est, max_sampl))
-		_, _ = self.preprocess_fit_score(app_id, ids_entries,
-			lambda x: x,
-			sk_ens.IsolationForest(n_estimators=n_est, max_samples=max_sampl, n_jobs=-1, random_state=0),
-			printer)
+		# END TODO
+
+		# print("\n\t::: %s :::\n" % app_id)
+
+		# # TODO
+		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
+		# 	lambda x: x,
+		# 	sklearn.svm.OneClassSVM(),
+		# 	printer)
+
+		# name = "IF"
+		# n_est = 100
+		# max_sampl = 256
+		# print("\n\t> %s - n_est: %s, max_sampl: %s" % (name, n_est, max_sampl))
+		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
+		# 	lambda x: x,
+		# 	sk_ens.IsolationForest(n_estimators=n_est, max_samples=max_sampl, n_jobs=-1, random_state=0),
+		# 	printer)
 
 		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
 		# 	lambda x: sk_pre.scale(x),

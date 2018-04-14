@@ -254,7 +254,7 @@ class Experiment(object):
 
 		self.end_time = time.time()
 
-		printer = util.prtr.Printer(name="store")
+		printer = util.prtr.TimePrinter(name="store")
 		printer.prt("Storing experiment results...")
 
 		Dir.ensure_folder_exists(self.experiment_dir_path)

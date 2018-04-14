@@ -355,11 +355,14 @@ class Experiment(object):
 		""" Get the experiment folder of the given name. """
 
 		result = os.path.join(EXPERIMENTS_HOME, name)
-
-		if not os.path.lexists(result):
-			os.makedirs(result)
-
 		return result
+
+
+	def open_experiment_folder(self):
+		""" Ensure the experiment folder exists. """
+
+		if not os.path.lexists(self.experiment_dir_path):
+			os.makedirs(self.experiment_dir_path)
 
 
 	### Helpers ###

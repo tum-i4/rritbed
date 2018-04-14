@@ -74,7 +74,11 @@ def save_entries(file_path, ids_entry_generator):
 	if not isinstance(first_entry, IdsEntry):
 		raise TypeError("Given elements are no IdsEntry objects!")
 
-	lines = [_ids_entry_to_idse_string(first_entry)]
+	lines = [
+		HEADER,
+		_ids_entry_to_idse_string(first_entry)
+	]
+
 	for ids_entry in ids_entry_generator:
 		line = _ids_entry_to_idse_string(ids_entry)
 		lines.append(line)

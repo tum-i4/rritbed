@@ -47,6 +47,7 @@ class Experiment(object):
 		self.end_time = None
 		# Loaded entries
 		self.entries_dict = {}
+		self.entries_count = -1
 		# ClassifierResultPair objects (classifier, result)
 		self.classifier_results = []
 
@@ -323,6 +324,8 @@ class Experiment(object):
 		for line in Dir.yield_lines(file_path, ITEM_LIMIT):
 			log_entry = LogEntry.from_log_string(line)
 			log_entries.append(log_entry)
+
+		self.entries_count = len(log_entries)
 
 		ids_entries_dict = converter.log_entries_to_ids_entries_dict(log_entries)
 		return ids_entries_dict

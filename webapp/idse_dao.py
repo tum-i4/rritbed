@@ -155,7 +155,10 @@ def _ids_entry_to_idse_string(ids_entry):
 	line_elements.extend(features)
 	_verify_line_elements(line_elements, reading=False)
 
-	line = ",".join(line_elements)
+	strings = [str(x) for x in [app_id, feature_count, vclass]]
+	strings += [float.__repr__(x) % x for x in features]
+
+	line = ",".join(strings)
 	return line
 
 

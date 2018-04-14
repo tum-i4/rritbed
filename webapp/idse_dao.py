@@ -245,7 +245,9 @@ if __name__ == "__main__":
 		PARSER.add_argument("file_path", help="Log file")
 		ARGS = PARSER.parse_args()
 		if ARGS.mode == "convert":
+			print("Converting...")
 			convert(ARGS.file_path)
+			print("Done.")
 		else:
 			print("Doing nothing...")
 	except KeyboardInterrupt:

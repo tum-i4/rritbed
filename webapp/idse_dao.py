@@ -66,8 +66,10 @@ def yield_entries(file_path, limit=None):
 def save_entries(file_path, ids_entry_generator):
 	""" Store the entries as a IDSE file. """
 
-	if os.path.lexists(file_path):
-		_raise_file_exists(file_path)
+	file_path_full = add_idse_extension(file_path)
+
+	if os.path.lexists(file_path_full):
+		_raise_file_exists(file_path_full)
 
 	first_entry = ids_entry_generator.next()
 
@@ -83,7 +85,7 @@ def save_entries(file_path, ids_entry_generator):
 		line = _ids_entry_to_idse_string(ids_entry)
 		lines.append(line)
 
-	Dir.write_lines(file_path, lines)
+	Dir.write_lines(file_path_full, lines)
 
 
 def convert(input_path):

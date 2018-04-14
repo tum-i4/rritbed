@@ -100,6 +100,15 @@ def convert(input_path):
 	save_entries(output_path, yield_entries(input_path))
 
 
+def add_idse_extension(file_path):
+	""" Adds the .idse extension if not present. """
+
+	full_file_extension = "%s%s" % (os.path.extsep, FILE_EXTENSION)
+	if file_path.endswith(full_file_extension):
+		return file_path
+	return "%s%s" % (file_path, full_file_extension)
+
+
 def _detect_type(first_line):
 	""" Detect the file type from the first line. """
 

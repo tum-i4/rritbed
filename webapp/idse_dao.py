@@ -79,6 +79,19 @@ def save_entries(file_path, ids_entries):
 	Dir.write_lines(file_path, lines)
 
 
+def convert(input_path):
+
+	if not os.path.lexists(input_path):
+		_raise_file_doesnt_exist(input_path)
+
+	output_path = "%s%s%s" % (input_path, os.path.extsep, FILE_EXTENSION)
+
+	if os.path.lexists(output_path):
+		_raise_file_exists(output_path)
+
+	save_entries(output_path, get_entries(input_path))
+
+
 def _detect_type(first_line):
 	""" Detect the file type from the first line. """
 

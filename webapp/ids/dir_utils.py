@@ -81,7 +81,7 @@ class Dir(object):
 			for line in lines_generator:
 
 				if not isinstance(line, str):
-					line = "%s %s" % ("CAST TO STRING", str(line))
+					line = str(line)
 
 				# Only add the line terminating character if it's missing.
 				if not line.endswith(line_ending):

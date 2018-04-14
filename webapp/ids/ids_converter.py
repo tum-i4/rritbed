@@ -171,7 +171,7 @@ class IdsConverter(object):
 			log_messages.append(data_dict[LogEntry.LOG_MESSAGE_FIELD])
 			gps_positions.append(data_dict[LogEntry.GPS_POSITION_FIELD])
 
-		# One-hot encoding of levels -> [0, 1]
+		# Binarisation of levels -> [0, 1]
 		enc_levels_array = IdsConverter.encode_levels(levels)
 		# Conversion (data gens) or one-hot encoding of log messages -> [0, 1, ...]
 		enc_log_messages_array = IdsConverter.encode_log_messages(app_id, log_messages)
@@ -183,7 +183,7 @@ class IdsConverter(object):
 		for enc_lvl, enc_msg, enc_gps in (
 			zip(enc_levels_array, enc_log_messages_array, enc_gps_positions_array)):
 
-			# 2 level ints, 1-12 log message floats or ints
+			# 1 level ints, 1-12 log message floats or ints
 			data = list(enc_lvl) + list(enc_msg)
 			# 0/2 GPS ints
 			if enc_gps is not None:
@@ -291,8 +291,8 @@ class IdsConverter(object):
 	@staticmethod
 	def encode_levels(levels):
 		"""
-		Do a one-hot encoding of the given colour.
-		returns: Two-dimensional numpy.ndarray with a 2 element binary encoding per row.
+		Do a binarisation of the given levels.
+		returns: Two-dimensional numpy.ndarray with a 1 element binary encoding per row.
 		"""
 
 		# For expected levels, see web_api.log_entry.LogEntry

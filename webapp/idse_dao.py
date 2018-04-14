@@ -59,13 +59,21 @@ def get_entries(file_path, limit=None):
 		raise NotImplementedError("File type not implemented: %s" % file_type)
 
 
-def save_entries(file_path, entries):
+def save_entries(file_path, ids_entries):
 	""" Store the entries as a IDSE file. """
 
 	if os.path.lexists(file_path):
 		raise IOError("Output file exists already: %s" % file_path)
 
-	raise NotImplementedError()
+	if any([not isinstance(x, IdsEntry) for x in ids_entries[:50]]):
+		raise TypeError("Given elements are no IdsEntry objects!")
+
+	lines = []
+	for ids_entry in ids_entries:
+		line = _ids_entry_to_idse_string(ids_entry)
+		lines.append(line)
+
+	Dir.write_lines(file_path, lines)
 
 
 def _detect_type(first_line):
@@ -138,6 +146,10 @@ def _process_idse_line(line, converter):
 
 def _raise_corrupt_idse_error(message):
 	raise IOError("[IDSE DAO] Possibly corrupt IDSE file! %s" % message)
+
+
+def _ids_entry_to_idse_string(ids_entry):
+	raise NotImplementedError()
 
 
 def _read_log_lines_then_yield(yielder, first_line):

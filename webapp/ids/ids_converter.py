@@ -474,7 +474,7 @@ class IdsConverter(object):
 
 	# pylint: disable-msg=C0103; (Snake-case naming)
 	@staticmethod
-	def generic_scale(min_v, max_v, range_min, range_max, values):
+	def generic_scale(values, range_min, range_max, min_v, max_v):
 		""" Scale the given values from [min_v,max_v] to [range_min,range_max]. """
 
 		# pylint: disable-msg=C0103; (Snake-case naming)

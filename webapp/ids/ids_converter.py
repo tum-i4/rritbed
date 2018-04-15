@@ -493,7 +493,7 @@ class IdsConverter(object):
 		"""
 
 		# pylint: disable-msg=C0103; (Snake-case naming)
-		X = numpy.array(values)
+		X = numpy.array(values, dtype=numpy.float_)
 
 		if X.ndim != 2:
 			raise ValueError("generic_scale() requires a two-dimensional input")

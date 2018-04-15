@@ -138,7 +138,7 @@ class DistributionPublisher(object):
 		""" Run the distribution publisher with the given rate limiter and create num method """
 
 		# Default values for file-based publishing
-		rate_in_hz = 1000
+		rate_in_hz = 10
 		create_tuple = self._read
 
 		# Update for generation

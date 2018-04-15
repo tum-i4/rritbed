@@ -44,9 +44,9 @@ class IdsConverter(object):
 		# 1 value (generated)
 		for gen_key in ids_data.get_generators():
 			self._vector_constraints[gen_key] = {self._len_key : base_len + 1}
-		# 3 values for a split colour
+		# 3 values for a split colour, 2 values for the position
 		for colr_key in ids_data.get_colours():
-			self._vector_constraints[colr_key] = {self._len_key : base_len + 3}
+			self._vector_constraints[colr_key] = {self._len_key : base_len + 5}
 		# Poses all have GPS
 		for pose_key in ids_data.get_poses():
 			self._vector_constraints[pose_key] = {self._len_key : base_len + 2}

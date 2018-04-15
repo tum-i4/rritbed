@@ -475,7 +475,7 @@ class IdsConverter(object):
 	@staticmethod
 	def generic_scale(values, range_min, range_max, min_v, max_v):
 		"""
-		Scale the given values from [min_v,max_v] to [range_min,range_max].
+		Scale the given two-dimensional array from [min_v,max_v] to [range_min,range_max].
 		*range_min, range_max: The target range
 		*min_v, max_v: The source range
 		returns: A two-dimensional numpy.ndarray with scaled values.
@@ -483,6 +483,10 @@ class IdsConverter(object):
 
 		# pylint: disable-msg=C0103; (Snake-case naming)
 		X = numpy.array(values)
+
+		if X.ndim != 2:
+			raise ValueError("generic_scale() requires a two-dimensional input")
+
 		X_min = numpy.array([float(min_v) for _ in values[0]])
 		X_max = numpy.array([float(max_v) for _ in values[0]])
 

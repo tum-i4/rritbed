@@ -172,7 +172,7 @@ class IdsConverter(object):
 			gps_positions.append(data_dict[LogEntry.GPS_POSITION_FIELD])
 
 		# Binarisation of levels -> [0, 1]
-		enc_levels_array = IdsConverter.encode_levels(levels)
+		enc_levels_array = IdsConverter.levels_binarise(levels)
 		# Conversion (data gens) or one-hot encoding of log messages -> [0, 1, ...]
 		enc_log_messages_array = IdsConverter.encode_log_messages(app_id, log_messages)
 		# Convert GPS positions to None or (x, y)
@@ -289,7 +289,7 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def encode_levels(levels):
+	def levels_binarise(levels):
 		"""
 		Do a binarisation of the given levels.
 		returns: Two-dimensional numpy.ndarray with a 1 element binary encoding per row.

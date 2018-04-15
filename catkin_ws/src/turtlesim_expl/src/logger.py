@@ -63,9 +63,9 @@ class Logger(object):
 
 		# Each of the three poses should roughly generate as much data as the colour logger.
 		rospy.Subscriber(Logger.COLOUR_PATH, Color, self.rate_limit,
-			{"method" : self.log_colour, "rate" : 0.5})
+			{"method" : self.log_colour, "rate" : 0.7})
 		rospy.Subscriber(Logger.POSE_PATH, Pose, self.rate_limit,
-			{"method" : self.log_pose, "rate" : 0.02})
+			{"method" : self.log_pose, "rate" : 0.1})
 
 		rospy.loginfo("Logger initialised in NS {}".format(args.namespace))
 		rospy.loginfo("Options (Label | {}), (Intrusion | {})"

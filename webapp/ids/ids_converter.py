@@ -475,7 +475,12 @@ class IdsConverter(object):
 	# pylint: disable-msg=C0103; (Snake-case naming)
 	@staticmethod
 	def generic_scale(values, range_min, range_max, min_v, max_v):
-		""" Scale the given values from [min_v,max_v] to [range_min,range_max]. """
+		"""
+		Scale the given values from [min_v,max_v] to [range_min,range_max].
+		*range_min, range_max: The target range
+		*min_v, max_v: The source range
+		returns: A two-dimensional numpy.ndarray with scaled values.
+		"""
 
 		# pylint: disable-msg=C0103; (Snake-case naming)
 		X = numpy.array(values)

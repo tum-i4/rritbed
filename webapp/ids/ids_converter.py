@@ -449,15 +449,24 @@ class IdsConverter(object):
 		if len(split) != 2:
 			raise ValueError("Invalid string")
 
-		scaled = IdsConverter.generic_scale(
-			values=[split], # Requires two dimensions
-			range_min=-1,
-			range_max=1,
-			min_v=0,
-			max_v=499
-		)
 		# generic_scale() operates on a two-dimensional array - we return one dimension
+		scaled = IdsConverter.positions_scale(positions=[split])
 		return scaled[0]
+
+
+	@staticmethod
+	def positions_scale(positions):
+		"""
+		Scale the position pairs from [0,499] to [-1,1].
+		returns: A two-dimensional numpy.ndarray with 2 scaled positions per row.
+		"""
+
+		scaled = IdsConverter.generic_scale(
+			values=positions,
+			range_min=-1, range_max=1,
+			min_v=0, max_v=499
+		)
+		return scaled
 
 
 	@staticmethod

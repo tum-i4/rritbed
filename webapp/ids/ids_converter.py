@@ -376,7 +376,7 @@ class IdsConverter(object):
 	@staticmethod
 	def colours_scale(colours):
 		"""
-		Scale the split from [0,255] to [0,1].
+		Scale the colour triplets from [0,255] to [0,1].
 		returns: A two-dimensional numpy.ndarray with 3 scaled colours per row.
 		"""
 

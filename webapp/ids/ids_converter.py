@@ -313,26 +313,26 @@ class IdsConverter(object):
 
 		# Generators send "{f}"
 		if app_id in ids_data.get_generators():
-			# Return list with value
+			# Return a list with float values
 			return numpy.array([[float(log_message)] for log_message in log_messages])
 
 		# Colour sends "{i},{i},{i}"
 		if app_id in ids_data.get_colours():
 			colours = [[int(val) for val in msg.split(",")] for msg in log_messages]
 
-			# Returns a list with 3 floats in [0,1]
+			# Returns a list with 3 scaled colour floats in [0,1]
 			return IdsConverter.colours_scale(colours)
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
-			# Returns a list with 5 values
+			# Returns a list with 5 binary flags
 			return IdsConverter.country_codes_one_hot(log_messages)
 
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:
 			poi_pairs = [msg.split(",") for msg in log_messages]
 
-			# Returns a list with 11 values
+			# Returns a list with 11 binary flags
 			return IdsConverter.poi_pairs_one_hot(poi_pairs)
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
@@ -342,7 +342,7 @@ class IdsConverter(object):
 			for coord in coords_rows[0]:
 				assert(coord >= 0 and coord < 500)
 
-			# Return list of 4 coordinates
+			# Return list of 4 scaled coordinate floats in [-1,1]
 			return IdsConverter.positions_scale(coords_rows)
 
 		raise NotImplementedError("App ID {} not implemented".format(app_id))

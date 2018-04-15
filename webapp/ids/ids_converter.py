@@ -472,6 +472,23 @@ class IdsConverter(object):
 		return encodings
 
 
+	# pylint: disable-msg=C0103; (Snake-case naming)
+	@staticmethod
+	def generic_scale(min_v, max_v, range_min, range_max, values):
+		""" Scale the given values from [min_v,max_v] to [range_min,range_max]. """
+
+		# pylint: disable-msg=C0103; (Snake-case naming)
+		X = numpy.array(values)
+		X_min = numpy.array([float(min_v) for _ in values[0]])
+		X_max = numpy.array([float(max_v) for _ in values[0]])
+
+		# Source: http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html
+		X_std = (X - X_min) / (X_max - X_min)
+		X_scaled = X_std * (range_max - range_min) + range_min
+
+		return X_scaled
+
+
 	### Verification ###
 
 

@@ -377,16 +377,15 @@ class IdsConverter(object):
 	def colours_scale(colours):
 		"""
 		Scale the split from [0,255] to [0,1].
-		returns: A two-dimensional numpy.ndarray with a 3 element split per row.
+		returns: A two-dimensional numpy.ndarray with 3 scaled colours per row.
 		"""
 
-		max_val = float(255)
-		scale = lambda x: x / max_val
-
-		scaled = [[scale(c) for c in row]
-			for row in colours]
-
-		return numpy.array(scaled)
+		scaled = IdsConverter.generic_scale(
+			values=colours,
+			range_min=0, range_max=1,
+			min_v=0, max_v=255
+		)
+		return scaled
 
 
 	@staticmethod

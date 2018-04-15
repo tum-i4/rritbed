@@ -456,10 +456,7 @@ class IdsConverter(object):
 			min_v=0,
 			max_v=499
 		)
-
-		print(scaled)
-		print(scaled[0])
-		raise NotImplementedError("IS THIS CORRECT??")
+		# generic_scale() operates on a two-dimensional array - we return one dimension
 		return scaled[0]
 
 

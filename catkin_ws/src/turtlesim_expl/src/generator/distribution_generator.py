@@ -19,7 +19,7 @@ class DistributionGenerator(object):
 
 	def __init__(self,
 		method_name, name, args_constraints, expected_range, mean,
-		rate_in_hz=5, queue_size=10):
+		rate_in_hz=2, queue_size=10):
 		""" Ctor """
 
 		object.__init__(self)

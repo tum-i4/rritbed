@@ -183,9 +183,9 @@ class IdsConverter(object):
 		for enc_lvl, enc_msg, enc_gps in (
 			zip(enc_levels_array, enc_log_messages_array, enc_gps_positions_array)):
 
-			# 1 level ints, 1-12 log message floats or ints
+			# 1 level int, 1-12 log message floats or ints
 			data = list(enc_lvl) + list(enc_msg)
-			# 0/2 GPS ints
+			# 0/2 GPS floats
 			if enc_gps is not None:
 				data += list(enc_gps)
 
@@ -325,8 +325,6 @@ class IdsConverter(object):
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
-			assert(len(log_messages[0]) == 2)
-
 			# Returns a list with 5 values
 			return IdsConverter.country_codes_one_hot(log_messages)
 
@@ -339,13 +337,13 @@ class IdsConverter(object):
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == ids_data.POSE_TSP:
-			coords_list = [[int(coord) for coord in msg.split(",")] for msg in log_messages]
-			assert(len(coords_list[0]) == 4)
-			for coord in coords_list[0]:
+			coords_rows = [[float(coord) for coord in msg.split(",")] for msg in log_messages]
+			assert(len(coords_rows[0]) == 4)
+			for coord in coords_rows[0]:
 				assert(coord >= 0 and coord < 500)
 
 			# Return list of 4 coordinates
-			return coords_list
+			return IdsConverter.positions_scale(coords_rows)
 
 		raise NotImplementedError("App ID {} not implemented".format(app_id))
 

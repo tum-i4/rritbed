@@ -162,21 +162,21 @@ class IdsConverter(object):
 		# Discard time_unix
 		levels = []
 		log_messages = []
-		gps_positions = []
+		positions = []
 
 		for log_entry in log_entries:
 			data_dict = log_entry.data
 
 			levels.append(data_dict[LogEntry.LEVEL_FIELD])
 			log_messages.append(data_dict[LogEntry.LOG_MESSAGE_FIELD])
-			gps_positions.append(data_dict[LogEntry.GPS_POSITION_FIELD])
+			positions.append(data_dict[LogEntry.GPS_POSITION_FIELD])
 
 		# Binarisation of levels -> [0, 1]
 		enc_levels_array = IdsConverter.levels_binarise(levels)
 		# Conversion (data gens) or one-hot encoding of log messages -> [0, 1, ...]
 		enc_log_messages_array = IdsConverter.encode_log_messages(app_id, log_messages)
 		# Convert GPS positions to None or (x, y)
-		enc_gps_positions_array = IdsConverter.encode_gps_positions(gps_positions)
+		enc_gps_positions_array = IdsConverter.encode_positions(positions)
 
 		vectors = []
 
@@ -457,8 +457,8 @@ class IdsConverter(object):
 	@staticmethod
 	def positions_scale(positions):
 		"""
-		Scale the position pairs from [0,499] to [-1,1].
-		returns: A two-dimensional numpy.ndarray with 2 scaled positions per row.
+		Scale the position rows from [0,499] to [-1,1].
+		returns: A two-dimensional numpy.ndarray scaled positions per row.
 		"""
 
 		scaled = IdsConverter.generic_scale(

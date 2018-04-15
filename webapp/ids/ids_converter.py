@@ -427,29 +427,40 @@ class IdsConverter(object):
 
 
 	@staticmethod
-	def encode_gps_positions(gps_positions):
+	def encode_positions(positions):
 		"""
 		Convert the given "x,y" GPS position strings to (x, y) or None.
 		returns: A two-dimensional numpy.ndarray with a result (tuple or None) per row.
 		"""
 
-		encoded_positions = [IdsConverter.gps_position_to_int_list(gps_pos) for gps_pos in gps_positions]
+		encoded_positions = [IdsConverter.position_to_none_or_scaled(gps_pos) for gps_pos in positions]
 		return numpy.array(encoded_positions)
 
 
 	@staticmethod
-	def gps_position_to_int_list(gps_position):
-		""" Convert the given GPS position string to (lat, lon). """
+	def position_to_none_or_scaled(position):
+		""" Convert the given GPS position string to (x, y). """
 
-		if not gps_position:
+		if not position:
 			return None
 
-		# Format: lat,lon
-		split = gps_position.split(",")
+		# Format: x,y
+		split = position.split(",")
 		if len(split) != 2:
 			raise ValueError("Invalid string")
 
-		return [int(split[0]), int(split[1])]
+		scaled = IdsConverter.generic_scale(
+			values=[split], # Requires two dimensions
+			range_min=-1,
+			range_max=1,
+			min_v=0,
+			max_v=499
+		)
+
+		print(scaled)
+		print(scaled[0])
+		raise NotImplementedError("IS THIS CORRECT??")
+		return scaled[0]
 
 
 	@staticmethod

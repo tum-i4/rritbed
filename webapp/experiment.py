@@ -239,19 +239,21 @@ class Experiment(object):
 		table.append(["Pred (-)", fn, tn])
 		util.outp.print_table(table, printer=storer)
 
+		classifier_name = type(classifier).__name__
+		line_prefix = ">>> [%s / %s] %s -" % (name, classifier_name, app_id)
+
 		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
 		this_result = [
-			"Classifier: %s (%s)" % (name, type(classifier).__name__),
+			"Classifier: %s (%s)" % (name, classifier_name),
 			str(classifier),
 			"",
-			">>> %s - Result | %s: %s | %s: %s | %s: %s" % (app_id, "Accuracy", accu, "Precision", prec, "Recall", reca),
-			">>> %s - Confusion matrix:" % app_id
+			"%s Result | Accuracy: %s | Precision: %s | Recall: %s" % (line_prefix, accu, prec, reca),
+			"%s Confusion matrix:" % line_prefix
 		]
 
 		table_lines = [line for line in storer.get_messages() if line != ""]
 
 		this_result.extend(table_lines)
-		this_result.append("")
 
 		print("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
 		storer.printout(purge=True)

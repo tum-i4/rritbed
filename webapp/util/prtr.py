@@ -83,13 +83,14 @@ class Storer(Printer):
 		return messages
 
 
-	def printout(self):
-		""" Print out the stored lines. Empties the contained lines. """
+	def printout(self, purge=True):
+		""" Print out the stored lines. Empties the contained lines by default. """
 
 		for message, only_verbose, preface, newline in self.lines:
 			super(Storer, self)._prt_line(message, only_verbose, preface, newline)
 
-		self.lines = []
+		if purge:
+			self.lines = []
 
 
 

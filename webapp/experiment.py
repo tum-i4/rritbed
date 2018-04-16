@@ -133,7 +133,7 @@ class Experiment(object):
 			y_pred = classifier.predict(X_test)
 			self.visualise_store("ALL", app_id, classifier, y_true, y_pred)
 
-		printer.prt("\n\n\DONNNNNNEEEE\n\n")
+		printer.prt("\n\nDONNNNNNEEEE\n\n")
 
 
 	def handle_app(self, app_id, ids_entries):

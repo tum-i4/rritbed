@@ -11,6 +11,7 @@ from collections import namedtuple
 
 import sklearn
 import sklearn.ensemble as sk_ens
+import sklearn.neighbors as sk_nghb
 import sklearn.externals as sk_ext
 import sklearn.metrics as sk_metr
 import sklearn.preprocessing as sk_pre
@@ -124,18 +125,20 @@ class Experiment(object):
 			scoring_dict[ids_entry.app_id].append(ids_entry)
 
 		# Classify with all entries: training_entries
-		classifier1 = sklearn.svm.OneClassSVM()
-		classifier2 = sk_ens.IsolationForest()
-		classifier1.fit(X_train)
-		classifier2.fit(X_train)
+		classifiers = [
+			sklearn.svm.OneClassSVM(),
+			sk_ens.IsolationForest(),
+			sk_nghb.LocalOutlierFactor()
+		]
+		for classifier in classifiers:
+			classifier.fit(X_train)
 
 		# Score for each app: scoring_dict
 		for app_id, app_entries in scoring_dict.items():
 			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
-			y_pred1 = classifier1.predict(X_test)
-			y_pred2 = classifier2.predict(X_test)
-			self.visualise_store("ALL - OCSVM", app_id, classifier1, y_true, y_pred1)
-			self.visualise_store("ALL - ISOFO", app_id, classifier2, y_true, y_pred2)
+			y_preds = [clf.predict(X_test) for clf in classifiers]
+			for clf, y_pred in zip(classifiers, y_preds):
+				self.visualise_store("ALL", app_id, clf, y_true, y_pred)
 
 		printer.prt("\n\nDONNNNNNEEEE\n\n")
 
@@ -159,14 +162,15 @@ class Experiment(object):
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training)
 		X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
 
-		classifier1 = sklearn.svm.OneClassSVM()
-		classifier2 = sk_ens.IsolationForest()
-		classifier1.fit(X_train)
-		classifier2.fit(X_train)
-		y_pred1 = classifier1.predict(X_test)
-		y_pred2 = classifier2.predict(X_test)
-		self.visualise_store("SPEC-OCSVM", app_id, classifier1, y_true, y_pred1)
-		self.visualise_store("SPEC-ISOFO", app_id, classifier2, y_true, y_pred2)
+		classifiers = [
+			sklearn.svm.OneClassSVM(),
+			sk_ens.IsolationForest(),
+			sk_nghb.LocalOutlierFactor()
+		]
+		for classifier in classifiers:
+			classifier.fit(X_train)
+			y_pred = classifier.predict(X_test)
+			self.visualise_store("SPEC", app_id, classifier, y_true, y_pred)
 
 		# END TODO
 

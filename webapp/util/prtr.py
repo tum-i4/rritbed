@@ -103,4 +103,4 @@ class TimePrinter(Printer):
 		""" Preface the given line with the contained name and the current time. """
 
 		time_str = time.strftime("%H:%M:%S")
-		return "[{}] {} - {}".format(self.name, time_str, line)
+		return "[{}] {} {}".format(self.name, time_str, line)

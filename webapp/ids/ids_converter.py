@@ -157,9 +157,8 @@ class IdsConverter(object):
 		assert(len(log_entries[0].data) == 7)
 
 		# Discard log_id (unnecessary) and app_id (it's used for mapping to a classifier)
-		# Discard VIN (we don't plan on involvin specific VINs in intrusion detection)
-		# vin_int_list = self.vin_to_int_list(data_dict[LogEntry.VIN_FIELD])
-		# Discard time_unix
+		# Discard VIN (we don't plan on involving specific VINs in intrusion detection)
+		# Discard time_unix (is randomly set)
 		levels = []
 		log_messages = []
 		positions = []

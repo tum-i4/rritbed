@@ -211,22 +211,13 @@ class Experiment(object):
 	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
-		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
-		this_result = [app_id]
-
 		print("\nSCORE FOR >>> %s <<<" % app_id)
 
 		accu = sk_metr.accuracy_score(y_true, y_pred)
 		prec = sk_metr.precision_score(y_true, y_pred)
 		reca = sk_metr.recall_score(y_true, y_pred)
 
-		this_result.extend([("Accuracy", accu), ("Precision", prec), ("Recall", reca)])
-
-		print("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
-
 		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
-
-		this_result.extend([("TN", tn), ("FP", fp), ("FN", fn), ("TP", tp)])
 
 		storer = util.prtr.Storer()
 
@@ -236,8 +227,22 @@ class Experiment(object):
 		table.append(["Pred (-)", fn, tn])
 		util.outp.print_table(table, printer=storer)
 
-		this_result.append(storer.get_messages())
-		storer.printout()
+		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
+		this_result = [
+			"Classifier: %s (%s)" % (name, type(classifier).__name__),
+			str(classifier),
+			"",
+			">>> %s - Result | %s: %s | %s: %s | %s: %s" % (app_id, "Accuracy", accu, "Precision", prec, "Recall", reca),
+			">>> %s - Confusion matrix:" % app_id
+		]
+
+		table_lines = [line for line in storer.get_messages() if line != ""]
+
+		this_result.extend(table_lines)
+		this_result.append("")
+
+		print("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
+		storer.printout(purge=True)
 
 		self.classifier_results.append(
 			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
@@ -319,29 +324,9 @@ class Experiment(object):
 			""
 		]
 
-		for name, classifier, result in self.classifier_results:
-			classifier_result = self.create_classifier_result(name, classifier, result)
-			lines.extend(classifier_result)
+		for _, _, result in self.classifier_results:
+			lines.extend(result)
 			lines.extend(["", ""])
-
-		return lines
-
-
-	def create_classifier_result(self, name, classifier, result):
-		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
-
-		lines = []
-		lines.append("Classifier: %s (%s)" % (name, type(classifier).__name__))
-		lines.append(str(classifier))
-		lines.append("")
-
-		line_with_result = ">>> %s - Result | " % result[0]
-		for element in result[1:-1]:
-			line_with_result += "%s: %s | " % element
-		lines.append(line_with_result[:-3])
-
-		lines.append(">>> %s - Confusion matrix:" % result[0])
-		lines.extend(result[-1])
 
 		return lines
 

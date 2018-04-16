@@ -124,14 +124,18 @@ class Experiment(object):
 			scoring_dict[ids_entry.app_id].append(ids_entry)
 
 		# Classify with all entries: training_entries
-		classifier = sklearn.svm.OneClassSVM()
-		classifier.fit(X_train)
+		classifier1 = sklearn.svm.OneClassSVM()
+		classifier2 = sk_ens.IsolationForest()
+		classifier1.fit(X_train)
+		classifier2.fit(X_train)
 
 		# Score for each app: scoring_dict
 		for app_id, app_entries in scoring_dict.items():
 			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
-			y_pred = classifier.predict(X_test)
-			self.visualise_store("ALL", app_id, classifier, y_true, y_pred)
+			y_pred1 = classifier1.predict(X_test)
+			y_pred2 = classifier2.predict(X_test)
+			self.visualise_store("ALL - OCSVM", app_id, classifier1, y_true, y_pred1)
+			self.visualise_store("ALL - ISOFO", app_id, classifier2, y_true, y_pred2)
 
 		printer.prt("\n\nDONNNNNNEEEE\n\n")
 
@@ -155,10 +159,14 @@ class Experiment(object):
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training)
 		X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
 
-		classifier = sklearn.svm.OneClassSVM()
-		classifier.fit(X_train)
-		y_pred = classifier.predict(X_test)
-		self.visualise_store(app_id, app_id, classifier, y_true, y_pred)
+		classifier1 = sklearn.svm.OneClassSVM()
+		classifier2 = sk_ens.IsolationForest()
+		classifier1.fit(X_train)
+		classifier2.fit(X_train)
+		y_pred1 = classifier1.predict(X_test)
+		y_pred2 = classifier2.predict(X_test)
+		self.visualise_store("SPEC-OCSVM", app_id, classifier1, y_true, y_pred1)
+		self.visualise_store("SPEC-ISOFO", app_id, classifier2, y_true, y_pred2)
 
 		# END TODO
 

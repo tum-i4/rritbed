@@ -69,9 +69,9 @@ class DistributionGenerator(object):
 			raise NotImplementedError("Expected three levels")
 
 		err_tuple = namedtuple("err_tuple", "l r")
-		easy_err = err_tuple(span_l * 10, span_r * 10)
-		med_err = err_tuple(span_l * 5, span_r * 5)
-		hard_err = err_tuple(span_l * 1.5, span_r * 1.5)
+		easy_err = err_tuple(span_l * 10, span_r * 5)
+		med_err = err_tuple(span_l * 5, span_r * 1.5)
+		hard_err = err_tuple(span_l * 1.5, span_r * 1.001)
 
 		self._errors = {
 			DistributionGenerator.LEVELS[0] : easy_err,

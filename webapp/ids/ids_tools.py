@@ -61,21 +61,33 @@ def flip_dict(given_dict, verify_hash):
 	return result
 
 
-def empty_app_id_to_list_dict():
-	""" Create an empty dict with { app_id : [] }. """
+def empty_app_id_to_list_dict(app_ids):
+	"""
+	Create an empty dict with { app_id : [] }.
+	*app_ids: The keys to use. None for 'all'.
+	"""
+
+	if app_ids is None:
+		app_ids = ids_data.get_app_ids()
 
 	result = {}
-	for app_id in ids_data.get_app_ids():
+	for app_id in app_ids:
 		result[app_id] = []
 
 	return result
 
 
-def empty_app_id_to_list_tuple_dict():
-	""" Create an empty dict with { app_id : ([], []) }. """
+def empty_app_id_to_list_tuple_dict(app_ids):
+	"""
+	Create an empty dict with { app_id : ([], []) }.
+	*app_ids: The keys to use. None for 'all'.
+	"""
+
+	if app_ids is None:
+		app_ids = ids_data.get_app_ids()
 
 	result = {}
-	for app_id in ids_data.get_app_ids():
+	for app_id in app_ids:
 		result[app_id] = ([], [])
 
 	return result

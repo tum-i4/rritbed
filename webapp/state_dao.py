@@ -54,8 +54,11 @@ class StateDao(object):
 		self._auto_flush = flush_frequency is not None or max_entries_in_state is not None
 		self._last_flush = time.time()
 
-		# Statistics
+		# Stopping after
 		self._current_total_entries = self.count_log_lines()
+		self._max_entries_total = max_entries_total
+
+		# User info about number of entries in log store
 		if self._current_total_entries:
 			self._printer.prt("Current log length: {:,}".format(self._current_total_entries))
 		else:
@@ -180,6 +183,13 @@ class StateDao(object):
 		number_of_entries = len(self._new_log_entries)
 
 		if number_of_entries == 0:
+			return
+
+		if self._current_total_entries >= self._max_entries_total:
+			self._new_log_entries = []
+			self._printer.prt("Flush blocked, entries discarded - "
+				+ "log already has {} entries. Reached set maximum number of entries: {}."
+				.format(self._current_total_entries, self._max_entries_total))
 			return
 
 		time_now = time.time()

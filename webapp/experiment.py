@@ -97,7 +97,7 @@ class Experiment(object):
 		ids_entries_dict = self.read_convert(self.file_path)
 
 		self.storer_printer.prt("Done. Scoring individual classifier...")
-		for app_id, ids_entries in ids_entries_dict.items():
+		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entries_dict):
 			self.handle_app(app_id, ids_entries)
 
 		self.store_experiment()
@@ -137,7 +137,7 @@ class Experiment(object):
 			classifier.fit(X_train)
 
 		# Score for each app: scoring_dict
-		for app_id, app_entries in scoring_dict.items():
+		for app_id, app_entries in util.seqr.yield_items_in_key_order(scoring_dict):
 			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
 			y_preds = [clf.predict(X_test) for clf in classifiers]
 			for clf, y_pred in zip(classifiers, y_preds):

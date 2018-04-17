@@ -194,12 +194,26 @@ class StateDao(object):
 
 		time_now = time.time()
 		self._current_total_entries += number_of_entries
+		flushed_entry_count = len(self._new_log_entries)
+		time_since_last_flush = time_now - self._last_flush
+		velocity_second = int(float(flushed_entry_count) / time_since_last_flush)
 
-		self._printer.prt("Flushing {:,} log entries. Last flush was {} ago."
-			.format(len(self._new_log_entries),
-					util.fmtr.format_time_passed(time_now - self._last_flush))
-			+ " Log file is now at {:,} lines.".format(self._current_total_entries)
+		output_message = ("Flushing {:,} entries. Last flush: {} ago. Velocity: {} entries/min."
+			.format(flushed_entry_count,
+					util.fmtr.format_time_passed(time_since_last_flush),
+					60 * velocity_second
+				)
 		)
+
+		if self._max_entries_total is not None:
+			entries_left = self._max_entries_total - self._current_total_entries
+			seconds_left_until_max = float(entries_left) / velocity_second
+			output_message += " Reaching max. in: {}.".format(
+				util.fmtr.format_time_passed(seconds_left_until_max))
+
+		output_message += " Log length: {:,} lines.".format(self._current_total_entries)
+
+		self._printer.prt(output_message)
 
 		# Remove new entries from list and save them to disk
 		with open(self._log_file_path, "a") as log_file:

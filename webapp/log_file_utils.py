@@ -72,7 +72,7 @@ def analyse(file_path, to_file, output_printer):
 
 	# "Elements and classes per app ID" table
 	per_app_id = []
-	per_app_id.append(["App ID", "Elements", "%"] + all_classes)
+	per_app_id.append(["App ID", "Elements", "El. %"] + all_classes)
 	for app_id in all_app_ids:
 		line = [
 			app_id,
@@ -92,7 +92,7 @@ def analyse(file_path, to_file, output_printer):
 
 	# "Elements per class" table
 	per_class = []
-	per_class.append(["Class", "Elements", "%", "App Ids"])
+	per_class.append(["Class", "Elements", "El. %", "App Ids"])
 	for a_class in all_classes:
 		per_class.append([
 			a_class,

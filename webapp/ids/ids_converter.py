@@ -69,28 +69,38 @@ class IdsConverter(object):
 	def log_entries_to_ids_entries_dict(self, all_log_entries, binary=True):
 		""" Convert the given LogEntry objects to a { app_id : IdsEntrys } dict. """
 
-		log_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
+		log_entries_per_app_id = {}
 
 		for log_entry in all_log_entries:
 			app_id = ids_tools.log_entry_to_app_id(log_entry)
+
+			if app_id not in log_entries_per_app_id:
+				log_entries_per_app_id[app_id] = []
+
 			log_entries_per_app_id[app_id].append(log_entry)
 
-		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
+		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict(log_entries_per_app_id.keys())
+
 		for app_id in log_entries_per_app_id:
 			my_log_entries = log_entries_per_app_id[app_id]
 			my_ids_entries = self.log_entries_to_ids_entries(app_id, my_log_entries, binary)
-			ids_entries_per_app_id[app_id] = my_ids_entries
+			ids_entries_per_app_id[app_id].extend(my_ids_entries)
 
+		self.check_dict(ids_entries_per_app_id)
 		return ids_entries_per_app_id
 
 
 	def ids_entries_to_dict(self, ids_entries):
 		""" Store the given LogEntry objects in a { app_id : [IdsEntry] } dict. """
 
-		ids_entries_per_app_id = ids_tools.empty_app_id_to_list_dict()
+		ids_entries_per_app_id = {}
 		for ids_entry in ids_entries:
+			if ids_entry.app_id not in ids_entries_per_app_id:
+				ids_entries_per_app_id[ids_entry.app_id] = []
+
 			ids_entries_per_app_id[ids_entry.app_id].append(ids_entry)
 
+		self.check_dict(ids_entries_per_app_id)
 		return ids_entries_per_app_id
 
 
@@ -143,6 +153,7 @@ class IdsConverter(object):
 		for app_id, ids_entries in ids_entries_dict.items():
 			train_dict[app_id] = IdsConverter.ids_entries_to_X_y(ids_entries, app_id)
 
+		self.check_dict(train_dict)
 		printer.prt("Done.")
 		return train_dict
 

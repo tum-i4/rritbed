@@ -188,7 +188,7 @@ class StateDao(object):
 		if self._current_total_entries >= self._max_entries_total:
 			self._new_log_entries = []
 			self._printer.prt("Flush blocked, entries discarded - "
-				+ "log already has {} entries. Reached set maximum number of entries: {}."
+				+ "log already has {:,} >= {:,} entries (maximum set)."
 				.format(self._current_total_entries, self._max_entries_total))
 			return
 
@@ -198,7 +198,7 @@ class StateDao(object):
 		time_since_last_flush = time_now - self._last_flush
 		velocity_second = int(float(flushed_entry_count) / time_since_last_flush)
 
-		output_message = ("Flushing {:,} entries. Last flush: {} ago. Velocity: {} entries/min."
+		output_message = ("Flushing {:,} entries. Last flush: {} ago. Velocity: {:,} entries/min."
 			.format(flushed_entry_count,
 					util.fmtr.format_time_passed(time_since_last_flush),
 					60 * velocity_second

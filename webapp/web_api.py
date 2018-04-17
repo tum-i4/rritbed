@@ -291,7 +291,7 @@ DETECT = ARGS.detect
 STORE = ARGS.store
 
 YES_NO = lambda x: "yes" if x else "no"
-IT_NOT = lambda x: "{:n}".format(x) if x else "not set"
+IT_NOT = lambda x: "{:,}".format(x) if x else "not set"
 FLUSH_FREQ_TXT = ("flush frequency: {}"
 	.format(util.fmtr.format_time_passed(ARGS.flush_frequency)
 	if ARGS.flush_frequency

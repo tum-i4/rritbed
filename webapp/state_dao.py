@@ -27,7 +27,8 @@ class StateDao(object):
 		if StateDao._INSTANCE:
 			raise ValueError("DAO is already instantiated!")
 
-		if any([x <= 0 for x in [flush_frequency, max_entries_in_state, max_entries_total]]):
+		if any([x <= 0 for x in
+			filter(lambda x: x is not None, [flush_frequency, max_entries_in_state, max_entries_total])]):
 			raise ValueError("All args must be positive valued!")
 
 		object.__init__(self)

@@ -418,7 +418,6 @@ class StateDao(object):
 		return self._log_file_path + "_until_" + time_str
 
 
-
 	### Helper methods ###
 
 
@@ -428,6 +427,20 @@ class StateDao(object):
 		self._curr_min_time = None
 		self._client_times = {}
 		self._new_log_entries = []
+
+
+	def _maximum_reached(self, include_state=False):
+		""" Check if the maximum total has been reached.
+		returns: False if no maximum was set. """
+
+		if self._max_entries_total is None:
+			return False
+
+		current_count = self._current_total_entries
+		if include_state:
+			current_count += len(self._new_log_entries)
+
+		return current_count >= self._max_entries_total
 
 
 

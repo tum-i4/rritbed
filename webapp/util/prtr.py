@@ -93,6 +93,27 @@ class Storer(Printer):
 			self.lines = []
 
 
+class StorerAndPrinter(Storer):
+	"""
+	Printer replacement that stores AND prints all lines given to it.
+	See <Storer> for storing doc.
+	"""
+
+	def __init__(self, squelch=False, verbose=True, name=None, printer=None):
+		""" Ctor """
+
+		super(StorerAndPrinter, self).__init__(squelch, verbose, name)
+		self.printer = printer or Printer(squelch=squelch, verbose=verbose, name=name)
+
+
+	def prt(self, message, only_verbose=False, preface=True, newline=True):
+		""" Print and save the given message. """
+
+		super(StorerAndPrinter, self).prt(
+			message=message, only_verbose=only_verbose, preface=preface, newline=newline)
+		self.printer.prt(
+			message=message, only_verbose=only_verbose, preface=preface, newline=newline)
+
 
 class TimePrinter(Printer):
 	"""

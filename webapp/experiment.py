@@ -239,14 +239,20 @@ class Experiment(object):
 		util.outp.print_table(table, printer=storer)
 
 		classifier_name = type(classifier).__name__
-		line_prefix = ">>> [%s / %s] %s -" % (name, classifier_name, app_id)
+		line_prefix = ">>> [%s / %s] %s -" % (
+			util.fmtr.fit_string_in(name, 4),
+			util.fmtr.fit_string_in(classifier_name, 20),
+			util.fmtr.fit_string_in(app_id, 12))
+
+		justed_value_str = lambda x: util.fmtr.fit_string_in("{:.12f}".format(x), 15)
 
 		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
 		this_result = [
 			"Classifier: %s (%s)" % (name, classifier_name),
 			str(classifier),
 			"",
-			"%s Result | Accuracy: %s | Precision: %s | Recall: %s" % (line_prefix, accu, prec, reca),
+			("%s Result | Accuracy: %s | Precision: %s | Recall: %s"
+				% (line_prefix, justed_value_str(accu), justed_value_str(prec), justed_value_str(reca))),
 			"%s Confusion matrix:" % line_prefix
 		]
 

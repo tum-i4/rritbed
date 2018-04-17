@@ -296,9 +296,14 @@ FLUSH_FREQ_TXT = ("flush frequency: {}"
 	.format(util.fmtr.format_time_passed(ARGS.flush_frequency)
 	if ARGS.flush_frequency
 	else "not set"))
-CFG_MSG = ("detect: {} | store: {} | {} | max. entries in state: {}"
-	.format(YES_NO(ARGS.detect), YES_NO(ARGS.store),
-		FLUSH_FREQ_TXT, IT_NOT(ARGS.max_entries_in_state))
+CFG_MSG = ("detect: {} | store: {} | {} | max. entries in state: {} | max. entries total: {}"
+	.format(
+		YES_NO(ARGS.detect),
+		YES_NO(ARGS.store),
+		FLUSH_FREQ_TXT,
+		IT_NOT(ARGS.max_entries_in_state),
+		IT_NOT(ARGS.total_max_entries)
+	)
 )
 
 if not ARGS.verbose:

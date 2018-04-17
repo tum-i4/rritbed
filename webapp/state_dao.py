@@ -58,7 +58,6 @@ class StateDao(object):
 		# Stopping after
 		self._current_total_entries = self.count_log_lines()
 		self._max_entries_total = max_entries_total
-		self._last_info = 0
 
 		# User info about number of entries in log store
 		if self._current_total_entries:
@@ -187,17 +186,14 @@ class StateDao(object):
 		if number_of_entries == 0:
 			return
 
+		# Maximum number of entries reached on disk: Print info and raise MaximumReachedError
+		if self._maximum_reached(include_state=False):
+			self._printer.prt("Flush blocked - log already has {:,} entries (set maximum: {:,})."
+				.format(self._current_total_entries, self._max_entries_total))
+
+			raise self.MaximumReachedError()
+
 		time_now = time.time()
-
-		# Maximum number of entries reached: Return immediately
-		if self._current_total_entries >= self._max_entries_total:
-			# Alert every 5 minutes
-			if self._last_info + 300 < time_now:
-				self._printer.prt("Flush blocked - log already has {:,} entries (set maximum: {:,})."
-					.format(self._current_total_entries, self._max_entries_total))
-				self._last_info = time_now
-
-			return
 
 		self._current_total_entries += number_of_entries
 		flushed_entry_count = len(self._new_log_entries)

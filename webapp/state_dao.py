@@ -260,6 +260,10 @@ class StateDao(object):
 
 		self._new_log_entries.append(log_entry)
 
+		if self._maximum_reached(include_state=True):
+			self.flush_log()
+			return
+
 		if not self._auto_flush:
 			return
 

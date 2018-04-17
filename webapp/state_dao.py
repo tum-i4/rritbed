@@ -186,7 +186,9 @@ class StateDao(object):
 			return
 
 		if self._current_total_entries >= self._max_entries_total:
-			self._new_log_entries = []
+			for _ in range(0, number_of_entries):
+				self._new_log_entries.pop(0)
+
 			self._printer.prt("Flush blocked, entries discarded - "
 				+ "log already has {:,} >= {:,} entries (maximum set)."
 				.format(self._current_total_entries, self._max_entries_total))

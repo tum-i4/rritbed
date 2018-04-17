@@ -106,7 +106,6 @@ class Experiment(object):
 	def handle_all(self, file_path):
 		""" Full flow for a one-fits-all classifier. """
 
-		printer = util.prtr.TimePrinter(name="ALL")
 		self.storer_printer.prt("ALLLLLLLL\n\n")
 
 		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER
@@ -272,8 +271,6 @@ class Experiment(object):
 		""" Store the results saved in this class in our experiment directory. """
 
 		self.end_time = time.time()
-
-		printer = util.prtr.TimePrinter(name="store")
 		self.storer_printer.prt("Storing experiment results...")
 
 		Dir.ensure_folder_exists(self.experiment_dir_path)

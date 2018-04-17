@@ -68,11 +68,15 @@ def analyse(file_path, to_file, output_printer):
 		len(found_classes), len(all_classes), get_pl("es", found_classes))
 	)
 
-	# App ID table
+	# "Elements and classes per app ID" table
 	per_app_id = []
-	per_app_id.append(["App ID", "Elements"] + all_classes)
+	per_app_id.append(["App ID", "Elements", "%"] + all_classes)
 	for app_id in all_app_ids:
-		line = [app_id, str(entry_count_per_app_id[app_id])]
+		line = [
+			app_id,
+			entry_count_per_app_id[app_id],
+			util.fmtr.format_percentage(entry_count_per_app_id[app_id] / float(total_entries), True, 2)
+		]
 
 		for a_class in all_classes:
 			class_count_str = ""

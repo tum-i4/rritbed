@@ -142,10 +142,12 @@ def straighten_dataset(ids_entries):
 	""" Ensure a 9:1 ratio of inliers:outliers for each app_id in the given entries. """
 
 	# { app_id : its_entries }
-	ids_entry_dict = empty_app_id_to_list_dict()
+	ids_entry_dict = {}
 
 	for ids_entry in ids_entries:
-		ids_entry_dict[ids_entry.app_id] = ids_entry
+		if ids_entry.app_id not in ids_entry_dict:
+			ids_entry_dict[ids_entry.app_id] = []
+		ids_entry_dict[ids_entry.app_id].append(ids_entry)
 
 	all_entries = []
 

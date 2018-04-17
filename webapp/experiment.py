@@ -11,13 +11,10 @@ from collections import namedtuple
 
 import sklearn
 import sklearn.ensemble as sk_ens
-import sklearn.neighbors as sk_nghb
 import sklearn.externals as sk_ext
 import sklearn.metrics as sk_metr
-import sklearn.preprocessing as sk_pre
 
 from log_entry import LogEntry
-import ids.ids_data as ids_data
 import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
@@ -26,7 +23,7 @@ import idse_dao
 import log_file_utils
 import util.fmtr
 import util.outp
-from util.prtr import TimePrinter
+import util.prtr
 
 
 ITEM_LIMIT = 5000000
@@ -198,7 +195,7 @@ class Experiment(object):
 		# 	printer)
 
 
-	def preprocess_fit_score(self, app_id, ids_entries, preprocessor, classifier, printer):
+	def preprocess_fit_score(self, app_id, ids_entries, preprocessor, classifier):
 		""" Use the given preprocessor on the data, classify it with the given classifier and score. """
 
 		converter = IdsConverter()

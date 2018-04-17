@@ -361,7 +361,7 @@ class StateDao(object):
 		"""
 
 		if not os.path.lexists(self._state_path):
-			return
+			return "Folder doesn't exist"
 
 		# Delete state file
 		StateDao._delete_file_if_existing(

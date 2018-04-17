@@ -203,7 +203,7 @@ def analyse_entries(log_entry_generator):
 			duplicate_elements_per_app_id[app_id]["uniq"] += 1
 		last_hash_per_app_id[app_id] = entry_hash
 
-	scorable_app_ids = set()
+	scorable_app_ids = []
 	scorable_entry_counts = []
 	scorable_duplicate_percentages = []
 
@@ -211,7 +211,7 @@ def analyse_entries(log_entry_generator):
 		entry_count = entry_count_per_app_id[app_id]
 		dupe_count = duplicate_elements_per_app_id[app_id]["dupe"]
 		if entry_count > 0:
-			scorable_app_ids.add(app_id)
+			scorable_app_ids.append(app_id)
 			scorable_entry_counts.append(entry_count)
 			scorable_duplicate_percentages.append(float(dupe_count)/entry_count)
 

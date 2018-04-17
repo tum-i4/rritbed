@@ -54,6 +54,10 @@ class Experiment(object):
 		# ClassifierResultGroup objects (name, classifier, result)
 		self.classifier_results = []
 
+		# StorerAndPrinter - stores and prints ;)
+		time_printer = util.prtr.TimePrinter(name="exp")
+		self.storer_printer = util.prtr.StorerAndPrinter(printer=time_printer)
+
 		# Paths and name
 		self.file_path = os.path.expanduser(file_path)
 		self.input_file_name = os.path.basename(self.file_path)
@@ -84,17 +88,15 @@ class Experiment(object):
 		# Prerequisites: I could have loaded from a folder
 		# raise NotImplementedError()
 
-		printer = TimePrinter(name="experiment")
-
 		# TODO TEMP?
-		printer.prt("Scoring classifier trained with all samples...")
+		self.storer_printer.prt("Scoring classifier trained with all samples...")
 		self.handle_all(self.file_path)
 
-		printer.prt("Done. Reading file and converting...")
+		self.storer_printer.prt("Done. Reading file and converting...")
 		# ids_entries: { app_id, vector, my_class }
 		ids_entries_dict = self.read_convert(self.file_path)
 
-		printer.prt("Done. Scoring individual classifier...")
+		self.storer_printer.prt("Done. Scoring individual classifier...")
 		for app_id, ids_entries in ids_entries_dict.items():
 			self.handle_app(app_id, ids_entries)
 
@@ -105,7 +107,7 @@ class Experiment(object):
 		""" Full flow for a one-fits-all classifier. """
 
 		printer = util.prtr.TimePrinter(name="ALL")
-		printer.prt("ALLLLLLLL\n\n")
+		self.storer_printer.prt("ALLLLLLLL\n\n")
 
 		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER
 		converter = TEMPCONVERTER()
@@ -140,16 +142,14 @@ class Experiment(object):
 			for clf, y_pred in zip(classifiers, y_preds):
 				self.visualise_store("ALL", app_id, clf, y_true, y_pred)
 
-		printer.prt("\n\nDONNNNNNEEEE\n\n")
+		self.storer_printer.prt("\n\nDONNNNNNEEEE\n\n")
 
 
 	def handle_app(self, app_id, ids_entries):
 		""" Full flow for one classifier. """
 
-		printer = TimePrinter(name=app_id)
-
 		if not ids_entries:
-			printer.prt("No input data for {}".format(app_id))
+			self.storer_printer.prt("No input data for {}".format(app_id))
 			return
 
 		if not isinstance(ids_entries[0], IdsEntry):
@@ -174,7 +174,7 @@ class Experiment(object):
 
 		# END TODO
 
-		# print("\n\t::: %s :::\n" % app_id)
+		# self.storer_printer.prt("\n\t::: %s :::\n" % app_id)
 
 		# # TODO
 		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
@@ -185,7 +185,7 @@ class Experiment(object):
 		# name = "IF"
 		# n_est = 100
 		# max_sampl = 256
-		# print("\n\t> %s - n_est: %s, max_sampl: %s" % (name, n_est, max_sampl))
+		# self.storer_printer.prt("\n\t> %s - n_est: %s, max_sampl: %s" % (name, n_est, max_sampl))
 		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
 		# 	lambda x: x,
 		# 	sk_ens.IsolationForest(n_estimators=n_est, max_samples=max_sampl, n_jobs=-1, random_state=0),
@@ -203,16 +203,16 @@ class Experiment(object):
 		converter = IdsConverter()
 		X, y = converter.ids_entries_to_X_y(ids_entries, app_id)
 
-		printer.prt("Preprocessing... ", newline=False)
+		self.storer_printer.prt("Preprocessing... ", newline=False)
 		X = preprocessor(X)
 
-		printer.prt("Splitting... ", newline=False)
+		self.storer_printer.prt("Splitting... ", newline=False)
 		X_train, _, X_test, y_true = ids_tools.X_y_to_train_test(X, y)
 
-		printer.prt("Fitting... ", newline=False)
+		self.storer_printer.prt("Fitting... ", newline=False)
 		classifier.fit(X_train)
 
-		printer.prt("Predicting... ")
+		self.storer_printer.prt("Predicting... ")
 		y_pred = classifier.predict(X_test)
 
 		self.visualise_store(app_id, app_id, classifier, y_true, y_pred)
@@ -223,7 +223,7 @@ class Experiment(object):
 	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
-		print("\nSCORE FOR >>> %s <<<" % app_id)
+		self.storer_printer.prt("\nSCORE FOR >>> %s <<<" % app_id)
 
 		accu = sk_metr.accuracy_score(y_true, y_pred)
 		prec = sk_metr.precision_score(y_true, y_pred)
@@ -255,14 +255,14 @@ class Experiment(object):
 
 		this_result.extend(table_lines)
 
-		print("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
+		self.storer_printer.prt("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
 		storer.printout(purge=True)
 
 		self.classifier_results.append(
 			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
 		)
 
-		print("\nEND FOR  >>> %s <<<" % app_id)
+		self.storer_printer.prt("\nEND FOR  >>> %s <<<" % app_id)
 
 
 	### Persistence ###
@@ -274,13 +274,14 @@ class Experiment(object):
 		self.end_time = time.time()
 
 		printer = util.prtr.TimePrinter(name="store")
-		printer.prt("Storing experiment results...")
+		self.storer_printer.prt("Storing experiment results...")
 
 		Dir.ensure_folder_exists(self.experiment_dir_path)
 
 		entry_file_path = os.path.join(self.experiment_dir_path, "used_entries")
 		result_file_path = os.path.join(self.experiment_dir_path, "result")
-		other_file_paths = [entry_file_path, result_file_path]
+		stdout_file_path = os.path.join(self.experiment_dir_path, "stdout")
+		other_file_paths = [entry_file_path, result_file_path, stdout_file_path]
 		classifiers_file_paths = []
 		for name, classifier, _ in self.classifier_results:
 			clf_name = "%s_%s" % (name, type(classifier).__name__.replace(" ", "_"))
@@ -292,30 +293,34 @@ class Experiment(object):
 		if any([os.path.lexists(x) for x in other_file_paths + classifiers_file_paths]):
 			raise IOError("One of the files exists: %s" % (other_file_paths + classifiers_file_paths))
 
-		printer.prt("Data verified. Storing utilised entries...")
+		self.storer_printer.prt("Data verified. Storing utilised entries...")
 
 		# Create new file with my entries
 		saved_path = idse_dao.save_entries(entry_file_path, self.ids_entries)
 
-		printer.prt("Done. Analysing file...")
+		self.storer_printer.prt("Done. Analysing file...")
 
 		# Analyse that file
 		log_file_utils.analyse(saved_path, to_file=True, output_printer=util.prtr.Storer())
 
-		printer.prt("Done. Saving classifiers...")
+		self.storer_printer.prt("Done. Saving classifiers...")
 
 		# Save trained classifiers
 		for (_, classifier, _), its_path in zip(self.classifier_results, classifiers_file_paths):
 			sk_ext.joblib.dump(classifier, its_path)
 
-		printer.prt("Done. Saving result digest...")
+		self.storer_printer.prt("Done. Saving result digest...")
 
 		# Save the result
 		result_lines = self.create_result_lines()
 		Dir.write_lines(result_file_path, result_lines)
 
-		printer.prt("Done!")
-		printer.prt("Experiment stored in: %s" % self.experiment_dir_path)
+		self.storer_printer.prt("Done!")
+		self.storer_printer.prt("Experiment stored in: %s" % self.experiment_dir_path)
+
+		# Save the stdout (tee replacement)
+		stdout_lines = self.storer_printer.get_messages()
+		Dir.write_lines(stdout_file_path, stdout_lines)
 
 
 	def retrieve_experiment(self, experiment_dir):

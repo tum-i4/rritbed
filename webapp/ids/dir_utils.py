@@ -3,6 +3,7 @@
 
 import os
 import random
+import string
 import time
 import uuid
 import sklearn.svm as sk_svm
@@ -40,6 +41,26 @@ class Dir(object):
 			any_path += str(random.randint(0, 9))
 
 		return any_path
+
+
+	@staticmethod
+	def remove_disallowed_characters(any_path):
+		""" Removes all disallowed characters from the path. Replaces spaces with underscores. """
+
+		# Allowed: a-z A-Z 0-9 underscore (_) dash (-) period (.)
+		allowed_chars = string.ascii_letters + "0123456789" + "_" + "-" + "."
+
+		result = ""
+		for character in any_path:
+			if character in allowed_chars:
+				result += character
+			elif character == " ":
+				result += "_"
+			else:
+				# Skip illegal characters
+				pass
+
+		return result
 
 
 	@staticmethod

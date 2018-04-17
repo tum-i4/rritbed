@@ -268,7 +268,10 @@ def _append_and_detect(new_log_entry):
 	""" Append the given string plus a newline to the log file and detect possible intrusions. """
 
 	if STORE:
-		DAO.append_to_log(new_log_entry)
+		try:
+			DAO.append_to_log(new_log_entry)
+		except StateDao.MaximumReachedError:
+			exit()
 	if DETECT:
 		IDS.process(new_log_entry)
 

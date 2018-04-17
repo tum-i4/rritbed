@@ -9,6 +9,7 @@ from log_entry import LogEntry
 import util.fmtr
 import util.outp
 import util.prtr
+import util.stat
 from ids.dir_utils import Dir
 import ids.ids_tools as ids_tools
 import ids.ids_data as ids_data
@@ -48,7 +49,8 @@ def analyse(file_path, to_file, output_printer):
 
 	(
 		total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
-		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id
+		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id,
+		scorable_app_ids, dispersion_index, duplicate_score
 	) = analyse_entries(log_entry_generator)
 
 	# Output #
@@ -121,6 +123,10 @@ def analyse(file_path, to_file, output_printer):
 	else:
 		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)
 
+	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s | Duplicate score = %s"
+		% (len(scorable_app_ids), dispersion_index, duplicate_score))
+	printer.prt("Scorable app ids: %s" % scorable_app_ids)
+
 	if to_file:
 		with open(output_path, "w") as output_file:
 			for line in printer.get_messages():
@@ -128,7 +134,6 @@ def analyse(file_path, to_file, output_printer):
 
 		output_printer.prt("Successfully saved analysis to \"{}\".".format(output_path))
 
-	# TODO: score??
 	# harmonious? all labelled / some / none?
 	# for each app id: are there roughly the same number of entries per class?
 	return
@@ -138,7 +143,8 @@ def analyse_entries(log_entry_generator):
 	"""
 	Analyse the LogEntry objects from the given generator.
 	returns: A tuple containing (found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
-	found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id)
+	found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id),
+	scorable_app_ids, dispersion_index, duplicate_score
 	"""
 
 	total_entries = 0
@@ -197,9 +203,25 @@ def analyse_entries(log_entry_generator):
 			duplicate_elements_per_app_id[app_id]["uniq"] += 1
 		last_hash_per_app_id[app_id] = entry_hash
 
+	scorable_app_ids = set()
+	scorable_entry_counts = []
+	scorable_duplicate_percentages = []
+
+	for app_id in all_app_ids:
+		entry_count = entry_count_per_app_id[app_id]
+		dupe_count = duplicate_elements_per_app_id[app_id]["dupe"]
+		if entry_count > 0:
+			scorable_app_ids.add(app_id)
+			scorable_entry_counts.append(entry_count)
+			scorable_duplicate_percentages.append(float(dupe_count)/entry_count)
+
+	dispersion_index = util.stat.index_of_dispersion(scorable_entry_counts)
+	duplicate_score = (util.stat.avg(scorable_duplicate_percentages)
+		+ max(scorable_duplicate_percentages) / float(len(scorable_duplicate_percentages)))
 
 	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
-		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id)
+		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id,
+		scorable_app_ids, dispersion_index, duplicate_score)
 
 
 def get_content_hash(log_entry):

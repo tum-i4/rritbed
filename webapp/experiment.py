@@ -121,8 +121,10 @@ class Experiment(object):
 		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)
 
-		scoring_dict = ids_tools.empty_app_id_to_list_dict()
+		scoring_dict = {}
 		for ids_entry in scoring_entries:
+			if ids_entry.app_id not in scoring_dict:
+				scoring_dict[ids_entry.app_id] = []
 			scoring_dict[ids_entry.app_id].append(ids_entry)
 
 		# Classify with all entries: training_entries

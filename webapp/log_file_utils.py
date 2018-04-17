@@ -50,7 +50,7 @@ def analyse(file_path, to_file, output_printer):
 	(
 		total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id,
-		scorable_app_ids, dispersion_index, duplicate_score
+		scorable_app_ids, dispersion_index, duplicate_index
 	) = analyse_entries(log_entry_generator)
 
 	# Output #
@@ -123,8 +123,8 @@ def analyse(file_path, to_file, output_printer):
 	else:
 		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)
 
-	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s | Duplicate score = %s"
-		% (len(scorable_app_ids), dispersion_index, duplicate_score))
+	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s | Duplicate index = %s"
+		% (len(scorable_app_ids), round(dispersion_index, 3), round(duplicate_index, 3)))
 	printer.prt("Scorable app ids: %s" % scorable_app_ids)
 
 	if to_file:
@@ -144,7 +144,7 @@ def analyse_entries(log_entry_generator):
 	Analyse the LogEntry objects from the given generator.
 	returns: A tuple containing (found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 	found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id),
-	scorable_app_ids, dispersion_index, duplicate_score
+	scorable_app_ids, dispersion_index, duplicate_index
 	"""
 
 	total_entries = 0
@@ -216,12 +216,12 @@ def analyse_entries(log_entry_generator):
 			scorable_duplicate_percentages.append(float(dupe_count)/entry_count)
 
 	dispersion_index = util.stat.index_of_dispersion(scorable_entry_counts)
-	duplicate_score = (util.stat.avg(scorable_duplicate_percentages)
+	duplicate_index = (util.stat.avg(scorable_duplicate_percentages)
 		+ max(scorable_duplicate_percentages) / float(len(scorable_duplicate_percentages)))
 
 	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id,
-		scorable_app_ids, dispersion_index, duplicate_score)
+		scorable_app_ids, dispersion_index, duplicate_index)
 
 
 def get_content_hash(log_entry):

@@ -15,6 +15,9 @@ import ids.ids_data as ids_data
 import idse_dao
 
 
+VERSION = "1.1"
+
+
 def analyse(file_path, to_file, output_printer):
 	""" Analyse the given log file. """
 
@@ -59,8 +62,8 @@ def analyse(file_path, to_file, output_printer):
 	if not to_file:
 		printer.prt("")
 
-	printer.prt("Found {} entries with {}/{} app id{} and {}/{} class{}".format(
-		total_entries,
+	printer.prt("Analysis {}: Found {} entries with {}/{} app id{} and {}/{} class{}".format(
+		VERSION, total_entries,
 		len(found_app_ids), len(all_app_ids), get_pl("s", found_app_ids),
 		len(found_classes), len(all_classes), get_pl("es", found_classes))
 	)

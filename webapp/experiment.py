@@ -68,7 +68,7 @@ class Experiment(object):
 			random_num_str = "".join(str(x) for x in (random.sample(range(0, 15), 5)))
 			self.title = "Experiment %s" % random_num_str
 
-		experiment_dir_name = self.title.lower().replace(" ", "_")
+		experiment_dir_name = Dir.remove_disallowed_characters(self.title.lower())
 		experiment_dir_name += time.strftime("_%m-%d_%H-%M")
 		self.experiment_dir_path = self.get_experiment_folder(experiment_dir_name)
 

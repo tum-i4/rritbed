@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ Converter """
 
+import warnings
+
 import numpy
 import sklearn.preprocessing as sk_pre
 
@@ -175,6 +177,10 @@ class IdsConverter(object):
 		Convert the given LogEntry objects to learnable vectors.
 		returns: C-ordered numpy.ndarray (dense) with dtype=float64
 		"""
+
+		if not log_entries:
+			warnings.warn("[IdsConverter.log_entries_to_vectors()] %s: No log entries!" % app_id)
+			return numpy.array([])
 
 		# We have: vin, app_id, level, log_message, gps_position, time_unix, log_id
 		assert(len(log_entries[0].data) == 7)

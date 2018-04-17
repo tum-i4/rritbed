@@ -193,8 +193,7 @@ class StateDao(object):
 		if self._current_total_entries >= self._max_entries_total:
 			# Alert every 5 minutes
 			if self._last_info + 300 < time_now:
-				self._printer.prt("Flush blocked, entries discarded - "
-					+ "log already has {:,} entries (set maximum: {:,})."
+				self._printer.prt("Flush blocked - log already has {:,} entries (set maximum: {:,})."
 					.format(self._current_total_entries, self._max_entries_total))
 				self._last_info = time_now
 

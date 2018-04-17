@@ -20,7 +20,8 @@ class StateDao(object):
 	_INSTANCE = None
 
 
-	def __init__(self, verbose, flush_frequency=None, max_entries_in_state=None):
+	def __init__(
+		self, verbose, flush_frequency=None, max_entries_in_state=None, max_entries_total=None):
 		""" Ctor """
 
 		if StateDao._INSTANCE:

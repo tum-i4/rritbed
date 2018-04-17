@@ -284,6 +284,7 @@ PARSER.add_argument("--dont-detect", "-d", action="store_false", dest="detect")
 PARSER.add_argument("--dont-store", "-s", action="store_false", dest="store")
 PARSER.add_argument("--flush-frequency", "-f", type=int, metavar="S")
 PARSER.add_argument("--max-entries-in-state", "-m", type=int, metavar="N")
+PARSER.add_argument("--total-max-entries", "-t", type=int, metavar="N", help="Max. total entries")
 ARGS = PARSER.parse_args()
 
 DETECT = ARGS.detect
@@ -307,7 +308,8 @@ else:
 
 with StateDao(verbose=ARGS.verbose,
 	flush_frequency=ARGS.flush_frequency,
-	max_entries_in_state=ARGS.max_entries_in_state) as dao:
+	max_entries_in_state=ARGS.max_entries_in_state,
+	max_entries_total=ARGS.total_max_entries) as dao:
 	if ARGS.verbose:
 		print("")
 

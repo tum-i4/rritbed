@@ -110,10 +110,12 @@ def analyse(file_path, to_file, output_printer):
 		unique_count = result["uniq"]
 		duplicate_count = result["dupe"]
 		all_count = unique_count + duplicate_count
-		duplicate_percent_str = util.fmtr.format_percentage(0)
+
+		duplicate_percent = 0
 		if all_count > 0:
-			duplicate_percent_str = util.fmtr.format_percentage(
-				float(duplicate_count) / all_count, True, 3)
+			duplicate_percent = float(duplicate_count) / all_count
+
+		duplicate_percent_str = util.fmtr.format_percentage(duplicate_percent, True, 3)
 
 		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
 

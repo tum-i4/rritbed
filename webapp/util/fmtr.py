@@ -39,3 +39,8 @@ def format_percentage(value, pad_spaces=False, digits=0):
 	if pad_spaces:
 		return string.rjust(just_len)
 	return string
+
+
+def fit_string_in(in_str, given_len):
+	""" Fits the given string in a string of length given_len. """
+	return in_str[:given_len].ljust(given_len)

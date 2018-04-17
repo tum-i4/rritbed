@@ -147,6 +147,18 @@ class IdsConverter(object):
 		return train_dict
 
 
+	def check_dict(self, given_dict):
+		""" Ensure the given dict conforms to our expectations. Call before returning entry dicts! """
+
+		dict_keys = given_dict.keys()
+		if any([app_id not in self.app_ids for app_id in dict_keys]):
+			raise ValueError("Invalid dict! A key was not expected: %s" % dict_keys)
+
+		dict_values = given_dict.values()
+		if any([not elements for elements in dict_values]):
+			raise ValueError("Invalid dict! A list is empty or doesn't exist: %s" % dict_values)
+
+
 	def log_entries_to_vectors(self, app_id, log_entries):
 		"""
 		Convert the given LogEntry objects to learnable vectors.

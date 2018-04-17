@@ -33,7 +33,7 @@ class StateDao(object):
 		object.__init__(self)
 
 		StateDao._INSTANCE = self
-		self._printer = util.prtr.Printer(verbose=verbose, name="DAO")
+		self._printer = util.prtr.TimePrinter(verbose=verbose, name="DAO")
 
 		self._state_path = "state"
 		self._state_file_name = "state"
@@ -185,9 +185,8 @@ class StateDao(object):
 		time_now = time.time()
 		self._current_total_entries += number_of_entries
 
-		self._printer.prt("{} - Flushing {:,} log entries. Last flush was {} ago."
-			.format(time.strftime("%H:%M:%S", time.localtime(time_now)),
-					len(self._new_log_entries),
+		self._printer.prt("Flushing {:,} log entries. Last flush was {} ago."
+			.format(len(self._new_log_entries),
 					util.fmtr.format_time_passed(time_now - self._last_flush))
 			+ " Log file is now at {:,} lines.".format(self._current_total_entries)
 		)

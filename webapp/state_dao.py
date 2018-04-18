@@ -200,20 +200,20 @@ class StateDao(object):
 		time_since_last_flush = time_now - self._last_flush
 		velocity_second = int(float(flushed_entry_count) / time_since_last_flush)
 
-		output_message = ("Flushing {:,} entries. Last flush: {} ago. Velocity: {:,} entries/min."
-			.format(flushed_entry_count,
-					util.fmtr.format_time_passed(time_since_last_flush),
-					60 * velocity_second
-				)
+		output_message = ("Flushing {:>6,} entries. Last flush: {:>4} ago. Velocity: {:>6,} entries/min."
+			.format(
+				flushed_entry_count,
+				util.fmtr.format_time_passed(time_since_last_flush),
+				60 * velocity_second
+			)
+			+ " Log length: {:,} lines.".format(self._current_total_entries)
 		)
 
 		if self._max_entries_total is not None:
 			entries_left = self._max_entries_total - self._current_total_entries
 			seconds_left_until_max = float(entries_left) / velocity_second
-			output_message += " Reaching max. in: {}.".format(
+			output_message += " Reaching goal in: {}.".format(
 				util.fmtr.format_time_passed(seconds_left_until_max))
-
-		output_message += " Log length: {:,} lines.".format(self._current_total_entries)
 
 		self._printer.prt(output_message)
 

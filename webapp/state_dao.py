@@ -443,14 +443,14 @@ class StateDao(object):
 		return current_count >= self._max_entries_total
 
 
-	### Exception class ###
+### Exception class ###
 
 
-	class MaximumReachedError(Exception):
-		""" Thrown when the set maximum number of entries has been reached and more are added. """
-		def __init__(self):
-			""" Ctor """
-			Exception.__init__(self)
+class MaximumReachedError(Exception):
+	""" Thrown when the set maximum number of entries has been reached and more are added. """
+	def __init__(self):
+		""" Ctor """
+		Exception.__init__(self)
 
 
 

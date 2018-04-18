@@ -14,7 +14,7 @@ import time
 from bottle import post, get, run, request, BaseResponse
 
 from log_entry import LogEntry
-from state_dao import StateDao
+from state_dao import StateDao, MaximumReachedError
 from ids.live_ids import LiveIds
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
@@ -270,7 +270,8 @@ def _append_and_detect(new_log_entry):
 	if STORE:
 		try:
 			DAO.append_to_log(new_log_entry)
-		except StateDao.MaximumReachedError:
+		except MaximumReachedError:
+			print("ABC")
 			exit()
 	if DETECT:
 		IDS.process(new_log_entry)

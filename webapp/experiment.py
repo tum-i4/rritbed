@@ -14,13 +14,14 @@ import sklearn.ensemble as sk_ens
 import sklearn.externals as sk_ext
 import sklearn.metrics as sk_metr
 
-from log_entry import LogEntry
+import experiment_modules
 import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
 from ids.ids_entry import IdsEntry
 import idse_dao
-import log_file_utils
+from log_entry import LogEntry
+import log_file_analysis
 import util.fmtr
 import util.outp
 import util.prtr
@@ -304,7 +305,7 @@ class Experiment(object):
 		self.storer_printer.prt("Done. Analysing file...")
 
 		# Analyse that file
-		log_file_utils.analyse(saved_path, to_file=True, output_printer=util.prtr.Storer())
+		log_file_analysis.analyse(saved_path, to_file=True, output_printer=util.prtr.Storer())
 
 		self.storer_printer.prt("Done. Saving classifiers...")
 

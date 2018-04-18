@@ -191,7 +191,7 @@ class StateDao(object):
 			self._printer.prt("Flush blocked - log already has {:,} entries (set maximum: {:,})."
 				.format(self._current_total_entries, self._max_entries_total))
 
-			raise MaximumReachedError()
+			raise self.MaximumReachedError()
 
 		time_now = time.time()
 
@@ -443,14 +443,14 @@ class StateDao(object):
 		return current_count >= self._max_entries_total
 
 
-### Exception class ###
+	### Exception class ###
 
 
-class MaximumReachedError(Exception):
-	""" Thrown when the set maximum number of entries has been reached and more are added. """
-	def __init__(self):
-		""" Ctor """
-		Exception.__init__(self)
+	class MaximumReachedError(Exception):
+		""" Thrown when the set maximum number of entries has been reached and more are added. """
+		def __init__(self):
+			""" Ctor """
+			Exception.__init__(self)
 
 
 

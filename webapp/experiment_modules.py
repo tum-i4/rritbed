@@ -3,7 +3,7 @@
 # pylint: disable-msg=R0903; (Too few public methods)
 
 
-class SubmoduleInterface(object):
+class ModuleInterface(object):
 	""" Interface for all submodules. """
 
 	@staticmethod
@@ -12,7 +12,7 @@ class SubmoduleInterface(object):
 		raise NotImplementedError
 
 
-class AllVsSpecSvmVsIso(SubmoduleInterface):
+class AllVsSpecSvmVsIso(ModuleInterface):
 	"""
 	Experiment:
 	Classifier trained on all vs specialised classifiers,

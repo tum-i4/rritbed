@@ -306,13 +306,13 @@ def reservoir_sample(item_generator, sample_size):
 
 	reservoir = []
 	index = 0
-	for log_entry in item_generator:
+	for item in item_generator:
 		if index < sample_size:
-			reservoir.append(log_entry)
+			reservoir.append(item)
 		else:
 			m = random.randint(0, index)
 			if m < sample_size:
-				reservoir[m] = log_entry
+				reservoir[m] = item
 
 		index += 1
 

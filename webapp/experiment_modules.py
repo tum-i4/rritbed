@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" Runnable experiments. All respect the ModuleInterface interface. """
 
 # pylint: disable-msg=R0903; (Too few public methods)
 

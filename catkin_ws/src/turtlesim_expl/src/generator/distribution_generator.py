@@ -4,8 +4,6 @@
 from collections import namedtuple
 import numpy
 
-from argument_constraint import ArgumentConstraint
-
 
 class DistributionGenerator(object):
 	""" Container class for distribution parameters """

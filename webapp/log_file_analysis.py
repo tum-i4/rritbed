@@ -3,7 +3,6 @@
 
 import md5
 import os
-import statistics as stat
 
 from log_entry import LogEntry
 import util.fmtr

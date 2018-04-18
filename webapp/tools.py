@@ -2,7 +2,6 @@
 """ Tools for command-line interaction with the server """
 
 import argparse
-import md5
 import os
 import statistics as stat
 import sys
@@ -439,15 +438,15 @@ def _init_file_handle(path):
 
 def sample_call(args):
 	""" Unpack the args and call _sample.
-	Expects 'file_path' and 'number_of_elements'. """
+	Expects 'file_path' and 'number_of_elements', optionally 'limit_to'. """
 
 	if not args.file_path or not args.number_of_elements:
 		raise RuntimeError("Missing arg!")
 
-	_sample(args.file_path, args.number_of_elements)
+	_sample(args.file_path, args.number_of_elements, args.limit_to)
 
 
-def _sample(file_path, number_of_elements):
+def _sample(file_path, number_of_elements, limit_to):
 	""" Sample <number_of_elements> from the given file. """
 
 	print("Sampling...")
@@ -457,12 +456,15 @@ def _sample(file_path, number_of_elements):
 	if not os.path.lexists(file_path) or os.path.lexists(target_file_path):
 		raise IOError("Input file doesn't OR output file does exist")
 
-	log_line_generator = (
-		line
-		for line
-		in ids_tools.reservoir_sample(Dir.yield_lines(file_path), number_of_elements)
-	)
-	Dir.write_lines(target_file_path, log_line_generator)
+	line_generator = Dir.yield_lines(file_path)
+
+	log_lines = None
+	if limit_to is None:
+		log_lines = ids_tools.reservoir_sample(line_generator, number_of_elements)
+	else:
+		log_lines = ids_tools.reservoir_sample_limit(line_generator, number_of_elements, limit_to)
+
+	Dir.write_lines(target_file_path, log_lines)
 
 	print("Done. Wrote to file:\n%s" % target_file_path)
 
@@ -651,6 +653,8 @@ if __name__ == "__main__":
 		SAMPLE_PARSER.add_argument("file_path", metavar="PATH")
 		SAMPLE_PARSER.add_argument("number_of_elements", type=int,
 			help="Sample size. Needs to be smaller than the available lines in the given file.")
+		SAMPLE_PARSER.add_argument("--limit-to", "-l", nargs="+", choices=ids_data.get_app_ids(),
+			help="Only sample entries of the given data type(s).")
 		SAMPLE_PARSER.set_defaults(function=sample_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")

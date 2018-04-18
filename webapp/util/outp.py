@@ -61,7 +61,7 @@ def print_time_passed_message(time_passed, task_name=None):
 	message = "Finished "
 	if task_name is not None:
 		message += "task '%s'" % task_name
-	message += "in %s" % fmtr.format_time_passed(time_expired)
+	message += "in %s" % fmtr.format_time_passed(time_passed)
 	print(message)
 
 

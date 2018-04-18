@@ -4,7 +4,6 @@
 import argparse
 import md5
 import os
-import random
 import statistics as stat
 import sys
 import time
@@ -21,6 +20,7 @@ import util.fmtr
 import util.outp
 import util.prtr
 import util.seqr
+import util.stat
 from ids.dir_utils import Dir, ModelDir
 from ids.intrusion_classifier import IntrusionClassifier
 from ids.ids_converter import IdsConverter
@@ -71,7 +71,7 @@ def _train_entries(log_entry_generator, squelch_output=False):
 		clas.train(log_entry_generator, squelch_output=squelch_output)
 		return True
 	except ValueError as val_err:
-		print(val_err.message)
+		print(val_err)
 		return False
 
 
@@ -123,7 +123,7 @@ def _score_entries(log_entries, squelch_output=False):
 		result = clas.score(log_entries, do_return=True, squelch_output=squelch_output)
 		return result
 	except ValueError as val_err:
-		print(val_err.message)
+		print(val_err)
 		return None
 
 
@@ -295,7 +295,7 @@ def _print_scores(scores, printer, headline="Results"):
 			row = scores[app_id]
 			result_table.append([
 				app_id,
-				util.fmtr.format_percentage(util.seqr.avg(row)),
+				util.fmtr.format_percentage(util.stat.avg(row)),
 				round(stat.variance([x * 100 for x in row]), 2),
 				"",
 				", ".join([util.fmtr.format_percentage(x, pad_spaces=True) for x in row])
@@ -341,7 +341,7 @@ def _split_in_train_and_score(log_entry_generator, file_path, split):
 		_save_entries_flow(training_entries, training_file_path)
 		_save_entries_flow(scoring_entries, scoring_file_path)
 	except IOError as io_err:
-		print(io_err.message)
+		print(io_err)
 		return
 
 	print("Split was finished successfully!")
@@ -385,7 +385,7 @@ def _split_per_app_id(log_entry_generator, file_path, max_per_file=1000000):
 			file_handles[app_id].write(log_entry.get_log_string() + "\n")
 			entry_counts[app_id] += 1
 	except IOError as io_err:
-		print(io_err.message)
+		print(io_err)
 		return
 	finally:
 		for file_handle in file_handles.values():

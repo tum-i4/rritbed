@@ -18,7 +18,7 @@ from state_dao import StateDao
 from ids.live_ids import LiveIds
 from functionality.country_code_mapper import CountryCodeMapper
 from functionality.poi_mapper import PoiMapper
-from functionality.tsp_routing_mapper import TspRoutingMapper
+from functionality.routing_mapper import RoutingMapper
 import util.fmtr
 
 
@@ -140,7 +140,7 @@ def get_tsp_routing():
 	app_id = "TSPROUTING"
 	position = _get_position_string(crd_x, crd_y)
 
-	tsp_message = TspRoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
+	tsp_message = RoutingMapper.map(crd_x, crd_y, targ_x, targ_y)
 
 	tsp_log_entry = _create_base_log_entry(request.params.vin)
 

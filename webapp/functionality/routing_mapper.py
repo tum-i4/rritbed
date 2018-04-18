@@ -3,7 +3,7 @@
 
 from functionality.mapper_base import MapperBase
 
-class TspRoutingMapper(MapperBase):
+class RoutingMapper(MapperBase):
 	""" Mapping position and target to some TSP route """
 
 	@staticmethod

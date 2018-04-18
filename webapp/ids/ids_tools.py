@@ -301,6 +301,26 @@ def get_test_size(percentage_intruded):
 ### Sampling ###
 
 
+def reservoir_sample_limit(item_generator, sample_size, limit_to):
+	"""
+	Sample with 'Reservoir Sampling' from the given generator the given number of elements.
+	*limit_to: List of data types to limit to.
+	"""
+
+	if any([l not in ids_data.get_app_ids() for l in limit_to]):
+		raise ValueError("Given limits are invalid: %s" % limit_to)
+
+	limited_generator = (
+		line
+		for line
+		in item_generator
+		# Convert line to LogEntry, check that app_id is in the allowed limits
+		if log_entry_to_app_id(LogEntry.from_log_string(line)) in limit_to
+	)
+
+	return reservoir_sample(limited_generator, sample_size)
+
+
 def reservoir_sample(item_generator, sample_size):
 	""" Sample with 'Reservoir Sampling' from the given generator the given number of elements. """
 

@@ -18,7 +18,7 @@ class IntrusionDefinition(object):
 	}
 
 	# Check DistributionGenerator if these are correct
-	_BLUNT_INTRUSIONS = ["zeroes", "huge-error"]
+	_BLUNT_INTRUSIONS = ["off-value", "huge-error"]
 	_GENERATOR_INTRUSION_CHOICES = {
 		0 : _BLUNT_INTRUSIONS,
 		1 : _BLUNT_INTRUSIONS,

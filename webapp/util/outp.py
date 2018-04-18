@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Outputters """
 
+import fmtr
 import prtr
 
 
@@ -49,6 +50,22 @@ def print_table(list_of_lists, headline=None, col_sep=" | ", head_sep=True, prin
 
 	for i in range(1, len(lines_to_print)):
 		printer.prt(lines_to_print[i])
+
+
+### User info ###
+
+
+def print_time_passed_message(time_passed, task_name=None):
+	""" Print a message about how long a task took. """
+
+	message = "Finished "
+	if task_name is not None:
+		message += "task '%s'" % task_name
+	message += "in %s" % fmtr.format_time_passed(time_expired)
+	print(message)
+
+
+### Print shortcuts ###
 
 
 def exit_on_error(error_message):

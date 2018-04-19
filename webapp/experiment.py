@@ -249,8 +249,7 @@ class Experiment(object):
 
 		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
 		this_result = [
-			"Classifier: %s (%s)" % (name, classifier_name),
-			str(classifier),
+			"Classifier: %s (%s) | %s" % (name, classifier_name, self.classifier_str_oneline(classifier)),
 			"",
 			("%s Result | Accuracy: %s | Precision: %s | Recall: %s"
 				% (line_prefix, justed_value_str(accu), justed_value_str(prec), justed_value_str(reca))),
@@ -275,6 +274,12 @@ class Experiment(object):
 	def classifier_name(classifier):
 		""" Return a human-readable name for the given classifier. """
 		return type(classifier).__name__
+
+
+	@staticmethod
+	def classifier_str_oneline(classifier):
+		""" Return a one-line description for the given classifier. """
+		return str(classifier).replace("\n", "").replace("      ", " ")
 
 
 	### Persistence ###

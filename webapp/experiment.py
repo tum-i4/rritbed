@@ -296,17 +296,11 @@ class Experiment(object):
 		entry_file_path = os.path.join(self.experiment_dir_path, "used_entries")
 		result_file_path = os.path.join(self.experiment_dir_path, "result")
 		stdout_file_path = os.path.join(self.experiment_dir_path, "stdout")
-		other_file_paths = [entry_file_path, result_file_path, stdout_file_path]
-		classifiers_file_paths = []
-		for name, classifier, _ in self.classifier_results:
-			clf_name = "%s_%s" % (name, type(classifier).__name__.replace(" ", "_"))
-			clf_path = os.path.join(self.experiment_dir_path, clf_name)
-			while clf_path in classifiers_file_paths:
-				clf_path += "_"
-			classifiers_file_paths.append(clf_path)
+		classifiers_file_path = os.path.join(self.experiment_dir_path, "classifiers")
+		file_paths = [entry_file_path, result_file_path, stdout_file_path, classifiers_file_path]
 
-		if any([os.path.lexists(x) for x in other_file_paths + classifiers_file_paths]):
-			raise IOError("One of the files exists: %s" % (other_file_paths + classifiers_file_paths))
+		if any([os.path.lexists(x) for x in file_paths]):
+			raise IOError("One of the files exists: %s" % (file_paths))
 
 		self.storer_printer.prt("Data verified. Storing utilised entries...")
 
@@ -321,8 +315,8 @@ class Experiment(object):
 		self.storer_printer.prt("Done. Saving classifiers...")
 
 		# Save trained classifiers
-		for (_, classifier, _), its_path in zip(self.classifier_results, classifiers_file_paths):
-			sk_ext.joblib.dump(classifier, its_path)
+		classifier_lines = self.create_classifier_lines()
+		Dir.write_lines(classifiers_file_path, classifier_lines)
 
 		self.storer_printer.prt("Done. Saving result digest...")
 

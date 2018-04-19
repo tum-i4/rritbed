@@ -239,7 +239,7 @@ class Experiment(object):
 		table.append(["Pred (-)", fn, tn])
 		util.outp.print_table(table, printer=storer)
 
-		classifier_name = type(classifier).__name__
+		classifier_name = self.classifier_name(classifier)
 		line_prefix = ">>> [%s / %s] %s -" % (
 			util.fmtr.fit_string_in(name, 4),
 			util.fmtr.fit_string_in(classifier_name, 20),
@@ -269,6 +269,12 @@ class Experiment(object):
 		)
 
 		self.storer_printer.prt("\nEND FOR  >>> %s <<<" % app_id)
+
+
+	@staticmethod
+	def classifier_name(classifier):
+		""" Return a human-readable name for the given classifier. """
+		return type(classifier).__name__
 
 
 	### Persistence ###

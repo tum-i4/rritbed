@@ -343,6 +343,17 @@ class Experiment(object):
 		# return (test_set, score_set, classifier, result)
 
 
+	def create_classifier_lines(self):
+		""" Create an overview of the utilised classifiers. """
+
+		lines = ["Name | Classifier"]
+		for name, classifier, _ in self.classifier_results:
+			lines.append("%s | %s"
+				% (util.fmtr.fit_string_in(name, 4), self.classifier_str_oneline(classifier)))
+
+		return lines
+
+
 	def create_result_lines(self):
 		""" Create a human readable digest of the experiment. """
 

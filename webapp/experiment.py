@@ -128,8 +128,8 @@ class Experiment(object):
 
 		# Classify with all entries: training_entries
 		classifiers = [
-			sklearn.svm.OneClassSVM(),
-			sk_ens.IsolationForest()
+			sklearn.svm.OneClassSVM()
+			# sk_ens.IsolationForest()
 			# sk_nghb.LocalOutlierFactor()
 		]
 		for classifier in classifiers:
@@ -163,8 +163,8 @@ class Experiment(object):
 		X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
 
 		classifiers = [
-			sklearn.svm.OneClassSVM(),
-			sk_ens.IsolationForest()
+			sklearn.svm.OneClassSVM()
+			# sk_ens.IsolationForest()
 			# sk_nghb.LocalOutlierFactor()
 		]
 		for classifier in classifiers:

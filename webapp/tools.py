@@ -194,7 +194,7 @@ def _sample(file_path, number_of_elements, limit_to):
 
 
 def analyse_call(args):
-	""" Unpack the args and call _analyse.
+	""" Unpack the args and call log_file_analysis.analyse.
 	Expects 'file_path' and 'to_file'. """
 	log_file_analysis.analyse(args.file_path, args.to_file, util.prtr.Printer())
 
@@ -292,11 +292,11 @@ if __name__ == "__main__":
 			help="Only sample entries of the given data type(s).")
 		SAMPLE_PARSER.set_defaults(function=sample_call)
 
-		ANAL_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
-		ANAL_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
-		ANAL_PARSER.add_argument("--to-file", "-f", action="store_true",
+		ANALYSE_PARSER = SUBPARSERS.add_parser("analyse", help="Analyse existing log data")
+		ANALYSE_PARSER.add_argument("file_path", metavar="PATH", help="The file to analyse")
+		ANALYSE_PARSER.add_argument("--to-file", "-f", action="store_true",
 			help="Save the analysis to file.")
-		ANAL_PARSER.set_defaults(function=analyse_call)
+		ANALYSE_PARSER.set_defaults(function=analyse_call)
 
 		if len(sys.argv) == 1:
 			PARSER.print_help()

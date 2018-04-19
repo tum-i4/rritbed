@@ -202,13 +202,13 @@ def _train_and_score(file_path, folds, iterations=None):
 	_print_scores(scores, printer)
 
 
-def score_shit_call(args):
-	""" Unpack the args and call _score_shit.
+def score_pr_call(args):
+	""" Unpack the args and call _score_pr.
 	Expects 'file_path'. """
-	_score_shit(args.file_path)
+	_score_pr(args.file_path)
 
 
-def _score_shit(file_path):
+def _score_pr(file_path):
 
 	printer = util.prtr.Printer()
 	squelcher = util.prtr.Printer(squelch=True)
@@ -335,12 +335,6 @@ def _reset(classifier, server_log, reset_all):
 	print(message)
 
 
-def anal_call(args):
-	""" Unpack the args and call _analyse.
-	Expects 'file_path' and 'to_file'. """
-	log_file_analysis.analyse(args.file_path, args.to_file, util.prtr.Printer())
-
-
 def _read_file_flow(file_path, squelch_output=False):
 	""" Read up to 5000000 lines of the given file as LogEntry objects.
 	Updates the user about the progress. """
@@ -394,9 +388,9 @@ if __name__ == "__main__":
 		TRAINSCORE_PARSER.add_argument("--iterations", "-i", type=int)
 		TRAINSCORE_PARSER.set_defaults(function=train_score_call)
 
-		SHIT_PARSER = SUBPARSERS.add_parser("shit")
-		SHIT_PARSER.add_argument("file_path", metavar="PATH", help="The data")
-		SHIT_PARSER.set_defaults(function=score_shit_call)
+		SCOREPR_PARSER = SUBPARSERS.add_parser("score-pr")
+		SCOREPR_PARSER.add_argument("file_path", metavar="PATH", help="The data")
+		SCOREPR_PARSER.set_defaults(function=score_pr_call)
 
 		RESET_PARSER = SUBPARSERS.add_parser("reset", help="Reset the classifier")
 		RESET_PARSER.add_argument("--classifier", "-c", action="store_true")

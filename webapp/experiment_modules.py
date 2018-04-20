@@ -49,7 +49,6 @@ class OneHotVsLabelling(ModuleInterface):
 
 	@staticmethod
 	def run(experiment):
-		raise NotImplementedError()
 
 		log_entries = []
 
@@ -67,8 +66,6 @@ class OneHotVsLabelling(ModuleInterface):
 
 	@staticmethod
 	def handle_log_entries(name, converter, log_entries, experiment):
-
-		raise NotImplementedError()
 
 		ids_entry_dict = converter.log_entries_to_ids_entries_dict(log_entries, binary=True)
 

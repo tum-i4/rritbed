@@ -3,6 +3,8 @@
 
 # pylint: disable-msg=R0903, C0103; (Too few public methods, invalid name)
 
+import time
+
 import sklearn.ensemble as sk_ens
 import sklearn.svm as sk_svm
 
@@ -62,9 +64,24 @@ class OneHotVsLabelling(ModuleInterface):
 		experiment.entries = log_entries
 
 		# Exp 1: map
-		OneHotVsLabelling.handle_log_entries("MAP", OneHotVsMappingConverter(), log_entries, experiment)
+		time_before_map = time.time()
+		OneHotVsMapping.handle_log_entries("MAP", OneHotVsMappingConverter(), log_entries, experiment)
 		# Exp 2: one-hot
-		OneHotVsLabelling.handle_log_entries("OHOT", IdsConverter(), log_entries, experiment)
+		time_after_map_before_one_hot = time.time()
+		OneHotVsMapping.handle_log_entries("OHOT", IdsConverter(), log_entries, experiment)
+		time_after_all = time.time()
+
+		time_for_map = time_after_map_before_one_hot - time_before_map
+		time_for_one_hot = time_after_all - time_after_map_before_one_hot
+
+		timing_lines = [
+			"Benchmark result | %s entries processed | OneClassSVM classifier",
+			"",
+			"Mapping: %s" % util.fmtr.format_time_passed(time_for_map),
+			"One-hot: %s" % util.fmtr.format_time_passed(time_for_one_hot)
+		]
+
+		experiment.add_result_file("time_map_vs_onehot", timing_lines)
 
 
 	@staticmethod

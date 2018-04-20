@@ -43,7 +43,7 @@ def verify_ids_entries(ids_entries, app_id, printer):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
 
-class OneHotVsLabelling(ModuleInterface):
+class OneHotVsMapping(ModuleInterface):
 	"""
 	Experiment:
 	Classifier trained with one-hot encoding

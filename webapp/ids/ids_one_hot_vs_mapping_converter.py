@@ -11,7 +11,7 @@ import ids_tools
 class OneHotVsMappingConverter(IdsConverter):
 
 	def __init__(self):
-		super(OneHotVsMappingConverter, self).__init__(self)
+		super(OneHotVsMappingConverter, self).__init__()
 
 
 	@staticmethod

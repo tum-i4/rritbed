@@ -86,6 +86,7 @@ class OneHotVsMapping(ModuleInterface):
 
 	@staticmethod
 	def handle_log_entries(name, converter, log_entries, experiment):
+		""" Handle the given log entries by converting them with the given converter and then scoring. """
 
 		ids_entry_dict = converter.log_entries_to_ids_entries_dict(log_entries, binary=True)
 

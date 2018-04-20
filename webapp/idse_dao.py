@@ -65,8 +65,8 @@ def yield_entries(file_path, limit=None):
 
 def save_entries(file_path, entry_generator):
 	"""
-	Store the entries as a IDSE file.
-	returns: The file path which was stored to.
+	Store the entries as a file. IDS entries in IDSE files, log entries as log files.
+	returns: The file path in which the file was saved.
 	"""
 
 	entries_list = list(entry_generator)

@@ -85,68 +85,6 @@ class Experiment(object):
 		self.store_experiment()
 
 
-	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
-		""" Score, print. """
-
-		self.storer_printer.prt("\nSCORE FOR >>> %s <<<" % app_id)
-
-		accu = sk_metr.accuracy_score(y_true, y_pred)
-		prec = sk_metr.precision_score(y_true, y_pred)
-		reca = sk_metr.recall_score(y_true, y_pred)
-
-		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
-
-		storer = util.prtr.Storer()
-
-		table = []
-		table.append(["", "Actual (+)", "Actual (-)"])
-		table.append(["Pred (+)", tp, fp])
-		table.append(["Pred (-)", fn, tn])
-		util.outp.print_table(table, printer=storer)
-
-		classifier_name = self.classifier_name(classifier)
-		line_prefix = ">>> [%s / %s] %s -" % (
-			util.fmtr.fit_string_in(name, 4),
-			util.fmtr.fit_string_in(classifier_name, 20),
-			util.fmtr.fit_string_in(app_id, 12))
-
-		justed_value_str = lambda x: (util.fmtr.fit_string_in("{:.12f}".format(x), 15)).replace(".", ",")
-
-		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
-		this_result = [
-			"Classifier: %s (%s) | %s" % (name, classifier_name, self.classifier_str_oneline(classifier)),
-			"",
-			("%s Result | Accuracy: %s | Precision: %s | Recall: %s"
-				% (line_prefix, justed_value_str(accu), justed_value_str(prec), justed_value_str(reca))),
-			"%s Confusion matrix:" % line_prefix
-		]
-
-		table_lines = [line for line in storer.get_messages() if line != ""]
-
-		this_result.extend(table_lines)
-
-		self.storer_printer.prt("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
-		storer.printout(purge=True)
-
-		self.classifier_results.append(
-			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
-		)
-
-		self.storer_printer.prt("\nEND FOR  >>> %s <<<" % app_id)
-
-
-	@staticmethod
-	def classifier_name(classifier):
-		""" Return a human-readable name for the given classifier. """
-		return type(classifier).__name__
-
-
-	@staticmethod
-	def classifier_str_oneline(classifier):
-		""" Return a one-line description for the given classifier. """
-		return str(classifier).replace("\n", "").replace("      ", " ")
-
-
 	### Persistence ###
 
 
@@ -243,7 +181,58 @@ class Experiment(object):
 		return result
 
 
-	### Helpers ###
+	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
+		""" Score, print. """
+
+		self.storer_printer.prt("Finished [%s] for app_id [%s] and classifier [%s]"
+			% (name, app_id, self.classifier_name(classifier)))
+
+		accu = sk_metr.accuracy_score(y_true, y_pred)
+		prec = sk_metr.precision_score(y_true, y_pred)
+		reca = sk_metr.recall_score(y_true, y_pred)
+
+		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
+
+		storer = util.prtr.Storer()
+
+		table = []
+		table.append(["", "Actual (+)", "Actual (-)"])
+		table.append(["Pred (+)", tp, fp])
+		table.append(["Pred (-)", fn, tn])
+		util.outp.print_table(table, printer=storer)
+
+		classifier_name = self.classifier_name(classifier)
+		line_prefix = ">>> [%s / %s] %s -" % (
+			util.fmtr.fit_string_in(name, 4),
+			util.fmtr.fit_string_in(classifier_name, 20),
+			util.fmtr.fit_string_in(app_id, 12))
+
+		justed_value_str = lambda x: (util.fmtr.fit_string_in("{:.12f}".format(x), 15)).replace(".", ",")
+
+		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
+		this_result = [
+			"Classifier: %s (%s) | %s" % (name, classifier_name, self.classifier_str_oneline(classifier)),
+			"",
+			("%s Result | Accuracy: %s | Precision: %s | Recall: %s"
+				% (line_prefix, justed_value_str(accu), justed_value_str(prec), justed_value_str(reca))),
+			"%s Confusion matrix:" % line_prefix
+		]
+
+		table_lines = [line for line in storer.get_messages() if line != ""]
+
+		this_result.extend(table_lines)
+
+		self.storer_printer.prt("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
+		storer.printout(purge=True)
+
+		self.classifier_results.append(
+			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
+		)
+
+		self.storer_printer.prt("\nEND FOR  >>> %s <<<" % app_id)
+
+
+	### Interface for experiment modules ###
 
 
 	def read_convert(self, file_path):
@@ -255,6 +244,21 @@ class Experiment(object):
 		ids_entries_dict = converter.ids_entries_to_dict(self.ids_entries)
 
 		return ids_entries_dict
+
+
+	### Helpers ###
+
+
+	@staticmethod
+	def classifier_name(classifier):
+		""" Return a human-readable name for the given classifier. """
+		return type(classifier).__name__
+
+
+	@staticmethod
+	def classifier_str_oneline(classifier):
+		""" Return a one-line description for the given classifier. """
+		return str(classifier).replace("\n", "").replace("      ", " ")
 
 
 

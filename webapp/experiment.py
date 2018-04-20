@@ -116,10 +116,10 @@ class Experiment(object):
 		# Create new file with my entries
 		# saved_path = idse_dao.save_entries(entry_file_path, self.entries)
 
-		self.storer_printer.prt("Done. Analysing file...")
+		# self.storer_printer.prt("Done. Analysing file...")
 
 		# Analyse that file
-		log_file_analysis.analyse(saved_path, to_file=True, output_printer=util.prtr.Storer())
+		# log_file_analysis.analyse(saved_path, to_file=True, output_printer=util.prtr.Storer())
 
 		self.storer_printer.prt("Done. Saving classifiers...")
 

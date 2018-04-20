@@ -177,8 +177,10 @@ def _sample(file_path, number_of_elements, limit_to):
 
 	target_file_path = "%s_%s-sample" % (file_path, number_of_elements)
 
-	if not os.path.lexists(file_path) or os.path.lexists(target_file_path):
-		raise IOError("Input file doesn't OR output file does exist")
+	if not os.path.lexists(file_path):
+		raise IOError("Input file doesn't exist")
+
+	target_file_path = Dir.uniquify(target_file_path)
 
 	line_generator = Dir.yield_lines(file_path)
 

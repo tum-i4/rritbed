@@ -1,26 +1,18 @@
 #!/usr/bin/env python
 """ The Experiment class and program. """
 
-# pylint: disable-msg=C0103; (Invalid name)
-
 import argparse
 import os
 import random
 import time
 from collections import namedtuple
 
-import sklearn
-import sklearn.ensemble as sk_ens
-import sklearn.externals as sk_ext
 import sklearn.metrics as sk_metr
 
 import experiment_modules
-import ids.ids_tools as ids_tools
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
-from ids.ids_entry import IdsEntry
 import idse_dao
-from log_entry import LogEntry
 import log_file_analysis
 import util.fmtr
 import util.outp
@@ -78,146 +70,19 @@ class Experiment(object):
 			self.experiment_dir_path = Dir.uniquify(self.experiment_dir_path)
 
 
-	### Workers ###
+	### Running, storing ###
 
 
 	def run(self):
 		""" Read entries, convert them, split them per app_id and call b() for each app. """
 
-		# Prerequisites: I could have loaded from a folder
-		# raise NotImplementedError()
+		# TODO Prerequisites: I could have loaded from a folder
 
-		# TODO TEMP?
-		self.storer_printer.prt("Scoring classifier trained with all samples...")
-		self.handle_all(self.file_path)
+		experiment_modules.AllVsSpecSvmVsIso.run(self)
 
-		self.storer_printer.prt("Done. Reading file and converting...")
-		# ids_entries: { app_id, vector, my_class }
-		ids_entries_dict = self.read_convert(self.file_path)
-
-		self.storer_printer.prt("Done. Scoring individual classifier...")
-		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entries_dict):
-			self.handle_app(app_id, ids_entries)
+		self.ensure_valid_state()
 
 		self.store_experiment()
-
-
-	def handle_all(self, file_path):
-		""" Full flow for a one-fits-all classifier. """
-
-		self.storer_printer.prt("ALLLLLLLL\n\n")
-
-		from ids.TEMP_IDS_CONVERTER import IdsConverter as TEMPCONVERTER
-		converter = TEMPCONVERTER()
-		log_entries = []
-
-		for line in Dir.yield_lines(file_path, ITEM_LIMIT):
-			log_entry = LogEntry.from_log_string(line)
-			log_entries.append(log_entry)
-
-		all_entries = converter.LOG_ENTRIES_TO_IDS_ENTRIES(log_entries, binary=True)
-
-		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
-		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)
-
-		scoring_dict = {}
-		for ids_entry in scoring_entries:
-			if ids_entry.app_id not in scoring_dict:
-				scoring_dict[ids_entry.app_id] = []
-			scoring_dict[ids_entry.app_id].append(ids_entry)
-
-		# Classify with all entries: training_entries
-		classifiers = [
-			# sklearn.svm.OneClassSVM()
-			sk_ens.IsolationForest()
-			# sk_nghb.LocalOutlierFactor()
-		]
-		for classifier in classifiers:
-			classifier.fit(X_train)
-
-		# Score for each app: scoring_dict
-		for app_id, app_entries in util.seqr.yield_items_in_key_order(scoring_dict):
-			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
-			y_preds = [clf.predict(X_test) for clf in classifiers]
-			for clf, y_pred in zip(classifiers, y_preds):
-				self.visualise_store("ALL", app_id, clf, y_true, y_pred)
-
-		self.storer_printer.prt("\n\nDONNNNNNEEEE\n\n")
-
-
-	def handle_app(self, app_id, ids_entries):
-		""" Full flow for one classifier. """
-
-		if not ids_entries:
-			self.storer_printer.prt("No input data for {}".format(app_id))
-			return
-
-		if not isinstance(ids_entries[0], IdsEntry):
-			raise TypeError("Given list does not contain IdsEntry objects.")
-
-		# ids_entries = ids_tools.straighten_dataset_for_app(ids_entries)
-
-		# TODO TEMP FOR ONE-V-ALL
-		training, scoring = ids_tools.ids_entries_to_train_test(ids_entries)
-		X_train, _ = IdsConverter.ids_entries_to_X_y(training)
-		X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
-
-		classifiers = [
-			# sklearn.svm.OneClassSVM()
-			sk_ens.IsolationForest()
-			# sk_nghb.LocalOutlierFactor()
-		]
-		for classifier in classifiers:
-			classifier.fit(X_train)
-			y_pred = classifier.predict(X_test)
-			self.visualise_store("SPEC", app_id, classifier, y_true, y_pred)
-
-		# END TODO
-
-		# self.storer_printer.prt("\n\t::: %s :::\n" % app_id)
-
-		# # TODO
-		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
-		# 	lambda x: x,
-		# 	sklearn.svm.OneClassSVM(),
-		# 	printer)
-
-		# name = "IF"
-		# n_est = 100
-		# max_sampl = 256
-		# self.storer_printer.prt("\n\t> %s - n_est: %s, max_sampl: %s" % (name, n_est, max_sampl))
-		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
-		# 	lambda x: x,
-		# 	sk_ens.IsolationForest(n_estimators=n_est, max_samples=max_sampl, n_jobs=-1, random_state=0),
-		# 	printer)
-
-		# _, _ = self.preprocess_fit_score(app_id, ids_entries,
-		# 	lambda x: sk_pre.scale(x),
-		# 	sklearn.svm.OneClassSVM(),
-		# 	printer)
-
-
-	def preprocess_fit_score(self, app_id, ids_entries, preprocessor, classifier):
-		""" Use the given preprocessor on the data, classify it with the given classifier and score. """
-
-		converter = IdsConverter()
-		X, y = converter.ids_entries_to_X_y(ids_entries, app_id)
-
-		self.storer_printer.prt("Preprocessing... ", newline=False)
-		X = preprocessor(X)
-
-		self.storer_printer.prt("Splitting... ", newline=False)
-		X_train, _, X_test, y_true = ids_tools.X_y_to_train_test(X, y)
-
-		self.storer_printer.prt("Fitting... ", newline=False)
-		classifier.fit(X_train)
-
-		self.storer_printer.prt("Predicting... ")
-		y_pred = classifier.predict(X_test)
-
-		self.visualise_store(app_id, app_id, classifier, y_true, y_pred)
-
-		return (y_true, y_pred)
 
 
 	def visualise_store(self, name, app_id, classifier, y_true, y_pred):

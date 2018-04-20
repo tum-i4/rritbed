@@ -63,34 +63,40 @@ def yield_entries(file_path, limit=None):
 		raise NotImplementedError("File type not implemented: %s" % file_type)
 
 
-def save_entries(file_path, ids_entry_generator):
+def save_entries(file_path, entry_generator):
 	"""
 	Store the entries as a IDSE file.
 	returns: The file path which was stored to.
 	"""
 
-	file_path_full = add_idse_extension(file_path)
+	entries_list = list(entry_generator)
+	first_entry = entries_list[0]
+
+	# Where to store?
+	file_path_full = None
+	# What to store?
+	lines = None
+	# How to convert?
+	to_line = None
+
+	# LogEntry objects: No extension, no header, call entry.get_log_string()
+	if isinstance(first_entry, LogEntry):
+		file_path_full = file_path
+		lines = []
+		to_line = lambda l: l.get_log_string()
+	# IdsEntry objects: IDSE extension, IDSE header and run _ids_entry_to_idse_string(entry)
+	elif isinstance(first_entry, IdsEntry):
+		file_path_full = add_idse_extension(file_path)
+		lines = [HEADER]
+		to_line = _ids_entry_to_idse_string
+	else:
+		raise TypeError("[IDSE DAO] Given elements are neither LogEntry nor IdsEntry objects!")
 
 	if os.path.lexists(file_path_full):
 		_raise_file_exists(file_path_full)
 
-	if isinstance(ids_entry_generator, list):
-		ids_entry_generator = (x for x in ids_entry_generator)
-
-	first_entry = ids_entry_generator.next()
-
-	if not isinstance(first_entry, IdsEntry):
-		raise TypeError("Given elements are no IdsEntry objects!")
-
-	lines = [
-		HEADER,
-		_ids_entry_to_idse_string(first_entry)
-	]
-
-	for ids_entry in ids_entry_generator:
-		line = _ids_entry_to_idse_string(ids_entry)
-		lines.append(line)
-
+	# Actual entry -> string conversion
+	lines.extend([to_line(e) for e in entries_list])
 	Dir.write_lines(file_path_full, lines)
 
 	return file_path_full

@@ -72,9 +72,9 @@ class OneHotVsLabelling(ModuleInterface):
 
 		ids_entry_dict = converter.log_entries_to_ids_entries_dict(log_entries, binary=True)
 
-		first = ids_entry_dict.items()[0][0]
+		first = ids_entry_dict.items()[0][1]
 		experiment.storer_printer.prt("I am %s, and my first entry looks like:" % name)
-		experiment.storer_printer.prt("%s" % first)
+		experiment.storer_printer.prt("%s" % (first.app_id, first.vector))
 
 		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entry_dict):
 			verify_ids_entries(ids_entries, app_id, experiment.storer_printer)

@@ -112,9 +112,9 @@ class Experiment(object):
 		file_paths = [entry_file_path, result_file_path, stdout_file_path, classifiers_file_path]
 		other_result_files_paths = []
 		for file_name, _ in self.other_result_files:
-			othres_path = os.path.join(self.experiment_dir_path, file_name)
-			othres_path = Dir.uniquify(othres_path)
-			other_result_files_paths.append(othres_path)
+			oth_res_path_creation = os.path.join(self.experiment_dir_path, file_name)
+			oth_res_path_creation = Dir.uniquify(oth_res_path_creation)
+			other_result_files_paths.append(oth_res_path_creation)
 
 		if any([os.path.lexists(x) for x in file_paths + other_result_files_paths]):
 			raise IOError("One of the files exists: %s" % (file_paths + other_result_files_paths))
@@ -143,8 +143,8 @@ class Experiment(object):
 
 		if self.other_result_files:
 			self.storer_printer.prt("Done. Saving %s other results..." % len(self.other_result_files))
-			for othres_path, (_, othres_lines) in zip(other_result_files_paths, self.other_result_files):
-				Dir.write_lines(othres_path, othres_lines)
+			for oth_res_path, (_, oth_res_lines) in zip(other_result_files_paths, self.other_result_files):
+				Dir.write_lines(oth_res_path, oth_res_lines)
 
 		self.storer_printer.prt("Done!")
 		self.storer_printer.prt("Experiment stored in: %s" % self.experiment_dir_path)
@@ -293,8 +293,8 @@ if __name__ == "__main__":
 
 		ARGS = PARSER.parse_args()
 
-		experiment = Experiment(ARGS.file_path, ARGS.store)
-		experiment.run()
+		EXPERIMENT = Experiment(ARGS.file_path, ARGS.store)
+		EXPERIMENT.run()
 
 		exit()
 	except KeyboardInterrupt:

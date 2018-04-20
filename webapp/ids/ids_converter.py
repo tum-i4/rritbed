@@ -422,7 +422,7 @@ class IdsConverter(object):
 		"""
 
 		# For expected country codes, see web_api.functionality.country_code_mapper
-		expected_cc = ["AT", "CH", "DE", "FR", "IT"]
+		expected_cc = ids_data.get_country_codes()
 		ids_tools.verify_md5(expected_cc, "b1d9e303bda676c3c6a61dc21e1d07c3")
 
 		encodings = IdsConverter.generic_one_hot(expected_cc, country_codes)

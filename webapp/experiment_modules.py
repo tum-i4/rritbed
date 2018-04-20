@@ -75,7 +75,7 @@ class OneHotVsMapping(ModuleInterface):
 		time_for_one_hot = time_after_all - time_after_map_before_one_hot
 
 		timing_lines = [
-			"Benchmark result | %s entries processed | OneClassSVM classifier",
+			"Benchmark result | %s entries processed | OneClassSVM classifier" % len(log_entries),
 			"",
 			"Mapping: %s" % util.fmtr.format_time_passed(time_for_map),
 			"One-hot: %s" % util.fmtr.format_time_passed(time_for_one_hot)

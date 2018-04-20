@@ -57,7 +57,7 @@ class OneHotVsMappingConverter(IdsConverter):
 			country_code_mapping = ids_tools.enumerate_to_dict(
 				ids_data.get_country_codes(),
 				verify_hash="8ef55ff8ba5ce289a3d2a689edbaa423")
-			mapped = [country_code_mapping[c] for c in log_messages]
+			mapped = [[country_code_mapping[c]] for c in log_messages]
 			return numpy.array(mapped)
 
 		# "type,result" -> 1,7

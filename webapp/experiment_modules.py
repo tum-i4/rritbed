@@ -23,6 +23,23 @@ class ModuleInterface(object):
 		raise NotImplementedError
 
 
+### Module helpers ###
+
+
+def verify_ids_entries(ids_entries, app_id, printer):
+	""" Check for content and type. """
+
+	if not ids_entries:
+		printer.prt("No input data for {}".format(app_id))
+		return
+
+	if not isinstance(ids_entries[0], IdsEntry):
+		raise TypeError("Given list does not contain IdsEntry objects.")
+
+
+### Experiments ###
+
+
 class AllVsSpecSvmVsIso(ModuleInterface):
 	"""
 	Experiment:
@@ -89,12 +106,7 @@ class AllVsSpecSvmVsIso(ModuleInterface):
 	def handle_app(app_id, ids_entries, experiment):
 		""" Full flow for one classifier. """
 
-		if not ids_entries:
-			experiment.storer_printer.prt("No input data for {}".format(app_id))
-			return
-
-		if not isinstance(ids_entries[0], IdsEntry):
-			raise TypeError("Given list does not contain IdsEntry objects.")
+		verify_ids_entries(ids_entries, app_id, experiment.storer_printer)
 
 		training, scoring = ids_tools.ids_entries_to_train_test(ids_entries)
 		X_train, _ = IdsConverter.ids_entries_to_X_y(training)

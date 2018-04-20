@@ -111,10 +111,10 @@ class Experiment(object):
 		if any([os.path.lexists(x) for x in file_paths]):
 			raise IOError("One of the files exists: %s" % (file_paths))
 
-		self.storer_printer.prt("Data verified. Storing utilised entries...")
+		# self.storer_printer.prt("Data verified. Storing utilised entries...")
 
 		# Create new file with my entries
-		saved_path = idse_dao.save_entries(entry_file_path, self.entries)
+		# saved_path = idse_dao.save_entries(entry_file_path, self.entries)
 
 		self.storer_printer.prt("Done. Analysing file...")
 

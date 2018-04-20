@@ -43,6 +43,8 @@ class AllVsSpecSvmVsIso(ModuleInterface):
 		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entries_dict):
 			AllVsSpecSvmVsIso.handle_app(app_id, ids_entries, experiment)
 
+		experiment.storer_printer.prt("Done.")
+
 
 	@staticmethod
 	def handle_all(experiment):

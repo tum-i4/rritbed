@@ -191,6 +191,7 @@ class Experiment(object):
 		prec = sk_metr.precision_score(y_true, y_pred)
 		reca = sk_metr.recall_score(y_true, y_pred)
 
+		# pylint: disable-msg=C0103; (Invalid name)
 		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
 		storer = util.prtr.Storer()
@@ -222,14 +223,11 @@ class Experiment(object):
 
 		this_result.extend(table_lines)
 
-		self.storer_printer.prt("PREC: %s, RECC: %s, ACCU: %s" % (prec, reca, accu))
-		storer.printout(purge=True)
+		self.storer_printer.prt("> Precision: %s | Recall: %s | Accuracy: %s" % (prec, reca, accu))
 
 		self.classifier_results.append(
 			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
 		)
-
-		self.storer_printer.prt("\nEND FOR  >>> %s <<<" % app_id)
 
 
 	### Interface for experiment modules ###

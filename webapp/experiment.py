@@ -25,6 +25,7 @@ EXPERIMENTS_HOME = "experiments"
 
 
 ClassifierResultGroup = namedtuple("ClassifierResultGroup", "name classifier result")
+ResultFileGroup = namedtuple("ResultFileGroup", "file_name lines")
 
 
 class Experiment(object):
@@ -44,6 +45,8 @@ class Experiment(object):
 		self.entries = []
 		# ClassifierResultGroup objects (name, classifier, result)
 		self.classifier_results = []
+		# OtherResult objects (file_name lines)
+		self.other_result_files = []
 
 		# StorerAndPrinter - stores and prints ;)
 		time_printer = util.prtr.TimePrinter(name="exp")
@@ -237,6 +240,12 @@ class Experiment(object):
 		self.classifier_results.append(
 			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
 		)
+
+
+	def add_result_file(self, file_name, lines):
+		""" Add an arbitrary result file to the result file list. """
+
+		self.other_result_files.append(ResultFileGroup(file_name=file_name, lines=lines))
 
 
 	def read_convert(self, file_path):

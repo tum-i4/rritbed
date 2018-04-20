@@ -70,7 +70,7 @@ class Experiment(object):
 			self.experiment_dir_path = Dir.uniquify(self.experiment_dir_path)
 
 
-	### Running, storing ###
+	### Running, verifying ###
 
 
 	def run(self):
@@ -79,10 +79,15 @@ class Experiment(object):
 		# TODO Prerequisites: I could have loaded from a folder
 
 		experiment_modules.AllVsSpecSvmVsIso.run(self)
-
 		self.ensure_valid_state()
-
 		self.store_experiment()
+
+
+	def ensure_valid_state(self):
+		""" Verify that a run experiment module correctly set the internal state. """
+
+		if not self.ids_entries or not self.classifier_results:
+			raise ValueError("Experiment module did not store any results.")
 
 
 	### Persistence ###
@@ -181,6 +186,9 @@ class Experiment(object):
 		return result
 
 
+	### Interface for experiment modules ###
+
+
 	def visualise_store(self, name, app_id, classifier, y_true, y_pred):
 		""" Score, print. """
 
@@ -228,9 +236,6 @@ class Experiment(object):
 		self.classifier_results.append(
 			ClassifierResultGroup(name=name, classifier=classifier, result=this_result)
 		)
-
-
-	### Interface for experiment modules ###
 
 
 	def read_convert(self, file_path):

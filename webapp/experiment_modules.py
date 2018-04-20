@@ -62,9 +62,9 @@ class OneHotVsLabelling(ModuleInterface):
 		experiment.entries = log_entries
 
 		# Exp 1: map
-		OneHotVsLabelling.handle_log_entries("MAP", IdsConverter(), log_entries, experiment)
+		OneHotVsLabelling.handle_log_entries("MAP", OneHotVsMappingConverter(), log_entries, experiment)
 		# Exp 2: one-hot
-		OneHotVsLabelling.handle_log_entries("OHOT", OneHotVsMappingConverter(), log_entries, experiment)
+		OneHotVsLabelling.handle_log_entries("OHOT", IdsConverter(), log_entries, experiment)
 
 
 	@staticmethod

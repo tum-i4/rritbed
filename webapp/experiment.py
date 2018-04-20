@@ -110,9 +110,14 @@ class Experiment(object):
 		stdout_file_path = os.path.join(self.experiment_dir_path, "stdout")
 		classifiers_file_path = os.path.join(self.experiment_dir_path, "classifiers")
 		file_paths = [entry_file_path, result_file_path, stdout_file_path, classifiers_file_path]
+		other_result_files_paths = []
+		for file_name, _ in self.other_result_files:
+			othres_path = os.path.join(self.experiment_dir_path, file_name)
+			othres_path = Dir.uniquify(othres_path)
+			other_result_files_paths.append(othres_path)
 
-		if any([os.path.lexists(x) for x in file_paths]):
-			raise IOError("One of the files exists: %s" % (file_paths))
+		if any([os.path.lexists(x) for x in file_paths + other_result_files_paths]):
+			raise IOError("One of the files exists: %s" % (file_paths + other_result_files_paths))
 
 		# self.storer_printer.prt("Data verified. Storing utilised entries...")
 
@@ -135,6 +140,11 @@ class Experiment(object):
 		# Save the result
 		result_lines = self.create_result_lines()
 		Dir.write_lines(result_file_path, result_lines)
+
+		if self.other_result_files:
+			self.storer_printer.prt("Done. Saving %s other results..." % len(self.other_result_files))
+			for othres_path, (_, othres_lines) in zip(other_result_files_paths, self.other_result_files):
+				Dir.write_lines(othres_path, othres_lines)
 
 		self.storer_printer.prt("Done!")
 		self.storer_printer.prt("Experiment stored in: %s" % self.experiment_dir_path)

@@ -24,6 +24,10 @@ def get_app_ids():
 def get_levels():
 	return list([LogEntry.LEVEL_DEFAULT, LogEntry.LEVEL_ERROR])
 
+# Country codes
+def get_country_codes():
+	return list(["AT", "CH", "DE", "FR", "IT"])
+
 # POI types
 def get_legal_poi_types():
 	return list([PoMa.restaurants_field, PoMa.gas_stations_field])

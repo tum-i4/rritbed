@@ -13,6 +13,29 @@ class OneHotVsMappingConverter(IdsConverter):
 	def __init__(self):
 		super(OneHotVsMappingConverter, self).__init__()
 
+		## Verifier data ##
+		# 1 for a binarised level (only two options)
+		base_len = 1
+		self._len_key = "len"
+
+		self._vector_constraints = {}
+		# 1 value (generated)
+		for gen_key in ids_data.get_generators():
+			self._vector_constraints[gen_key] = {self._len_key : base_len + 1}
+		# 3 values for a split colour, 2 values for the position
+		for colr_key in ids_data.get_colours():
+			self._vector_constraints[colr_key] = {self._len_key : base_len + 5}
+		# Poses all have GPS
+		for pose_key in ids_data.get_poses():
+			self._vector_constraints[pose_key] = {self._len_key : base_len + 2}
+
+		# CC: One mapping
+		self._vector_constraints[ids_data.POSE_CC][self._len_key] += 1
+		# POI: Two mappings
+		self._vector_constraints[ids_data.POSE_POI][self._len_key] += 2
+		# TSP: x, y, targ_x, targ_y
+		self._vector_constraints[ids_data.POSE_TSP][self._len_key] += 4
+
 
 	def encode_log_messages(self, app_id, log_messages):
 		"""

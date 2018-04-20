@@ -8,6 +8,7 @@ import sklearn.svm as sk_svm
 
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
+from ids.ids_one_hot_vs_mapping_converter import OneHotVsMappingConverter
 from ids.ids_entry import IdsEntry
 import ids.ids_tools as ids_tools
 from log_entry import LogEntry
@@ -35,6 +36,57 @@ def verify_ids_entries(ids_entries, app_id, printer):
 
 	if not isinstance(ids_entries[0], IdsEntry):
 		raise TypeError("Given list does not contain IdsEntry objects.")
+
+
+class OneHotVsLabelling(ModuleInterface):
+	"""
+	Experiment:
+	Classifier trained with one-hot encoding
+	vs. classifier trained with labelling.
+	Regards app_ids:
+	"""
+
+
+	@staticmethod
+	def run(experiment):
+		raise NotImplementedError()
+
+		log_entries = []
+
+		for line in Dir.yield_lines(experiment.file_path, experiment.ITEM_LIMIT):
+			log_entry = LogEntry.from_log_string(line)
+			log_entries.append(log_entry)
+
+		experiment.entries = log_entries
+
+		# Exp 1: map
+		OneHotVsLabelling.handle_log_entries("MAP", IdsConverter(), log_entries, experiment)
+		# Exp 2: one-hot
+		OneHotVsLabelling.handle_log_entries("OHOT", OneHotVsMappingConverter(), log_entries, experiment)
+
+
+	@staticmethod
+	def handle_log_entries(name, converter, log_entries, experiment):
+
+		raise NotImplementedError()
+
+		ids_entry_dict = converter.log_entries_to_ids_entries_dict(log_entries, binary=True)
+
+		first = ids_entry_dict.items()[0][0]
+		experiment.storer_printer.prt("I am %s, and my first entry looks like:" % name)
+		experiment.storer_printer.prt("%s | %s" % (first.app_id, first.vector))
+
+		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entry_dict):
+			verify_ids_entries(ids_entries, app_id, experiment.storer_printer)
+
+			training, scoring = ids_tools.ids_entries_to_train_test(ids_entries)
+			X_train, _ = IdsConverter.ids_entries_to_X_y(training)
+			X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
+
+			classifier = sk_svm.OneClassSVM()
+			classifier.fit(X_train)
+			y_pred = classifier.predict(X_test)
+			experiment.visualise_store(name, app_id, classifier, y_true, y_pred)
 
 
 ### Experiments ###

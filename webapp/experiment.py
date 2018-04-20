@@ -142,8 +142,8 @@ class Experiment(object):
 		Dir.write_lines(result_file_path, result_lines)
 
 		if self.other_result_files:
-			self.storer_printer.prt("Done. Saving %s other results..." % len(self.other_result_files))
-			for oth_res_path, (_, oth_res_lines) in zip(other_result_files_paths, self.other_result_files):
+			for oth_res_path, (oth_res_name, oth_res_lines) in zip(other_result_files_paths, self.other_result_files):
+				self.storer_printer.prt("Saving others: %s..." % oth_res_name)
 				Dir.write_lines(oth_res_path, oth_res_lines)
 
 		self.storer_printer.prt("Done!")

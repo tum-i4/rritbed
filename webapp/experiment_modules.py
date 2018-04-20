@@ -80,8 +80,8 @@ class OneHotVsLabelling(ModuleInterface):
 			experiment.storer_printer.prt("%s | %s" % (first.app_id, first.vector))
 
 			training, scoring = ids_tools.ids_entries_to_train_test(ids_entries)
-			X_train, _ = IdsConverter.ids_entries_to_X_y(training)
-			X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
+			X_train, _ = converter.ids_entries_to_X_y(training)
+			X_test, y_true = converter.ids_entries_to_X_y(scoring)
 
 			classifier = sk_svm.OneClassSVM()
 			classifier.fit(X_train)
@@ -130,7 +130,7 @@ class AllVsSpecSvmVsIso(ModuleInterface):
 		all_entries = converter.LOG_ENTRIES_TO_IDS_ENTRIES(log_entries, binary=True)
 
 		training_entries, scoring_entries = ids_tools.ids_entries_to_train_test(all_entries)
-		X_train, _ = IdsConverter.ids_entries_to_X_y(training_entries)
+		X_train, _ = IdsConverter().ids_entries_to_X_y(training_entries)
 
 		scoring_dict = {}
 		for ids_entry in scoring_entries:
@@ -148,7 +148,7 @@ class AllVsSpecSvmVsIso(ModuleInterface):
 
 		# Score for each app: scoring_dict
 		for app_id, app_entries in util.seqr.yield_items_in_key_order(scoring_dict):
-			X_test, y_true = IdsConverter.ids_entries_to_X_y(app_entries)
+			X_test, y_true = IdsConverter().ids_entries_to_X_y(app_entries)
 			y_preds = [clf.predict(X_test) for clf in classifiers]
 			for clf, y_pred in zip(classifiers, y_preds):
 				experiment.visualise_store("ALL", app_id, clf, y_true, y_pred)
@@ -161,8 +161,8 @@ class AllVsSpecSvmVsIso(ModuleInterface):
 		verify_ids_entries(ids_entries, app_id, experiment.storer_printer)
 
 		training, scoring = ids_tools.ids_entries_to_train_test(ids_entries)
-		X_train, _ = IdsConverter.ids_entries_to_X_y(training)
-		X_test, y_true = IdsConverter.ids_entries_to_X_y(scoring)
+		X_train, _ = IdsConverter().ids_entries_to_X_y(training)
+		X_test, y_true = IdsConverter().ids_entries_to_X_y(scoring)
 
 		classifiers = [
 			sk_svm.OneClassSVM(),

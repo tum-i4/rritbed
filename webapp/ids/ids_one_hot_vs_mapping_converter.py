@@ -14,8 +14,7 @@ class OneHotVsMappingConverter(IdsConverter):
 		super(OneHotVsMappingConverter, self).__init__()
 
 
-	@staticmethod
-	def encode_log_messages(app_id, log_messages):
+	def encode_log_messages(self, app_id, log_messages):
 		"""
 		Either just convert the data or do convert to mapping
 		returns: Two-dimensional numpy.ndarray
@@ -65,8 +64,7 @@ class OneHotVsMappingConverter(IdsConverter):
 		raise NotImplementedError("App ID {} not implemented".format(app_id))
 
 
-	@staticmethod
-	def encode_positions(positions):
+	def encode_positions(self, positions):
 		"""
 		Given: strings "x,y"
 		returns: numpy.ndarray with "" -> None, "x,y" -> [int(x),int(y)]

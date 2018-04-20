@@ -126,8 +126,7 @@ class IdsConverter(object):
 		return ids_entries
 
 
-	@staticmethod
-	def ids_entries_to_X_y(ids_entries, app_id=None):
+	def ids_entries_to_X_y(self, ids_entries, app_id=None):
 		""" Convert the given IdsEntry objects to (X, y).
 		* app_id : Optionally specify the app_id that all entries should have. """
 
@@ -153,7 +152,7 @@ class IdsConverter(object):
 
 		train_dict = {}
 		for app_id, ids_entries in ids_entries_dict.items():
-			train_dict[app_id] = IdsConverter.ids_entries_to_X_y(ids_entries, app_id)
+			train_dict[app_id] = self.ids_entries_to_X_y(ids_entries, app_id)
 
 		self.check_dict(train_dict)
 		printer.prt("Done.")
@@ -179,7 +178,7 @@ class IdsConverter(object):
 		"""
 
 		if not log_entries:
-			warnings.warn("[IdsConverter.log_entries_to_vectors()] %s: No log entries!" % app_id)
+			warnings.warn("[IdsConverter().log_entries_to_vectors()] %s: No log entries!" % app_id)
 			return numpy.array([])
 
 		# We have: vin, app_id, level, log_message, gps_position, time_unix, log_id
@@ -200,11 +199,11 @@ class IdsConverter(object):
 			positions.append(data_dict[LogEntry.GPS_POSITION_FIELD])
 
 		# Binarisation of levels -> [0, 1]
-		enc_levels_array = IdsConverter.levels_binarise(levels)
+		enc_levels_array = self.levels_binarise(levels)
 		# Conversion (data gens) or one-hot encoding of log messages -> [0, 1, ...]
-		enc_log_messages_array = IdsConverter.encode_log_messages(app_id, log_messages)
+		enc_log_messages_array = self.encode_log_messages(app_id, log_messages)
 		# Convert GPS positions to None or (x, y)
-		enc_gps_positions_array = IdsConverter.encode_positions(positions)
+		enc_gps_positions_array = self.encode_positions(positions)
 
 		vectors = []
 
@@ -257,8 +256,7 @@ class IdsConverter(object):
 		return the_class != 0
 
 
-	@staticmethod
-	def prediction_means_outlier(prediction):
+	def prediction_means_outlier(self, prediction):
 		""" LEGACY """
 		return ids_tools.is_outlier(prediction)
 
@@ -316,8 +314,7 @@ class IdsConverter(object):
 	### Conversions ###
 
 
-	@staticmethod
-	def levels_binarise(levels):
+	def levels_binarise(self, levels):
 		"""
 		Do a binarisation of the given levels.
 		returns: Two-dimensional numpy.ndarray with a 1 element binary encoding per row.
@@ -327,12 +324,11 @@ class IdsConverter(object):
 		expected_levels = ["DEBUG", "ERROR"]
 		ids_tools.verify_md5(expected_levels, "7692bbdba09aa7f2c9a15ca0e9a654cd")
 
-		encoded_levels = IdsConverter.generic_one_hot(expected_levels, levels)
+		encoded_levels = self.generic_one_hot(expected_levels, levels)
 		return encoded_levels
 
 
-	@staticmethod
-	def encode_log_messages(app_id, log_messages):
+	def encode_log_messages(self, app_id, log_messages):
 		"""
 		Either just convert the data (data generators) or do a one-hot encoding of the log message.
 		returns: Two-dimensional numpy.ndarray with either 1 float value, 4 int values
@@ -349,19 +345,19 @@ class IdsConverter(object):
 			colours = [[int(val) for val in msg.split(",")] for msg in log_messages]
 
 			# Returns a list with 3 scaled colour floats in [0,1]
-			return IdsConverter.colours_scale(colours)
+			return self.colours_scale(colours)
 
 		# Country code string like "DE" or "CH"
 		if app_id == ids_data.POSE_CC:
 			# Returns a list with 5 binary flags
-			return IdsConverter.country_codes_one_hot(log_messages)
+			return self.country_codes_one_hot(log_messages)
 
 		# POI pair "type,result"
 		if app_id == ids_data.POSE_POI:
 			poi_pairs = [msg.split(",") for msg in log_messages]
 
 			# Returns a list with 11 binary flags
-			return IdsConverter.poi_pairs_one_hot(poi_pairs)
+			return self.poi_pairs_one_hot(poi_pairs)
 
 		# Two positions as "{},{},{},{}" (start,end as x,y)
 		if app_id == ids_data.POSE_TSP:
@@ -371,13 +367,12 @@ class IdsConverter(object):
 				assert(coord >= 0 and coord < 500)
 
 			# Return list of 4 scaled coordinate floats in [-1,1]
-			return IdsConverter.positions_scale(coords_rows)
+			return self.positions_scale(coords_rows)
 
 		raise NotImplementedError("App ID {} not implemented".format(app_id))
 
 
-	@staticmethod
-	def colours_one_hot(colours):
+	def colours_one_hot(self, colours):
 		"""
 		Do a one-hot encoding of the given colours.
 		returns: A two-dimensional numpy.ndarray with a 3+4+5=12 element binary encoding per row.
@@ -391,22 +386,21 @@ class IdsConverter(object):
 
 		colours_array = numpy.array(colours)
 
-		red_encodings = IdsConverter.generic_one_hot(reds, colours_array[:, 0])
-		green_encodings = IdsConverter.generic_one_hot(greens, colours_array[:, 1])
-		blue_encodings = IdsConverter.generic_one_hot(blues, colours_array[:, 2])
+		red_encodings = self.generic_one_hot(reds, colours_array[:, 0])
+		green_encodings = self.generic_one_hot(greens, colours_array[:, 1])
+		blue_encodings = self.generic_one_hot(blues, colours_array[:, 2])
 
 		encodings = numpy.concatenate((red_encodings, green_encodings, blue_encodings), axis=1)
 		return encodings
 
 
-	@staticmethod
-	def colours_scale(colours):
+	def colours_scale(self, colours):
 		"""
 		Scale the colour triplets from [0,255] to [0,1].
 		returns: A two-dimensional numpy.ndarray with 3 scaled colours per row.
 		"""
 
-		scaled = IdsConverter.generic_scale(
+		scaled = self.generic_scale(
 			values=colours,
 			range_min=0, range_max=1,
 			min_v=0, max_v=255
@@ -414,8 +408,7 @@ class IdsConverter(object):
 		return scaled
 
 
-	@staticmethod
-	def country_codes_one_hot(country_codes):
+	def country_codes_one_hot(self, country_codes):
 		"""
 		Do a one-hot encoding of the given country codes.
 		returns: A two-dimensional numpy.ndarray with a 5 element binary encoding per row.
@@ -425,12 +418,11 @@ class IdsConverter(object):
 		expected_cc = ids_data.get_country_codes()
 		ids_tools.verify_md5(expected_cc, "b1d9e303bda676c3c6a61dc21e1d07c3")
 
-		encodings = IdsConverter.generic_one_hot(expected_cc, country_codes)
+		encodings = self.generic_one_hot(expected_cc, country_codes)
 		return encodings
 
 
-	@staticmethod
-	def poi_pairs_one_hot(poi_pairs):
+	def poi_pairs_one_hot(self, poi_pairs):
 		"""
 		Do a one-hot encoding of the given POI pairs.
 		returns: A two-dimensional numpy.ndarray with a 4+7=11 element binary encoding per row.
@@ -445,26 +437,24 @@ class IdsConverter(object):
 
 		poi_pairs_array = numpy.array(poi_pairs)
 
-		types_encodings = IdsConverter.generic_one_hot(expected_types, poi_pairs_array[:, 0])
-		results_encodings = IdsConverter.generic_one_hot(exptected_results, poi_pairs_array[:, 1])
+		types_encodings = self.generic_one_hot(expected_types, poi_pairs_array[:, 0])
+		results_encodings = self.generic_one_hot(exptected_results, poi_pairs_array[:, 1])
 
 		encodings = numpy.concatenate((types_encodings, results_encodings), axis=1)
 		return encodings
 
 
-	@staticmethod
-	def encode_positions(positions):
+	def encode_positions(self, positions):
 		"""
 		Convert the given "x,y" GPS position strings to (x, y) or None.
 		returns: A two-dimensional numpy.ndarray with a result (tuple or None) per row.
 		"""
 
-		encoded_positions = [IdsConverter.position_to_none_or_scaled(gps_pos) for gps_pos in positions]
+		encoded_positions = [self.position_to_none_or_scaled(gps_pos) for gps_pos in positions]
 		return numpy.array(encoded_positions)
 
 
-	@staticmethod
-	def position_to_none_or_scaled(position):
+	def position_to_none_or_scaled(self, position):
 		""" Convert the given GPS position string to (x, y). """
 
 		if not position:
@@ -476,18 +466,17 @@ class IdsConverter(object):
 			raise ValueError("Invalid string")
 
 		# generic_scale() operates on a two-dimensional array - we return one dimension
-		scaled = IdsConverter.positions_scale(positions=[split])
+		scaled = self.positions_scale(positions=[split])
 		return scaled[0]
 
 
-	@staticmethod
-	def positions_scale(positions):
+	def positions_scale(self, positions):
 		"""
 		Scale the position rows from [0,499] to [-1,1].
 		returns: A two-dimensional numpy.ndarray scaled positions per row.
 		"""
 
-		scaled = IdsConverter.generic_scale(
+		scaled = self.generic_scale(
 			values=positions,
 			range_min=-1, range_max=1,
 			min_v=0, max_v=499
@@ -495,8 +484,7 @@ class IdsConverter(object):
 		return scaled
 
 
-	@staticmethod
-	def generic_one_hot(expected_values, values):
+	def generic_one_hot(self, expected_values, values):
 		"""
 		Do a one-hot encoding of the given values, which are one of expected_values.
 		returns: A two-dimensional numpy.ndarray with one encoding per row.
@@ -515,8 +503,7 @@ class IdsConverter(object):
 
 
 	# pylint: disable-msg=C0103; (Snake-case naming)
-	@staticmethod
-	def generic_scale(values, range_min, range_max, min_v, max_v):
+	def generic_scale(self, values, range_min, range_max, min_v, max_v):
 		"""
 		Scale the given two-dimensional array from [min_v,max_v] to [range_min,range_max].
 		*range_min, range_max: The target range

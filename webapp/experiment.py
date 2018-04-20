@@ -41,7 +41,7 @@ class Experiment(object):
 		self.start_time = time.time()
 		self.end_time = None
 		# Loaded entries
-		self.ids_entries = []
+		self.entries = []
 		# ClassifierResultGroup objects (name, classifier, result)
 		self.classifier_results = []
 
@@ -86,7 +86,7 @@ class Experiment(object):
 	def ensure_valid_state(self):
 		""" Verify that a run experiment module correctly set the internal state. """
 
-		if not self.ids_entries or not self.classifier_results:
+		if not self.entries or not self.classifier_results:
 			raise ValueError("Experiment module did not store any results.")
 
 
@@ -113,7 +113,7 @@ class Experiment(object):
 		self.storer_printer.prt("Data verified. Storing utilised entries...")
 
 		# Create new file with my entries
-		saved_path = idse_dao.save_entries(entry_file_path, self.ids_entries)
+		saved_path = idse_dao.save_entries(entry_file_path, self.entries)
 
 		self.storer_printer.prt("Done. Analysing file...")
 
@@ -243,8 +243,8 @@ class Experiment(object):
 
 		converter = IdsConverter()
 
-		self.ids_entries = list(idse_dao.yield_entries(file_path))
-		ids_entries_dict = converter.ids_entries_to_dict(self.ids_entries)
+		self.entries = list(idse_dao.yield_entries(file_path))
+		ids_entries_dict = converter.ids_entries_to_dict(self.entries)
 
 		return ids_entries_dict
 

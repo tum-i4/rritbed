@@ -15,6 +15,9 @@ from log_entry import LogEntry
 import util.seqr
 
 
+ITEM_LIMIT = 5000000
+
+
 class ModuleInterface(object):
 	""" Interface for all submodules. """
 
@@ -52,7 +55,7 @@ class OneHotVsLabelling(ModuleInterface):
 
 		log_entries = []
 
-		for line in Dir.yield_lines(experiment.file_path, experiment.ITEM_LIMIT):
+		for line in Dir.yield_lines(experiment.file_path, ITEM_LIMIT):
 			log_entry = LogEntry.from_log_string(line)
 			log_entries.append(log_entry)
 
@@ -120,7 +123,7 @@ class AllVsSpecSvmVsIso(ModuleInterface):
 		converter = TEMPCONVERTER()
 		log_entries = []
 
-		for line in Dir.yield_lines(experiment.file_path, experiment.ITEM_LIMIT):
+		for line in Dir.yield_lines(experiment.file_path, ITEM_LIMIT):
 			log_entry = LogEntry.from_log_string(line)
 			log_entries.append(log_entry)
 

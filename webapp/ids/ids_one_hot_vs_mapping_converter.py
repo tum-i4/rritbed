@@ -98,6 +98,7 @@ class OneHotVsMappingConverter(IdsConverter):
 		for position in positions:
 			if not position:
 				encoded_positions.append(None)
+				return
 			split = position.split(",")
 			if len(split) != 2:
 				raise ValueError("Invalid string")

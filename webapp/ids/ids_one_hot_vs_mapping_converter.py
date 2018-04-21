@@ -98,10 +98,12 @@ class OneHotVsMappingConverter(IdsConverter):
 		for position in positions:
 			if not position:
 				encoded_positions.append(None)
-				return
+				continue
+
 			split = position.split(",")
 			if len(split) != 2:
 				raise ValueError("Invalid string")
+
 			encoded_positions.append([int(x) for x in split])
 
 		return numpy.array(encoded_positions)

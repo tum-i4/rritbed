@@ -211,8 +211,15 @@ class StateDao(object):
 
 		if self._max_entries_total is not None:
 			entries_left = self._max_entries_total - self._current_total_entries
-			seconds_left_until_max = float(entries_left) / velocity_second
-			output_message += " Reaching goal in: {}.".format(
+			seconds_left_until_max = -1
+			if velocity_second:
+				seconds_left_until_max = float(entries_left) / velocity_second
+
+			output_message += " Reaching goal in: "
+			if seconds_left_until_max == -1:
+				output_message += "inf"
+			else:
+				output_message += "{}.".format(
 				util.fmtr.format_time_passed(seconds_left_until_max))
 
 		self._printer.prt(output_message)

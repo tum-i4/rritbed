@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='ASCII'?>
+<launch>
+	<!-- One hundred nodes -->
+	<group ns="A100010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A100010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A200010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A200010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A300010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A300010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A400010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A400010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A500010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A500010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A600010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A600010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A700010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A700010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A800010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A800010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A900010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A900010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+	<group ns="A010010">
+		<node name="gaussian_1" type="distribution_publisher.py" args="--id gaussian_1 gen gaussian 0.0 1.0 --seed 1" pkg="turtlesim_expl"/>
+		<node name="gumbel_1" type="distribution_publisher.py" args="--id gumbel_1 gen gumbel 0.0 1.0 --seed 2" pkg="turtlesim_expl"/>
+		<node name="laplace_1" type="distribution_publisher.py" args="--id laplace_1 gen laplace 0.0 1.0 --seed 3" pkg="turtlesim_expl"/>
+		<node name="logistic_1" type="distribution_publisher.py" args="--id logistic_1 gen logistic 0.0 1.0 --seed 4" pkg="turtlesim_expl"/>
+		<node name="pareto_1" type="distribution_publisher.py" args="--id pareto_1 gen pareto 1.0 --seed 5" pkg="turtlesim_expl"/>
+		<node name="rayleigh_1" type="distribution_publisher.py" args="--id rayleigh_1 gen rayleigh 1.0 --seed 6" pkg="turtlesim_expl"/>
+		<node name="uniform_1" type="distribution_publisher.py" args="--id uniform_1 gen uniform 0.0 1.0 --seed 7" pkg="turtlesim_expl"/>
+		<node name="vonmises_1" type="distribution_publisher.py" args="--id vonmises_1 gen vonmises 0.0 1.0 --seed 8" pkg="turtlesim_expl"/>
+		<node name="wald_1" type="distribution_publisher.py" args="--id wald_1 gen wald 1.0 1.0 --seed 9" pkg="turtlesim_expl"/>
+		<node name="logger" type="logger.py" pkg="turtlesim_expl"
+			args="A010010 --gen-topics gaussian_1 gumbel_1 laplace_1 logistic_1
+				pareto_1 rayleigh_1 uniform_1 vonmises_1 wald_1 --label"/>
+	</group>
+</launch>

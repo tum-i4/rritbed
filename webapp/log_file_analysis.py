@@ -154,7 +154,8 @@ def analyse(file_path, to_file, output_printer):
 	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s |"
 		% (len(scorable_app_ids), round(dispersion_index, 3))
 		+ " Duplicate index = %s | Duplicate percent = %s"
-		% (round(duplicate_index, 3)), util.fmtr.format_percentage(duplicate_percent))
+		% (round(duplicate_index, 3), util.fmtr.format_percentage(duplicate_percent))
+	)
 	printer.prt("Scorable app ids: %s" % scorable_app_ids)
 
 	if to_file:

@@ -94,10 +94,12 @@ def analyse(file_path, to_file, output_printer):
 
 	assert(total_entries == total_entries_assertion)
 
+	empty_line = [""] * 3 + len(all_classes)
+	per_app_id.append(empty_line)
+
 	total_line = [total_line_name, total_entries, util.fmtr.format_percentage(100, True, 2)]
 	for a_class in all_classes:
 		total_line.append(entry_count_per_class[a_class])
-
 	per_app_id.append(total_line)
 
 	util.outp.print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
@@ -141,6 +143,9 @@ def analyse(file_path, to_file, output_printer):
 	if total_number_of_duplicates == 0:
 		printer.prt("\nDuplicate analysis: No duplicates found!")
 	else:
+		empty_line = [""] * 5
+		duplicates.append(empty_line)
+
 		total_duplicate_percent = float(total_number_of_duplicates) / total_entries
 		duplicates.append([
 			total_line_name,

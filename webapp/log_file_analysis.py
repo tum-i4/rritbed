@@ -117,24 +117,34 @@ def analyse(file_path, to_file, output_printer):
 	# Duplicate table
 	duplicates = []
 	duplicates.append(["App ID", "All", "Unique", "Duplicates", "Duplicate %"])
+	total_number_of_duplicates = 0
 	for app_id in all_app_ids:
 		result = duplicate_elements_per_app_id[app_id]
 		unique_count = result["uniq"]
 		duplicate_count = result["dupe"]
 		all_count = unique_count + duplicate_count
 
+		total_number_of_duplicates += duplicate_count
+
 		duplicate_percent = 0
 		if all_count > 0:
 			duplicate_percent = float(duplicate_count) / all_count
-
 		duplicate_percent_str = util.fmtr.format_percentage(duplicate_percent, True, 3)
 
 		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
 
-	# Check content (skip header) for found duplicates
-	if not any([l[3] > 0 for l in duplicates[1:]]):
+	# Don't output table if there are no duplicates
+	if total_number_of_duplicates == 0:
 		printer.prt("\nDuplicate analysis: No duplicates found!")
 	else:
+		total_duplicate_percent = float(total_number_of_duplicates) / total_entries
+		duplicates.append([
+			total_line_name,
+			total_entries,
+			total_entries - total_number_of_duplicates,
+			total_number_of_duplicates,
+			util.fmtr.format_percentage(total_duplicate_percent, True, 3)
+		])
 		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)
 
 	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s |"

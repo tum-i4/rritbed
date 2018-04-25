@@ -117,7 +117,7 @@ def analyse(file_path, to_file, output_printer):
 		app_ids_line.append(
 			len(app_ids_per_class[a_class]))
 		percent_line.append(
-			util.fmtr.format_percentage(entry_count_per_class[a_class] / float(total_entries), True, 2))
+			util.fmtr.format_percentage(entry_count_per_class[a_class] / float(total_entries), False, 2))
 
 	per_class.append(app_ids_line)
 	per_class.append(percent_line)

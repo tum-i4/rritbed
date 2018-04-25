@@ -25,13 +25,16 @@ def format_time_passed(time_in_sec):
 def format_percentage(value, pad_spaces=False, digits=0):
 	""" Formats the given float value in [0, 1] as a percentage string. """
 
+	if value > 1 or value < 0:
+		raise ValueError("value must be in [0, 1]")
+
 	# For no digits: 'xxx %'
 	just_len = 5
 	if digits > 0:
 		# Normal + '.dd'
 		just_len += digits + 1
 	elif digits < 0:
-		raise ValueError("digits must be a value >= 0")
+		raise ValueError("digits must be >= 0")
 
 	formatter = "{:.%sf} %%" % digits
 

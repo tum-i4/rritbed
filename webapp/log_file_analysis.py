@@ -94,7 +94,7 @@ def analyse(file_path, to_file, output_printer):
 
 	assert(total_entries == total_entries_assertion)
 
-	empty_line = [""] * 3 + len(all_classes)
+	empty_line = [""] * (3 + len(all_classes))
 	per_app_id.append(empty_line)
 
 	total_line = [total_line_name, total_entries, util.fmtr.format_percentage(100, True, 2)]

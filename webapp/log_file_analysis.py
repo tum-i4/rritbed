@@ -15,7 +15,7 @@ import ids.ids_data as ids_data
 import idse_dao
 
 
-VERSION = "1.2"
+VERSION = "1.3"
 
 
 def analyse(file_path, to_file, output_printer):

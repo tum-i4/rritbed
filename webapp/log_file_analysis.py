@@ -15,7 +15,7 @@ import ids.ids_data as ids_data
 import idse_dao
 
 
-VERSION = "1.1"
+VERSION = "1.2"
 
 
 def analyse(file_path, to_file, output_printer):
@@ -49,7 +49,7 @@ def analyse(file_path, to_file, output_printer):
 	(
 		total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id,
-		scorable_app_ids, dispersion_index, duplicate_index
+		scorable_app_ids, dispersion_index, duplicate_index, duplicate_percent
 	) = analyse_entries(log_entry_generator)
 
 	# Output #
@@ -124,8 +124,10 @@ def analyse(file_path, to_file, output_printer):
 	else:
 		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)
 
-	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s | Duplicate index = %s"
-		% (len(scorable_app_ids), round(dispersion_index, 3), round(duplicate_index, 3)))
+	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s |"
+		% (len(scorable_app_ids), round(dispersion_index, 3))
+		+ " Duplicate index = %s | Duplicate percent = %s"
+		% (round(duplicate_index, 3)), util.fmtr.format_percentage(duplicate_percent))
 	printer.prt("Scorable app ids: %s" % scorable_app_ids)
 
 	if to_file:
@@ -145,7 +147,7 @@ def analyse_entries(log_entry_generator):
 	Analyse the LogEntry objects from the given generator.
 	returns: A tuple containing (found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 	found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id),
-	scorable_app_ids, dispersion_index, duplicate_index
+	scorable_app_ids, dispersion_index, duplicate_index, duplicate_percent
 	"""
 
 	total_entries = 0
@@ -206,6 +208,7 @@ def analyse_entries(log_entry_generator):
 
 	scorable_app_ids = []
 	scorable_entry_counts = []
+	scorable_duplicate_counts = []
 	scorable_duplicate_percentages = []
 
 	for app_id in all_app_ids:
@@ -214,15 +217,17 @@ def analyse_entries(log_entry_generator):
 		if entry_count > 0:
 			scorable_app_ids.append(app_id)
 			scorable_entry_counts.append(entry_count)
+			scorable_duplicate_counts.append(dupe_count)
 			scorable_duplicate_percentages.append(float(dupe_count)/entry_count)
 
 	dispersion_index = util.stat.index_of_dispersion(scorable_entry_counts)
+	duplicate_percent = sum(scorable_duplicate_counts) / float(total_entries)
 	duplicate_index = (util.stat.avg(scorable_duplicate_percentages)
 		+ max(scorable_duplicate_percentages) / float(len(scorable_duplicate_percentages)))
 
 	return (total_entries, found_app_ids, entry_count_per_app_id, elements_per_class_per_app_id,
 		found_classes, entry_count_per_class, app_ids_per_class, duplicate_elements_per_app_id,
-		scorable_app_ids, dispersion_index, duplicate_index)
+		scorable_app_ids, dispersion_index, duplicate_index, duplicate_percent)
 
 
 def get_content_hash(log_entry):

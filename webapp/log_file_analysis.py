@@ -255,7 +255,6 @@ def analyse_entries(log_entry_generator):
 		if entry_count > 0:
 			scorable_app_ids.append(app_id)
 			scorable_entry_counts.append(entry_count)
-			scorable_duplicate_counts.append(dupe_count)
 			scorable_duplicate_percentages.append(float(dupe_count)/entry_count)
 
 	dispersion_index = util.stat.index_of_dispersion(scorable_entry_counts)

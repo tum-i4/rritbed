@@ -79,14 +79,14 @@ def analyse(file_path, to_file, output_printer):
 
 		line = [
 			app_id,
-			entry_count_per_app_id[app_id],
+			"{:,}".format(entry_count_per_app_id[app_id]),
 			util.fmtr.format_percentage(entry_count_per_app_id[app_id] / float(total_entries), True, 2)
 		]
 
 		for a_class in all_classes:
 			class_count_str = ""
 			if a_class in elements_per_class_per_app_id[app_id]:
-				class_count_str = str(elements_per_class_per_app_id[app_id][a_class])
+				class_count_str = "{:,}".format(elements_per_class_per_app_id[app_id][a_class])
 
 			line.append(class_count_str)
 
@@ -124,7 +124,7 @@ def analyse(file_path, to_file, output_printer):
 
 	util.outp.print_table(per_class, headline="Metrics per class", printer=printer)
 
-	# Duplicate table
+	# "Duplicates per app ID" table
 	duplicates = []
 	duplicates.append(["App ID", "All", "Unique", "Duplicates", "Duplicate %"])
 	total_number_of_duplicates = 0
@@ -143,7 +143,10 @@ def analyse(file_path, to_file, output_printer):
 			duplicate_percent = float(duplicate_count) / all_count
 		duplicate_percent_str = util.fmtr.format_percentage(duplicate_percent, True, 3)
 
-		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
+		new_line = [app_id]
+		new_line.extend(["{:,}".format(x) for x in [all_count, unique_count, duplicate_count]])
+		new_line.append(duplicate_percent_str)
+		duplicates.append(new_line)
 
 	assert(total_entries == total_entries_assertion)
 
@@ -155,13 +158,14 @@ def analyse(file_path, to_file, output_printer):
 		duplicates.append(empty_line)
 
 		total_duplicate_percent = float(total_number_of_duplicates) / total_entries
-		duplicates.append([
-			total_line_name,
-			"{:,}".format(total_entries),
-			"{:,}".format(total_entries - total_number_of_duplicates),
-			"{:,}".format(total_number_of_duplicates),
-			util.fmtr.format_percentage(total_duplicate_percent, True, 3)
+		total_line = [total_line_name]
+		total_line.extend([
+			"{:,}".format(x) for x in
+			[total_entries, total_entries - total_number_of_duplicates, total_number_of_duplicates]
 		])
+		total_line.append(util.fmtr.format_percentage(total_duplicate_percent, True, 3))
+		duplicates.append(total_line)
+
 		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)
 
 	printer.prt("\nScores for %s scorable app ids: Dispersion index = %s | Duplicate index = %s"

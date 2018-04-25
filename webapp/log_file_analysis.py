@@ -118,6 +118,7 @@ def analyse(file_path, to_file, output_printer):
 	duplicates = []
 	duplicates.append(["App ID", "All", "Unique", "Duplicates", "Duplicate %"])
 	total_number_of_duplicates = 0
+	total_entries_assertion = 0
 	for app_id in all_app_ids:
 		result = duplicate_elements_per_app_id[app_id]
 		unique_count = result["uniq"]
@@ -125,6 +126,7 @@ def analyse(file_path, to_file, output_printer):
 		all_count = unique_count + duplicate_count
 
 		total_number_of_duplicates += duplicate_count
+		total_entries_assertion += all_count
 
 		duplicate_percent = 0
 		if all_count > 0:
@@ -132,6 +134,8 @@ def analyse(file_path, to_file, output_printer):
 		duplicate_percent_str = util.fmtr.format_percentage(duplicate_percent, True, 3)
 
 		duplicates.append([app_id, all_count, unique_count, duplicate_count, duplicate_percent_str])
+
+	assert(total_entries == total_entries_assertion)
 
 	# Don't output table if there are no duplicates
 	if total_number_of_duplicates == 0:

@@ -59,6 +59,7 @@ def analyse(file_path, to_file, output_printer):
 		printer = util.prtr.Storer()
 
 	get_pl = lambda s, obj: s if len(obj) > 1 else ""
+	total_line_name = "<total>"
 
 	if not to_file:
 		printer.prt("")
@@ -86,6 +87,12 @@ def analyse(file_path, to_file, output_printer):
 			line.append(class_count_str)
 
 		per_app_id.append(line)
+
+	total_line = [total_line_name, total_entries, util.fmtr.format_percentage(100, True, 2)]
+	for a_class in all_classes:
+		total_line.append(entry_count_per_class[a_class])
+
+	per_app_id.append(total_line)
 
 	util.outp.print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
 

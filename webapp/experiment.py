@@ -81,8 +81,8 @@ class Experiment(object):
 
 		# TODO Prerequisites: I could have loaded from a folder
 
-		# experiment_modules.AllVsSpecSvmVsIso.run(self)
-		experiment_modules.OneHotVsMapping.run(self)
+		experiment_modules.AllVsSpecSvmVsIso.run(self)
+		# experiment_modules.OneHotVsMapping.run(self)
 		self.ensure_valid_state()
 		self.store_experiment()
 
@@ -210,18 +210,24 @@ class Experiment(object):
 			% (name, app_id, self.classifier_name(classifier)))
 
 		accu = sk_metr.accuracy_score(y_true, y_pred)
-		prec = sk_metr.precision_score(y_true, y_pred)
-		reca = sk_metr.recall_score(y_true, y_pred)
+		# prec = sk_metr.precision_score(y_true, y_pred)
+		# reca = sk_metr.recall_score(y_true, y_pred)
 
 		# pylint: disable-msg=C0103; (Invalid name)
 		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
+		assert(accu == (tn + tp) / (tn + fp + fn + tp))
+
+		# This is reverse! sklearn assumes that inliers are 'positives'
+		prec = tn / (tn + fn)
+		reca = tn / (tn + fp)
+
 		storer = util.prtr.Storer()
 
 		table = []
-		table.append(["", "Actual (+)", "Actual (-)"])
-		table.append(["Pred (+)", tp, fp])
-		table.append(["Pred (-)", fn, tn])
+		table.append(["", "Actual (+ inlier)", "Actual (- outlier)"])
+		table.append(["Pred (+ inlier)", tp, fp])
+		table.append(["Pred (- outlier)", fn, tn])
 		util.outp.print_table(table, printer=storer)
 
 		classifier_name = self.classifier_name(classifier)

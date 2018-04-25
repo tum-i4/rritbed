@@ -73,7 +73,10 @@ def analyse(file_path, to_file, output_printer):
 	# "Elements and classes per app ID" table
 	per_app_id = []
 	per_app_id.append(["App ID", "Elements", "El. %"] + all_classes)
+	total_entries_assertion = 0
 	for app_id in all_app_ids:
+		total_entries_assertion += entry_count_per_app_id[app_id]
+
 		line = [
 			app_id,
 			entry_count_per_app_id[app_id],
@@ -84,9 +87,12 @@ def analyse(file_path, to_file, output_printer):
 			class_count_str = ""
 			if a_class in elements_per_class_per_app_id[app_id]:
 				class_count_str = str(elements_per_class_per_app_id[app_id][a_class])
+
 			line.append(class_count_str)
 
 		per_app_id.append(line)
+
+	assert(total_entries == total_entries_assertion)
 
 	total_line = [total_line_name, total_entries, util.fmtr.format_percentage(100, True, 2)]
 	for a_class in all_classes:

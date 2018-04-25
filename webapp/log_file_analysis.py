@@ -102,17 +102,17 @@ def analyse(file_path, to_file, output_printer):
 
 	util.outp.print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
 
-	# "Elements per class" table
-	per_class = []
-	per_class.append(["Class", "Elements", "El. %", "App Ids"])
-	for a_class in all_classes:
-		per_class.append([
-			a_class,
-			entry_count_per_class[a_class],
-			util.fmtr.format_percentage(entry_count_per_class[a_class] / float(total_entries), True, 2),
-			len(app_ids_per_class[a_class])])
+	# "Elements per class" table (obsolete?)
+	# per_class = []
+	# per_class.append(["Class", "Elements", "El. %", "App Ids"])
+	# for a_class in all_classes:
+	# 	per_class.append([
+	# 		a_class,
+	# 		entry_count_per_class[a_class],
+	# 		util.fmtr.format_percentage(entry_count_per_class[a_class] / float(total_entries), True, 2),
+	# 		len(app_ids_per_class[a_class])])
 
-	util.outp.print_table(per_class, headline="Elements per class", printer=printer)
+	# util.outp.print_table(per_class, headline="Elements per class", printer=printer)
 
 	# Duplicate table
 	duplicates = []

@@ -64,7 +64,7 @@ def analyse(file_path, to_file, output_printer):
 	if not to_file:
 		printer.prt("")
 
-	printer.prt("Analysis {}: Found {} entries with {}/{} app id{} and {}/{} class{}".format(
+	printer.prt("Analysis {}: Found {:,} entries with {}/{} app id{} and {}/{} class{}".format(
 		VERSION, total_entries,
 		len(found_app_ids), len(all_app_ids), get_pl("s", found_app_ids),
 		len(found_classes), len(all_classes), get_pl("es", found_classes))
@@ -97,9 +97,13 @@ def analyse(file_path, to_file, output_printer):
 	empty_line = [""] * (3 + len(all_classes))
 	per_app_id.append(empty_line)
 
-	total_line = [total_line_name, total_entries, util.fmtr.format_percentage(100, True, 2)]
+	total_line = [
+		total_line_name,
+		"{:,}".format(total_entries),
+		util.fmtr.format_percentage(1, True, 2)
+	]
 	for a_class in all_classes:
-		total_line.append(entry_count_per_class[a_class])
+		total_line.append("{:,}".format(entry_count_per_class[a_class]))
 	per_app_id.append(total_line)
 
 	util.outp.print_table(per_app_id, headline="Elements and classes per app ID", printer=printer)
@@ -153,9 +157,9 @@ def analyse(file_path, to_file, output_printer):
 		total_duplicate_percent = float(total_number_of_duplicates) / total_entries
 		duplicates.append([
 			total_line_name,
-			total_entries,
-			total_entries - total_number_of_duplicates,
-			total_number_of_duplicates,
+			"{:,}".format(total_entries),
+			"{:,}".format(total_entries - total_number_of_duplicates),
+			"{:,}".format(total_number_of_duplicates),
 			util.fmtr.format_percentage(total_duplicate_percent, True, 3)
 		])
 		util.outp.print_table(duplicates, headline="Duplicates per app ID", printer=printer)

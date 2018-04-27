@@ -117,7 +117,17 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	classifier trained on various distributions of intruded data.
 	"""
 
-	pass
+	@staticmethod
+	def run(experiment):
+		experiment.storer_printer.prt("Reading entries...")
+		# ids_entries: { app_id, vector, my_class }
+		ids_entries_dict = experiment.read_convert(experiment.file_path)
+
+		experiment.storer_printer.prt("Running experiment...")
+
+		raise NotImplementedError()
+
+		experiment.storer_printer.prt("Done.")
 
 
 class AllVsSpecSvmVsIso(ModuleInterface):

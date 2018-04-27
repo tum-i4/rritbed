@@ -43,6 +43,9 @@ def verify_ids_entries(ids_entries, app_id, printer):
 		raise TypeError("Given list does not contain IdsEntry objects.")
 
 
+### Experiments ###
+
+
 class OneHotVsMapping(ModuleInterface):
 	"""
 	Experiment:
@@ -107,7 +110,14 @@ class OneHotVsMapping(ModuleInterface):
 			experiment.visualise_store(name, app_id, classifier, y_true, y_pred)
 
 
-### Experiments ###
+class CleanTrainingVsDistorted(ModuleInterface):
+	"""
+	Experiment:
+	Classifier trained on clean data versus
+	classifier trained on various distributions of intruded data.
+	"""
+
+	pass
 
 
 class AllVsSpecSvmVsIso(ModuleInterface):

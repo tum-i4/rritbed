@@ -134,6 +134,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 40, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 50, experiment)
 
+		experiment.add_result_file("run_iterations", ["Ran iterations with 0, 10, 20, 30, 40, 50 %"])
+
 		experiment.storer_printer.prt("Done.")
 
 

@@ -6,6 +6,7 @@ import os
 import random
 import time
 from collections import namedtuple
+import warnings
 
 import sklearn.metrics as sk_metr
 
@@ -216,11 +217,14 @@ class Experiment(object):
 		# pylint: disable-msg=C0103; (Invalid name)
 		tn, fp, fn, tp = sk_metr.confusion_matrix(y_true, y_pred).ravel()
 
-		assert(accu == (tn + tp) / (tn + fp + fn + tp))
+		assert(accu == float(tn + tp) / float(tn + fp + fn + tp))
 
 		# This is reverse! sklearn assumes that inliers are 'positives'
-		prec = tn / (tn + fn)
-		reca = tn / (tn + fp)
+		prec = 0 if (tn + fn) == 0 else float(tn) / (tn + fn)
+		reca = 0 if (tn + fp) == 0 else float(tn) / (tn + fp)
+
+		if (tn + fp) == 0:
+			warnings.warn("No outliers present! Recall set to zero.")
 
 		storer = util.prtr.Storer()
 

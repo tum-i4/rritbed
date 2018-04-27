@@ -82,8 +82,10 @@ class Experiment(object):
 
 		# TODO Prerequisites: I could have loaded from a folder
 
-		experiment_modules.AllVsSpecSvmVsIso.run(self)
+		# experiment_modules.AllVsSpecSvmVsIso.run(self)
 		# experiment_modules.OneHotVsMapping.run(self)
+		experiment_modules.CleanTrainingVsDistorted.run(self)
+
 		self.ensure_valid_state()
 		self.store_experiment()
 

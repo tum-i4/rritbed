@@ -250,8 +250,15 @@ class CleanTrainingVsDistorted(ModuleInterface):
 			float(len(training_intruded))
 			/ (len(training_normal) + len(training_intruded)))
 
+		# No more than 1 % error
+		assert(abs(target_pct_intruded_training - achieved_percentage_intruded) < 0.01)
+
 		training_entries = training_normal + training_intruded
 		random.shuffle(training_entries)
+
+		# Ensure we calculated everything correctly.
+		assert(len(training_entries) >= max(len(remaining_normal), len(remaining_intruded)))
+		assert(min(len(training_entries), len(scoring_entries)) > 1000)
 
 		return (training_entries, scoring_entries)
 

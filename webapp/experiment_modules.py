@@ -212,7 +212,40 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		scoring_entries = test_normal + test_intruded
 		random.shuffle(scoring_entries)
 
-		raise NotImplementedError()
+		# Prevent future errors
+		entries_normal = None
+		entries_intruded = None
+
+		# Remaining are 50 % of the smaller set and > 50 % of the bigger set.
+		# Check current proportion
+
+		remaining_count = len(remaining_normal) + len(remaining_intruded)
+
+		relative_size_intruded = float(len(remaining_intruded)) / remaining_count
+
+		excessive_percent_normal = 0.0
+		excessive_percent_intruded = 0.0
+
+		# If we have too few intruded entries, sample from normal entries
+		if relative_size_intruded < target_pct_intruded_training:
+			raise NotImplementedError()
+		# If we have too many, sample from them
+		elif relative_size_intruded > target_pct_intruded_training:
+			raise NotImplementedError()
+
+		training_normal, _ = sk_mod.train_test_split(
+			remaining_normal, test_size=excessive_percent_normal)
+		training_intruded, _ = sk_mod.train_test_split(
+			remaining_intruded, test_size=excessive_percent_intruded)
+
+		achieved_percentage_intruded = (
+			float(len(training_intruded))
+			/ (len(training_normal) + len(training_intruded)))
+
+		training_entries = training_normal + training_intruded
+		random.shuffle(training_entries)
+
+		return (training_entries, scoring_entries)
 
 
 	@staticmethod

@@ -130,6 +130,16 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		experiment.storer_printer.prt("Done.")
 
 
+	@staticmethod
+	def get_name(percentage_intruded_training):
+		""" Create a name based on the percentage of intruded entries. """
+
+		if percentage_intruded_training == 0:
+			return "CLeN"
+		else:
+			return "DS{:2}".format(percentage_intruded_training)
+
+
 class AllVsSpecSvmVsIso(ModuleInterface):
 	"""
 	Experiment:

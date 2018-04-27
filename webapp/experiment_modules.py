@@ -139,6 +139,23 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	def run_cycle(ids_entries_dict, percentage_intruded_training, experiment):
 		""" Full cycle for all apps with the given percentage. """
 
+		if percentage_intruded_training < 0:
+			raise ValueError("percentage_intruded_training needs to be > 0")
+		elif percentage_intruded_training == 0:
+			experiment.storer_printer.prt("Scoring clean classifier...")
+		else:
+			experiment.storer_printer.prt("Scoring distorted classifier (%s %%)..."
+				% percentage_intruded_training)
+
+		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entries_dict):
+			CleanTrainingVsDistorted.run_cycle_for_app(
+				ids_entries, app_id, percentage_intruded_training, experiment)
+
+
+	@staticmethod
+	def run_cycle_for_app(ids_entries, app_id, percentage_intruded_training, experiment):
+		""" One app with the given percentage. """
+
 		raise NotImplementedError()
 
 

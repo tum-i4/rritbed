@@ -131,6 +131,13 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 
 	@staticmethod
+	def run_cycle(ids_entries_dict, percentage_intruded_training, experiment):
+		""" Full cycle for all apps with the given percentage. """
+
+		raise NotImplementedError()
+
+
+	@staticmethod
 	def get_name(percentage_intruded_training):
 		""" Create a name based on the percentage of intruded entries. """
 

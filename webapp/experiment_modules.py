@@ -5,6 +5,7 @@
 
 import time
 import random
+import warnings
 
 import sklearn.ensemble as sk_ens
 import sklearn.svm as sk_svm
@@ -119,6 +120,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	classifier trained on various distributions of intruded data.
 	"""
 
+	LIMIT_PER_APP = 100000
+
 	@staticmethod
 	def run(experiment):
 		experiment.storer_printer.prt("Reading entries...")
@@ -193,6 +196,15 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		if len(entries_intruded) < 500 or len(entries_normal) < 1000:
 			raise ValueError("Too few intruded/normal entries")
+
+		half_limit = CleanTrainingVsDistorted.LIMIT_PER_APP / 2
+
+		if len(entries_normal) > half_limit or len(entries_intruded) > half_limit:
+			warnings.warn("I found %s normal and %s intruded entries. Will limit both to %s"
+				% (len(entries_normal), len(entries_intruded), half_limit))
+
+		entries_normal = entries_normal[:half_limit]
+		entries_intruded = entries_intruded[:half_limit]
 
 		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
 		ids_tools.verify_percentage_intruded(percentage_intruded)

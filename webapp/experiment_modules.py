@@ -4,9 +4,11 @@
 # pylint: disable-msg=R0903, C0103; (Too few public methods, invalid name)
 
 import time
+import random
 
 import sklearn.ensemble as sk_ens
 import sklearn.svm as sk_svm
+import sklearn.model_selection as sk_mod
 
 from ids.dir_utils import Dir
 from ids.ids_converter import IdsConverter
@@ -192,6 +194,23 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
 		ids_tools.verify_percentage_intruded(percentage_intruded)
+
+		# Always select the smaller set as a baseline. Choose the test size as the smaller set's size.
+		# 50 % will be normal, 50 % intruded.
+		half_size_test = int(float(min(len(entries_normal), len(entries_intruded)))/2)
+
+		percentage_for_normal = float(half_size_test) / len(entries_normal)
+		percentage_for_intruded = float(half_size_test) / len(entries_intruded)
+
+		assert(percentage_for_normal <= 0.5 and percentage_for_intruded <= 0.5)
+
+		remaining_normal, test_normal = sk_mod.train_test_split(
+			entries_normal, test_size=percentage_for_normal)
+		remaining_intruded, test_intruded = sk_mod.train_test_split(
+			entries_intruded, test_size=percentage_for_intruded)
+
+		scoring_entries = test_normal + test_intruded
+		random.shuffle(scoring_entries)
 
 		raise NotImplementedError()
 

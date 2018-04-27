@@ -228,10 +228,18 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		# If we have too few intruded entries, sample from normal entries
 		if relative_size_intruded < target_pct_intruded_training:
-			raise NotImplementedError()
+			# Target size derived from number of intruded entries
+			target_size = (1 / target_pct_intruded_training) * len(remaining_intruded)
+			normal_entries_needed = target_size - len(remaining_intruded)
+			normal_entries_excessive = len(remaining_normal) - normal_entries_needed
+			excessive_percent_normal = float(normal_entries_excessive) / len(remaining_normal)
 		# If we have too many, sample from them
 		elif relative_size_intruded > target_pct_intruded_training:
-			raise NotImplementedError()
+			# Target size derived from number of normal entries
+			target_size = (1 / (1 - target_pct_intruded_training)) * len(remaining_normal)
+			intruded_entries_needed = target_size - len(remaining_normal)
+			intruded_entries_excessive = len(remaining_intruded) - intruded_entries_needed
+			excessive_percent_intruded = float(intruded_entries_excessive) / len(remaining_intruded)
 
 		training_normal, _ = sk_mod.train_test_split(
 			remaining_normal, test_size=excessive_percent_normal)

@@ -176,6 +176,23 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	def custom_train_test_split(ids_entries, target_pct_intruded_training):
 		""" Split in train/test and ensure target_pct... of intruded entries in the training set. """
 
+		if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
+			raise ValueError("Given entries are not valid IdsEntry objects!")
+
+		entries_normal = []
+		entries_intruded = []
+		for ids_entry in ids_entries:
+			if ids_tools.is_inlier(ids_entry.vclass):
+				entries_normal.append(ids_entry)
+			else:
+				entries_intruded.append(ids_entry)
+
+		if len(entries_intruded) < 500 or len(entries_normal) < 1000:
+			raise ValueError("Too few intruded/normal entries")
+
+		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
+		ids_tools.verify_percentage_intruded(percentage_intruded)
+
 		raise NotImplementedError()
 
 

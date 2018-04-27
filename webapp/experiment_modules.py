@@ -156,6 +156,26 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	def run_cycle_for_app(ids_entries, app_id, percentage_intruded_training, experiment):
 		""" One app with the given percentage. """
 
+		verify_ids_entries(ids_entries, app_id, experiment.storer_printer)
+
+		training, scoring = CleanTrainingVsDistorted.custom_train_test_split(
+			ids_entries, percentage_intruded_training)
+
+		X_train, _ = IdsConverter().ids_entries_to_X_y(training)
+		X_test, y_true = IdsConverter().ids_entries_to_X_y(scoring)
+
+		classifier = sk_svm.OneClassSVM()
+		name = CleanTrainingVsDistorted.get_name(percentage_intruded_training)
+
+		classifier.fit(X_train)
+		y_pred = classifier.predict(X_test)
+		experiment.visualise_store(name, app_id, classifier, y_true, y_pred)
+
+
+	@staticmethod
+	def custom_train_test_split(ids_entries, target_pct_intruded_training):
+		""" Split in train/test and ensure target_pct... of intruded entries in the training set. """
+
 		raise NotImplementedError()
 
 

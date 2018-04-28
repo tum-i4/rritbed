@@ -231,13 +231,6 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		scoring_entries = test_normal + test_intruded
 		random.shuffle(scoring_entries)
 
-		TEMP_NUMBER_TEST = len(scoring_entries)
-		TEMP_NORMAL_TEST = len(test_normal)
-		TEMP_INTRU_TEST = len(test_intruded)
-		TEMP_INTRU_TEST_PCT = float(TEMP_INTRU_TEST) / TEMP_NUMBER_TEST
-
-		print("TEMP>>> I SELECTED %s entries for test (%s n / %s i / %s %% i)" % (TEMP_NUMBER_TEST, TEMP_NORMAL_TEST, TEMP_INTRU_TEST, TEMP_INTRU_TEST_PCT))
-
 		# Prevent future errors
 		entries_normal = None
 		entries_intruded = None
@@ -251,30 +244,16 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		needed_number_normal = len(remaining_normal)
 		needed_number_intruded = len(remaining_intruded)
 
-		print("TEMP>>> STARTING WITH NEED %s n %s i" % (needed_number_normal, needed_number_intruded))
-		print("TEMP>>> TARGET %% is %s" % target_pct_intruded_training)
-		print("TEMP>>> REL %% intr is %s" % relative_size_intruded)
-
 		# If we have too few intruded entries, sample from normal entries
 		if relative_size_intruded < target_pct_intruded_training:
 			# Target size derived from number of intruded entries
 			target_size = int((1.0 / target_pct_intruded_training) * len(remaining_intruded))
-			print("TEMP>>> TARGET_SIZE = %s" % target_size)
 			needed_number_normal = target_size - len(remaining_intruded)
-			print("TEMP>>> INTRU < TARG ==>> %s n %s i" % (needed_number_normal, needed_number_intruded))
 		# If we have too many, sample from them
 		elif relative_size_intruded > target_pct_intruded_training:
 			# Target size derived from number of normal entries
 			target_size = int((1.0 / (1.0 - target_pct_intruded_training)) * len(remaining_normal))
-			print("TEMP>>> TARGET_SIZE = %s" % target_size)
 			needed_number_intruded = target_size - len(remaining_normal)
-			print("TEMP>>> INTRU > TARG ==>> %s n %s i" % (needed_number_normal, needed_number_intruded))
-
-		print("TEMP>>> %s n + %s i = %s" % (needed_number_normal, needed_number_intruded, needed_number_normal + needed_number_intruded))
-
-		print("TEMP>>> I REQUIRE %s of the %s n entries and %s of the %s i entries for train -> %s %%"
-			% (needed_number_normal, len(remaining_normal), needed_number_intruded, len(remaining_intruded),
-			float(needed_number_intruded) / (needed_number_normal + needed_number_intruded)))
 
 		# The split will put test_size % entries in the second bucket
 		training_normal = random.sample(remaining_normal, needed_number_normal)

@@ -210,10 +210,6 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		entries_normal = entries_normal[:half_limit]
 		entries_intruded = entries_intruded[:half_limit]
 
-		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
-		# No more than 1 % error
-		assert(abs(percentage_intruded - 0.5) < 0.01)
-
 		# Always select the smaller set as a baseline. Choose the test size as the smaller set's size.
 		# 50 % will be normal, 50 % intruded.
 		half_size_test = int(float(min(len(entries_normal), len(entries_intruded)))/2)

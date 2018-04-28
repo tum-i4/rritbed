@@ -275,7 +275,15 @@ class Experiment(object):
 
 		converter = IdsConverter()
 
-		self.entries = list(idse_dao.yield_entries(file_path))
+		self.entries = []
+
+		for entry in idse_dao.yield_entries(file_path):
+			self.entries.append(entry)
+
+			if len(self.entries) >= 5000000:
+				warnings.warn("Skipping remaining entries - limit of 5000000 reached!")
+				break
+
 		ids_entries_dict = converter.ids_entries_to_dict(self.entries)
 
 		return ids_entries_dict

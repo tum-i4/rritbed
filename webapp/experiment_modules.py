@@ -256,9 +256,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		# Remaining are 50 % of the smaller set and > 50 % of the bigger set.
 		# Check current proportion
 
-		remaining_count = len(remaining_normal) + len(remaining_intruded)
-
-		relative_size_intruded = float(len(remaining_intruded)) / remaining_count
+		remaining_total = len(remaining_normal) + len(remaining_intruded)
+		relative_size_intruded = float(len(remaining_intruded)) / remaining_total
 
 		needed_number_normal = len(remaining_normal)
 		needed_number_intruded = len(remaining_intruded)

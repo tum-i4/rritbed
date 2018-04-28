@@ -254,10 +254,10 @@ class CleanTrainingVsDistorted(ModuleInterface):
 			needed_percent_intruded = float(intruded_entries_needed) / len(remaining_intruded)
 
 		# The split will put test_size % entries in the second bucket
-		_, training_normal = sk_mod.train_test_split(
-			remaining_normal, test_size=needed_percent_normal)
-		_, training_intruded = sk_mod.train_test_split(
-			remaining_intruded, test_size=needed_percent_intruded)
+		training_normal = random.sample(
+			remaining_normal, len(remaining_normal) * needed_percent_normal)
+		training_intruded = random.sample(
+			remaining_intruded, len(remaining_intruded) * needed_percent_intruded)
 
 		achieved_percentage_intruded = (
 			float(len(training_intruded))

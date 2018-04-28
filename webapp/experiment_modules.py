@@ -183,6 +183,9 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	def custom_train_test_split(ids_entries, target_pct_intruded_training):
 		""" Split in train/test and ensure target_pct... of intruded entries in the training set. """
 
+		if target_pct_intruded_training < 0 or target_pct_intruded_training > 1:
+			raise ValueError("Given percentage must be in [0,1]")
+
 		if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
 			raise ValueError("Given entries are not valid IdsEntry objects!")
 

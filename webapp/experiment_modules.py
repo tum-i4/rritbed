@@ -130,8 +130,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		experiment.storer_printer.prt("Running experiment...")
 
-		# CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0, experiment)
-		# CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.1, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.1, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.2, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.3, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.4, experiment)
@@ -208,8 +208,6 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		entries_normal = entries_normal[:half_limit]
 		entries_intruded = entries_intruded[:half_limit]
-
-		TEMP_LIMIT_NUMBER = len(entries_normal) + len(entries_intruded)
 
 		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
 		ids_tools.verify_percentage_intruded(percentage_intruded)

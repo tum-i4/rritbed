@@ -195,6 +195,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		TEMP_INTRU_TEST_PCT = 0
 		TEMP_INTRU_TRAIN_PCT = 0
 
+		print("TEMP>>> I HAVE %s entries total" % TEMP_TOTAL_NUMBER)
+
 		if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
 			raise ValueError("Given entries are not valid IdsEntry objects!")
 
@@ -271,6 +273,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 			# Target size derived from number of normal entries
 			target_size = (1 / (1 - target_pct_intruded_training)) * len(remaining_normal)
 			needed_number_intruded = target_size - len(remaining_normal)
+
+		print("TEMP>>> %s n + %s i = %s" % (needed_number_normal, needed_number_intruded, needed_number_normal + needed_number_intruded))
 
 		print("TEMP>>> I REQUIRE %s of the %s n entries and %s of the %s i entries for train -> %s %%"
 			% (needed_number_normal, len(remaining_normal), needed_number_intruded, len(remaining_intruded),

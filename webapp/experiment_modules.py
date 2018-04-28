@@ -288,7 +288,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		if percentage_intruded_training == 0:
 			return "CLeN"
 		else:
-			return "DS{:2}".format(percentage_intruded_training)
+			percentage_intruded_pct = int(percentage_intruded_training * 100)
+			return "DS{:2}".format(percentage_intruded_pct)
 
 
 class AllVsSpecSvmVsIso(ModuleInterface):

@@ -274,7 +274,7 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		print("TEMP>>> I REQUIRE %s of the %s n entries and %s of the %s i entries for train -> %s %%"
 			% (needed_number_normal, len(remaining_normal), needed_number_intruded, len(remaining_intruded),
-			float(needed_number_intruded) / (needed_number_normal + needed_number_intruded))
+			float(needed_number_intruded) / (needed_number_normal + needed_number_intruded)))
 
 		# The split will put test_size % entries in the second bucket
 		training_normal = random.sample(remaining_normal, needed_number_normal)

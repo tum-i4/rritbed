@@ -266,12 +266,12 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		# If we have too few intruded entries, sample from normal entries
 		if relative_size_intruded < target_pct_intruded_training:
 			# Target size derived from number of intruded entries
-			target_size = (1 / target_pct_intruded_training) * len(remaining_intruded)
+			target_size = int((1 / target_pct_intruded_training) * len(remaining_intruded))
 			needed_number_normal = target_size - len(remaining_intruded)
 		# If we have too many, sample from them
 		elif relative_size_intruded > target_pct_intruded_training:
 			# Target size derived from number of normal entries
-			target_size = (1 / (1 - target_pct_intruded_training)) * len(remaining_normal)
+			target_size = int((1 / (1 - target_pct_intruded_training)) * len(remaining_normal))
 			needed_number_intruded = target_size - len(remaining_normal)
 
 		print("TEMP>>> %s n + %s i = %s" % (needed_number_normal, needed_number_intruded, needed_number_normal + needed_number_intruded))

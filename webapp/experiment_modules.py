@@ -269,18 +269,16 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		training_entries = training_normal + training_intruded
 		random.shuffle(training_entries)
 
-		TEMP_NUMBER_TRAIN = len(training_entries)
 		TEMP_NORMAL_TRAIN = len(training_normal)
 		TEMP_INTRU_TRAIN = len(training_intruded)
-		TEMP_INTRU_TRAIN_PCT = float(TEMP_INTRU_TRAIN) / TEMP_NUMBER_TRAIN
+		TEMP_INTRU_TRAIN_PCT = float(TEMP_INTRU_TRAIN) / len(training_entries)
 
 		# Ensure we calculated everything correctly.
 		assert(len(training_entries) >= max(len(remaining_normal), len(remaining_intruded)))
 		assert(min(len(training_entries), len(scoring_entries)) > 1000)
 
-		print("TEMP>>> %s total; %s limit; %s for test; %s for train;" % (TEMP_TOTAL_NUMBER, TEMP_LIMIT_NUMBER, TEMP_NUMBER_TEST, TEMP_NUMBER_TRAIN)
-			+ " TEST:: %s normal; %s intru; => %s %% intru; TRAIN:: %s normal; %s intru; => %s %% intru"
-			% (TEMP_NORMAL_TEST, TEMP_INTRU_TEST, TEMP_INTRU_TEST_PCT, TEMP_NORMAL_TRAIN, TEMP_INTRU_TRAIN, TEMP_INTRU_TRAIN_PCT))
+		print("TEMP>>> %s total; %s limit; %s for test; %s for train;" % (len(ids_entries), TEMP_LIMIT_NUMBER, len(scoring_entries), len(training_entries))
+			+ " TRAIN:: %s normal; %s intru; => %s %% intru" % (TEMP_NORMAL_TRAIN, TEMP_INTRU_TRAIN, TEMP_INTRU_TRAIN_PCT))
 
 		return (training_entries, scoring_entries)
 

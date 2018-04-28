@@ -18,6 +18,7 @@ from ids.ids_entry import IdsEntry
 import ids.ids_tools as ids_tools
 from log_entry import LogEntry
 import util.seqr
+import util.fmtr
 
 
 ITEM_LIMIT = 5000000
@@ -151,8 +152,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		elif percentage_intruded_training == 0:
 			experiment.storer_printer.prt("Scoring clean classifier...")
 		else:
-			experiment.storer_printer.prt("Scoring distorted classifier (%s %%)..."
-				% percentage_intruded_training)
+			experiment.storer_printer.prt("Scoring distorted classifier (%s)..."
+				% util.fmtr.format_percentage(percentage_intruded_training))
 
 		for app_id, ids_entries in util.seqr.yield_items_in_key_order(ids_entries_dict):
 			CleanTrainingVsDistorted.run_cycle_for_app(

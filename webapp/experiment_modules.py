@@ -131,11 +131,11 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		experiment.storer_printer.prt("Running experiment...")
 
 		# CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0, experiment)
-		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 10, experiment)
-		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 20, experiment)
-		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 30, experiment)
-		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 40, experiment)
-		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 50, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.1, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.2, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.3, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.4, experiment)
+		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0.5, experiment)
 
 		experiment.add_result_file("run_iterations", ["Ran iterations with 0, 10, 20, 30, 40, 50 %"])
 

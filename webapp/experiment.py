@@ -242,7 +242,7 @@ class Experiment(object):
 			util.fmtr.fit_string_in(classifier_name, 20),
 			util.fmtr.fit_string_in(app_id, 12))
 
-		justed_value_str = lambda x: (util.fmtr.fit_string_in("{:.12f}".format(x), 15)).replace(".", ",")
+		justed_value_str = lambda x: util.fmtr.fit_string_in("{:.12f}".format(x), 15)
 
 		# Result: [app_id, accuracy, precision, recall, tn, fp, fn, tp, confusion_matrix]
 		this_result = [

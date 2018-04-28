@@ -274,8 +274,13 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		TEMP_INTRU_TRAIN_PCT = float(TEMP_INTRU_TRAIN) / len(training_entries)
 
 		# Ensure we calculated everything correctly.
-		assert(len(training_entries) >= max(len(remaining_normal), len(remaining_intruded)))
-		assert(min(len(training_entries), len(scoring_entries)) > 1000)
+		if len(training_entries) < max(len(remaining_normal), len(remaining_intruded)):
+			raise RuntimeError("I have %s training entries, from %s normal and %s intruded."
+				% (len(training_entries), len(remaining_normal), len(remaining_intruded)))
+
+		if min(len(training_entries), len(scoring_entries)) < 1000:
+			raise RuntimeError("One of my sets is < 1000: %s training entries, %s scoring entries"
+				% (len(training_entries), len(scoring_entries)))
 
 		print("TEMP>>> %s total; %s limit; %s for test; %s for train;" % (len(ids_entries), TEMP_LIMIT_NUMBER, len(scoring_entries), len(training_entries))
 			+ " TRAIN:: %s normal; %s intru; => %s %% intru" % (TEMP_NORMAL_TRAIN, TEMP_INTRU_TRAIN, TEMP_INTRU_TRAIN_PCT))

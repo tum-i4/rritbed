@@ -130,7 +130,7 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		experiment.storer_printer.prt("Running experiment...")
 
-		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0, experiment)
+		# CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 0, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 10, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 20, experiment)
 		CleanTrainingVsDistorted.run_cycle(ids_entries_dict, 30, experiment)

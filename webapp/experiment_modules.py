@@ -243,7 +243,7 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		TEMP_NUMBER_TEST = len(scoring_entries)
 		TEMP_NORMAL_TEST = len(test_normal)
 		TEMP_INTRU_TEST = len(test_intruded)
-		TEMP_INTRU_TEST_PCT = float(TEMP_INTRU_TEST) / TEMP_NUMBER_TEST)
+		TEMP_INTRU_TEST_PCT = float(TEMP_INTRU_TEST) / TEMP_NUMBER_TEST
 
 		print("TEMP>>> I SELECTED %s entries for test (%s n / %s i / %s %% i)" % (TEMP_NUMBER_TEST, TEMP_NORMAL_TEST, TEMP_INTRU_TEST, TEMP_INTRU_TEST_PCT))
 

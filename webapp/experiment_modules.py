@@ -274,7 +274,7 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		TEMP_INTRU_TRAIN_PCT = float(TEMP_INTRU_TRAIN) / len(training_entries)
 
 		# Ensure we calculated everything correctly.
-		if len(training_entries) < max(len(remaining_normal), len(remaining_intruded)):
+		if len(training_entries) < min(len(remaining_normal), len(remaining_intruded)):
 			raise RuntimeError("I have %s training entries, from %s normal and %s intruded."
 				% (len(training_entries), len(remaining_normal), len(remaining_intruded)))
 

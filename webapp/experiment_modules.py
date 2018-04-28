@@ -211,7 +211,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		entries_intruded = entries_intruded[:half_limit]
 
 		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
-		ids_tools.verify_percentage_intruded(percentage_intruded)
+		# No more than 1 % error
+		assert(abs(percentage_intruded - 0.5) < 0.01)
 
 		# Always select the smaller set as a baseline. Choose the test size as the smaller set's size.
 		# 50 % will be normal, 50 % intruded.

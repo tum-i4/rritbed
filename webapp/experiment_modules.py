@@ -263,6 +263,7 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		needed_number_intruded = len(remaining_intruded)
 
 		print("TEMP>>> STARTING WITH NEED %s n %s i" % (needed_number_normal, needed_number_intruded))
+		print("TEMP>>> TARGET %% is %s" % target_pct_intruded_training)
 
 		# If we have too few intruded entries, sample from normal entries
 		if relative_size_intruded < target_pct_intruded_training:

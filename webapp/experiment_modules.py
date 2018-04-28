@@ -237,27 +237,23 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		relative_size_intruded = float(len(remaining_intruded)) / remaining_count
 
-		needed_percent_normal = 1.0
-		needed_percent_intruded = 1.0
+		needed_number_normal = len(remaining_normal)
+		needed_number_intruded = len(remaining_intruded)
 
 		# If we have too few intruded entries, sample from normal entries
 		if relative_size_intruded < target_pct_intruded_training:
 			# Target size derived from number of intruded entries
 			target_size = (1 / target_pct_intruded_training) * len(remaining_intruded)
-			normal_entries_needed = target_size - len(remaining_intruded)
-			needed_percent_normal = float(normal_entries_needed) / len(remaining_normal)
+			needed_number_normal = target_size - len(remaining_intruded)
 		# If we have too many, sample from them
 		elif relative_size_intruded > target_pct_intruded_training:
 			# Target size derived from number of normal entries
 			target_size = (1 / (1 - target_pct_intruded_training)) * len(remaining_normal)
-			intruded_entries_needed = target_size - len(remaining_normal)
-			needed_percent_intruded = float(intruded_entries_needed) / len(remaining_intruded)
+			needed_number_intruded = target_size - len(remaining_normal)
 
 		# The split will put test_size % entries in the second bucket
-		training_normal = random.sample(
-			remaining_normal, len(remaining_normal) * needed_percent_normal)
-		training_intruded = random.sample(
-			remaining_intruded, len(remaining_intruded) * needed_percent_intruded)
+		training_normal = random.sample(remaining_normal, needed_number_normal)
+		training_intruded = random.sample(remaining_intruded, needed_number_intruded)
 
 		achieved_percentage_intruded = (
 			float(len(training_intruded))

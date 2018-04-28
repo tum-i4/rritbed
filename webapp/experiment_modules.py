@@ -183,20 +183,6 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	def custom_train_test_split(ids_entries, target_pct_intruded_training):
 		""" Split in train/test and ensure target_pct... of intruded entries in the training set. """
 
-		TEMP_TOTAL_NUMBER = len(ids_entries)
-		TEMP_LIMIT_NUMBER = 0
-		TEMP_NUMBER_TEST = 0
-		TEMP_NORMAL_TEST = 0
-		TEMP_INTRU_TEST = 0
-		TEMP_NUMBER_TRAIN = 0
-		TEMP_NORMAL_TRAIN = 0
-		TEMP_INTRU_TRAIN = 0
-		TEMP_TARGET_PCT = target_pct_intruded_training
-		TEMP_INTRU_TEST_PCT = 0
-		TEMP_INTRU_TRAIN_PCT = 0
-
-		print("TEMP>>> I HAVE %s entries total" % TEMP_TOTAL_NUMBER)
-
 		if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
 			raise ValueError("Given entries are not valid IdsEntry objects!")
 
@@ -264,6 +250,7 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		print("TEMP>>> STARTING WITH NEED %s n %s i" % (needed_number_normal, needed_number_intruded))
 		print("TEMP>>> TARGET %% is %s" % target_pct_intruded_training)
+		print("TEMP>>> REL %% intr is %s" % relative_size_intruded)
 
 		# If we have too few intruded entries, sample from normal entries
 		if relative_size_intruded < target_pct_intruded_training:

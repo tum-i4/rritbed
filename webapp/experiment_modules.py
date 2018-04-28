@@ -245,6 +245,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		TEMP_INTRU_TEST = len(test_intruded)
 		TEMP_INTRU_TEST_PCT = float(TEMP_INTRU_TEST) / TEMP_NUMBER_TEST)
 
+		print("TEMP>>> I SELECTED %s entries for test (%s n / %s i / %s %% i)" % (TEMP_NUMBER_TEST, TEMP_NORMAL_TEST, TEMP_INTRU_TEST, TEMP_INTRU_TEST_PCT))
+
 		# Prevent future errors
 		entries_normal = None
 		entries_intruded = None
@@ -269,6 +271,10 @@ class CleanTrainingVsDistorted(ModuleInterface):
 			# Target size derived from number of normal entries
 			target_size = (1 / (1 - target_pct_intruded_training)) * len(remaining_normal)
 			needed_number_intruded = target_size - len(remaining_normal)
+
+		print("TEMP>>> I REQUIRE %s of the %s n entries and %s of the %s i entries for train -> %s %%"
+			% (needed_number_normal, len(remaining_normal), needed_number_intruded, len(remaining_intruded),
+			float(needed_number_intruded) / (needed_number_normal + needed_number_intruded))
 
 		# The split will put test_size % entries in the second bucket
 		training_normal = random.sample(remaining_normal, needed_number_normal)

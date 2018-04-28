@@ -183,6 +183,18 @@ class CleanTrainingVsDistorted(ModuleInterface):
 	def custom_train_test_split(ids_entries, target_pct_intruded_training):
 		""" Split in train/test and ensure target_pct... of intruded entries in the training set. """
 
+		TEMP_TOTAL_NUMBER = len(ids_entries)
+		TEMP_LIMIT_NUMBER = 0
+		TEMP_NUMBER_TEST = 0
+		TEMP_NORMAL_TEST = 0
+		TEMP_INTRU_TEST = 0
+		TEMP_NUMBER_TRAIN = 0
+		TEMP_NORMAL_TRAIN = 0
+		TEMP_INTRU_TRAIN = 0
+		TEMP_TARGET_PCT = target_pct_intruded_training
+		TEMP_INTRU_TEST_PCT = 0
+		TEMP_INTRU_TRAIN_PCT = 0
+
 		if any([entry.vclass not in [1, -1] for entry in ids_entries[:100]]):
 			raise ValueError("Given entries are not valid IdsEntry objects!")
 
@@ -206,6 +218,8 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		entries_normal = entries_normal[:half_limit]
 		entries_intruded = entries_intruded[:half_limit]
 
+		TEMP_LIMIT_NUMBER = len(entries_normal) + len(entries_intruded)
+
 		percentage_intruded = (len(entries_intruded) / float(len(entries_normal)))
 		ids_tools.verify_percentage_intruded(percentage_intruded)
 
@@ -225,6 +239,11 @@ class CleanTrainingVsDistorted(ModuleInterface):
 
 		scoring_entries = test_normal + test_intruded
 		random.shuffle(scoring_entries)
+
+		TEMP_NUMBER_TEST = len(scoring_entries)
+		TEMP_NORMAL_TEST = len(test_normal)
+		TEMP_INTRU_TEST = len(test_intruded)
+		TEMP_INTRU_TEST_PCT = float(TEMP_INTRU_TEST) / TEMP_NUMBER_TEST)
 
 		# Prevent future errors
 		entries_normal = None
@@ -265,9 +284,18 @@ class CleanTrainingVsDistorted(ModuleInterface):
 		training_entries = training_normal + training_intruded
 		random.shuffle(training_entries)
 
+		TEMP_NUMBER_TRAIN = len(training_entries)
+		TEMP_NORMAL_TRAIN = len(training_normal)
+		TEMP_INTRU_TRAIN = len(training_intruded)
+		TEMP_INTRU_TRAIN_PCT = float(TEMP_INTRU_TRAIN) / TEMP_NUMBER_TRAIN
+
 		# Ensure we calculated everything correctly.
 		assert(len(training_entries) >= max(len(remaining_normal), len(remaining_intruded)))
 		assert(min(len(training_entries), len(scoring_entries)) > 1000)
+
+		print("TEMP>>> %s total; %s limit; %s for test; %s for train;" % (TEMP_TOTAL_NUMBER, TEMP_LIMIT_NUMBER, TEMP_NUMBER_TEST, TEMP_NUMBER_TRAIN)
+			+ " TEST:: %s normal; %s intru; => %s %% intru; TRAIN:: %s normal; %s intru; => %s %% intru"
+			% (TEMP_NORMAL_TEST, TEMP_INTRU_TEST, TEMP_INTRU_TEST_PCT, TEMP_NORMAL_TRAIN, TEMP_INTRU_TRAIN, TEMP_INTRU_TRAIN_PCT))
 
 		return (training_entries, scoring_entries)
 

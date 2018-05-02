@@ -59,15 +59,17 @@ class StateDao(object):
 		self._current_total_entries = self.count_log_lines()
 		self._max_entries_total = max_entries_total
 
+		self._timing_mode = self._max_entries_total == 1
+
 		# User info about number of entries in log store
 		if self._current_total_entries:
 			self._printer.prt("Current log length: {:,}".format(self._current_total_entries))
 		else:
 			self._printer.prt("Log is empty.")
 
-		# Super secret special mega mode
-                if self._max_entries_total == 1:
-			self._printer.prt("TIMING MODE ACTIVATED")
+		# Timing mode provides precise timing of incoming requests
+		if self._timing_mode:
+			self._printer.prt("Timing mode activated!")
 
 
 	def __enter__(self):
@@ -190,9 +192,9 @@ class StateDao(object):
 		if number_of_entries == 0:
 			return
 
-		# Super secret special mega mode
-		if self._max_entries_total == 1:
-			print("\nTime in msec: %s\n" % int(round(time.time() * 1000)))
+		# Print the current time in milliseconds
+		if self._timing_mode:
+			self._printer.prt("\nTime in msec: %s\n" % round(time.time() * 1000))
 
 		# Maximum number of entries reached on disk: Print info and raise MaximumReachedError
 		if self._maximum_reached(include_state=False):

@@ -4,6 +4,6 @@
 
 ## Read more
 
-/developed_modules.md - Overview of all tools, programs, scripts
+/[developed_modules.md](developed_modules.md) - Overview of all tools, programs, scripts
 
-/readmes/*.md - Readme for the respective tool
+/[readmes](readmes)/*.md - Readme for the respective tool

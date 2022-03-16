@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+title: >-
+  A real-time remote IDS testbed for connected
+  vehicles
+message: Please cite our paper when making use of this tool.
+type: software
+authors:
+  - given-names: Valentin
+    family-names: Zieglmeier
+    orcid: 'https://orcid.org/0000-0002-3770-0321'
+    affiliation: Technical University of Munich
+repository-code: 'https://github.com/tum-i4/rritbed'
+keywords:
+  - IDS
+  - Intrustion detection
+  - Testbed
+  - Connected vehicles
+date-released: '2019-07-11'
+preferred-citation:
+  title: >-
+    A real-time remote IDS testbed for connected
+    vehicles
+  authors:
+    - given-names: Valentin
+      family-names: Zieglmeier
+      orcid: 'https://orcid.org/0000-0002-3770-0321'
+      affiliation: Technical University of Munich
+    - given-names: Severin
+      family-names: Kacianka
+      affiliation: Technical University of Munich
+    - given-names: Thomas
+      family-names: Hutzelmann
+      affiliation: Technical University of Munich
+    - given-names: Alexander
+      family-names: Pretschner
+      affiliation: Technical University of Munich
+      orcid: 'https://orcid.org/0000-0002-5573-1201'
+  year: 2019
+  publisher:
+    name: Association for Computing Machinery
+  doi: 10.1145/3297280.3297465
+  isbn: "9781450359337"
+  pages: 8
+  start: 1898
+  end: 1905
+  location:
+    name: Limassol
+    country: CY
+  conference:
+    name: "SAC '19"
+  collection-type: proceedings
+  collection-title: Proceedings of the 34th ACM/SIGAPP Symposium on Applied Computing
+  type: conference-paper
